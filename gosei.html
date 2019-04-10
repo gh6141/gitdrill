@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>力の合成</title>
+    
+    <style>
+      #canvas {
+        background: #FFF;
+      }
+    </style>
+  </head>
+  <body onLoad="init()">
+    <a href="https://gh6141.github.io/gitdrill/index.html">MENU</a><br>
+  <p><b>力の合成</b>　<font color=red>■</font>を動かしてみてください　　<font style='font-size:40px;color:blue'>→</font>は <font style='font-size:40px;color:red;'>→</font>の合力です。</p>
+    <canvas id="canvas" width="1200" height="800"></canvas>
+    <script>
+//********************************************
+    (function(target) {
+  if (!target || !target.prototype)
+    return;
+  target.prototype.arrow = function(startX, startY, endX, endY, controlPoints) {
+    var dx = endX - startX;
+    var dy = endY - startY;
+    var len = Math.sqrt(dx * dx + dy * dy);
+    var sin = dy / len;
+    var cos = dx / len;
+    var a = [];
+    a.push(0, 0);
+    for (var i = 0; i < controlPoints.length; i += 2) {
+      var x = controlPoints[i];
+      var y = controlPoints[i + 1];
+      a.push(x < 0 ? len + x : x, y);
+    }
+    a.push(len, 0);
+    for (var i = controlPoints.length; i > 0; i -= 2) {
+      var x = controlPoints[i - 2];
+      var y = controlPoints[i - 1];
+      a.push(x < 0 ? len + x : x, -y);
+    }
+    a.push(0, 0);
+    for (var i = 0; i < a.length; i += 2) {
+      var x = a[i] * cos - a[i + 1] * sin + startX;
+      var y = a[i] * sin + a[i + 1] * cos + startY;
+      if (i === 0) this.moveTo(x, y);
+      else this.lineTo(x, y);
+    }
+  };
+})(CanvasRenderingContext2D);
+//****************************************
+    
+    
+       canvas = document.getElementById("canvas");
+       context = canvas.getContext('2d');
+       wx = canvas.width;
+       hx = canvas.height;
+       
+       
+        objWidth = 10;
+        objHeight = 10;
+        startx=300;
+        starty=200;
+        var x, y, relX,relY;
+        var offsetX = canvas.getBoundingClientRect().left;
+        var offsetY = canvas.getBoundingClientRect().top;       
+        otherX=10;
+        otherY=10;
+
+     
+     
+     function Arrow(ix,iy) {       
+         this.objX=ix;
+         this.objY=iy;
+         this.dragging = false;
+   
+         //https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
+         canvas.addEventListener('mousedown', this.onDown.bind(this) , false);
+         canvas.addEventListener('mousemove', this.onMove.bind(this) , false);
+         canvas.addEventListener('mouseup', this.onUp.bind(this), false);
+
+     }      
+       Arrow.prototype = {
+        getobj : function(obj){
+         this.obj=obj;
+         this.drawRect();
+        },
+        onDown :function(e) {
+        x = e.clientX - offsetX;
+        y = e.clientY - offsetY;
+        if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
+          this.dragging = true;
+          relX = this.objX - x;
+          relY = this.objY - y;
+        }      
+        },
+        onMove : function(e) {
+        x = e.clientX - offsetX;
+        y = e.clientY - offsetY;
+        if (this.dragging) {
+          this.objX = x + relX;
+          this.objY = y + relY;
+          this.drawRect();
+        }
+        },
+        onUp : function(e) {
+        this.dragging = false;
+        },
+        goseidrawRect : function(iix,iiy) {
+         
+        context.strokeStyle = "rgb(0,0, 200)";
+        context.fillStyle = "rgb(0,0, 255)";
+        context.beginPath();        
+        context.arrow(startx, starty, iix,iiy, [0, 5, -20, 5, -20, 15]);
+  context.fill();     
+        },      
+        drawRect : function() {
+        
+             context.clearRect(0,0,wx,hx);
+      //２つの力の矢印
+        context.fillStyle = "rgb(200, 0, 0)";
+        context.arrow(startx, starty, this.objX, this.objY, [0, 5, -20, 5, -20, 15]);
+        context.arrow(startx, starty, this.obj.objX, this.obj.objY, [0, 5, -20, 5, -20, 15]);
+  context.fill();
+  context.fillRect(this.objX, this.objY, objWidth, objHeight);
+  context.fillRect(this.obj.objX, this.obj.objY, objWidth, objHeight);
+  
+
+         this.goseidrawRect(this.objX+this.obj.objX-startx,this.objY+this.obj.objY-starty);    
+     
+      //平行四辺形の細い線
+       context.strokeStyle = "rgb(200,0, 0)";
+        context.beginPath();
+        context.lineWidth=1;
+        context.moveTo(this.objX, this.objY);
+        context.lineTo(this.objX+this.obj.objX-startx,this.objY+this.obj.objY-starty);        
+        context.moveTo(this.obj.objX, this.obj.objY);
+        context.lineTo(this.objX+this.obj.objX-startx,this.objY+this.obj.objY-starty);        
+        context.stroke();       
+        }
+     }
+
+         ar1 = new Arrow(startx+120,starty+20);    
+         ar2 = new Arrow(startx+40,starty+110);          
+    
+         ar1.getobj(ar2);
+         ar2.getobj(ar1);
+ 
+
+        
+
+
+    
+    </script>
+  </body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>力の分解</title>
+    
+    <style>
+      #canvas {
+        background: #FFF;
+      }
+    </style>
+  </head>
+  <body onLoad="init()">
+      <a href="https://gh6141.github.io/gitdrill/index.html">MENU</a><br>
+  <p><b>力の分解</b>　<font color=blue>■</font>を動かしてみてください　　
+  <font style='color:red;font-size:40px;'>→</font>が<font style='color:blue;font-size:40px;'>→</font>の分力です</p>
+    <canvas id="canvas" width="1200" height="800"></canvas>
+    <script>
+//********************************************
+    (function(target) {
+  if (!target || !target.prototype)
+    return;
+  target.prototype.arrow = function(startX, startY, endX, endY, controlPoints) {
+    var dx = endX - startX;
+    var dy = endY - startY;
+    var len = Math.sqrt(dx * dx + dy * dy);
+    var sin = dy / len;
+    var cos = dx / len;
+    var a = [];
+    a.push(0, 0);
+    for (var i = 0; i < controlPoints.length; i += 2) {
+      var x = controlPoints[i];
+      var y = controlPoints[i + 1];
+      a.push(x < 0 ? len + x : x, y);
+    }
+    a.push(len, 0);
+    for (var i = controlPoints.length; i > 0; i -= 2) {
+      var x = controlPoints[i - 2];
+      var y = controlPoints[i - 1];
+      a.push(x < 0 ? len + x : x, -y);
+    }
+    a.push(0, 0);
+    for (var i = 0; i < a.length; i += 2) {
+      var x = a[i] * cos - a[i + 1] * sin + startX;
+      var y = a[i] * sin + a[i + 1] * cos + startY;
+      if (i === 0) this.moveTo(x, y);
+      else this.lineTo(x, y);
+    }
+  };
+})(CanvasRenderingContext2D);
+//****************************************
+    
+    
+       canvas = document.getElementById("canvas");
+       context = canvas.getContext('2d');
+       wx = canvas.width;
+       hx = canvas.height;
+       
+       
+        objWidth = 10;
+        objHeight = 10;
+        startx=300;
+        starty=200;
+        var x, y, relX,relY;
+        var offsetX = canvas.getBoundingClientRect().left;
+        var offsetY = canvas.getBoundingClientRect().top;       
+        otherX=10;
+        otherY=10;
+
+     
+     function Arrow(ix,iy) {       
+         this.objX=ix;
+         this.objY=iy;
+         this.dragging = false;
+
+     }      
+       Arrow.prototype = {
+        getobj : function(obj,objg){
+         this.obj=obj;
+         this.objg=objg;
+         this.drawRect();
+        },
+        getobj2 : function(obj1,obj2){
+         this.obj1=obj1;
+         this.obj2=obj2;
+         this.drawRect();
+        },
+        onDown :function(e) {
+        x = e.clientX - offsetX;
+        y = e.clientY - offsetY;
+        if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
+          this.dragging = true;
+          relX = this.objX - x;
+          relY = this.objY - y;
+        }      
+        },
+        onMove : function(e) {
+        x = e.clientX - offsetX;
+        y = e.clientY - offsetY;
+        if (this.dragging) {
+          this.objX = x + relX;
+          this.objY = y + relY;
+          this.drawRect();
+        }
+        },
+        onUp : function(e) {
+        this.dragging = false;
+        }
+
+    }  
+
+//****************************
+function disp(obj1,obj2,objg){
+      context.clearRect(0,0,wx,hx);
+      //２つの力の矢印
+      
+      context.beginPath();
+      context.fillStyle = "rgb(200, 0, 0)";     
+      
+  
+      ab=(starty-objg.objY)/(starty-obj2.objY)-(startx-objg.objX)/(startx-obj2.objX);
+      bab=(startx-obj1.objX)/(obj2.objX-startx)-(starty-obj1.objY)/(obj2.objY-starty);
+      ak=ab/bab;      
+        xx=startx+ak*(obj1.objX-startx);
+        yy=starty+ak*(obj1.objY-starty);
+        context.arrow(startx, starty, xx, yy, [0, 5, -20, 5, -20, 15]);//動かしている矢印
+
+        
+      ab2=(starty-objg.objY)/(starty-obj1.objY)-(startx-objg.objX)/(startx-obj1.objX);
+      bab2=(startx-obj2.objX)/(obj1.objX-startx)-(starty-obj2.objY)/(obj1.objY-starty);
+      ak2=ab2/bab2;      
+        xx2=startx+ak2*(obj2.objX-startx);
+        yy2=starty+ak2*(obj2.objY-starty);
+        context.arrow(startx, starty, xx2, yy2, [0, 5, -20, 5, -20, 15]);//反対側の矢印
+
+  context.fill();
+  
+  context.beginPath();
+  context.fillStyle = "rgb(0, 0, 200)";
+  context.fillRect(obj1.objX, obj1.objY, objWidth, objHeight);
+  context.fillRect(obj2.objX, obj2.objY, objWidth, objHeight);
+ 
+     context.arrow(startx, starty, objg.objX, objg.objY, [0, 5, -20, 5, -20, 15]); //合力
+  context.fillRect(objg.objX, objg.objY, objWidth, objHeight);
+  context.fill();
+
+
+     
+      //平行四辺形の細い線
+        context.strokeStyle = "rgb(200,0, 0)";
+        context.beginPath();
+        context.lineWidth=1;
+        context.moveTo(xx, yy);
+        context.lineTo(objg.objX,objg.objY); //元の力
+        
+        context.moveTo(startx,starty);
+        context.lineTo((obj1.objX-startx)*10+startx,(obj1.objY-starty)*10+starty);//延長線
+               
+        context.moveTo(xx2, yy2);
+        context.lineTo(objg.objX,objg.objY); //元の力       
+        
+        context.moveTo(startx,starty);
+        context.lineTo((obj2.objX-startx)*10+startx,(obj2.objY-starty)*10+starty);//延長線
+
+        context.stroke(); 
+        
+
+}
+function addE(obj){
+         canvas.addEventListener('mousedown', obj.onDown.bind(obj) , false);
+         canvas.addEventListener('mousemove', obj.onMove.bind(obj) , false);
+         canvas.addEventListener('mouseup', obj.onUp.bind(obj), false);
+         }
+//********************************
+
+function sArrow(ix,iy) {  
+         this.objX=ix;
+         this.objY=iy;        
+          addE(this);
+         }    
+         sArrow.prototype = new Arrow();
+         
+sArrow.prototype.drawRect = function() {
+              disp(this,this.obj,this.objg);       
+        }
+
+function nArrow(ix,iy) {  
+         this.objX=ix;
+         this.objY=iy; 
+          addE(this);         
+         }    
+         nArrow.prototype = new Arrow();
+         
+nArrow.prototype.drawRect = function() {
+            disp(this.obj1,this.obj2,this);   
+}
+         ar1 = new sArrow(startx+120,starty+20);    
+         ar2 = new sArrow(startx+40,starty+110);          
+         arg = new nArrow(startx+80,starty+70);
+         
+         ar1.getobj(ar2,arg);
+         ar2.getobj(ar1,arg);
+         arg.getobj2(ar1,ar2);
+             
+    </script>
+  </body>
+</html>
+        

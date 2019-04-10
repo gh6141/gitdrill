@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+  </head>
+
+<body>  
+<div>
+ <input type="button" class="btn2"  onclick="reset();" value="つぎへ">
+  <input type="button" class="btn2"  onclick="redyellow();" value="赤と黄">
+   <input type="button" class="btn2"  onclick="redblue();" value="赤と青">
+    <input type="button" class="btn2"  onclick="redgreen();" value="赤と緑">
+    <input type="button" class="btn2"  onclick="blackwhite();" value="黒と白">
+</div>
+<div>
+ <div class="box"><input type="button" class="btn" id="0" onclick="" value=""></div>
+ <div class="box"><input type="button" class="btn" id="1"  onclick="" value=""></div>
+ <div class="box"><input type="button" class="btn" id="2"  onclick="" value=""></div>
+ <div class="box"><input type="button" class="btn" id="3"  onclick="" value=""></div>
+ <div class="box"><input type="button" class="btn" id="4"  onclick="" value=""></div>
+</div>
+
+<audio id="Sound" preload="auto">
+   <source src="/taiko.mp3" type="audio/mp3">
+   <p>※お使いのブラウザでは音は鳴りません。</p>
+</audio>
+
+<style>
+
+ .box {
+      display : inline-block;
+       width: 19%;
+       height: 500px;
+  
+ }
+
+  .btn  { 
+  display: block;
+    width: 100%;
+    height: 90%;
+  background: #ff0;
+  border-radius: 5px;
+  border-bottom: 4px solid #666;
+  color: #f00;
+  margin: 0 auto;
+}
+
+.btn2{
+ width:100px;
+ hegiht:50px;
+}
+
+
+</style>
+ 
+ 
+ <script type="text/javascript">
+ var TARGET = document.getElementById('Sound');
+ scolor='red';
+ ocolor='yellow';
+ 
+function ring() {
+ TARGET.play();
+}
+
+
+
+function reset(){
+    TARGET.pause();
+    TARGET.currentTime = 0;
+    
+    var min = 0 ;
+    var max = 4 ;
+
+    var a = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+    
+    
+    $('.btn').each( function(i) {
+     if(i==a) {
+       $(this).css('background',scolor);
+        $(this).attr('onclick','ring();');
+       }
+     else {
+      $(this).css('background',ocolor) ;
+        $(this).attr('onclick','');
+       };
+     
+    });
+    
+    
+}
+
+function redyellow(){
+ scolor='red';
+ ocolor='yellow';
+}
+function redblue(){
+ scolor='red';
+ ocolor='blue';
+}
+function redgreen(){
+ scolor='red';
+ ocolor='green';
+}
+function blackwhite(){
+ scolor='black';
+ ocolor='white';
+}
+
+</script>
+ 
+<br>
+<a href="https://gh6141.github.io/gitdrill/index.html">MENU</a><br>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+
+#btn2{
+ width:200px;
+ height:100px;
+}
+
+.contents{
+width: 100%;
+height: 50%;
+
+}
+
+
+
+
+</style>
+ 
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<meta charset="UTF-8">
+<script type="text/javascript">
+<!--
+
+
+
+
+
+function sample(shi,san,mar) {
+
+var w = $('.contents').width();
+var h = $('.contents').height();
+$('#sample1').attr('width', w);
+$('#sample1').attr('height', h);
+//描画コンテキストの取得
+var canvas = document.getElementById('sample1');
+ if (canvas.getContext) {
+
+ var context = canvas.getContext('2d');
+
+
+
+ //色を指定する
+ //context.strokeStyle = 'rgb(00,00,255)'; //枠線の色は青
+ context.fillStyle = 'rgb(0,25,255)'; //塗りつぶしの色は赤
+
+ //左から20上から40の位置に、幅50高さ100の四角形を描く
+
+ bai=2;
+
+ context.fillRect((shi*130+30)*bai,30*bai,100*bai,100*bai); 
+
+ var ox=(san*130+30)*bai;
+ var oy=20*bai;
+ var ln=60*bai;
+ context.beginPath();
+ context.moveTo(ln+ox, 0+oy);
+ context.lineTo(ln*2+ox, ln*Math.sqrt(3)+oy);
+ context.lineTo(-0+ox,ln*Math.sqrt(3)+oy);
+
+ context.closePath();
+ context.stroke();
+
+ //左から150上から75の位置に、半径60の半円を反時計回り（左回り）で描く
+ context.arc((mar*130+80)*bai,75*bai,60*bai,Math.PI*0,Math.PI*2,true);
+ context.fill();
+
+ }
+}
+
+
+
+
+//-->
+</script>
+
+</head>
+<body onLoad="sample(0,1,2)">
+<div>
+ <input type="button" id="btn2"  value="つぎへ">
+
+</div>
+
+<h2><span id="katachi"></span>　はどれ?</h2>
+
+<div class="contents">
+<canvas id="sample1" style="background-color:yellow;" height=600>
+図形を表示するには、canvasタグをサポートしたブラウザが必要です。
+</canvas>
+</div>
+
+<audio id="Sound" preload="auto">
+   <source src="/pinpon.mp3" type="audio/mp3">
+   <p>※お使いのブラウザでは音は鳴りません。</p>
+</audio>
+
+<script type="text/javascript">
+<!--
+
+ var TARGET = document.getElementById('Sound');
+
+ 
+function ring() {
+ TARGET.play();
+}
+
+
+ var  katachi;
+ var x1;
+var x2;
+var x3;
+
+ 
+var btn = document.getElementById('btn2'); 
+btn.addEventListener('click', function() {
+    var min = 0 ;
+    var max = 8 ;
+    var a = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+     x1=(a)%3;
+     x2=(1+a)%3;
+     x3=(2+a)%3;
+  sample(x1,x2,x3);
+  
+  
+
+  var min = 0 ;
+    var max = 2 ;
+     b = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+    if(b==0){
+      katachi='さんかく▲';
+     }else if(b==1){
+      katachi='しかく■';
+     }else{
+      katachi='まる●';
+     }
+  
+  $('#katachi').text(katachi);
+}, false);
+
+
+document.addEventListener('click', test);
+
+function test(e) {
+    xx=e.clientX;
+    yy=e.clientY;
+    
+    var ans;
+   
+    if(xx>72 && xx<300 && yy>244 && yy<450){
+       ans=0;
+     }else if(xx>300 && xx<570 && yy>244 && yy<450){
+       ans=1;
+     }else if(xx>570 && xx<840 && yy>244 && yy<450){
+       ans=2;
+     }else{
+       
+     }
+         
+         if(x1==ans && b==1){ring();}
+          if(x2==ans && b==0){ring();}
+           if(x3==ans && b==2){ring();}
+         
+      
+}
+
+
+//-->
+</script>
+<a href="https://gh6141.github.io/gitdrill/index.html">MENU</a><br>
+</body>
+</html>
