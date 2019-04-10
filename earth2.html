@@ -39,10 +39,10 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-			<script src="/three.js"></script>
-		<script src="/js/renderers/Projector.js"></script>
-		<script src="/js/renderers/CanvasRenderer.js"></script>
-		<script src="/js/libs/stats.min.js"></script>
+			<script src="three.js"></script>
+		<script src="js/renderers/Projector.js"></script>
+		<script src="js/renderers/CanvasRenderer.js"></script>
+		<script src="js/libs/stats.min.js"></script>
 
 		<script>
 
@@ -73,7 +73,7 @@
 				// earth
 
 				var loader = new THREE.TextureLoader();
-				loader.load( '/land_ocean_ice_cloud_2048.jpg', function ( texture ) {
+				loader.load( 'land_ocean_ice_cloud_2048.jpg', function ( texture ) {
 					var geometry = new THREE.SphereGeometry( 50, 10, 10 );
 					var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
 					var mesh = new THREE.Mesh( geometry, material );
@@ -83,7 +83,7 @@
 				
 				
 		
-	            loader.load( '/star.jpg', function ( texture ) {
+	            loader.load( 'star.jpg', function ( texture ) {
 					var geometry2 = new THREE.SphereGeometry( 200, 20, 20 );
 					var material2 = new THREE.MeshBasicMaterial( { map:texture , transparent:true , opacity:0.5, side:THREE.DoubleSide} );
 					var mesh2 = new THREE.Mesh( geometry2, material2 );
