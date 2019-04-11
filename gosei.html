@@ -66,9 +66,7 @@
         otherX=10;
         otherY=10;
 
-        document.body.addEventListener('touchmove', function(event) {
-  event.preventDefault();
-}, false); 
+    
      
      function Arrow(ix,iy) {       
          this.objX=ix;
@@ -100,14 +98,14 @@
         },
         onDownt :function(e) {
           if (event.targetTouches.length == 1) {
-    var touch = event.targetTouches[0];
-    x = touch.pageX - offsetX;
-        y = touch.pageY - offsetY;
-        if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
-          this.dragging = true;
-          relX = this.objX - x;
-          relY = this.objY - y;
-        }   
+           var touch = event.targetTouches[0];
+           x = touch.pageX - offsetX;
+           y = touch.pageY - offsetY;
+          if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
+           this.dragging = true;
+           relX = this.objX - x;
+           relY = this.objY - y;
+           }   
           }
        
         },
@@ -121,16 +119,16 @@
         }
         },
         onMovet : function(event) {
-
+          event.preventDefault();
           if (event.targetTouches.length == 1) {
-    var touch = event.targetTouches[0];
-    x = touch.pageX - offsetX;
-        y = touch.pageY - offsetY;
-        if (this.dragging) {
+             var touch = event.targetTouches[0];
+             x = touch.pageX - offsetX;
+             y = touch.pageY - offsetY;
+          if (this.dragging) {
           this.objX = x + relX;
           this.objY = y + relY;
           this.drawRect();
-  }
+          }
 
       
         }
@@ -147,7 +145,7 @@
         context.fillStyle = "rgb(0,0, 255)";
         context.beginPath();        
         context.arrow(startx, starty, iix,iiy, [0, 5, -20, 5, -20, 15]);
-  context.fill();     
+        context.fill();     
         },      
         drawRect : function() {
         
@@ -156,9 +154,9 @@
         context.fillStyle = "rgb(200, 0, 0)";
         context.arrow(startx, starty, this.objX, this.objY, [0, 5, -20, 5, -20, 15]);
         context.arrow(startx, starty, this.obj.objX, this.obj.objY, [0, 5, -20, 5, -20, 15]);
-  context.fill();
-  context.fillRect(this.objX, this.objY, objWidth, objHeight);
-  context.fillRect(this.obj.objX, this.obj.objY, objWidth, objHeight);
+        context.fill();
+        context.fillRect(this.objX, this.objY, objWidth, objHeight);
+        context.fillRect(this.obj.objX, this.obj.objY, objWidth, objHeight);
   
 
          this.goseidrawRect(this.objX+this.obj.objX-startx,this.objY+this.obj.objY-starty);    
@@ -181,11 +179,6 @@
          ar1.getobj(ar2);
          ar2.getobj(ar1);
  
-
-        
-
-
-    
     </script>
   </body>
 </html>
