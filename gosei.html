@@ -82,7 +82,7 @@
          canvas.addEventListener('mousemove', this.onMove.bind(this) , false);
          canvas.addEventListener('mouseup', this.onUp.bind(this), false);
          canvas.addEventListener('touchend', this.onUpt.bind(this), false);
-         document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+         canvas.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 
      }      
        Arrow.prototype = {
