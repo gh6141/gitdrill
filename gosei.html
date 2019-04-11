@@ -119,7 +119,7 @@
         }
         },
         onMovet : function(event) {
-          event.preventDefault();
+          event.stopPropagation();
           if (event.targetTouches.length == 1) {
              var touch = event.targetTouches[0];
              x = touch.pageX - offsetX;
