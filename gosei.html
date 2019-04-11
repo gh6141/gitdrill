@@ -75,6 +75,7 @@
    
          //https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
          canvas.addEventListener('mousedown', this.onDown.bind(this) , false);
+         canvas.addEventListener('touchmove', this.onMove.bind(this) , false);
          canvas.addEventListener('mousemove', this.onMove.bind(this) , false);
          canvas.addEventListener('mouseup', this.onUp.bind(this), false);
 
