@@ -66,7 +66,9 @@
         otherX=10;
         otherY=10;
 
-     
+        document.body.addEventListener('touchmove', function(event) {
+  event.preventDefault();
+}, false); 
      
      function Arrow(ix,iy) {       
          this.objX=ix;
@@ -75,11 +77,11 @@
    
          //https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
          canvas.addEventListener('mousedown', this.onDown.bind(this) , false);
-         canvas.addEventListener('forcus', this.onDown.bind(this) , false);
-         canvas.addEventListener('forcusin', this.onMove.bind(this) , false);
+         canvas.addEventListener('touchstart', this.onDownt.bind(this) , false);
+         canvas.addEventListener('touchmove', this.onMovet.bind(this) , false);
          canvas.addEventListener('mousemove', this.onMove.bind(this) , false);
          canvas.addEventListener('mouseup', this.onUp.bind(this), false);
-         canvas.addEventListener('focusout', this.onUp.bind(this), false);
+         canvas.addEventListener('touchend', this.onUpt.bind(this), false);
 
      }      
        Arrow.prototype = {
@@ -96,6 +98,19 @@
           relY = this.objY - y;
         }      
         },
+        onDownt :function(e) {
+          if (event.targetTouches.length == 1) {
+    var touch = event.targetTouches[0];
+    x = touch.pageX - offsetX;
+        y = touch.pageY - offsetY;
+        if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
+          this.dragging = true;
+          relX = this.objX - x;
+          relY = this.objY - y;
+        }   
+          }
+       
+        },
         onMove : function(e) {
         x = e.clientX - offsetX;
         y = e.clientY - offsetY;
@@ -105,7 +120,25 @@
           this.drawRect();
         }
         },
+        onMovet : function(event) {
+
+          if (event.targetTouches.length == 1) {
+    var touch = event.targetTouches[0];
+    x = touch.pageX - offsetX;
+        y = touch.pageY - offsetY;
+        if (this.dragging) {
+          this.objX = x + relX;
+          this.objY = y + relY;
+          this.drawRect();
+  }
+
+      
+        }
+        },
         onUp : function(e) {
+        this.dragging = false;
+        },
+        onUpt : function(e) {
         this.dragging = false;
         },
         goseidrawRect : function(iix,iiy) {
