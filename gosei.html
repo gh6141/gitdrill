@@ -47,8 +47,10 @@
   };
 })(CanvasRenderingContext2D);
 //****************************************
+
+
     
-document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+
 
        canvas = document.getElementById("canvas");
        context = canvas.getContext('2d');
@@ -56,8 +58,8 @@ document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
        hx = canvas.height;
        
        
-        objWidth = 50;
-        objHeight = 50;
+        objWidth = 30;
+        objHeight = 30;
         startx=300;
         starty=200;
         var x, y, relX,relY;
@@ -179,7 +181,9 @@ document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
     
          ar1.getobj(ar2);
          ar2.getobj(ar1);
- 
+         
+         document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+
     </script>
   </body>
 </html>
