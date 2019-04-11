@@ -56,8 +56,8 @@
        hx = canvas.height;
        
        
-        objWidth = 10;
-        objHeight = 10;
+        objWidth = 30;
+        objHeight = 30;
         startx=300;
         starty=200;
         var x, y, relX,relY;
@@ -103,6 +103,35 @@
         }
         },
         onUp : function(e) {
+        this.dragging = false;
+        },
+        onDownt :function(event) {
+          if (event.targetTouches.length == 1) {
+           var touch = event.targetTouches[0];
+           x = touch.pageX - offsetX;
+           y = touch.pageY - offsetY;
+           if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
+           this.dragging = true;
+           relX = this.objX - x;
+           relY = this.objY - y;
+           }   
+          }
+                 
+        },
+        onMovet : function(event) {
+          if (event.targetTouches.length == 1) {
+           var touch = event.targetTouches[0];
+           x = touch.pageX - offsetX;
+           y = touch.pageY - offsetY;
+           if (this.dragging) {
+            this.objX = x + relX;
+            this.objY = y + relY;
+            this.drawRect();
+           }
+          }
+     
+        },
+        onUpt : function(e) {
         this.dragging = false;
         }
 
@@ -169,6 +198,12 @@ function addE(obj){
          canvas.addEventListener('mousedown', obj.onDown.bind(obj) , false);
          canvas.addEventListener('mousemove', obj.onMove.bind(obj) , false);
          canvas.addEventListener('mouseup', obj.onUp.bind(obj), false);
+
+         canvas.addEventListener('touchstart', obj.onDownt.bind(obj) , false);
+         canvas.addEventListener('touchmove', obj.onMovet.bind(obj) , false);
+         canvas.addEventListener('touchend', obj.onUpt.bind(obj), false);
+
+         document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
          }
 //********************************
 
