@@ -80,6 +80,7 @@
          canvas.addEventListener('mousemove', this.onMove.bind(this) , false);
          canvas.addEventListener('mouseup', this.onUp.bind(this), false);
          canvas.addEventListener('touchend', this.onUpt.bind(this), false);
+         canvas.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 
      }      
        Arrow.prototype = {
@@ -119,7 +120,7 @@
         }
         },
         onMovet : function(event) {
-          event.stopPropagation();
+          
           if (event.targetTouches.length == 1) {
              var touch = event.targetTouches[0];
              x = touch.pageX - offsetX;
