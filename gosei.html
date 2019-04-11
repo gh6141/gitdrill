@@ -106,6 +106,7 @@
            y = touch.pageY - offsetY;
           if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
            this.dragging = true;
+           document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
            relX = this.objX - x;
            relY = this.objY - y;
            }   
@@ -181,8 +182,8 @@
     
          ar1.getobj(ar2);
          ar2.getobj(ar1);
+
          
-         document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 
     </script>
   </body>
