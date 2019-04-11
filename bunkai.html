@@ -203,7 +203,7 @@ function addE(obj){
          canvas.addEventListener('touchmove', obj.onMovet.bind(obj) , false);
          canvas.addEventListener('touchend', obj.onUpt.bind(obj), false);
 
-         document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+         canvas.addEventListener("touchmove", function(e){e.preventDefault();}, false);
          }
 //********************************
 
