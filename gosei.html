@@ -82,7 +82,7 @@
          canvas.addEventListener('mousemove', this.onMove.bind(this) , false);
          canvas.addEventListener('mouseup', this.onUp.bind(this), false);
          canvas.addEventListener('touchend', this.onUpt.bind(this), false);
-         
+         document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 
      }      
        Arrow.prototype = {
@@ -106,7 +106,7 @@
            y = touch.pageY - offsetY;
           if (this.objX < x && (this.objX + objWidth) > x && this.objY < y && (this.objY + objHeight) > y) {
            this.dragging = true;
-           document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+           
            relX = this.objX - x;
            relY = this.objY - y;
            }   
