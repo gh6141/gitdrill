@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>canvas tutorial</title>
+    <style>
+      #canvas {
+        background: #DDD;
+      }
+    </style>
+  </head>
+  <body onLoad="init()">
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+
+    <script>
+      // ここにコードを書いていきます
+      var canvas = document.getElementById("canvas");
+      var context = canvas.getContext('2d');
+
+      
+      var objX, objY;
+      var objWidth, objHeight;
+
+      function init() {
+      // オブジェクトの大きさを定義
+        objWidth = 50;
+        objHeight = 50;
+
+        // オブジェクトの座標を定義(キャンバスの中央に表示)
+        objX = canvas.width / 2 ;
+        objY = canvas.height / 2 ;
+
+        // オブジェクトを描画
+         drawRect();
+        }
+
+
+
+
+//********************:
+var x, y, relX, relY;
+var dragging = false;
+
+function onDown(e) {
+  // キャンバスの左上端の座標を取得
+  var offsetX = canvas.getBoundingClientRect().left;
+  var offsetY = canvas.getBoundingClientRect().top;
+
+  // マウスが押された座標を取得
+  x = e.clientX - offsetX;
+  y = e.clientY - offsetY;
+
+  // オブジェクト上の座標かどうかを判定
+  if ((objX-objWidth/2) < x && (objX + objWidth/2) > x && (objY-objHeight/2) < y && (objY + objHeight/2) > y) {
+    dragging = true; // ドラッグ開始
+    relX = objX - x;
+    relY = objY - y;
+  }
+}
+
+
+
+//******************:
+function onMove(e) {
+  // キャンバスの左上端の座標を取得
+  var offsetX = canvas.getBoundingClientRect().left;
+  var offsetY = canvas.getBoundingClientRect().top;
+
+  // マウスが移動した先の座標を取得
+  x = e.clientX - offsetX;
+  y = e.clientY - offsetY;
+
+  // ドラッグが開始されていればオブジェクトの座標を更新して再描画
+  if (dragging) {
+    objX = x + relX;
+    objY = y + relY;
+    
+    drawRect();
+  }
+}
+
+function onUp(e) {
+  dragging = false; // ドラッグ終了
+}
+
+function drawRect() {
+
+ context.clearRect(0,0,canvas.width,canvas.height);
+ context.beginPath();//これが必要！！！!!!
+  context.arc( objX, objY, objWidth/2, 0 * Math.PI / 180, 360 * Math.PI / 180, false ) ;
+  context.fillStyle = 'rgb(0, 0, 256)'; 
+  context.fill();
+  context.font = "30px 'ＭＳ Ｐゴシック'";
+  context.strokeStyle = "white";
+  context.strokeText("H", objX-objWidth/5, objY+objHeight/5,);
+
+}
+
+canvas.addEventListener('mousedown', onDown, false);
+canvas.addEventListener('mousemove', onMove, false);
+canvas.addEventListener('mouseup', onUp, false);
+
+    </script>
+  </body>
+</html>
