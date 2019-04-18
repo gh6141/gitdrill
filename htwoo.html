@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <title>canvas tutorial</title>
@@ -12,94 +11,116 @@
   <body onLoad="init()">
     <canvas id="canvas" width="640" height="480"></canvas>
 
-
     <script>
       // ここにコードを書いていきます
       var canvas = document.getElementById("canvas");
       var context = canvas.getContext('2d');
 
-      
-      var objX, objY;
-      var objWidth, objHeight;
+/* インスタンス作成 */
+ function init(){
+   
+  var atom1 = new Atom('H',200,50);
 
-      function init() {
-      // オブジェクトの大きさを定義
-        objWidth = 50;
-        objHeight = 50;
+  var atom2 =new Atom('O',100,50);
+  
+
+  
+  //contextx.clearRect(0,0,canvas.width,canvas.height);
+ }
+
+      
+class Atom {
+
+     constructor(_name,xx,yy) {
+       this.name = _name;
+       
+  
+ 
+      this.x=0;
+      this.y=0;
+      this.relX=0;
+      this.relY=0;
+       this.dragging = false;
+
+        // オブジェクトの大きさを定義
+       this.objWidth = 50;
+       this.objHeight = 50;
 
         // オブジェクトの座標を定義(キャンバスの中央に表示)
-        objX = canvas.width / 2 ;
-        objY = canvas.height / 2 ;
+       this.objX = xx;
+       this.objY = yy ;
 
-        // オブジェクトを描画
-         drawRect();
-        }
+        canvas.addEventListener('mousedown',this.onDown, false);
+        canvas.addEventListener('mousemove', this.onMove, false);
+        canvas.addEventListener('mouseup', this.onUp, false);
+        
+         this.disp();
 
+       }
 
-
-
-//********************:
-var x, y, relX, relY;
-var dragging = false;
-
-function onDown(e) {
+  
+ 
+   onDown(e) {
   // キャンバスの左上端の座標を取得
   var offsetX = canvas.getBoundingClientRect().left;
   var offsetY = canvas.getBoundingClientRect().top;
 
   // マウスが押された座標を取得
-  x = e.clientX - offsetX;
-  y = e.clientY - offsetY;
+  this.x = e.clientX - offsetX;
+  this.y = e.clientY - offsetY;
 
+ // alert(this.x+'/'+this.y)
   // オブジェクト上の座標かどうかを判定
-  if ((objX-objWidth/2) < x && (objX + objWidth/2) > x && (objY-objHeight/2) < y && (objY + objHeight/2) > y) {
-    dragging = true; // ドラッグ開始
-    relX = objX - x;
-    relY = objY - y;
+   if ((this.objX-this.objWidth/2) < this.x && (this.objX + this.objWidth/2) > this.x && (this.objY-this.objHeight/2) < this.y && (this.objY + this.objHeight/2) > this.y) {
+    this.dragging = true; // ドラッグ開始
+    
+    this.relX = this.objX - this.x;
+    this.relY = this.objY - this.y;
+   }
+  
   }
-}
 
 
 
-//******************:
-function onMove(e) {
+ onMove(e) {
   // キャンバスの左上端の座標を取得
   var offsetX = canvas.getBoundingClientRect().left;
   var offsetY = canvas.getBoundingClientRect().top;
 
   // マウスが移動した先の座標を取得
-  x = e.clientX - offsetX;
-  y = e.clientY - offsetY;
+  this.x = e.clientX - offsetX;
+  this.y = e.clientY - offsetY;
 
   // ドラッグが開始されていればオブジェクトの座標を更新して再描画
-  if (dragging) {
-    objX = x + relX;
-    objY = y + relY;
+  if (this.dragging) {
+    this.objX = this.x + this.relX;
+    this.objY = this.y + this.relY;    
     
-    drawRect();
+    this.disp();
+    
   }
-}
+ }
 
-function onUp(e) {
-  dragging = false; // ドラッグ終了
-}
+ onUp(e) {
+  this.dragging = false; // ドラッグ終了
+ }
 
-function drawRect() {
+ disp() {
 
- context.clearRect(0,0,canvas.width,canvas.height);
- context.beginPath();//これが必要！！！!!!
-  context.arc( objX, objY, objWidth/2, 0 * Math.PI / 180, 360 * Math.PI / 180, false ) ;
+  context.beginPath();//これが必要！！！!!!
+  context.arc( this.objX, this.objY, this.objWidth/2, 0 * Math.PI / 180, 360 * Math.PI / 180, false ) ;
   context.fillStyle = 'rgb(0, 0, 256)'; 
   context.fill();
   context.font = "30px 'ＭＳ Ｐゴシック'";
   context.strokeStyle = "white";
-  context.strokeText("H", objX-objWidth/5, objY+objHeight/5,);
+  context.strokeText(this.name, this.objX-this.objWidth/5, this.objY+this.objHeight/5,);
+
+  }
 
 }
+ 
 
-canvas.addEventListener('mousedown', onDown, false);
-canvas.addEventListener('mousemove', onMove, false);
-canvas.addEventListener('mouseup', onUp, false);
+
 
     </script>
   </body>
