@@ -6,7 +6,7 @@ import Draggable.Events exposing (onClick, onDragBy, onDragStart)
 import Html exposing (Html)
 import Html.Attributes
 import Math.Vector2 as Vector2 exposing (Vec2, getX, getY)
-import Svg exposing (Svg)
+import Svg exposing (..)
 import Svg.Attributes as Attr
 import Svg.Events exposing (onMouseUp)
 import Svg.Keyed
@@ -229,18 +229,21 @@ boxView { id, position, clicked } =
             else
                 "lightblue"
     in
-    Svg.rect
-        [ num Attr.width <| getX boxSize
-        , num Attr.height <| getY boxSize
-        , num Attr.x (getX position)
-        , num Attr.y (getY position)
+    Svg.circle
+       [
+          num Attr.r <| getY boxSize
+        , num Attr.cx (getX position)
+        , num Attr.cy (getY position)
         , Attr.fill color
         , Attr.stroke "black"
         , Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging
-        ]
-        []
+       ]
+       []
+
+
+    
 
 
 background : Svg msg
