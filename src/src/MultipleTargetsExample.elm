@@ -241,7 +241,15 @@ boxView { id, position, clicked } =
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging
        ]
-       [text "a" ]
+       [Svg.text_ [
+           num Attr.x "40%"
+        , num Attr.y "40%"
+        
+        
+           ]
+         [Svg.text "a"] 
+           
+        ]
        
       
 
