@@ -230,27 +230,31 @@ boxView { id, position, clicked } =
                 "lightblue"
     in
     
-     Svg.circle
+     Svg.g
+     [     Attr.cursor "move"
+        , Draggable.mouseTrigger id DragMsg
+        , onMouseUp StopDragging]
+     [
+      Svg.circle
        [
           num Attr.r <| getY boxSize
         , num Attr.cx (getX position)
         , num Attr.cy (getY position)
         , Attr.fill color
         , Attr.stroke "black"
-        , Attr.cursor "move"
-        , Draggable.mouseTrigger id DragMsg
-        , onMouseUp StopDragging
+   
        ]
-       [Svg.text_ [
-           num Attr.x "40%"
-        , num Attr.y "40%"
-        
-        
-           ]
-         [Svg.text "a"] 
-           
-        ]
+       [ ]
+       ,
+       Svg.text_ [
+         num Attr.x (getX position)
+        , num Attr.y (getY position)
+         ,  Attr.stroke "black"
+             ]
+         [Svg.text "abcde"] 
        
+     ]
+     
       
 
     
