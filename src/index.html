@@ -7020,6 +7020,8 @@ var author$project$MultipleTargetsExample$num = F2(
 			elm$core$String$fromFloat(value));
 	});
 var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
 var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
 var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
@@ -7117,13 +7119,15 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 				author$project$MultipleTargetsExample$num,
 				elm$svg$Svg$Attributes$cy,
 				elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-				elm$svg$Svg$Attributes$fill(color),
 				elm$svg$Svg$Attributes$stroke('black'),
 				elm$svg$Svg$Attributes$cursor('move'),
 				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
 				elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
 			]),
-		_List_Nil);
+		_List_fromArray(
+			[
+				elm$svg$Svg$text('a')
+			]));
 };
 var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
 	return _VirtualDom_nodeNS(
@@ -7143,7 +7147,6 @@ var author$project$MultipleTargetsExample$boxesView = function (boxGroup) {
 };
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;

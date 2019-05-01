@@ -229,7 +229,8 @@ boxView { id, position, clicked } =
             else
                 "lightblue"
     in
-    Svg.circle
+    
+     Svg.circle
        [
           num Attr.r <| getY boxSize
         , num Attr.cx (getX position)
@@ -240,7 +241,16 @@ boxView { id, position, clicked } =
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging
        ]
-       []
+       [text "a" ]
+       
+      
+
+    
+    
+    
+    
+    
+ 
 
 
     
