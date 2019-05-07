@@ -5585,7 +5585,18 @@ var author$project$MultipleTargetsExample$addBox = F2(
 						author$project$MultipleTargetsExample$makeBox,
 						elm$core$String$fromInt(uid),
 						position,
-						'H'),
+						function () {
+							switch (uid) {
+								case 0:
+									return 'O';
+								case 1:
+									return 'H';
+								case 2:
+									return 'H';
+								default:
+									return '';
+							}
+						}()),
 					idleBoxes),
 				uid: uid + 1
 			});

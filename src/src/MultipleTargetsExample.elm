@@ -64,10 +64,17 @@ emptyGroup =
 
 addBox :  Vec2 -> BoxGroup  -> BoxGroup
 addBox position ({ uid, idleBoxes } as group)  =
-    { group
-        | idleBoxes = makeBox (String.fromInt uid) position "H" :: idleBoxes
+     { group
+        | idleBoxes = makeBox (String.fromInt uid) position 
+          ( case uid of
+            0 -> "O"
+            1 -> "H"
+            2 -> "H"
+            _ -> ""
+          )
+         :: idleBoxes
         , uid = uid + 1
-    }
+     }
 
 
 makeBoxGroup : List Vec2 -> BoxGroup
