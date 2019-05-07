@@ -5552,24 +5552,24 @@ var author$project$MultipleTargetsExample$boxPositions = function () {
 		elm$core$Basics$toFloat,
 		A2(
 			elm$core$Basics$composeR,
-			elm$core$Basics$mul(60),
+			elm$core$Basics$mul(100),
 			A2(
 				elm$core$Basics$composeR,
-				elm$core$Basics$add(10),
-				elm_explorations$linear_algebra$Math$Vector2$vec2(10))));
+				elm$core$Basics$add(60),
+				elm_explorations$linear_algebra$Math$Vector2$vec2(80))));
 	return A2(
 		elm$core$List$map,
 		indexToPosition,
-		A2(elm$core$List$range, 0, 10));
+		A2(elm$core$List$range, 0, 4));
 }();
-var author$project$MultipleTargetsExample$Box = F3(
-	function (id, position, clicked) {
-		return {clicked: clicked, id: id, position: position};
+var author$project$MultipleTargetsExample$Box = F4(
+	function (id, position, clicked, genso) {
+		return {clicked: clicked, genso: genso, id: id, position: position};
 	});
 var elm$core$Basics$False = {$: 'False'};
-var author$project$MultipleTargetsExample$makeBox = F2(
-	function (id, position) {
-		return A3(author$project$MultipleTargetsExample$Box, id, position, false);
+var author$project$MultipleTargetsExample$makeBox = F3(
+	function (id, position, genso) {
+		return A4(author$project$MultipleTargetsExample$Box, id, position, false, genso);
 	});
 var elm$core$String$fromInt = _String_fromNumber;
 var author$project$MultipleTargetsExample$addBox = F2(
@@ -5581,10 +5581,11 @@ var author$project$MultipleTargetsExample$addBox = F2(
 			{
 				idleBoxes: A2(
 					elm$core$List$cons,
-					A2(
+					A3(
 						author$project$MultipleTargetsExample$makeBox,
 						elm$core$String$fromInt(uid),
-						position),
+						position,
+						'H'),
 					idleBoxes),
 				uid: uid + 1
 			});
@@ -7027,6 +7028,7 @@ var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
 var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
 var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -7104,6 +7106,7 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 	var id = _n0.id;
 	var position = _n0.position;
 	var clicked = _n0.clicked;
+	var genso = _n0.genso;
 	var color = clicked ? 'red' : 'lightblue';
 	return A2(
 		elm$svg$Svg$g,
@@ -7142,16 +7145,17 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 						A2(
 						author$project$MultipleTargetsExample$num,
 						elm$svg$Svg$Attributes$x,
-						elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+						elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
 						A2(
 						author$project$MultipleTargetsExample$num,
 						elm$svg$Svg$Attributes$y,
-						elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-						elm$svg$Svg$Attributes$stroke('black')
+						elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
+						elm$svg$Svg$Attributes$stroke('black'),
+						elm$svg$Svg$Attributes$fontSize('36pt')
 					]),
 				_List_fromArray(
 					[
-						elm$svg$Svg$text('abcde')
+						elm$svg$Svg$text(genso)
 					]))
 			]));
 };

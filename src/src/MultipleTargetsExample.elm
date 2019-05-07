@@ -27,6 +27,7 @@ type alias Box =
     { id : Id
     , position : Vec2
     , clicked : Bool
+    , genso: String
     }
 
 
@@ -34,9 +35,9 @@ type alias Id =
     String
 
 
-makeBox : Id -> Vec2 -> Box
-makeBox id position =
-    Box id position False
+makeBox : Id -> Vec2 -> String -> Box
+makeBox id position genso =
+    Box id position False genso
 
 
 dragBoxBy : Vec2 -> Box -> Box
@@ -61,10 +62,10 @@ emptyGroup =
     BoxGroup 0 Nothing []
 
 
-addBox : Vec2 -> BoxGroup -> BoxGroup
-addBox position ({ uid, idleBoxes } as group) =
+addBox :  Vec2 -> BoxGroup  -> BoxGroup
+addBox position ({ uid, idleBoxes } as group)  =
     { group
-        | idleBoxes = makeBox (String.fromInt uid) position :: idleBoxes
+        | idleBoxes = makeBox (String.fromInt uid) position "H" :: idleBoxes
         , uid = uid + 1
     }
 
@@ -138,9 +139,9 @@ boxPositions : List Vec2
 boxPositions =
     let
         indexToPosition =
-            toFloat >> (*) 60 >> (+) 10 >> Vector2.vec2 10
+            toFloat >> (*) 100 >> (+) 60 >> Vector2.vec2 80
     in
-    List.range 0 10 |> List.map indexToPosition
+    List.range 0 4 |> List.map indexToPosition
 
 
 init : flags -> ( Model, Cmd Msg )
@@ -220,7 +221,7 @@ boxesView boxGroup =
 
 
 boxView : Box -> Svg Msg
-boxView { id, position, clicked } =
+boxView { id, position, clicked ,genso} =
     let
         color =
             if clicked then
@@ -247,11 +248,12 @@ boxView { id, position, clicked } =
        [ ]
        ,
        Svg.text_ [
-         num Attr.x (getX position)
-        , num Attr.y (getY position)
+         num Attr.x (getX position-18)
+        , num Attr.y (getY position+18)
          ,  Attr.stroke "black"
+         , Attr.fontSize "36pt"
              ]
-         [Svg.text "abcde"] 
+         [Svg.text genso] 
        
      ]
      
