@@ -22,12 +22,17 @@ main =
         , view = view
         }
 
+type alias Genso =
+    {
+     gensoname: String
+    , size : String
+    }
 
 type alias Box =
     { id : Id
     , position : Vec2
     , clicked : Bool
-    , genso: String
+    , genso: Genso
     }
 
 
@@ -35,7 +40,7 @@ type alias Id =
     String
 
 
-makeBox : Id -> Vec2 -> String -> Box
+makeBox : Id -> Vec2 -> Genso -> Box
 makeBox id position genso =
     Box id position False genso
 
@@ -67,10 +72,10 @@ addBox position ({ uid, idleBoxes } as group)  =
      { group
         | idleBoxes = makeBox (String.fromInt uid) position 
           ( case uid of
-            0 -> "O"
-            1 -> "H"
-            2 -> "H"
-            _ -> ""
+            0 -> { gensoname = "O" , size = "50" }
+            1 -> { gensoname = "H" , size = "40" }
+            2 -> { gensoname = "H" , size = "40"}
+            _ -> { gensoname = "" , size ="0" }
           )
          :: idleBoxes
         , uid = uid + 1
@@ -208,7 +213,7 @@ view { boxGroup } =
         []
         [ Html.p
             [ Html.Attributes.style "padding-left" "8px" ]
-            [ Html.text "Drag any box around. Click it to toggle its color." ]
+            [ Html.text "Drag any Atom . Click it to toggle its color." ]
         , Svg.svg
             [ Attr.style "height: 100vh; width: 100vw; position: fixed;"
             ]
@@ -245,7 +250,7 @@ boxView { id, position, clicked ,genso} =
      [
       Svg.circle
        [
-          num Attr.r <| getY boxSize
+          Attr.r genso.size
         , num Attr.cx (getX position)
         , num Attr.cy (getY position)
         , Attr.fill color
@@ -260,7 +265,7 @@ boxView { id, position, clicked ,genso} =
          ,  Attr.stroke "black"
          , Attr.fontSize "36pt"
              ]
-         [Svg.text genso] 
+         [Svg.text genso.gensoname] 
        
      ]
      

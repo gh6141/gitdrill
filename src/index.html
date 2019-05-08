@@ -5588,13 +5588,13 @@ var author$project$MultipleTargetsExample$addBox = F2(
 						function () {
 							switch (uid) {
 								case 0:
-									return 'O';
+									return {gensoname: 'O', size: '50'};
 								case 1:
-									return 'H';
+									return {gensoname: 'H', size: '40'};
 								case 2:
-									return 'H';
+									return {gensoname: 'H', size: '40'};
 								default:
-									return '';
+									return {gensoname: '', size: '0'};
 							}
 						}()),
 					idleBoxes),
@@ -7024,7 +7024,6 @@ var author$project$MultipleTargetsExample$background = A2(
 		]),
 	_List_Nil);
 var author$project$MultipleTargetsExample$StopDragging = {$: 'StopDragging'};
-var author$project$MultipleTargetsExample$boxSize = A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 50, 50);
 var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$MultipleTargetsExample$num = F2(
 	function (attr, value) {
@@ -7133,10 +7132,7 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 				elm$svg$Svg$circle,
 				_List_fromArray(
 					[
-						A2(
-						author$project$MultipleTargetsExample$num,
-						elm$svg$Svg$Attributes$r,
-						elm_explorations$linear_algebra$Math$Vector2$getY(author$project$MultipleTargetsExample$boxSize)),
+						elm$svg$Svg$Attributes$r(genso.size),
 						A2(
 						author$project$MultipleTargetsExample$num,
 						elm$svg$Svg$Attributes$cx,
@@ -7166,7 +7162,7 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 					]),
 				_List_fromArray(
 					[
-						elm$svg$Svg$text(genso)
+						elm$svg$Svg$text(genso.gensoname)
 					]))
 			]));
 };
