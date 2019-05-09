@@ -5562,14 +5562,14 @@ var author$project$MultipleTargetsExample$boxPositions = function () {
 		indexToPosition,
 		A2(elm$core$List$range, 0, 4));
 }();
-var author$project$MultipleTargetsExample$Box = F4(
-	function (id, position, clicked, genso) {
-		return {clicked: clicked, genso: genso, id: id, position: position};
+var author$project$MultipleTargetsExample$Box = F5(
+	function (id, position, clicked, genso, bunsi) {
+		return {bunsi: bunsi, clicked: clicked, genso: genso, id: id, position: position};
 	});
 var elm$core$Basics$False = {$: 'False'};
-var author$project$MultipleTargetsExample$makeBox = F3(
-	function (id, position, genso) {
-		return A4(author$project$MultipleTargetsExample$Box, id, position, false, genso);
+var author$project$MultipleTargetsExample$makeBox = F4(
+	function (id, position, genso, bunsi) {
+		return A5(author$project$MultipleTargetsExample$Box, id, position, false, genso, bunsi);
 	});
 var elm$core$String$fromInt = _String_fromNumber;
 var author$project$MultipleTargetsExample$addBox = F2(
@@ -5581,7 +5581,7 @@ var author$project$MultipleTargetsExample$addBox = F2(
 			{
 				idleBoxes: A2(
 					elm$core$List$cons,
-					A3(
+					A4(
 						author$project$MultipleTargetsExample$makeBox,
 						elm$core$String$fromInt(uid),
 						position,
@@ -5596,7 +5596,8 @@ var author$project$MultipleTargetsExample$addBox = F2(
 								default:
 									return {gensoname: '', size: '0'};
 							}
-						}()),
+						}(),
+						elm$core$Maybe$Nothing),
 					idleBoxes),
 				uid: uid + 1
 			});
@@ -7204,7 +7205,7 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text('Drag any box around. Click it to toggle its color.')
+						elm$html$Html$text('Drag any Atom . Click it to toggle its color.')
 					])),
 				A2(
 				elm$svg$Svg$svg,

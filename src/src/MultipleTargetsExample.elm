@@ -28,11 +28,18 @@ type alias Genso =
     , size : String
     }
 
+type alias Bunsi =
+    {
+        listgensi : List String
+      , listpositon : List Vec2
+    }
+
 type alias Box =
     { id : Id
     , position : Vec2
     , clicked : Bool
     , genso: Genso
+    , bunsi: Maybe Bunsi
     }
 
 
@@ -40,9 +47,9 @@ type alias Id =
     String
 
 
-makeBox : Id -> Vec2 -> Genso -> Box
-makeBox id position genso =
-    Box id position False genso
+makeBox : Id -> Vec2 -> Genso -> Maybe Bunsi-> Box
+makeBox id position genso bunsi =
+    Box id position False genso bunsi
 
 
 dragBoxBy : Vec2 -> Box -> Box
@@ -72,11 +79,11 @@ addBox position ({ uid, idleBoxes } as group)  =
      { group
         | idleBoxes = makeBox (String.fromInt uid) position 
           ( case uid of
-            0 -> { gensoname = "O" , size = "50" }
-            1 -> { gensoname = "H" , size = "40" }
-            2 -> { gensoname = "H" , size = "40"}
-            _ -> { gensoname = "" , size ="0" }
-          )
+            0 -> { gensoname = "O" , size = "50" } 
+            1 -> { gensoname = "H" , size = "40" }  
+            2 -> { gensoname = "H" , size = "40"} 
+            _ -> { gensoname = "" , size ="0" } 
+          ) Nothing
          :: idleBoxes
         , uid = uid + 1
      }
