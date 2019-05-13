@@ -79,7 +79,7 @@ addBox position ({ uid, idleBoxes } as group)  =
             0 -> { gensoname = "O" , size = "50" , bunsi=Nothing } 
             1 -> { gensoname = "H" , size = "40" , bunsi=Nothing }  
             2 -> { gensoname = "H" , size = "40" , bunsi=Nothing } 
-            _ -> { gensoname = "H2O" , size ="40" ,bunsi =Just "H2"} 
+            _ -> { gensoname = "H2" , size ="40" ,bunsi =Just "H2"} 
           ) 
          :: idleBoxes
         , uid = uid + 1
@@ -235,93 +235,51 @@ boxesView boxGroup =
         |> List.map boxView
         |> Svg.node "g" []
 
-
+circlecreate : Vec2 -> (Float,Float) -> Genso -> List (Svg Msg)
+circlecreate position (dx,dy) genso =
+      [
+        Svg.circle
+        [
+          Attr.r genso.size
+        , num Attr.cx (getX position +dx)
+        , num Attr.cy (getY position +dy)
+        , Attr.fill "blue"
+        , Attr.stroke "black"
+   
+        ]
+        [ ]
+        ,
+        Svg.text_ [
+         num Attr.x (getX position)
+        , num Attr.y (getY position)
+         ,  Attr.stroke "black"
+         , Attr.fontSize "36pt"
+        ]
+         [Svg.text genso.gensoname] 
+      ]
 boxView : Box -> Svg Msg
 boxView { id, position, clicked ,genso} =
-    let
-        color =
-            if clicked then
-                "red"
-
-            else
-                "lightblue"
-    in
+   
     
-     case genso.bunsi of 
-      Nothing -> 
+     
        Svg.g
        [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging]
-       [
-        Svg.circle
-        [
-          Attr.r genso.size
-        , num Attr.cx (getX position)
-        , num Attr.cy (getY position)
-        , Attr.fill color
-        , Attr.stroke "black"
-   
-        ]
-        [ ]
-        ,
-        Svg.text_ [
-         num Attr.x (getX position-18)
-        , num Attr.y (getY position+18)
-         ,  Attr.stroke "black"
-         , Attr.fontSize "36pt"
-        ]
-         [Svg.text genso.gensoname] 
-       ]
-      
-      
-      Just bnsi -> 
-       Svg.g
-       [     Attr.cursor "move"
-        , Draggable.mouseTrigger id DragMsg
-        , onMouseUp StopDragging]
-       [
-        Svg.circle
-        [
-          Attr.r genso.size
-        , num Attr.cx (getX position)
-        , num Attr.cy (getY position)
-        , Attr.fill color
-        , Attr.stroke "black"
-   
-        ]
-        [ ]
-        ,
-        Svg.text_ [
-         num Attr.x (getX position-18)
-        , num Attr.y (getY position+18)
-         ,  Attr.stroke "black"
-         , Attr.fontSize "36pt"
-        ]
-         [Svg.text genso.gensoname] 
-
-        ,
-        Svg.circle
-        [
-          Attr.r genso.size
-        , num Attr.cx (getX position+10)
-        , num Attr.cy (getY position+10)
-        , Attr.fill color
-        , Attr.stroke "black"
-   
-        ]
-        [ ]
-        ,
-        Svg.text_ [
-         num Attr.x (getX position-18)
-        , num Attr.y (getY position+18)
-         ,  Attr.stroke "black"
-         , Attr.fontSize "36pt"
-        ]
-         [Svg.text genso.gensoname] 
+        (
+        case genso.bunsi of 
+            Nothing ->              
+             (circlecreate position (0.0,0.0) genso) 
+          
+            Just bnsi ->              
+             (circlecreate position (0.0,0.0) genso) 
+             ++(circlecreate position (80.0,0.0) genso) 
+            
+           
+        )
 
 
-       ]
+       
         
      
     

@@ -5596,7 +5596,7 @@ var author$project$MultipleTargetsExample$addBox = F2(
 								default:
 									return {
 										bunsi: elm$core$Maybe$Just('H2'),
-										gensoname: 'H2O',
+										gensoname: 'H2',
 										size: '40'
 									};
 							}
@@ -7035,16 +7035,62 @@ var author$project$MultipleTargetsExample$num = F2(
 			elm$core$String$fromFloat(value));
 	});
 var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
-var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
 var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
-var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
 var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
+var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
+var author$project$MultipleTargetsExample$circlecreate = F3(
+	function (position, _n0, genso) {
+		var dx = _n0.a;
+		var dy = _n0.b;
+		return _List_fromArray(
+			[
+				A2(
+				elm$svg$Svg$circle,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$r(genso.size),
+						A2(
+						author$project$MultipleTargetsExample$num,
+						elm$svg$Svg$Attributes$cx,
+						elm_explorations$linear_algebra$Math$Vector2$getX(position) + dx),
+						A2(
+						author$project$MultipleTargetsExample$num,
+						elm$svg$Svg$Attributes$cy,
+						elm_explorations$linear_algebra$Math$Vector2$getY(position) + dy),
+						elm$svg$Svg$Attributes$fill('blue'),
+						elm$svg$Svg$Attributes$stroke('black')
+					]),
+				_List_Nil),
+				A2(
+				elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						A2(
+						author$project$MultipleTargetsExample$num,
+						elm$svg$Svg$Attributes$x,
+						elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+						A2(
+						author$project$MultipleTargetsExample$num,
+						elm$svg$Svg$Attributes$y,
+						elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+						elm$svg$Svg$Attributes$stroke('black'),
+						elm$svg$Svg$Attributes$fontSize('36pt')
+					]),
+				_List_fromArray(
+					[
+						elm$svg$Svg$text(genso.gensoname)
+					]))
+			]);
+	});
+var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
+var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7062,8 +7108,6 @@ var elm$svg$Svg$Events$onMouseUp = function (msg) {
 		'mouseup',
 		elm$json$Json$Decode$succeed(msg));
 };
-var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
-var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
 var elm$virtual_dom$VirtualDom$Custom = function (a) {
 	return {$: 'Custom', a: a};
 };
@@ -7121,142 +7165,37 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 	var position = _n0.position;
 	var clicked = _n0.clicked;
 	var genso = _n0.genso;
-	var color = clicked ? 'red' : 'lightblue';
-	var _n1 = genso.bunsi;
-	if (_n1.$ === 'Nothing') {
-		return A2(
-			elm$svg$Svg$g,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$cursor('move'),
-					A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
-					elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$r(genso.size),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cx,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position)),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cy,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-							elm$svg$Svg$Attributes$fill(color),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$text_,
-					_List_fromArray(
-						[
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$x,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$y,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
-							elm$svg$Svg$Attributes$stroke('black'),
-							elm$svg$Svg$Attributes$fontSize('36pt')
-						]),
-					_List_fromArray(
-						[
-							elm$svg$Svg$text(genso.gensoname)
-						]))
-				]));
-	} else {
-		var bnsi = _n1.a;
-		return A2(
-			elm$svg$Svg$g,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$cursor('move'),
-					A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
-					elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$r(genso.size),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cx,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position)),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cy,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-							elm$svg$Svg$Attributes$fill(color),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$text_,
-					_List_fromArray(
-						[
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$x,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$y,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
-							elm$svg$Svg$Attributes$stroke('black'),
-							elm$svg$Svg$Attributes$fontSize('36pt')
-						]),
-					_List_fromArray(
-						[
-							elm$svg$Svg$text(genso.gensoname)
-						])),
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$r(genso.size),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cx,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position) + 10),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cy,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 10),
-							elm$svg$Svg$Attributes$fill(color),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$text_,
-					_List_fromArray(
-						[
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$x,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$y,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
-							elm$svg$Svg$Attributes$stroke('black'),
-							elm$svg$Svg$Attributes$fontSize('36pt')
-						]),
-					_List_fromArray(
-						[
-							elm$svg$Svg$text(genso.gensoname)
-						]))
-				]));
-	}
+	return A2(
+		elm$svg$Svg$g,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$cursor('move'),
+				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
+				elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
+			]),
+		function () {
+			var _n1 = genso.bunsi;
+			if (_n1.$ === 'Nothing') {
+				return A3(
+					author$project$MultipleTargetsExample$circlecreate,
+					position,
+					_Utils_Tuple2(0.0, 0.0),
+					genso);
+			} else {
+				var bnsi = _n1.a;
+				return _Utils_ap(
+					A3(
+						author$project$MultipleTargetsExample$circlecreate,
+						position,
+						_Utils_Tuple2(0.0, 0.0),
+						genso),
+					A3(
+						author$project$MultipleTargetsExample$circlecreate,
+						position,
+						_Utils_Tuple2(80.0, 0.0),
+						genso));
+			}
+		}());
 };
 var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
 	return _VirtualDom_nodeNS(
