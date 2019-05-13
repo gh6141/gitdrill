@@ -26,20 +26,17 @@ type alias Genso =
     {
      gensoname: String
     , size : String
+    , bunsi : Maybe String
     }
 
-type alias Bunsi =
-    {
-        listgensi : List String
-      , listpositon : List Vec2
-    }
+
 
 type alias Box =
     { id : Id
     , position : Vec2
     , clicked : Bool
     , genso: Genso
-    , bunsi: Maybe Bunsi
+    
     }
 
 
@@ -47,9 +44,9 @@ type alias Id =
     String
 
 
-makeBox : Id -> Vec2 -> Genso -> Maybe Bunsi-> Box
-makeBox id position genso bunsi =
-    Box id position False genso bunsi
+makeBox : Id -> Vec2 -> Genso -> Box
+makeBox id position genso  =
+    Box id position False genso 
 
 
 dragBoxBy : Vec2 -> Box -> Box
@@ -79,11 +76,11 @@ addBox position ({ uid, idleBoxes } as group)  =
      { group
         | idleBoxes = makeBox (String.fromInt uid) position 
           ( case uid of
-            0 -> { gensoname = "O" , size = "50" } 
-            1 -> { gensoname = "H" , size = "40" }  
-            2 -> { gensoname = "H" , size = "40"} 
-            _ -> { gensoname = "" , size ="0" } 
-          ) Nothing
+            0 -> { gensoname = "O" , size = "50" , bunsi=Nothing } 
+            1 -> { gensoname = "H" , size = "40" , bunsi=Nothing }  
+            2 -> { gensoname = "H" , size = "40" , bunsi=Nothing } 
+            _ -> { gensoname = "H2O" , size ="40" ,bunsi =Just "H2"} 
+          ) 
          :: idleBoxes
         , uid = uid + 1
      }
@@ -250,42 +247,83 @@ boxView { id, position, clicked ,genso} =
                 "lightblue"
     in
     
-     Svg.g
-     [     Attr.cursor "move"
+     case genso.bunsi of 
+      Nothing -> 
+       Svg.g
+       [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging]
-     [
-      Svg.circle
        [
+        Svg.circle
+        [
           Attr.r genso.size
         , num Attr.cx (getX position)
         , num Attr.cy (getY position)
         , Attr.fill color
         , Attr.stroke "black"
    
-       ]
-       [ ]
-       ,
-       Svg.text_ [
+        ]
+        [ ]
+        ,
+        Svg.text_ [
          num Attr.x (getX position-18)
         , num Attr.y (getY position+18)
          ,  Attr.stroke "black"
          , Attr.fontSize "36pt"
-             ]
+        ]
          [Svg.text genso.gensoname] 
-       
-     ]
-     
+       ]
       
+      
+      Just bnsi -> 
+       Svg.g
+       [     Attr.cursor "move"
+        , Draggable.mouseTrigger id DragMsg
+        , onMouseUp StopDragging]
+       [
+        Svg.circle
+        [
+          Attr.r genso.size
+        , num Attr.cx (getX position)
+        , num Attr.cy (getY position)
+        , Attr.fill color
+        , Attr.stroke "black"
+   
+        ]
+        [ ]
+        ,
+        Svg.text_ [
+         num Attr.x (getX position-18)
+        , num Attr.y (getY position+18)
+         ,  Attr.stroke "black"
+         , Attr.fontSize "36pt"
+        ]
+         [Svg.text genso.gensoname] 
 
-    
-    
-    
-    
-    
- 
+        ,
+        Svg.circle
+        [
+          Attr.r genso.size
+        , num Attr.cx (getX position+10)
+        , num Attr.cy (getY position+10)
+        , Attr.fill color
+        , Attr.stroke "black"
+   
+        ]
+        [ ]
+        ,
+        Svg.text_ [
+         num Attr.x (getX position-18)
+        , num Attr.y (getY position+18)
+         ,  Attr.stroke "black"
+         , Attr.fontSize "36pt"
+        ]
+         [Svg.text genso.gensoname] 
 
 
+       ]
+        
+     
     
 
 

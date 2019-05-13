@@ -5562,14 +5562,14 @@ var author$project$MultipleTargetsExample$boxPositions = function () {
 		indexToPosition,
 		A2(elm$core$List$range, 0, 4));
 }();
-var author$project$MultipleTargetsExample$Box = F5(
-	function (id, position, clicked, genso, bunsi) {
-		return {bunsi: bunsi, clicked: clicked, genso: genso, id: id, position: position};
+var author$project$MultipleTargetsExample$Box = F4(
+	function (id, position, clicked, genso) {
+		return {clicked: clicked, genso: genso, id: id, position: position};
 	});
 var elm$core$Basics$False = {$: 'False'};
-var author$project$MultipleTargetsExample$makeBox = F4(
-	function (id, position, genso, bunsi) {
-		return A5(author$project$MultipleTargetsExample$Box, id, position, false, genso, bunsi);
+var author$project$MultipleTargetsExample$makeBox = F3(
+	function (id, position, genso) {
+		return A4(author$project$MultipleTargetsExample$Box, id, position, false, genso);
 	});
 var elm$core$String$fromInt = _String_fromNumber;
 var author$project$MultipleTargetsExample$addBox = F2(
@@ -5581,23 +5581,26 @@ var author$project$MultipleTargetsExample$addBox = F2(
 			{
 				idleBoxes: A2(
 					elm$core$List$cons,
-					A4(
+					A3(
 						author$project$MultipleTargetsExample$makeBox,
 						elm$core$String$fromInt(uid),
 						position,
 						function () {
 							switch (uid) {
 								case 0:
-									return {gensoname: 'O', size: '50'};
+									return {bunsi: elm$core$Maybe$Nothing, gensoname: 'O', size: '50'};
 								case 1:
-									return {gensoname: 'H', size: '40'};
+									return {bunsi: elm$core$Maybe$Nothing, gensoname: 'H', size: '40'};
 								case 2:
-									return {gensoname: 'H', size: '40'};
+									return {bunsi: elm$core$Maybe$Nothing, gensoname: 'H', size: '40'};
 								default:
-									return {gensoname: '', size: '0'};
+									return {
+										bunsi: elm$core$Maybe$Just('H2'),
+										gensoname: 'H2O',
+										size: '40'
+									};
 							}
-						}(),
-						elm$core$Maybe$Nothing),
+						}()),
 					idleBoxes),
 				uid: uid + 1
 			});
@@ -7119,53 +7122,141 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 	var clicked = _n0.clicked;
 	var genso = _n0.genso;
 	var color = clicked ? 'red' : 'lightblue';
-	return A2(
-		elm$svg$Svg$g,
-		_List_fromArray(
-			[
-				elm$svg$Svg$Attributes$cursor('move'),
-				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
-				elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$svg$Svg$circle,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$r(genso.size),
-						A2(
-						author$project$MultipleTargetsExample$num,
-						elm$svg$Svg$Attributes$cx,
-						elm_explorations$linear_algebra$Math$Vector2$getX(position)),
-						A2(
-						author$project$MultipleTargetsExample$num,
-						elm$svg$Svg$Attributes$cy,
-						elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-						elm$svg$Svg$Attributes$fill(color),
-						elm$svg$Svg$Attributes$stroke('black')
-					]),
-				_List_Nil),
-				A2(
-				elm$svg$Svg$text_,
-				_List_fromArray(
-					[
-						A2(
-						author$project$MultipleTargetsExample$num,
-						elm$svg$Svg$Attributes$x,
-						elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
-						A2(
-						author$project$MultipleTargetsExample$num,
-						elm$svg$Svg$Attributes$y,
-						elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
-						elm$svg$Svg$Attributes$stroke('black'),
-						elm$svg$Svg$Attributes$fontSize('36pt')
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text(genso.gensoname)
-					]))
-			]));
+	var _n1 = genso.bunsi;
+	if (_n1.$ === 'Nothing') {
+		return A2(
+			elm$svg$Svg$g,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$cursor('move'),
+					A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
+					elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$r(genso.size),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$cx,
+							elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$cy,
+							elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+							elm$svg$Svg$Attributes$fill(color),
+							elm$svg$Svg$Attributes$stroke('black')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$text_,
+					_List_fromArray(
+						[
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$x,
+							elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$y,
+							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
+							elm$svg$Svg$Attributes$stroke('black'),
+							elm$svg$Svg$Attributes$fontSize('36pt')
+						]),
+					_List_fromArray(
+						[
+							elm$svg$Svg$text(genso.gensoname)
+						]))
+				]));
+	} else {
+		var bnsi = _n1.a;
+		return A2(
+			elm$svg$Svg$g,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$cursor('move'),
+					A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
+					elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$r(genso.size),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$cx,
+							elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$cy,
+							elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+							elm$svg$Svg$Attributes$fill(color),
+							elm$svg$Svg$Attributes$stroke('black')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$text_,
+					_List_fromArray(
+						[
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$x,
+							elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$y,
+							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
+							elm$svg$Svg$Attributes$stroke('black'),
+							elm$svg$Svg$Attributes$fontSize('36pt')
+						]),
+					_List_fromArray(
+						[
+							elm$svg$Svg$text(genso.gensoname)
+						])),
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$r(genso.size),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$cx,
+							elm_explorations$linear_algebra$Math$Vector2$getX(position) + 10),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$cy,
+							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 10),
+							elm$svg$Svg$Attributes$fill(color),
+							elm$svg$Svg$Attributes$stroke('black')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$text_,
+					_List_fromArray(
+						[
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$x,
+							elm_explorations$linear_algebra$Math$Vector2$getX(position) - 18),
+							A2(
+							author$project$MultipleTargetsExample$num,
+							elm$svg$Svg$Attributes$y,
+							elm_explorations$linear_algebra$Math$Vector2$getY(position) + 18),
+							elm$svg$Svg$Attributes$stroke('black'),
+							elm$svg$Svg$Attributes$fontSize('36pt')
+						]),
+					_List_fromArray(
+						[
+							elm$svg$Svg$text(genso.gensoname)
+						]))
+				]));
+	}
 };
 var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
 	return _VirtualDom_nodeNS(
