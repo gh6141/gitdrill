@@ -146,6 +146,7 @@ toggleBoxClicked id group =
 type alias Model =
     { boxGroup : BoxGroup
     , drag : Draggable.State Id
+    , notify : String
     }
 
 
@@ -160,7 +161,7 @@ type Msg
 boxPositions : List Vec2
 boxPositions =
     let
-        indexToPosition = ( \ii -> Vector2.vec2  ((toFloat ii)*250+60)  400)
+        indexToPosition = ( \ii -> Vector2.vec2  ((toFloat ii)*250+60)  500)
            -- toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
     in
     List.range 0 4 |> List.map indexToPosition
@@ -170,6 +171,7 @@ init : flags -> ( Model, Cmd Msg )
 init _ =
     ( { boxGroup = makeBoxGroup boxPositions
       , drag = Draggable.init
+      , notify=""
       }
     , Cmd.none
     )
@@ -194,7 +196,7 @@ update msg ({ boxGroup } as model) =
             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
 
         StopDragging ->
-            ( { model | boxGroup = boxGroup |> stopDragging }, Cmd.none )
+            ( { model | boxGroup = boxGroup |> stopDragging , notify = "stop"}, Cmd.none )
 
         ToggleBoxClicked id ->
             ( { model | boxGroup = boxGroup |> toggleBoxClicked id }, Cmd.none )
@@ -218,7 +220,7 @@ boxSize =
 
 
 view : Model -> Html Msg
-view { boxGroup } =
+view { boxGroup,notify } =
     Html.div
         []
         [ Html.p
@@ -229,7 +231,7 @@ view { boxGroup } =
             ]
             [ background
             , boxesView boxGroup
-            , waku boxGroup
+            , waku boxGroup notify
             ]
         ]
 
@@ -295,8 +297,8 @@ background =
         ]
         []
 
-waku : BoxGroup -> Svg msg
-waku boxGroup =
+waku : BoxGroup -> String -> Svg msg
+waku boxGroup notify =
    Svg.g []
     [
      moji "50" "50" "水"
@@ -304,20 +306,21 @@ waku boxGroup =
        [ Attr.x "0"
        , Attr.y "0"
        , Attr.width "350"
-       , Attr.height "50%"
+       , Attr.height "400"
        , Attr.fill "none"
        , Attr.stroke "black"
        ]
        []
     ,
      moji "380" "200" "→"
+     ,moji "110" "110" notify
      ,
      moji "500" "50" "水素"
     ,Svg.rect
        [ Attr.x "450"
        , Attr.y "0"
        , Attr.width "350"
-       , Attr.height "50%"
+       , Attr.height "400"
        , Attr.fill "none"
        , Attr.stroke "black"
        ]
@@ -330,7 +333,7 @@ waku boxGroup =
        [ Attr.x "900"
        , Attr.y "0"
        , Attr.width "350"
-       , Attr.height "50%"
+       , Attr.height "400"
        , Attr.fill "none"
        , Attr.stroke "black"
        ]

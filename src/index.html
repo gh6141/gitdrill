@@ -5543,7 +5543,7 @@ var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var author$project$MultipleTargetsExample$boxPositions = function () {
 	var indexToPosition = function (ii) {
-		return A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 400);
+		return A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 500);
 	};
 	return A2(
 		elm$core$List$map,
@@ -6021,7 +6021,8 @@ var author$project$MultipleTargetsExample$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			boxGroup: author$project$MultipleTargetsExample$makeBoxGroup(author$project$MultipleTargetsExample$boxPositions),
-			drag: zaboco$elm_draggable$Draggable$init
+			drag: zaboco$elm_draggable$Draggable$init,
+			notify: ''
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -7055,7 +7056,8 @@ var author$project$MultipleTargetsExample$update = F2(
 					_Utils_update(
 						model,
 						{
-							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup)
+							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup),
+							notify: 'stop'
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'ToggleBoxClicked':
@@ -7291,55 +7293,57 @@ var author$project$MultipleTargetsExample$moji = F3(
 					elm$svg$Svg$text(txt)
 				]));
 	});
-var author$project$MultipleTargetsExample$waku = function (boxGroup) {
-	return A2(
-		elm$svg$Svg$g,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A3(author$project$MultipleTargetsExample$moji, '50', '50', '水'),
-				A2(
-				elm$svg$Svg$rect,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x('0'),
-						elm$svg$Svg$Attributes$y('0'),
-						elm$svg$Svg$Attributes$width('350'),
-						elm$svg$Svg$Attributes$height('50%'),
-						elm$svg$Svg$Attributes$fill('none'),
-						elm$svg$Svg$Attributes$stroke('black')
-					]),
-				_List_Nil),
-				A3(author$project$MultipleTargetsExample$moji, '380', '200', '→'),
-				A3(author$project$MultipleTargetsExample$moji, '500', '50', '水素'),
-				A2(
-				elm$svg$Svg$rect,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x('450'),
-						elm$svg$Svg$Attributes$y('0'),
-						elm$svg$Svg$Attributes$width('350'),
-						elm$svg$Svg$Attributes$height('50%'),
-						elm$svg$Svg$Attributes$fill('none'),
-						elm$svg$Svg$Attributes$stroke('black')
-					]),
-				_List_Nil),
-				A3(author$project$MultipleTargetsExample$moji, '820', '200', '+'),
-				A3(author$project$MultipleTargetsExample$moji, '950', '50', '酸素'),
-				A2(
-				elm$svg$Svg$rect,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x('900'),
-						elm$svg$Svg$Attributes$y('0'),
-						elm$svg$Svg$Attributes$width('350'),
-						elm$svg$Svg$Attributes$height('50%'),
-						elm$svg$Svg$Attributes$fill('none'),
-						elm$svg$Svg$Attributes$stroke('black')
-					]),
-				_List_Nil)
-			]));
-};
+var author$project$MultipleTargetsExample$waku = F2(
+	function (boxGroup, notify) {
+		return A2(
+			elm$svg$Svg$g,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A3(author$project$MultipleTargetsExample$moji, '50', '50', '水'),
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('0'),
+							elm$svg$Svg$Attributes$y('0'),
+							elm$svg$Svg$Attributes$width('350'),
+							elm$svg$Svg$Attributes$height('400'),
+							elm$svg$Svg$Attributes$fill('none'),
+							elm$svg$Svg$Attributes$stroke('black')
+						]),
+					_List_Nil),
+					A3(author$project$MultipleTargetsExample$moji, '380', '200', '→'),
+					A3(author$project$MultipleTargetsExample$moji, '110', '110', notify),
+					A3(author$project$MultipleTargetsExample$moji, '500', '50', '水素'),
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('450'),
+							elm$svg$Svg$Attributes$y('0'),
+							elm$svg$Svg$Attributes$width('350'),
+							elm$svg$Svg$Attributes$height('400'),
+							elm$svg$Svg$Attributes$fill('none'),
+							elm$svg$Svg$Attributes$stroke('black')
+						]),
+					_List_Nil),
+					A3(author$project$MultipleTargetsExample$moji, '820', '200', '+'),
+					A3(author$project$MultipleTargetsExample$moji, '950', '50', '酸素'),
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('900'),
+							elm$svg$Svg$Attributes$y('0'),
+							elm$svg$Svg$Attributes$width('350'),
+							elm$svg$Svg$Attributes$height('400'),
+							elm$svg$Svg$Attributes$fill('none'),
+							elm$svg$Svg$Attributes$stroke('black')
+						]),
+					_List_Nil)
+				]));
+	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
@@ -7349,6 +7353,7 @@ var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
 var elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var author$project$MultipleTargetsExample$view = function (_n0) {
 	var boxGroup = _n0.boxGroup;
+	var notify = _n0.notify;
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -7374,7 +7379,7 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 					[
 						author$project$MultipleTargetsExample$background,
 						author$project$MultipleTargetsExample$boxesView(boxGroup),
-						author$project$MultipleTargetsExample$waku(boxGroup)
+						A2(author$project$MultipleTargetsExample$waku, boxGroup, notify)
 					]))
 			]));
 };
