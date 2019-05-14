@@ -160,8 +160,8 @@ type Msg
 boxPositions : List Vec2
 boxPositions =
     let
-        indexToPosition =
-            toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
+        indexToPosition = ( \ii -> Vector2.vec2  ((toFloat ii)*250+60)  400)
+           -- toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
     in
     List.range 0 4 |> List.map indexToPosition
 
@@ -223,12 +223,13 @@ view { boxGroup } =
         []
         [ Html.p
             [ Html.Attributes.style "padding-left" "8px" ]
-            [ Html.text "Drag any Atom . Click it to toggle its color." ]
+            [ Html.text "Drag substance . " ]
         , Svg.svg
             [ Attr.style "height: 100vh; width: 100vw; position: fixed;"
             ]
             [ background
             , boxesView boxGroup
+            , waku boxGroup
             ]
         ]
 
@@ -294,6 +295,60 @@ background =
         ]
         []
 
+waku : BoxGroup -> Svg msg
+waku boxGroup =
+   Svg.g []
+    [
+     moji "50" "50" "水"
+     ,Svg.rect
+       [ Attr.x "0"
+       , Attr.y "0"
+       , Attr.width "350"
+       , Attr.height "50%"
+       , Attr.fill "none"
+       , Attr.stroke "black"
+       ]
+       []
+    ,
+     moji "380" "200" "→"
+     ,
+     moji "500" "50" "水素"
+    ,Svg.rect
+       [ Attr.x "450"
+       , Attr.y "0"
+       , Attr.width "350"
+       , Attr.height "50%"
+       , Attr.fill "none"
+       , Attr.stroke "black"
+       ]
+       []
+    ,
+     moji "820" "200" "+"
+    ,
+    moji "950" "50" "酸素"
+    ,Svg.rect
+       [ Attr.x "900"
+       , Attr.y "0"
+       , Attr.width "350"
+       , Attr.height "50%"
+       , Attr.fill "none"
+       , Attr.stroke "black"
+       ]
+       []  
+
+    ]
+    
+moji : String -> String -> String -> Svg msg
+moji xs ys txt =
+     Svg.text_
+     [
+         Attr.x xs
+        , Attr.y ys
+        ,  Attr.stroke "black"
+        , Attr.fontSize "36pt"
+     ]
+     [Svg.text txt] 
+    
 
 num : (String -> Svg.Attribute msg) -> Float -> Svg.Attribute msg
 num attr value =

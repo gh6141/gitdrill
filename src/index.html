@@ -5419,11 +5419,6 @@ var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
-var elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var elm$core$Basics$mul = _Basics_mul;
 var elm$core$Basics$toFloat = _Basics_toFloat;
 var elm$core$Basics$gt = _Utils_gt;
@@ -5547,16 +5542,9 @@ var elm$core$Maybe$Just = function (a) {
 var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var author$project$MultipleTargetsExample$boxPositions = function () {
-	var indexToPosition = A2(
-		elm$core$Basics$composeR,
-		elm$core$Basics$toFloat,
-		A2(
-			elm$core$Basics$composeR,
-			elm$core$Basics$mul(110),
-			A2(
-				elm$core$Basics$composeR,
-				elm$core$Basics$add(60),
-				elm_explorations$linear_algebra$Math$Vector2$vec2(80))));
+	var indexToPosition = function (ii) {
+		return A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 400);
+	};
 	return A2(
 		elm$core$List$map,
 		indexToPosition,
@@ -6837,6 +6825,11 @@ var author$project$MultipleTargetsExample$dragConfig = zaboco$elm_draggable$Drag
 			zaboco$elm_draggable$Draggable$Events$onDragStart(author$project$MultipleTargetsExample$StartDragging),
 			zaboco$elm_draggable$Draggable$Events$onClick(author$project$MultipleTargetsExample$ToggleBoxClicked)
 		]));
+var elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -7282,6 +7275,71 @@ var author$project$MultipleTargetsExample$boxesView = function (boxGroup) {
 			elm$core$List$reverse(
 				author$project$MultipleTargetsExample$allBoxes(boxGroup))));
 };
+var author$project$MultipleTargetsExample$moji = F3(
+	function (xs, ys, txt) {
+		return A2(
+			elm$svg$Svg$text_,
+			_List_fromArray(
+				[
+					elm$svg$Svg$Attributes$x(xs),
+					elm$svg$Svg$Attributes$y(ys),
+					elm$svg$Svg$Attributes$stroke('black'),
+					elm$svg$Svg$Attributes$fontSize('36pt')
+				]),
+			_List_fromArray(
+				[
+					elm$svg$Svg$text(txt)
+				]));
+	});
+var author$project$MultipleTargetsExample$waku = function (boxGroup) {
+	return A2(
+		elm$svg$Svg$g,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A3(author$project$MultipleTargetsExample$moji, '50', '50', '水'),
+				A2(
+				elm$svg$Svg$rect,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$x('0'),
+						elm$svg$Svg$Attributes$y('0'),
+						elm$svg$Svg$Attributes$width('350'),
+						elm$svg$Svg$Attributes$height('50%'),
+						elm$svg$Svg$Attributes$fill('none'),
+						elm$svg$Svg$Attributes$stroke('black')
+					]),
+				_List_Nil),
+				A3(author$project$MultipleTargetsExample$moji, '380', '200', '→'),
+				A3(author$project$MultipleTargetsExample$moji, '500', '50', '水素'),
+				A2(
+				elm$svg$Svg$rect,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$x('450'),
+						elm$svg$Svg$Attributes$y('0'),
+						elm$svg$Svg$Attributes$width('350'),
+						elm$svg$Svg$Attributes$height('50%'),
+						elm$svg$Svg$Attributes$fill('none'),
+						elm$svg$Svg$Attributes$stroke('black')
+					]),
+				_List_Nil),
+				A3(author$project$MultipleTargetsExample$moji, '820', '200', '+'),
+				A3(author$project$MultipleTargetsExample$moji, '950', '50', '酸素'),
+				A2(
+				elm$svg$Svg$rect,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$x('900'),
+						elm$svg$Svg$Attributes$y('0'),
+						elm$svg$Svg$Attributes$width('350'),
+						elm$svg$Svg$Attributes$height('50%'),
+						elm$svg$Svg$Attributes$fill('none'),
+						elm$svg$Svg$Attributes$stroke('black')
+					]),
+				_List_Nil)
+			]));
+};
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
@@ -7304,7 +7362,7 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text('Drag any Atom . Click it to toggle its color.')
+						elm$html$Html$text('Drag substance . ')
 					])),
 				A2(
 				elm$svg$Svg$svg,
@@ -7315,7 +7373,8 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 				_List_fromArray(
 					[
 						author$project$MultipleTargetsExample$background,
-						author$project$MultipleTargetsExample$boxesView(boxGroup)
+						author$project$MultipleTargetsExample$boxesView(boxGroup),
+						author$project$MultipleTargetsExample$waku(boxGroup)
 					]))
 			]));
 };
