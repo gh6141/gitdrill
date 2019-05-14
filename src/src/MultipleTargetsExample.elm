@@ -22,11 +22,11 @@ main =
         , view = view
         }
 
-type alias Genso =
+type alias Atom =
     {
      gensoname: String
     , size : String
-    , bunsi : Maybe String
+    , relposition : (Float,Float)
     }
 
 
@@ -35,7 +35,7 @@ type alias Box =
     { id : Id
     , position : Vec2
     , clicked : Bool
-    , genso: Genso
+    , atoms: List Atom
     
     }
 
@@ -44,9 +44,9 @@ type alias Id =
     String
 
 
-makeBox : Id -> Vec2 -> Genso -> Box
-makeBox id position genso  =
-    Box id position False genso 
+makeBox : Id -> Vec2 -> List Atom -> Box
+makeBox id position atoms  =
+    Box id position False atoms
 
 
 dragBoxBy : Vec2 -> Box -> Box
@@ -76,10 +76,16 @@ addBox position ({ uid, idleBoxes } as group)  =
      { group
         | idleBoxes = makeBox (String.fromInt uid) position 
           ( case uid of
-            0 -> { gensoname = "O" , size = "50" , bunsi=Nothing } 
-            1 -> { gensoname = "H" , size = "40" , bunsi=Nothing }  
-            2 -> { gensoname = "H" , size = "40" , bunsi=Nothing } 
-            _ -> { gensoname = "H2" , size ="40" ,bunsi =Just "H2"} 
+            0 -> [{ gensoname = "O" , size = "50" , relposition=(0.0,0.0) },{ gensoname = "O" , size = "50" , relposition=(100.0,0.0) }]
+
+            1 ->  [{ gensoname = "H" , size = "40" , relposition=(0.0,0.0) },{ gensoname = "H" , size = "40" , relposition=(80.0,0.0) } ]
+            2 ->  [{ gensoname = "H" , size = "40" , relposition=(0.0,0.0) },{ gensoname = "H" , size = "40" , relposition=(80.0,0.0) } ]
+
+            3 -> [{ gensoname = "H" , size = "40" , relposition=(0.0,40.0) },{ gensoname = "H" , size = "40" , relposition=(150.0,40.0) } ,{ gensoname = "O" , size = "50" , relposition=(75.0,0.0)}]
+            4 -> [{ gensoname = "H" , size = "40" , relposition=(0.0,40.0) },{ gensoname = "H" , size = "40" , relposition=(150.0,40.0) } ,{ gensoname = "O" , size = "50" , relposition=(75.0,0.0)}]
+
+            
+            _ -> []
           ) 
          :: idleBoxes
         , uid = uid + 1
@@ -235,54 +241,46 @@ boxesView boxGroup =
         |> List.map boxView
         |> Svg.node "g" []
 
-circlecreate : Vec2 -> (Float,Float) -> Genso -> List (Svg Msg)
-circlecreate position (dx,dy) genso =
-      [
+circlecreate : Vec2 -> Atom -> Svg Msg
+circlecreate position atom =
+       Svg.g
+       []
+       [
         Svg.circle
         [
-          Attr.r genso.size
-        , num Attr.cx (getX position +dx)
-        , num Attr.cy (getY position +dy)
-        , Attr.fill "blue"
+          Attr.r atom.size
+        , num Attr.cx (getX position +(Tuple.first atom.relposition))
+        , num Attr.cy (getY position +(Tuple.second atom.relposition))
+        , Attr.fill (
+            case atom.gensoname of
+             "H" -> "blue"
+             "O" -> "red"
+             _ -> "white"
+        )
         , Attr.stroke "black"
    
         ]
         [ ]
         ,
         Svg.text_ [
-         num Attr.x (getX position)
-        , num Attr.y (getY position)
+         num Attr.x (getX position +(Tuple.first atom.relposition)-18.0)
+        , num Attr.y (getY position +(Tuple.second atom.relposition)+14.0)
          ,  Attr.stroke "black"
          , Attr.fontSize "36pt"
         ]
-         [Svg.text genso.gensoname] 
-      ]
+         [Svg.text atom.gensoname] 
+       ]
 boxView : Box -> Svg Msg
-boxView { id, position, clicked ,genso} =
-   
+boxView { id, position, clicked ,atoms} =
     
-     
        Svg.g
        [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging]
-        (
-        case genso.bunsi of 
-            Nothing ->              
-             (circlecreate position (0.0,0.0) genso) 
-          
-            Just bnsi ->              
-             (circlecreate position (0.0,0.0) genso) 
-             ++(circlecreate position (80.0,0.0) genso) 
-            
-           
+        ( 
+            atoms |> List.map(\atom -> circlecreate position atom)            
         )
 
-
-       
-        
-     
-    
 
 
 background : Svg msg
