@@ -161,7 +161,7 @@ boxPositions : List Vec2
 boxPositions =
     let
         indexToPosition =
-            toFloat >> (*) 100 >> (+) 60 >> Vector2.vec2 80
+            toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
     in
     List.range 0 4 |> List.map indexToPosition
 
