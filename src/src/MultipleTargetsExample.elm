@@ -36,7 +36,7 @@ type alias Box =
     , position : Vec2
     , clicked : Bool
     , atoms: List Atom
-    
+    , name : String
     }
 
 
@@ -44,9 +44,9 @@ type alias Id =
     String
 
 
-makeBox : Id -> Vec2 -> List Atom -> Box
-makeBox id position atoms  =
-    Box id position False atoms
+makeBox : Id -> Vec2 -> List Atom -> String -> Box
+makeBox id position atoms name =
+    Box id position False atoms name
 
 
 dragBoxBy : Vec2 -> Box -> Box
@@ -71,10 +71,10 @@ emptyGroup =
     BoxGroup 0 Nothing []
 
 
-addBox :  Vec2 -> BoxGroup  -> BoxGroup
+addBox :  (Int,Vec2) -> BoxGroup  -> BoxGroup
 addBox position ({ uid, idleBoxes } as group)  =
      { group
-        | idleBoxes = makeBox (String.fromInt uid) position 
+        | idleBoxes = makeBox (String.fromInt uid) (Tuple.second position)
           ( case uid of
             0 -> [{ gensoname = "O" , size = "50" , relposition=(0.0,0.0) },{ gensoname = "O" , size = "50" , relposition=(100.0,0.0) }]
 
@@ -86,13 +86,13 @@ addBox position ({ uid, idleBoxes } as group)  =
 
             
             _ -> []
-          ) 
+          )  (String.fromInt ((Tuple.first position)+10))
          :: idleBoxes
-        , uid = uid + 1
+        , uid = uid + 1 
      }
 
 
-makeBoxGroup : List Vec2 -> BoxGroup
+makeBoxGroup : List (Int,Vec2) -> BoxGroup
 makeBoxGroup positions =
     positions
         |> List.foldl addBox emptyGroup
@@ -160,10 +160,10 @@ type Msg
     | StopDragging
 
 
-boxPositions : List Vec2
+boxPositions : List (Int,Vec2)
 boxPositions =
     let
-        indexToPosition = ( \ii -> Vector2.vec2  ((toFloat ii)*250+60)  500)
+        indexToPosition = ( \ii -> (ii, Vector2.vec2  ((toFloat ii)*250+60)  500))
            -- toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
     in
     List.range 0 4 |> List.map indexToPosition
@@ -203,20 +203,11 @@ update msg ({ boxGroup } as model) =
             ( { model | boxGroup = boxGroup |> stopDragging , 
                 notify1= (
                  let
-                  ll= boxGroup.idleBoxes |> List.filterMap(\bx->
-                    (
-                        if (Vector2.toRecord bx.position).x <100 && (bx.id=="3" || bx.id=="4") then
-                          Just bx
-                        else
-                          Nothing
-                    )
-                   ) |> List.length
-                  
+                  ll= boxGroup.idleBoxes |> List.map(\bx->bx.name++":"++ String.fromFloat( getX bx.position) )
+                     
                  in
-                  if ll>0 then
-                   "Ok"
-                  else
-                   " "++(toString ll)
+                  String.join " " ll
+                  
                 )
                 
                 

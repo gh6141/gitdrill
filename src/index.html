@@ -5543,23 +5543,33 @@ var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var author$project$MultipleTargetsExample$boxPositions = function () {
 	var indexToPosition = function (ii) {
-		return A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 500);
+		return _Utils_Tuple2(
+			ii,
+			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 500));
 	};
 	return A2(
 		elm$core$List$map,
 		indexToPosition,
 		A2(elm$core$List$range, 0, 4));
 }();
-var author$project$MultipleTargetsExample$Box = F4(
-	function (id, position, clicked, atoms) {
-		return {atoms: atoms, clicked: clicked, id: id, position: position};
+var author$project$MultipleTargetsExample$Box = F5(
+	function (id, position, clicked, atoms, name) {
+		return {atoms: atoms, clicked: clicked, id: id, name: name, position: position};
 	});
 var elm$core$Basics$False = {$: 'False'};
-var author$project$MultipleTargetsExample$makeBox = F3(
-	function (id, position, atoms) {
-		return A4(author$project$MultipleTargetsExample$Box, id, position, false, atoms);
+var author$project$MultipleTargetsExample$makeBox = F4(
+	function (id, position, atoms, name) {
+		return A5(author$project$MultipleTargetsExample$Box, id, position, false, atoms, name);
 	});
 var elm$core$String$fromInt = _String_fromNumber;
+var elm$core$Tuple$first = function (_n0) {
+	var x = _n0.a;
+	return x;
+};
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
 var author$project$MultipleTargetsExample$addBox = F2(
 	function (position, group) {
 		var uid = group.uid;
@@ -5569,10 +5579,10 @@ var author$project$MultipleTargetsExample$addBox = F2(
 			{
 				idleBoxes: A2(
 					elm$core$List$cons,
-					A3(
+					A4(
 						author$project$MultipleTargetsExample$makeBox,
 						elm$core$String$fromInt(uid),
-						position,
+						position.b,
 						function () {
 							switch (uid) {
 								case 0:
@@ -5658,7 +5668,8 @@ var author$project$MultipleTargetsExample$addBox = F2(
 								default:
 									return _List_Nil;
 							}
-						}()),
+						}(),
+						elm$core$String$fromInt(position.a + 10)),
 					idleBoxes),
 				uid: uid + 1
 			});
@@ -5724,10 +5735,6 @@ var elm$core$Array$compressNodes = F2(
 		}
 	});
 var elm$core$Basics$eq = _Utils_equal;
-var elm$core$Tuple$first = function (_n0) {
-	var x = _n0.a;
-	return x;
-};
 var elm$core$Array$treeFromBuilder = F2(
 	function (nodeList, nodeListSize) {
 		treeFromBuilder:
@@ -6929,7 +6936,8 @@ var author$project$MultipleTargetsExample$toggleBoxClicked = F2(
 				idleBoxes: A2(elm$core$List$map, possiblyToggleBox, group.idleBoxes)
 			});
 	});
-var elm_explorations$linear_algebra$Math$Vector2$toRecord = _MJS_v2toRecord;
+var elm$core$String$fromFloat = _String_fromNumber;
+var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
 var zaboco$elm_draggable$Cmd$Extra$message = function (x) {
 	return A2(
 		elm$core$Task$perform,
@@ -7061,14 +7069,14 @@ var author$project$MultipleTargetsExample$update = F2(
 						{
 							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup),
 							notify1: function () {
-								var ll = elm$core$List$length(
-									A2(
-										elm$core$List$filterMap,
-										function (bx) {
-											return ((elm_explorations$linear_algebra$Math$Vector2$toRecord(bx.position).x < 100) && ((bx.id === '3') || (bx.id === '4'))) ? elm$core$Maybe$Just(bx) : elm$core$Maybe$Nothing;
-										},
-										boxGroup.idleBoxes));
-								return (ll > 0) ? 'Ok' : '';
+								var ll = A2(
+									elm$core$List$map,
+									function (bx) {
+										return bx.name + (':' + elm$core$String$fromFloat(
+											elm_explorations$linear_algebra$Math$Vector2$getX(bx.position)));
+									},
+									boxGroup.idleBoxes);
+								return A2(elm$core$String$join, ' ', ll);
 							}()
 						}),
 					elm$core$Platform$Cmd$none);
@@ -7105,16 +7113,11 @@ var author$project$MultipleTargetsExample$background = A2(
 		]),
 	_List_Nil);
 var author$project$MultipleTargetsExample$StopDragging = {$: 'StopDragging'};
-var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$MultipleTargetsExample$num = F2(
 	function (attr, value) {
 		return attr(
 			elm$core$String$fromFloat(value));
 	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
 var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
 var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -7125,7 +7128,6 @@ var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
 var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
 var author$project$MultipleTargetsExample$circlecreate = F2(
 	function (position, atom) {
