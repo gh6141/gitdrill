@@ -7065,10 +7065,10 @@ var author$project$MultipleTargetsExample$update = F2(
 									A2(
 										elm$core$List$filterMap,
 										function (bx) {
-											return ((elm_explorations$linear_algebra$Math$Vector2$toRecord(bx.position).x > 100) && (bx.id === '1')) ? elm$core$Maybe$Just(bx) : elm$core$Maybe$Nothing;
+											return ((elm_explorations$linear_algebra$Math$Vector2$toRecord(bx.position).x < 100) && ((bx.id === '3') || (bx.id === '4'))) ? elm$core$Maybe$Just(bx) : elm$core$Maybe$Nothing;
 										},
 										boxGroup.idleBoxes));
-								return (ll > 0) ? '間違い' : '';
+								return (ll > 0) ? 'Ok' : '';
 							}()
 						}),
 					elm$core$Platform$Cmd$none);

@@ -205,17 +205,18 @@ update msg ({ boxGroup } as model) =
                  let
                   ll= boxGroup.idleBoxes |> List.filterMap(\bx->
                     (
-                        if (Vector2.toRecord bx.position).x >100 && bx.id=="1" then
+                        if (Vector2.toRecord bx.position).x <100 && (bx.id=="3" || bx.id=="4") then
                           Just bx
                         else
                           Nothing
                     )
                    ) |> List.length
+                  
                  in
                   if ll>0 then
-                   "間違い"
+                   "Ok"
                   else
-                   ""
+                   " "++(toString ll)
                 )
                 
                 
