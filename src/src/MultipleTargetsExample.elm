@@ -146,7 +146,9 @@ toggleBoxClicked id group =
 type alias Model =
     { boxGroup : BoxGroup
     , drag : Draggable.State Id
-    , notify : String
+    , notify1 : String
+    , notify2 : String
+    , notify3 : String
     }
 
 
@@ -171,7 +173,9 @@ init : flags -> ( Model, Cmd Msg )
 init _ =
     ( { boxGroup = makeBoxGroup boxPositions
       , drag = Draggable.init
-      , notify=""
+      , notify1=""
+      , notify2=""
+      , notify3=""
       }
     , Cmd.none
     )
@@ -196,7 +200,26 @@ update msg ({ boxGroup } as model) =
             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
 
         StopDragging ->
-            ( { model | boxGroup = boxGroup |> stopDragging , notify = "stop"}, Cmd.none )
+            ( { model | boxGroup = boxGroup |> stopDragging , 
+                notify1= (
+                 let
+                  ll= boxGroup.idleBoxes |> List.filterMap(\bx->
+                    (
+                        if (Vector2.toRecord bx.position).x >100 && bx.id=="1" then
+                          Just bx
+                        else
+                          Nothing
+                    )
+                   ) |> List.length
+                 in
+                  if ll>0 then
+                   "間違い"
+                  else
+                   ""
+                )
+                
+                
+                }, Cmd.none )
 
         ToggleBoxClicked id ->
             ( { model | boxGroup = boxGroup |> toggleBoxClicked id }, Cmd.none )
@@ -220,7 +243,7 @@ boxSize =
 
 
 view : Model -> Html Msg
-view { boxGroup,notify } =
+view { boxGroup,notify1,notify2,notify3 } =
     Html.div
         []
         [ Html.p
@@ -231,7 +254,7 @@ view { boxGroup,notify } =
             ]
             [ background
             , boxesView boxGroup
-            , waku boxGroup notify
+            , waku boxGroup notify1 notify2 notify3
             ]
         ]
 
@@ -297,8 +320,8 @@ background =
         ]
         []
 
-waku : BoxGroup -> String -> Svg msg
-waku boxGroup notify =
+waku : BoxGroup -> String -> String -> String -> Svg msg
+waku boxGroup notify1 notify2 notify3 =
    Svg.g []
     [
      moji "50" "50" "水"
@@ -311,9 +334,10 @@ waku boxGroup notify =
        , Attr.stroke "black"
        ]
        []
+    ,moji "50" "350" notify1
     ,
      moji "380" "200" "→"
-     ,moji "110" "110" notify
+     
      ,
      moji "500" "50" "水素"
     ,Svg.rect
@@ -325,8 +349,9 @@ waku boxGroup notify =
        , Attr.stroke "black"
        ]
        []
-    ,
-     moji "820" "200" "+"
+    
+    ,moji "500" "350" notify2
+    , moji "820" "200" "+"
     ,
     moji "950" "50" "酸素"
     ,Svg.rect
@@ -338,6 +363,7 @@ waku boxGroup notify =
        , Attr.stroke "black"
        ]
        []  
+     ,moji "950" "350" notify3
 
     ]
     

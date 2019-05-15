@@ -6022,7 +6022,9 @@ var author$project$MultipleTargetsExample$init = function (_n0) {
 		{
 			boxGroup: author$project$MultipleTargetsExample$makeBoxGroup(author$project$MultipleTargetsExample$boxPositions),
 			drag: zaboco$elm_draggable$Draggable$init,
-			notify: ''
+			notify1: '',
+			notify2: '',
+			notify3: ''
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -6927,6 +6929,7 @@ var author$project$MultipleTargetsExample$toggleBoxClicked = F2(
 				idleBoxes: A2(elm$core$List$map, possiblyToggleBox, group.idleBoxes)
 			});
 	});
+var elm_explorations$linear_algebra$Math$Vector2$toRecord = _MJS_v2toRecord;
 var zaboco$elm_draggable$Cmd$Extra$message = function (x) {
 	return A2(
 		elm$core$Task$perform,
@@ -7057,7 +7060,16 @@ var author$project$MultipleTargetsExample$update = F2(
 						model,
 						{
 							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup),
-							notify: 'stop'
+							notify1: function () {
+								var ll = elm$core$List$length(
+									A2(
+										elm$core$List$filterMap,
+										function (bx) {
+											return ((elm_explorations$linear_algebra$Math$Vector2$toRecord(bx.position).x > 100) && (bx.id === '1')) ? elm$core$Maybe$Just(bx) : elm$core$Maybe$Nothing;
+										},
+										boxGroup.idleBoxes));
+								return (ll > 0) ? '間違い' : '';
+							}()
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'ToggleBoxClicked':
@@ -7293,8 +7305,8 @@ var author$project$MultipleTargetsExample$moji = F3(
 					elm$svg$Svg$text(txt)
 				]));
 	});
-var author$project$MultipleTargetsExample$waku = F2(
-	function (boxGroup, notify) {
+var author$project$MultipleTargetsExample$waku = F4(
+	function (boxGroup, notify1, notify2, notify3) {
 		return A2(
 			elm$svg$Svg$g,
 			_List_Nil,
@@ -7313,8 +7325,8 @@ var author$project$MultipleTargetsExample$waku = F2(
 							elm$svg$Svg$Attributes$stroke('black')
 						]),
 					_List_Nil),
+					A3(author$project$MultipleTargetsExample$moji, '50', '350', notify1),
 					A3(author$project$MultipleTargetsExample$moji, '380', '200', '→'),
-					A3(author$project$MultipleTargetsExample$moji, '110', '110', notify),
 					A3(author$project$MultipleTargetsExample$moji, '500', '50', '水素'),
 					A2(
 					elm$svg$Svg$rect,
@@ -7328,6 +7340,7 @@ var author$project$MultipleTargetsExample$waku = F2(
 							elm$svg$Svg$Attributes$stroke('black')
 						]),
 					_List_Nil),
+					A3(author$project$MultipleTargetsExample$moji, '500', '350', notify2),
 					A3(author$project$MultipleTargetsExample$moji, '820', '200', '+'),
 					A3(author$project$MultipleTargetsExample$moji, '950', '50', '酸素'),
 					A2(
@@ -7341,7 +7354,8 @@ var author$project$MultipleTargetsExample$waku = F2(
 							elm$svg$Svg$Attributes$fill('none'),
 							elm$svg$Svg$Attributes$stroke('black')
 						]),
-					_List_Nil)
+					_List_Nil),
+					A3(author$project$MultipleTargetsExample$moji, '950', '350', notify3)
 				]));
 	});
 var elm$html$Html$div = _VirtualDom_node('div');
@@ -7353,7 +7367,9 @@ var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
 var elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var author$project$MultipleTargetsExample$view = function (_n0) {
 	var boxGroup = _n0.boxGroup;
-	var notify = _n0.notify;
+	var notify1 = _n0.notify1;
+	var notify2 = _n0.notify2;
+	var notify3 = _n0.notify3;
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -7379,7 +7395,7 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 					[
 						author$project$MultipleTargetsExample$background,
 						author$project$MultipleTargetsExample$boxesView(boxGroup),
-						A2(author$project$MultipleTargetsExample$waku, boxGroup, notify)
+						A4(author$project$MultipleTargetsExample$waku, boxGroup, notify1, notify2, notify3)
 					]))
 			]));
 };
