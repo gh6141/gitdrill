@@ -200,16 +200,18 @@ update msg ({ boxGroup } as model) =
             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
 
         StopDragging ->
-            ( { model | boxGroup = boxGroup |> stopDragging , 
+            ( { model | 
                 notify1= (
                  let
-                  ll= boxGroup.idleBoxes |> List.map(\bx->bx.name++":"++ String.fromFloat( getX bx.position) )
+                  mbx=boxGroup.movingBox
+                  bx=Maybe.withDefault {id = "" , position = {x=0.0,y=0.0} , clicked = False , atoms= [], name ="xx"} (Just {id = "" , position = {x=0.0,y=0.0} , clicked = False , atoms= [], name ="xxx"} )
+                  ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )
                      
                  in
-                  String.join " " ll
-                  
+                   ll                  
                 )
-                
+                ,
+                boxGroup = boxGroup |> stopDragging               
                 
                 }, Cmd.none )
 
