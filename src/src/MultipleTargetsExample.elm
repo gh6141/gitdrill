@@ -191,7 +191,7 @@ dragConfig =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg ({ boxGroup } as model) =
+update msg ({ boxGroup} as model) =
     case msg of
         OnDragBy delta ->
             ( { model | boxGroup = boxGroup |> dragActiveBy delta }, Cmd.none )
@@ -203,8 +203,12 @@ update msg ({ boxGroup } as model) =
             ( { model | 
                 notify1= (
                  let
+                  idd:Id
+                  idd="0"
+                  v2=Vector2.vec2 0.0 0.0
+            
                   mbx=boxGroup.movingBox
-                  bx=Maybe.withDefault {id = "" , position = {x=0.0,y=0.0} , clicked = False , atoms= [], name ="xx"} (Just {id = "" , position = {x=0.0,y=0.0} , clicked = False , atoms= [], name ="xxx"} )
+                  bx=Maybe.withDefault {id = idd, position = v2 , clicked = False , atoms= [], name ="0"} mbx
                   ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )
                      
                  in

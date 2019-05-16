@@ -7069,14 +7069,16 @@ var author$project$MultipleTargetsExample$update = F2(
 						{
 							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup),
 							notify1: function () {
-								var ll = A2(
-									elm$core$List$map,
-									function (bx) {
-										return bx.name + (':' + elm$core$String$fromFloat(
-											elm_explorations$linear_algebra$Math$Vector2$getX(bx.position)));
-									},
-									boxGroup.idleBoxes);
-								return A2(elm$core$String$join, ' ', ll);
+								var v2 = A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 0.0, 0.0);
+								var mbx = boxGroup.movingBox;
+								var idd = '0';
+								var bx = A2(
+									elm$core$Maybe$withDefault,
+									{atoms: _List_Nil, clicked: false, id: idd, name: 'xx', position: v2},
+									mbx);
+								var ll = bx.name + (':' + elm$core$String$fromFloat(
+									elm_explorations$linear_algebra$Math$Vector2$getX(bx.position)));
+								return ll;
 							}()
 						}),
 					elm$core$Platform$Cmd$none);
