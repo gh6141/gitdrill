@@ -213,7 +213,8 @@ notify xs xe ys ye namex boxGroup =
                   
                in
                   if xs<xx && xx<xe && ys<yy && yy<ye && bx.name==namex then
-                   "Ok"
+                
+                    "Ok"
                   else
                    ""        
                
@@ -230,9 +231,9 @@ update msg ({ boxGroup} as model) =
 
         StopDragging ->
             ( { model | 
-                 notify1= boxGroup |> notify 41.0 157.0 54.0 318.0 "H2O"
-                ,notify2= boxGroup |> notify 480.0 677.0 52.0 359.0 "H2"
-                ,notify3= boxGroup |> notify 952.0 1110.0 52.0 349.0 "O2"
+                  notify1= boxGroup |> notify 41.0 157.0 54.0 318.0 "H2O"
+                , notify2= boxGroup |> notify 480.0 677.0 52.0 359.0 "H2"
+                , notify3= boxGroup |> notify 952.0 1110.0 52.0 349.0 "O2"
                 , boxGroup = boxGroup |> stopDragging               
                 
                 }, Cmd.none )
