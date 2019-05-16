@@ -5544,7 +5544,22 @@ var elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
 var author$project$MultipleTargetsExample$boxPositions = function () {
 	var indexToPosition = function (ii) {
 		return _Utils_Tuple2(
-			ii,
+			function () {
+				switch (ii) {
+					case 0:
+						return 'O2';
+					case 1:
+						return 'H2';
+					case 2:
+						return 'H2';
+					case 3:
+						return 'H2O';
+					case 4:
+						return 'H2O';
+					default:
+						return '';
+				}
+			}(),
 			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 500));
 	};
 	return A2(
@@ -5669,7 +5684,7 @@ var author$project$MultipleTargetsExample$addBox = F2(
 									return _List_Nil;
 							}
 						}(),
-						elm$core$String$fromInt(position.a + 10)),
+						position.a),
 					idleBoxes),
 				uid: uid + 1
 			});
@@ -6835,6 +6850,32 @@ var author$project$MultipleTargetsExample$dragConfig = zaboco$elm_draggable$Drag
 			zaboco$elm_draggable$Draggable$Events$onDragStart(author$project$MultipleTargetsExample$StartDragging),
 			zaboco$elm_draggable$Draggable$Events$onClick(author$project$MultipleTargetsExample$ToggleBoxClicked)
 		]));
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
+var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
+var author$project$MultipleTargetsExample$notify = F6(
+	function (xs, xe, ys, ye, namex, boxGroup) {
+		var mbx = boxGroup.movingBox;
+		var dfb = A5(
+			author$project$MultipleTargetsExample$Box,
+			'',
+			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 0.0, 0.0),
+			false,
+			_List_Nil,
+			'');
+		var bx = A2(elm$core$Maybe$withDefault, dfb, mbx);
+		var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
+		var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
+		return ((_Utils_cmp(xs, xx) < 0) && ((_Utils_cmp(xx, xe) < 0) && ((_Utils_cmp(ys, yy) < 0) && ((_Utils_cmp(yy, ye) < 0) && _Utils_eq(bx.name, namex))))) ? 'Ok' : '';
+	});
 var elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -6889,15 +6930,6 @@ var author$project$MultipleTargetsExample$startDragging = F2(
 				movingBox: elm$core$List$head(targetAsList)
 			});
 	});
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var author$project$MultipleTargetsExample$allBoxes = function (_n0) {
 	var movingBox = _n0.movingBox;
 	var idleBoxes = _n0.idleBoxes;
@@ -6936,8 +6968,6 @@ var author$project$MultipleTargetsExample$toggleBoxClicked = F2(
 				idleBoxes: A2(elm$core$List$map, possiblyToggleBox, group.idleBoxes)
 			});
 	});
-var elm$core$String$fromFloat = _String_fromNumber;
-var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
 var zaboco$elm_draggable$Cmd$Extra$message = function (x) {
 	return A2(
 		elm$core$Task$perform,
@@ -7068,18 +7098,9 @@ var author$project$MultipleTargetsExample$update = F2(
 						model,
 						{
 							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup),
-							notify1: function () {
-								var v2 = A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 0.0, 0.0);
-								var mbx = boxGroup.movingBox;
-								var idd = '0';
-								var bx = A2(
-									elm$core$Maybe$withDefault,
-									{atoms: _List_Nil, clicked: false, id: idd, name: 'xx', position: v2},
-									mbx);
-								var ll = bx.name + (':' + elm$core$String$fromFloat(
-									elm_explorations$linear_algebra$Math$Vector2$getX(bx.position)));
-								return ll;
-							}()
+							notify1: A6(author$project$MultipleTargetsExample$notify, 41.0, 157.0, 54.0, 318.0, 'H2O', boxGroup),
+							notify2: A6(author$project$MultipleTargetsExample$notify, 480.0, 677.0, 52.0, 359.0, 'H2', boxGroup),
+							notify3: A6(author$project$MultipleTargetsExample$notify, 952.0, 1110.0, 52.0, 349.0, 'O2', boxGroup)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'ToggleBoxClicked':
@@ -7115,6 +7136,7 @@ var author$project$MultipleTargetsExample$background = A2(
 		]),
 	_List_Nil);
 var author$project$MultipleTargetsExample$StopDragging = {$: 'StopDragging'};
+var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$MultipleTargetsExample$num = F2(
 	function (attr, value) {
 		return attr(
@@ -7130,7 +7152,6 @@ var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
 var author$project$MultipleTargetsExample$circlecreate = F2(
 	function (position, atom) {
 		return A2(
@@ -7301,7 +7322,14 @@ var author$project$MultipleTargetsExample$moji = F3(
 				[
 					elm$svg$Svg$Attributes$x(xs),
 					elm$svg$Svg$Attributes$y(ys),
-					elm$svg$Svg$Attributes$stroke('black'),
+					elm$svg$Svg$Attributes$fill(
+					function () {
+						if (txt === 'Ok') {
+							return 'red';
+						} else {
+							return 'black';
+						}
+					}()),
 					elm$svg$Svg$Attributes$fontSize('36pt')
 				]),
 			_List_fromArray(

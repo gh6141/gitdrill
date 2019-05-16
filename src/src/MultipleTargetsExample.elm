@@ -71,7 +71,7 @@ emptyGroup =
     BoxGroup 0 Nothing []
 
 
-addBox :  (Int,Vec2) -> BoxGroup  -> BoxGroup
+addBox :  (String,Vec2) -> BoxGroup  -> BoxGroup
 addBox position ({ uid, idleBoxes } as group)  =
      { group
         | idleBoxes = makeBox (String.fromInt uid) (Tuple.second position)
@@ -86,13 +86,13 @@ addBox position ({ uid, idleBoxes } as group)  =
 
             
             _ -> []
-          )  (String.fromInt ((Tuple.first position)+10))
+          )  (Tuple.first position)
          :: idleBoxes
         , uid = uid + 1 
      }
 
 
-makeBoxGroup : List (Int,Vec2) -> BoxGroup
+makeBoxGroup : List (String,Vec2) -> BoxGroup
 makeBoxGroup positions =
     positions
         |> List.foldl addBox emptyGroup
@@ -160,10 +160,20 @@ type Msg
     | StopDragging
 
 
-boxPositions : List (Int,Vec2)
+boxPositions : List (String,Vec2)
 boxPositions =
     let
-        indexToPosition = ( \ii -> (ii, Vector2.vec2  ((toFloat ii)*250+60)  500))
+        
+        indexToPosition = ( \ii -> (
+            case ii of
+             0 -> "O2"
+             1 -> "H2"
+             2 -> "H2"
+             3 -> "H2O"
+             4 -> "H2O"
+             _ -> ""
+            
+            , Vector2.vec2  ((toFloat ii)*250+60)  500))
            -- toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
     in
     List.range 0 4 |> List.map indexToPosition
@@ -189,6 +199,25 @@ dragConfig =
         , onClick ToggleBoxClicked
         ]
 
+notify : Float -> Float -> Float -> Float -> String -> BoxGroup -> String
+notify xs xe ys ye namex boxGroup =
+               let
+                  dfb:Box
+                  dfb=Box "" (Vector2.vec2 0.0 0.0) False [] ""
+            
+                  mbx=boxGroup.movingBox
+                  bx=Maybe.withDefault dfb mbx
+                  -- ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )++ " "++(String.fromFloat (Vector2.getY bx.position) )
+                  xx=Vector2.getX bx.position
+                  yy=Vector2.getY bx.position
+                  
+               in
+                  if xs<xx && xx<xe && ys<yy && yy<ye && bx.name==namex then
+                   "Ok"
+                  else
+                   ""        
+               
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg ({ boxGroup} as model) =
@@ -201,21 +230,10 @@ update msg ({ boxGroup} as model) =
 
         StopDragging ->
             ( { model | 
-                notify1= (
-                 let
-                  idd:Id
-                  idd="0"
-                  v2=Vector2.vec2 0.0 0.0
-            
-                  mbx=boxGroup.movingBox
-                  bx=Maybe.withDefault {id = idd, position = v2 , clicked = False , atoms= [], name ="0"} mbx
-                  ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )
-                     
-                 in
-                   ll                  
-                )
-                ,
-                boxGroup = boxGroup |> stopDragging               
+                 notify1= boxGroup |> notify 41.0 157.0 54.0 318.0 "H2O"
+                ,notify2= boxGroup |> notify 480.0 677.0 52.0 359.0 "H2"
+                ,notify3= boxGroup |> notify 952.0 1110.0 52.0 349.0 "O2"
+                , boxGroup = boxGroup |> stopDragging               
                 
                 }, Cmd.none )
 
@@ -348,7 +366,7 @@ waku boxGroup notify1 notify2 notify3 =
        ]
        []
     
-    ,moji "500" "350" notify2
+    , moji "500" "350" notify2
     , moji "820" "200" "+"
     ,
     moji "950" "50" "酸素"
@@ -371,7 +389,13 @@ moji xs ys txt =
      [
          Attr.x xs
         , Attr.y ys
-        ,  Attr.stroke "black"
+        ,  Attr.fill
+         (
+          case txt of
+            "Ok" -> "red"
+            _ -> "black"
+         )
+
         , Attr.fontSize "36pt"
      ]
      [Svg.text txt] 
