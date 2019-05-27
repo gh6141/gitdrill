@@ -5568,8 +5568,8 @@ var author$project$MultipleTargetsExample$boxPositions = function () {
 		A2(elm$core$List$range, 0, 4));
 }();
 var author$project$MultipleTargetsExample$Box = F5(
-	function (id, position, clicked, atoms, name) {
-		return {atoms: atoms, clicked: clicked, id: id, name: name, position: position};
+	function (id, position, ok, atoms, name) {
+		return {atoms: atoms, id: id, name: name, ok: ok, position: position};
 	});
 var elm$core$Basics$False = {$: 'False'};
 var author$project$MultipleTargetsExample$makeBox = F4(
@@ -6788,8 +6788,8 @@ var author$project$MultipleTargetsExample$OnDragBy = function (a) {
 var author$project$MultipleTargetsExample$StartDragging = function (a) {
 	return {$: 'StartDragging', a: a};
 };
-var author$project$MultipleTargetsExample$ToggleBoxClicked = function (a) {
-	return {$: 'ToggleBoxClicked', a: a};
+var author$project$MultipleTargetsExample$ToggleBoxOk = function (a) {
+	return {$: 'ToggleBoxOk', a: a};
 };
 var zaboco$elm_draggable$Draggable$Config = function (a) {
 	return {$: 'Config', a: a};
@@ -6848,7 +6848,7 @@ var author$project$MultipleTargetsExample$dragConfig = zaboco$elm_draggable$Drag
 					A2(elm_explorations$linear_algebra$Math$Vector2$vec2, dx, dy));
 			}),
 			zaboco$elm_draggable$Draggable$Events$onDragStart(author$project$MultipleTargetsExample$StartDragging),
-			zaboco$elm_draggable$Draggable$Events$onClick(author$project$MultipleTargetsExample$ToggleBoxClicked)
+			zaboco$elm_draggable$Draggable$Events$onClick(author$project$MultipleTargetsExample$ToggleBoxOk)
 		]));
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -6943,29 +6943,31 @@ var author$project$MultipleTargetsExample$allBoxes = function (_n0) {
 			},
 			movingBox));
 };
-var author$project$MultipleTargetsExample$stopDragging = function (group) {
-	return _Utils_update(
-		group,
-		{
-			idleBoxes: author$project$MultipleTargetsExample$allBoxes(group),
-			movingBox: elm$core$Maybe$Nothing
-		});
-};
-var elm$core$Basics$not = _Basics_not;
-var author$project$MultipleTargetsExample$toggleClicked = function (box) {
+var author$project$MultipleTargetsExample$toggleOk = function (box) {
 	return _Utils_update(
 		box,
-		{clicked: !box.clicked});
+		{ok: true});
 };
-var author$project$MultipleTargetsExample$toggleBoxClicked = F2(
+var author$project$MultipleTargetsExample$toggleBoxOk = F2(
+	function (id, lbox) {
+		var possiblyToggleBox = function (box) {
+			return _Utils_eq(box.id, id) ? author$project$MultipleTargetsExample$toggleOk(box) : box;
+		};
+		return A2(elm$core$List$map, possiblyToggleBox, lbox);
+	});
+var author$project$MultipleTargetsExample$stopDragging = F2(
 	function (id, group) {
 		var possiblyToggleBox = function (box) {
-			return _Utils_eq(box.id, id) ? author$project$MultipleTargetsExample$toggleClicked(box) : box;
+			return _Utils_eq(box.id, id) ? author$project$MultipleTargetsExample$toggleOk(box) : box;
 		};
 		return _Utils_update(
 			group,
 			{
-				idleBoxes: A2(elm$core$List$map, possiblyToggleBox, group.idleBoxes)
+				idleBoxes: A2(
+					author$project$MultipleTargetsExample$toggleBoxOk,
+					id,
+					author$project$MultipleTargetsExample$allBoxes(group)),
+				movingBox: elm$core$Maybe$Nothing
 			});
 	});
 var zaboco$elm_draggable$Cmd$Extra$message = function (x) {
@@ -7093,25 +7095,20 @@ var author$project$MultipleTargetsExample$update = F2(
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'StopDragging':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							boxGroup: author$project$MultipleTargetsExample$stopDragging(boxGroup),
-							notify1: A6(author$project$MultipleTargetsExample$notify, 41.0, 157.0, 54.0, 318.0, 'H2O', boxGroup),
-							notify2: A6(author$project$MultipleTargetsExample$notify, 480.0, 677.0, 52.0, 359.0, 'H2', boxGroup),
-							notify3: A6(author$project$MultipleTargetsExample$notify, 952.0, 1110.0, 52.0, 349.0, 'O2', boxGroup)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'ToggleBoxClicked':
 				var id = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							boxGroup: A2(author$project$MultipleTargetsExample$toggleBoxClicked, id, boxGroup)
+							boxGroup: A2(author$project$MultipleTargetsExample$stopDragging, id, boxGroup),
+							notify1: A6(author$project$MultipleTargetsExample$notify, 41.0, 257.0, 54.0, 338.0, 'H2O', boxGroup),
+							notify2: A6(author$project$MultipleTargetsExample$notify, 480.0, 677.0, 52.0, 359.0, 'H2', boxGroup),
+							notify3: A6(author$project$MultipleTargetsExample$notify, 952.0, 1110.0, 52.0, 349.0, 'O2', boxGroup)
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'ToggleBoxOk':
+				var id = msg.a;
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			default:
 				var dragMsg = msg.a;
 				return A3(zaboco$elm_draggable$Draggable$update, author$project$MultipleTargetsExample$dragConfig, dragMsg, model);
@@ -7135,7 +7132,9 @@ var author$project$MultipleTargetsExample$background = A2(
 			elm$svg$Svg$Attributes$fill('#eee')
 		]),
 	_List_Nil);
-var author$project$MultipleTargetsExample$StopDragging = {$: 'StopDragging'};
+var author$project$MultipleTargetsExample$StopDragging = function (a) {
+	return {$: 'StopDragging', a: a};
+};
 var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$MultipleTargetsExample$num = F2(
 	function (attr, value) {
@@ -7281,7 +7280,7 @@ var zaboco$elm_draggable$Draggable$mouseTrigger = F2(
 var author$project$MultipleTargetsExample$boxView = function (_n0) {
 	var id = _n0.id;
 	var position = _n0.position;
-	var clicked = _n0.clicked;
+	var ok = _n0.ok;
 	var atoms = _n0.atoms;
 	return A2(
 		elm$svg$Svg$g,
@@ -7289,7 +7288,8 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 			[
 				elm$svg$Svg$Attributes$cursor('move'),
 				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
-				elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
+				elm$svg$Svg$Events$onMouseUp(
+				author$project$MultipleTargetsExample$StopDragging(id))
 			]),
 		A2(
 			elm$core$List$map,

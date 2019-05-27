@@ -34,7 +34,7 @@ type alias Atom =
 type alias Box =
     { id : Id
     , position : Vec2
-    , clicked : Bool
+    , ok : Bool
     , atoms: List Atom
     , name : String
     }
@@ -54,9 +54,13 @@ dragBoxBy delta box =
     { box | position = box.position |> Vector2.add delta }
 
 
-toggleClicked : Box -> Box
-toggleClicked box =
-    { box | clicked = not box.clicked }
+toggleOk : Box -> Box
+toggleOk box =
+    { box | ok = True }
+
+toggleOff : Box -> Box
+toggleOff box =
+    { box | ok = False }
 
 
 type alias BoxGroup =
@@ -117,10 +121,19 @@ startDragging id ({ idleBoxes, movingBox } as group) =
     }
 
 
-stopDragging : BoxGroup -> BoxGroup
-stopDragging group =
+stopDragging : Id -> BoxGroup -> BoxGroup
+stopDragging id group =
+   let
+        possiblyToggleBox box =
+            if box.id == id then
+                toggleOk box
+
+            else
+                box
+
+   in
     { group
-        | idleBoxes = allBoxes group
+        | idleBoxes = allBoxes group |> toggleBoxOk id
         , movingBox = Nothing
     }
 
@@ -130,12 +143,24 @@ dragActiveBy delta group =
     { group | movingBox = group.movingBox |> Maybe.map (dragBoxBy delta) }
 
 
-toggleBoxClicked : Id -> BoxGroup -> BoxGroup
-toggleBoxClicked id group =
+toggleBoxOk : Id -> List Box -> List Box
+toggleBoxOk id lbox =
     let
         possiblyToggleBox box =
             if box.id == id then
-                toggleClicked box
+                toggleOk box
+
+            else
+                box
+    in
+     lbox |> List.map possiblyToggleBox 
+
+toggleBoxOff : Id -> BoxGroup -> BoxGroup
+toggleBoxOff id group =
+    let
+        possiblyToggleBox box =
+            if box.id == id then
+                toggleOff box
 
             else
                 box
@@ -156,8 +181,8 @@ type Msg
     = DragMsg (Draggable.Msg Id)
     | OnDragBy Vec2
     | StartDragging String
-    | ToggleBoxClicked String
-    | StopDragging
+    | ToggleBoxOk String
+    | StopDragging String
 
 
 boxPositions : List (String,Vec2)
@@ -196,7 +221,7 @@ dragConfig =
     Draggable.customConfig
         [ onDragBy (\( dx, dy ) -> Vector2.vec2 dx dy |> OnDragBy)
         , onDragStart StartDragging
-        , onClick ToggleBoxClicked
+        , onClick ToggleBoxOk
         ]
 
 notify : Float -> Float -> Float -> Float -> String -> BoxGroup -> String
@@ -229,17 +254,17 @@ update msg ({ boxGroup} as model) =
         StartDragging id ->
             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
 
-        StopDragging ->
+        StopDragging id ->
             ( { model | 
-                  notify1= boxGroup |> notify 41.0 157.0 54.0 318.0 "H2O"
+                  notify1= boxGroup |> notify 41.0 257.0 54.0 338.0 "H2O"
                 , notify2= boxGroup |> notify 480.0 677.0 52.0 359.0 "H2"
                 , notify3= boxGroup |> notify 952.0 1110.0 52.0 349.0 "O2"
-                , boxGroup = boxGroup |> stopDragging               
+                , boxGroup = boxGroup |> stopDragging id       
                 
                 }, Cmd.none )
 
-        ToggleBoxClicked id ->
-            ( { model | boxGroup = boxGroup |> toggleBoxClicked id }, Cmd.none )
+        ToggleBoxOk id ->
+            ( model , Cmd.none )
 
         DragMsg dragMsg ->
             Draggable.update dragConfig dragMsg model
@@ -314,12 +339,12 @@ circlecreate position atom =
          [Svg.text atom.gensoname] 
        ]
 boxView : Box -> Svg Msg
-boxView { id, position, clicked ,atoms} =
+boxView { id, position, ok ,atoms} =
     
        Svg.g
        [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
-        , onMouseUp StopDragging]
+        , onMouseUp (StopDragging id)]
         ( 
             atoms |> List.map(\atom -> circlecreate position atom)            
         )

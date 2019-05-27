@@ -231,7 +231,7 @@ update msg ({ boxGroup} as model) =
 
         StopDragging ->
             ( { model | 
-                  notify1= boxGroup |> notify 41.0 157.0 54.0 318.0 "H2"
+                  notify1= boxGroup |> notify 41.0 357.0 54.0 340.0 "H2"
                 , notify2= boxGroup |> notify 480.0 677.0 52.0 359.0 "O2"
                 , notify3= boxGroup |> notify 952.0 1110.0 52.0 349.0 "H2O"
                 , boxGroup = boxGroup |> stopDragging               
