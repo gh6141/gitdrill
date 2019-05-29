@@ -236,7 +236,7 @@ boxPositions =
              4 -> "H2O"
              _ -> ""
             
-            , Vector2.vec2  ((toFloat ii)*250+60)  500))
+            , Vector2.vec2  ((toFloat ii)*250+60)  400))
            -- toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
     in
     List.range 0 4 |> List.map indexToPosition
@@ -354,8 +354,7 @@ view { boxGroup,notify1,notify2,notify3,siki } =
         []
         [ Html.p
             [ Html.Attributes.style "padding-left" "8px" ]
-            [ Html.text "Drag substance . "  , Html.button [ onClick Sikihyoji ] [ text "化学反応式" ]  , 
-          Html.p
+            [ Html.text "Drag substance . " ,Html.button [ onClick Sikihyoji ] [ text "化学反応式" ]  , Html.p
             [ Html.Attributes.style "padding-left" "14px" , Html.Attributes.style "display" (
                 case siki of
                  True -> ""
@@ -371,9 +370,8 @@ view { boxGroup,notify1,notify2,notify3,siki } =
             , boxesView boxGroup
             , waku boxGroup notify1 notify2 notify3
             ]
-        
+     
         ]
-
 
 boxesView : BoxGroup -> Svg Msg
 boxesView boxGroup =
@@ -436,8 +434,8 @@ background =
     Svg.rect
         [ Attr.x "0"
         , Attr.y "0"
-        , Attr.width "100%"
-        , Attr.height "100%"
+        , Attr.width "1300"
+        , Attr.height "430"
         , Attr.fill "#eee"
         ]
         []
