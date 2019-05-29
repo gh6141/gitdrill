@@ -354,8 +354,7 @@ view { boxGroup,notify1,notify2,notify3,siki } =
         []
         [ Html.p
             [ Html.Attributes.style "padding-left" "8px" ]
-            [ Html.text "Drag substance . " ]
-            , 
+            [ Html.text "Drag substance . "  , Html.button [ onClick Sikihyoji ] [ text "化学反応式" ]  , 
           Html.p
             [ Html.Attributes.style "padding-left" "14px" , Html.Attributes.style "display" (
                 case siki of
@@ -363,8 +362,9 @@ view { boxGroup,notify1,notify2,notify3,siki } =
                  False -> "none"
                 
                 )]
-            [ Html.text "2H2O ->  2H2  + O2 " ]
-        , Html.button [ onClick Sikihyoji ] [ text "化学反応式" ]
+            [ Html.text "2H2O ->  2H2  + O2 " ]]
+          
+       
         , Svg.svg
             [ Attr.style "height: 100vh; width: 100vw; position: fixed;"
             ]
