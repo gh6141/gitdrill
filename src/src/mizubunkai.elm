@@ -359,8 +359,7 @@ view { boxGroup,notify1,notify2,notify3,siki } =
             [ Html.Attributes.style "padding-left" "14px" , Html.Attributes.style "display" (
                 case siki of
                  True -> ""
-                 False -> "none"
-                
+                 False -> "none"                
                 )]
             [ Html.text "2H2O ->  2H2  + O2 " ]]
           
