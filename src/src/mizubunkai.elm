@@ -3,12 +3,13 @@ module MultipleTargetsExample exposing (main)
 import Browser
 import Draggable
 import Draggable.Events exposing (onClick, onDragBy, onDragStart)
-import Html exposing (Html)
+import Html exposing (Html,button)
 import Html.Attributes
 import Math.Vector2 as Vector2 exposing (Vec2, getX, getY)
 import Svg exposing (..)
 import Svg.Attributes as Attr
 import Svg.Events exposing (onMouseUp)
+import Html.Events exposing (onClick)
 import Svg.Keyed
 import Svg.Lazy exposing (lazy)
 
@@ -121,19 +122,22 @@ startDragging id ({ idleBoxes, movingBox } as group) =
     }
 
 
-stopDragging : Id -> BoxGroup -> BoxGroup
-stopDragging id group =
+stopDragging : Id -> Wakul -> Wakul -> Wakul -> BoxGroup -> BoxGroup
+stopDragging id wkl1 wkl2 wkl3 group =
    let
-        possiblyToggleBox box =
-            if box.id == id then
-                toggleOk box
+                  dfb:Box
+                  dfb=Box "" (Vector2.vec2 0.0 0.0) False [] ""
+            
+                  mbx=group.movingBox
+                  bx=Maybe.withDefault dfb mbx
+                  -- ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )++ " "++(String.fromFloat (Vector2.getY bx.position) )
+                  xx=Vector2.getX bx.position
+                  yy=Vector2.getY bx.position
 
-            else
-                box
 
    in
     { group
-        | idleBoxes = allBoxes group |> toggleBoxOk id
+        | idleBoxes = allBoxes group |> toggleBoxOk id wkl1 wkl2 wkl3 |> toggleBoxOff id wkl1 wkl2 wkl3
         , movingBox = Nothing
     }
 
@@ -143,29 +147,61 @@ dragActiveBy delta group =
     { group | movingBox = group.movingBox |> Maybe.map (dragBoxBy delta) }
 
 
-toggleBoxOk : Id -> List Box -> List Box
-toggleBoxOk id lbox =
+toggleBoxOk : Id -> Wakul -> Wakul -> Wakul -> List Box -> List Box
+toggleBoxOk id wkl1 wkl2 wkl3 lbox =
     let
+              
         possiblyToggleBox box =
-            if box.id == id then
-                toggleOk box
-
+          let
+                          
+                 
+                  bx=box
+                  -- ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )++ " "++(String.fromFloat (Vector2.getY bx.position) )
+                  xx=Vector2.getX bx.position
+                  yy=Vector2.getY bx.position   
+          in
+          
+            if bx.id == id then
+             (
+              if wkl1.xss<xx && xx<wkl1.xee && wkl1.yss<yy && yy<wkl1.yee && bx.name==wkl1.nm then
+                toggleOk bx
+              else if wkl2.xss<xx && xx<wkl2.xee && wkl2.yss<yy && yy<wkl2.yee && bx.name==wkl2.nm then
+                toggleOk bx
+              else if wkl3.xss<xx && xx<wkl3.xee && wkl3.yss<yy && yy<wkl3.yee && bx.name==wkl3.nm then
+                toggleOk bx
+              else
+                bx
+             )
             else
-                box
+                bx
     in
      lbox |> List.map possiblyToggleBox 
 
-toggleBoxOff : Id -> BoxGroup -> BoxGroup
-toggleBoxOff id group =
+toggleBoxOff : Id -> Wakul -> Wakul -> Wakul -> List Box -> List Box
+toggleBoxOff id  wkl1 wkl2 wkl3 lbox =
     let
+      
         possiblyToggleBox box =
+          let
+                  bx=box
+                  -- ll= bx.name++":"++ (String.fromFloat (Vector2.getX bx.position) )++ " "++(String.fromFloat (Vector2.getY bx.position) )
+                  xx=Vector2.getX bx.position
+                  yy=Vector2.getY bx.position   
+          in
             if box.id == id then
-                toggleOff box
-
+               (
+              if not (wkl1.xss<xx && xx<wkl1.xee && wkl1.yss<yy && yy<wkl1.yee && bx.name==wkl1.nm) && 
+                 not (wkl2.xss<xx && xx<wkl2.xee && wkl2.yss<yy && yy<wkl2.yee && bx.name==wkl2.nm) &&
+                 not (wkl3.xss<xx && xx<wkl3.xee && wkl3.yss<yy && yy<wkl3.yee && bx.name==wkl3.nm) then
+                  toggleOff bx
+              else
+                bx
+             )
+              
             else
-                box
+                bx
     in
-    { group | idleBoxes = group.idleBoxes |> List.map possiblyToggleBox }
+     lbox |> List.map possiblyToggleBox 
 
 
 type alias Model =
@@ -174,6 +210,7 @@ type alias Model =
     , notify1 : String
     , notify2 : String
     , notify3 : String
+    , siki : Bool
     }
 
 
@@ -183,6 +220,7 @@ type Msg
     | StartDragging String
     | ToggleBoxOk String
     | StopDragging String
+    | Sikihyoji 
 
 
 boxPositions : List (String,Vec2)
@@ -211,6 +249,7 @@ init _ =
       , notify1=""
       , notify2=""
       , notify3=""
+      , siki = False
       }
     , Cmd.none
     )
@@ -221,11 +260,11 @@ dragConfig =
     Draggable.customConfig
         [ onDragBy (\( dx, dy ) -> Vector2.vec2 dx dy |> OnDragBy)
         , onDragStart StartDragging
-        , onClick ToggleBoxOk
+        
         ]
 
-notify : Float -> Float -> Float -> Float -> String -> BoxGroup -> String
-notify xs xe ys ye namex boxGroup =
+notify : Wakul -> BoxGroup -> String
+notify wkl boxGroup =
                let
                   dfb:Box
                   dfb=Box "" (Vector2.vec2 0.0 0.0) False [] ""
@@ -237,17 +276,31 @@ notify xs xe ys ye namex boxGroup =
                   yy=Vector2.getY bx.position
                   
                in
-                  if xs<xx && xx<xe && ys<yy && yy<ye && bx.name==namex then
+                  if wkl.xss<xx && xx<wkl.xee && wkl.yss<yy && yy<wkl.yee && bx.name==wkl.nm then
                 
                     "Ok"
                   else
                    ""        
-               
 
+type alias Wakul =
+  {
+    xss : Float , xee : Float , yss : Float , yee : Float ,nm : String
+  }
+
+       
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg ({ boxGroup} as model) =
-    case msg of
+update msg ({ boxGroup,siki} as model) = 
+  let 
+    wkl : Float -> Float -> Float -> Float  -> String -> Wakul 
+    wkl x1 x2 y1 y2 st={xss=x1,xee=x2,yss=y1,yee=y2,nm=st}
+
+    wkl1= wkl 41.0 257.0 54.0 338.0 "H2O"
+    wkl2= wkl 480.0 677.0 52.0 359.0 "H2"
+    wkl3= wkl 952.0 1110.0 52.0 349.0 "O2"
+ 
+  in
+    ( case msg of
         OnDragBy delta ->
             ( { model | boxGroup = boxGroup |> dragActiveBy delta }, Cmd.none )
 
@@ -256,10 +309,10 @@ update msg ({ boxGroup} as model) =
 
         StopDragging id ->
             ( { model | 
-                  notify1= boxGroup |> notify 41.0 257.0 54.0 338.0 "H2O"
-                , notify2= boxGroup |> notify 480.0 677.0 52.0 359.0 "H2"
-                , notify3= boxGroup |> notify 952.0 1110.0 52.0 349.0 "O2"
-                , boxGroup = boxGroup |> stopDragging id       
+                  notify1= boxGroup |> notify wkl1
+                , notify2= boxGroup |> notify wkl2
+                , notify3= boxGroup |> notify wkl3
+                , boxGroup = boxGroup |> stopDragging id wkl1 wkl2 wkl3       
                 
                 }, Cmd.none )
 
@@ -269,6 +322,17 @@ update msg ({ boxGroup} as model) =
         DragMsg dragMsg ->
             Draggable.update dragConfig dragMsg model
 
+        Sikihyoji ->
+            ( {model |
+                siki = (
+                    case siki of
+                      False -> True
+                      True  -> False
+                ) 
+
+            },Cmd.none)    
+      )
+    
 
 subscriptions : Model -> Sub Msg
 subscriptions { drag } =
@@ -285,12 +349,22 @@ boxSize =
 
 
 view : Model -> Html Msg
-view { boxGroup,notify1,notify2,notify3 } =
+view { boxGroup,notify1,notify2,notify3,siki } =
     Html.div
         []
         [ Html.p
             [ Html.Attributes.style "padding-left" "8px" ]
             [ Html.text "Drag substance . " ]
+            , 
+          Html.p
+            [ Html.Attributes.style "padding-left" "14px" , Html.Attributes.style "display" (
+                case siki of
+                 True -> ""
+                 False -> "none"
+                
+                )]
+            [ Html.text "2H2O ->  2H2  + O2 " ]
+        , Html.button [ onClick Sikihyoji ] [ text "化学反応式" ]
         , Svg.svg
             [ Attr.style "height: 100vh; width: 100vw; position: fixed;"
             ]
@@ -298,6 +372,7 @@ view { boxGroup,notify1,notify2,notify3 } =
             , boxesView boxGroup
             , waku boxGroup notify1 notify2 notify3
             ]
+        
         ]
 
 
@@ -338,13 +413,19 @@ circlecreate position atom =
         ]
          [Svg.text atom.gensoname] 
        ]
+
 boxView : Box -> Svg Msg
 boxView { id, position, ok ,atoms} =
     
        Svg.g
        [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
-        , onMouseUp (StopDragging id)]
+        , onMouseUp (StopDragging id)
+        , ( case ok of
+                True ->  Attr.strokeWidth "5"
+                _ -> Attr.strokeWidth "1"
+            
+            )]
         ( 
             atoms |> List.map(\atom -> circlecreate position atom)            
         )
@@ -426,6 +507,8 @@ moji xs ys txt =
      ]
      [Svg.text txt] 
     
+
+
 
 num : (String -> Svg.Attribute msg) -> Float -> Svg.Attribute msg
 num attr value =

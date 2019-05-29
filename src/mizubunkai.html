@@ -6046,7 +6046,8 @@ var author$project$MultipleTargetsExample$init = function (_n0) {
 			drag: zaboco$elm_draggable$Draggable$init,
 			notify1: '',
 			notify2: '',
-			notify3: ''
+			notify3: '',
+			siki: false
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -6788,9 +6789,6 @@ var author$project$MultipleTargetsExample$OnDragBy = function (a) {
 var author$project$MultipleTargetsExample$StartDragging = function (a) {
 	return {$: 'StartDragging', a: a};
 };
-var author$project$MultipleTargetsExample$ToggleBoxOk = function (a) {
-	return {$: 'ToggleBoxOk', a: a};
-};
 var zaboco$elm_draggable$Draggable$Config = function (a) {
 	return {$: 'Config', a: a};
 };
@@ -6813,14 +6811,6 @@ var zaboco$elm_draggable$Draggable$customConfig = function (events) {
 	return zaboco$elm_draggable$Draggable$Config(
 		A3(elm$core$List$foldl, elm$core$Basics$apL, zaboco$elm_draggable$Internal$defaultConfig, events));
 };
-var zaboco$elm_draggable$Draggable$Events$onClick = F2(
-	function (toMsg, config) {
-		return _Utils_update(
-			config,
-			{
-				onClick: A2(elm$core$Basics$composeL, elm$core$Maybe$Just, toMsg)
-			});
-	});
 var zaboco$elm_draggable$Draggable$Events$onDragBy = F2(
 	function (toMsg, config) {
 		return _Utils_update(
@@ -6847,8 +6837,7 @@ var author$project$MultipleTargetsExample$dragConfig = zaboco$elm_draggable$Drag
 				return author$project$MultipleTargetsExample$OnDragBy(
 					A2(elm_explorations$linear_algebra$Math$Vector2$vec2, dx, dy));
 			}),
-			zaboco$elm_draggable$Draggable$Events$onDragStart(author$project$MultipleTargetsExample$StartDragging),
-			zaboco$elm_draggable$Draggable$Events$onClick(author$project$MultipleTargetsExample$ToggleBoxOk)
+			zaboco$elm_draggable$Draggable$Events$onDragStart(author$project$MultipleTargetsExample$StartDragging)
 		]));
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -6861,8 +6850,8 @@ var elm$core$Maybe$withDefault = F2(
 	});
 var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
 var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
-var author$project$MultipleTargetsExample$notify = F6(
-	function (xs, xe, ys, ye, namex, boxGroup) {
+var author$project$MultipleTargetsExample$notify = F2(
+	function (wkl, boxGroup) {
 		var mbx = boxGroup.movingBox;
 		var dfb = A5(
 			author$project$MultipleTargetsExample$Box,
@@ -6874,7 +6863,7 @@ var author$project$MultipleTargetsExample$notify = F6(
 		var bx = A2(elm$core$Maybe$withDefault, dfb, mbx);
 		var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
 		var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
-		return ((_Utils_cmp(xs, xx) < 0) && ((_Utils_cmp(xx, xe) < 0) && ((_Utils_cmp(ys, yy) < 0) && ((_Utils_cmp(yy, ye) < 0) && _Utils_eq(bx.name, namex))))) ? 'Ok' : '';
+		return ((_Utils_cmp(wkl.xss, xx) < 0) && ((_Utils_cmp(xx, wkl.xee) < 0) && ((_Utils_cmp(wkl.yss, yy) < 0) && ((_Utils_cmp(yy, wkl.yee) < 0) && _Utils_eq(bx.name, wkl.nm))))) ? 'Ok' : '';
 	});
 var elm$core$Basics$composeR = F3(
 	function (f, g, x) {
@@ -6943,30 +6932,66 @@ var author$project$MultipleTargetsExample$allBoxes = function (_n0) {
 			},
 			movingBox));
 };
+var author$project$MultipleTargetsExample$toggleOff = function (box) {
+	return _Utils_update(
+		box,
+		{ok: false});
+};
+var elm$core$Basics$not = _Basics_not;
+var author$project$MultipleTargetsExample$toggleBoxOff = F5(
+	function (id, wkl1, wkl2, wkl3, lbox) {
+		var possiblyToggleBox = function (box) {
+			var bx = box;
+			var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
+			var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
+			return _Utils_eq(box.id, id) ? (((!((_Utils_cmp(wkl1.xss, xx) < 0) && ((_Utils_cmp(xx, wkl1.xee) < 0) && ((_Utils_cmp(wkl1.yss, yy) < 0) && ((_Utils_cmp(yy, wkl1.yee) < 0) && _Utils_eq(bx.name, wkl1.nm)))))) && ((!((_Utils_cmp(wkl2.xss, xx) < 0) && ((_Utils_cmp(xx, wkl2.xee) < 0) && ((_Utils_cmp(wkl2.yss, yy) < 0) && ((_Utils_cmp(yy, wkl2.yee) < 0) && _Utils_eq(bx.name, wkl2.nm)))))) && (!((_Utils_cmp(wkl3.xss, xx) < 0) && ((_Utils_cmp(xx, wkl3.xee) < 0) && ((_Utils_cmp(wkl3.yss, yy) < 0) && ((_Utils_cmp(yy, wkl3.yee) < 0) && _Utils_eq(bx.name, wkl3.nm)))))))) ? author$project$MultipleTargetsExample$toggleOff(bx) : bx) : bx;
+		};
+		return A2(elm$core$List$map, possiblyToggleBox, lbox);
+	});
 var author$project$MultipleTargetsExample$toggleOk = function (box) {
 	return _Utils_update(
 		box,
 		{ok: true});
 };
-var author$project$MultipleTargetsExample$toggleBoxOk = F2(
-	function (id, lbox) {
+var author$project$MultipleTargetsExample$toggleBoxOk = F5(
+	function (id, wkl1, wkl2, wkl3, lbox) {
 		var possiblyToggleBox = function (box) {
-			return _Utils_eq(box.id, id) ? author$project$MultipleTargetsExample$toggleOk(box) : box;
+			var bx = box;
+			var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
+			var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
+			return _Utils_eq(bx.id, id) ? (((_Utils_cmp(wkl1.xss, xx) < 0) && ((_Utils_cmp(xx, wkl1.xee) < 0) && ((_Utils_cmp(wkl1.yss, yy) < 0) && ((_Utils_cmp(yy, wkl1.yee) < 0) && _Utils_eq(bx.name, wkl1.nm))))) ? author$project$MultipleTargetsExample$toggleOk(bx) : (((_Utils_cmp(wkl2.xss, xx) < 0) && ((_Utils_cmp(xx, wkl2.xee) < 0) && ((_Utils_cmp(wkl2.yss, yy) < 0) && ((_Utils_cmp(yy, wkl2.yee) < 0) && _Utils_eq(bx.name, wkl2.nm))))) ? author$project$MultipleTargetsExample$toggleOk(bx) : (((_Utils_cmp(wkl3.xss, xx) < 0) && ((_Utils_cmp(xx, wkl3.xee) < 0) && ((_Utils_cmp(wkl3.yss, yy) < 0) && ((_Utils_cmp(yy, wkl3.yee) < 0) && _Utils_eq(bx.name, wkl3.nm))))) ? author$project$MultipleTargetsExample$toggleOk(bx) : bx))) : bx;
 		};
 		return A2(elm$core$List$map, possiblyToggleBox, lbox);
 	});
-var author$project$MultipleTargetsExample$stopDragging = F2(
-	function (id, group) {
-		var possiblyToggleBox = function (box) {
-			return _Utils_eq(box.id, id) ? author$project$MultipleTargetsExample$toggleOk(box) : box;
-		};
+var author$project$MultipleTargetsExample$stopDragging = F5(
+	function (id, wkl1, wkl2, wkl3, group) {
+		var mbx = group.movingBox;
+		var dfb = A5(
+			author$project$MultipleTargetsExample$Box,
+			'',
+			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 0.0, 0.0),
+			false,
+			_List_Nil,
+			'');
+		var bx = A2(elm$core$Maybe$withDefault, dfb, mbx);
+		var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
+		var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
 		return _Utils_update(
 			group,
 			{
-				idleBoxes: A2(
-					author$project$MultipleTargetsExample$toggleBoxOk,
+				idleBoxes: A5(
+					author$project$MultipleTargetsExample$toggleBoxOff,
 					id,
-					author$project$MultipleTargetsExample$allBoxes(group)),
+					wkl1,
+					wkl2,
+					wkl3,
+					A5(
+						author$project$MultipleTargetsExample$toggleBoxOk,
+						id,
+						wkl1,
+						wkl2,
+						wkl3,
+						author$project$MultipleTargetsExample$allBoxes(group))),
 				movingBox: elm$core$Maybe$Nothing
 			});
 	});
@@ -7075,6 +7100,14 @@ var zaboco$elm_draggable$Draggable$update = F3(
 var author$project$MultipleTargetsExample$update = F2(
 	function (msg, model) {
 		var boxGroup = model.boxGroup;
+		var siki = model.siki;
+		var wkl = F5(
+			function (x1, x2, y1, y2, st) {
+				return {nm: st, xee: x2, xss: x1, yee: y2, yss: y1};
+			});
+		var wkl1 = A5(wkl, 41.0, 257.0, 54.0, 338.0, 'H2O');
+		var wkl2 = A5(wkl, 480.0, 677.0, 52.0, 359.0, 'H2');
+		var wkl3 = A5(wkl, 952.0, 1110.0, 52.0, 349.0, 'O2');
 		switch (msg.$) {
 			case 'OnDragBy':
 				var delta = msg.a;
@@ -7100,20 +7133,35 @@ var author$project$MultipleTargetsExample$update = F2(
 					_Utils_update(
 						model,
 						{
-							boxGroup: A2(author$project$MultipleTargetsExample$stopDragging, id, boxGroup),
-							notify1: A6(author$project$MultipleTargetsExample$notify, 41.0, 257.0, 54.0, 338.0, 'H2O', boxGroup),
-							notify2: A6(author$project$MultipleTargetsExample$notify, 480.0, 677.0, 52.0, 359.0, 'H2', boxGroup),
-							notify3: A6(author$project$MultipleTargetsExample$notify, 952.0, 1110.0, 52.0, 349.0, 'O2', boxGroup)
+							boxGroup: A5(author$project$MultipleTargetsExample$stopDragging, id, wkl1, wkl2, wkl3, boxGroup),
+							notify1: A2(author$project$MultipleTargetsExample$notify, wkl1, boxGroup),
+							notify2: A2(author$project$MultipleTargetsExample$notify, wkl2, boxGroup),
+							notify3: A2(author$project$MultipleTargetsExample$notify, wkl3, boxGroup)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'ToggleBoxOk':
 				var id = msg.a;
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			default:
+			case 'DragMsg':
 				var dragMsg = msg.a;
 				return A3(zaboco$elm_draggable$Draggable$update, author$project$MultipleTargetsExample$dragConfig, dragMsg, model);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							siki: function () {
+								if (!siki) {
+									return true;
+								} else {
+									return false;
+								}
+							}()
+						}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
+var author$project$MultipleTargetsExample$Sikihyoji = {$: 'Sikihyoji'};
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
 var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
@@ -7208,6 +7256,7 @@ var author$project$MultipleTargetsExample$circlecreate = F2(
 				]));
 	});
 var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7289,7 +7338,14 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 				elm$svg$Svg$Attributes$cursor('move'),
 				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
 				elm$svg$Svg$Events$onMouseUp(
-				author$project$MultipleTargetsExample$StopDragging(id))
+				author$project$MultipleTargetsExample$StopDragging(id)),
+				function () {
+				if (ok) {
+					return elm$svg$Svg$Attributes$strokeWidth('5');
+				} else {
+					return elm$svg$Svg$Attributes$strokeWidth('1');
+				}
+			}()
 			]),
 		A2(
 			elm$core$List$map,
@@ -7390,11 +7446,18 @@ var author$project$MultipleTargetsExample$waku = F4(
 					A3(author$project$MultipleTargetsExample$moji, '950', '350', notify3)
 				]));
 	});
+var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
 var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
 var elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
 var author$project$MultipleTargetsExample$view = function (_n0) {
@@ -7402,6 +7465,7 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 	var notify1 = _n0.notify1;
 	var notify2 = _n0.notify2;
 	var notify3 = _n0.notify3;
+	var siki = _n0.siki;
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -7416,6 +7480,36 @@ var author$project$MultipleTargetsExample$view = function (_n0) {
 				_List_fromArray(
 					[
 						elm$html$Html$text('Drag substance . ')
+					])),
+				A2(
+				elm$html$Html$p,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'padding-left', '14px'),
+						A2(
+						elm$html$Html$Attributes$style,
+						'display',
+						function () {
+							if (siki) {
+								return '';
+							} else {
+								return 'none';
+							}
+						}())
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('2H2O ->  2H2  + O2 ')
+					])),
+				A2(
+				elm$html$Html$button,
+				_List_fromArray(
+					[
+						elm$html$Html$Events$onClick(author$project$MultipleTargetsExample$Sikihyoji)
+					]),
+				_List_fromArray(
+					[
+						elm$svg$Svg$text('化学反応式')
 					])),
 				A2(
 				elm$svg$Svg$svg,
