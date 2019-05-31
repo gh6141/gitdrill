@@ -418,7 +418,7 @@ boxView { id, position, ok ,atoms} =
        [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp (StopDragging id)
-        , on "touchstart" (succeed (StopDragging id))
+        , on "touchend" (succeed (StopDragging id))
         , ( case ok of
                 True ->  Attr.strokeWidth "5"
                 _ -> Attr.strokeWidth "1"
