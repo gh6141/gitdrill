@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>MultipleTargetsExample</title>
+  <title>BasicExample</title>
 </head>
 
 <body>
@@ -862,1018 +862,51 @@ var _Basics_or  = F2(function(a, b) { return a || b; });
 var _Basics_xor = F2(function(a, b) { return a !== b; });
 
 
-/*
- * Copyright (c) 2010 Mozilla Corporation
- * Copyright (c) 2010 Vladimir Vukicevic
- * Copyright (c) 2013 John Mayer
- * Copyright (c) 2018 Andrey Kuzmin
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
 
-// Vector2
-
-var _MJS_v2 = F2(function(x, y) {
-    return new Float64Array([x, y]);
-});
-
-var _MJS_v2getX = function(a) {
-    return a[0];
-};
-
-var _MJS_v2getY = function(a) {
-    return a[1];
-};
-
-var _MJS_v2setX = F2(function(x, a) {
-    return new Float64Array([x, a[1]]);
-});
-
-var _MJS_v2setY = F2(function(y, a) {
-    return new Float64Array([a[0], y]);
-});
-
-var _MJS_v2toRecord = function(a) {
-    return { x: a[0], y: a[1] };
-};
-
-var _MJS_v2fromRecord = function(r) {
-    return new Float64Array([r.x, r.y]);
-};
-
-var _MJS_v2add = F2(function(a, b) {
-    var r = new Float64Array(2);
-    r[0] = a[0] + b[0];
-    r[1] = a[1] + b[1];
-    return r;
-});
-
-var _MJS_v2sub = F2(function(a, b) {
-    var r = new Float64Array(2);
-    r[0] = a[0] - b[0];
-    r[1] = a[1] - b[1];
-    return r;
-});
-
-var _MJS_v2negate = function(a) {
-    var r = new Float64Array(2);
-    r[0] = -a[0];
-    r[1] = -a[1];
-    return r;
-};
-
-var _MJS_v2direction = F2(function(a, b) {
-    var r = new Float64Array(2);
-    r[0] = a[0] - b[0];
-    r[1] = a[1] - b[1];
-    var im = 1.0 / _MJS_v2lengthLocal(r);
-    r[0] = r[0] * im;
-    r[1] = r[1] * im;
-    return r;
-});
-
-function _MJS_v2lengthLocal(a) {
-    return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+function _Char_toCode(char)
+{
+	var code = char.charCodeAt(0);
+	if (0xD800 <= code && code <= 0xDBFF)
+	{
+		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
+	}
+	return code;
 }
-var _MJS_v2length = _MJS_v2lengthLocal;
 
-var _MJS_v2lengthSquared = function(a) {
-    return a[0] * a[0] + a[1] * a[1];
-};
-
-var _MJS_v2distance = F2(function(a, b) {
-    var dx = a[0] - b[0];
-    var dy = a[1] - b[1];
-    return Math.sqrt(dx * dx + dy * dy);
-});
-
-var _MJS_v2distanceSquared = F2(function(a, b) {
-    var dx = a[0] - b[0];
-    var dy = a[1] - b[1];
-    return dx * dx + dy * dy;
-});
-
-var _MJS_v2normalize = function(a) {
-    var r = new Float64Array(2);
-    var im = 1.0 / _MJS_v2lengthLocal(a);
-    r[0] = a[0] * im;
-    r[1] = a[1] * im;
-    return r;
-};
-
-var _MJS_v2scale = F2(function(k, a) {
-    var r = new Float64Array(2);
-    r[0] = a[0] * k;
-    r[1] = a[1] * k;
-    return r;
-});
-
-var _MJS_v2dot = F2(function(a, b) {
-    return a[0] * b[0] + a[1] * b[1];
-});
-
-// Vector3
-
-var _MJS_v3temp1Local = new Float64Array(3);
-var _MJS_v3temp2Local = new Float64Array(3);
-var _MJS_v3temp3Local = new Float64Array(3);
-
-var _MJS_v3 = F3(function(x, y, z) {
-    return new Float64Array([x, y, z]);
-});
-
-var _MJS_v3getX = function(a) {
-    return a[0];
-};
-
-var _MJS_v3getY = function(a) {
-    return a[1];
-};
-
-var _MJS_v3getZ = function(a) {
-    return a[2];
-};
-
-var _MJS_v3setX = F2(function(x, a) {
-    return new Float64Array([x, a[1], a[2]]);
-});
-
-var _MJS_v3setY = F2(function(y, a) {
-    return new Float64Array([a[0], y, a[2]]);
-});
-
-var _MJS_v3setZ = F2(function(z, a) {
-    return new Float64Array([a[0], a[1], z]);
-});
-
-var _MJS_v3toRecord = function(a) {
-    return { x: a[0], y: a[1], z: a[2] };
-};
-
-var _MJS_v3fromRecord = function(r) {
-    return new Float64Array([r.x, r.y, r.z]);
-};
-
-var _MJS_v3add = F2(function(a, b) {
-    var r = new Float64Array(3);
-    r[0] = a[0] + b[0];
-    r[1] = a[1] + b[1];
-    r[2] = a[2] + b[2];
-    return r;
-});
-
-function _MJS_v3subLocal(a, b, r) {
-    if (r === undefined) {
-        r = new Float64Array(3);
-    }
-    r[0] = a[0] - b[0];
-    r[1] = a[1] - b[1];
-    r[2] = a[2] - b[2];
-    return r;
+function _Char_fromCode(code)
+{
+	return _Utils_chr(
+		(code < 0 || 0x10FFFF < code)
+			? '\uFFFD'
+			:
+		(code <= 0xFFFF)
+			? String.fromCharCode(code)
+			:
+		(code -= 0x10000,
+			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
+		)
+	);
 }
-var _MJS_v3sub = F2(_MJS_v3subLocal);
 
-var _MJS_v3negate = function(a) {
-    var r = new Float64Array(3);
-    r[0] = -a[0];
-    r[1] = -a[1];
-    r[2] = -a[2];
-    return r;
-};
-
-function _MJS_v3directionLocal(a, b, r) {
-    if (r === undefined) {
-        r = new Float64Array(3);
-    }
-    return _MJS_v3normalizeLocal(_MJS_v3subLocal(a, b, r), r);
+function _Char_toUpper(char)
+{
+	return _Utils_chr(char.toUpperCase());
 }
-var _MJS_v3direction = F2(_MJS_v3directionLocal);
 
-function _MJS_v3lengthLocal(a) {
-    return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+function _Char_toLower(char)
+{
+	return _Utils_chr(char.toLowerCase());
 }
-var _MJS_v3length = _MJS_v3lengthLocal;
 
-var _MJS_v3lengthSquared = function(a) {
-    return a[0] * a[0] + a[1] * a[1] + a[2] * a[2];
-};
-
-var _MJS_v3distance = F2(function(a, b) {
-    var dx = a[0] - b[0];
-    var dy = a[1] - b[1];
-    var dz = a[2] - b[2];
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
-});
-
-var _MJS_v3distanceSquared = F2(function(a, b) {
-    var dx = a[0] - b[0];
-    var dy = a[1] - b[1];
-    var dz = a[2] - b[2];
-    return dx * dx + dy * dy + dz * dz;
-});
-
-function _MJS_v3normalizeLocal(a, r) {
-    if (r === undefined) {
-        r = new Float64Array(3);
-    }
-    var im = 1.0 / _MJS_v3lengthLocal(a);
-    r[0] = a[0] * im;
-    r[1] = a[1] * im;
-    r[2] = a[2] * im;
-    return r;
+function _Char_toLocaleUpper(char)
+{
+	return _Utils_chr(char.toLocaleUpperCase());
 }
-var _MJS_v3normalize = _MJS_v3normalizeLocal;
 
-var _MJS_v3scale = F2(function(k, a) {
-    return new Float64Array([a[0] * k, a[1] * k, a[2] * k]);
-});
-
-var _MJS_v3dotLocal = function(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-};
-var _MJS_v3dot = F2(_MJS_v3dotLocal);
-
-function _MJS_v3crossLocal(a, b, r) {
-    if (r === undefined) {
-        r = new Float64Array(3);
-    }
-    r[0] = a[1] * b[2] - a[2] * b[1];
-    r[1] = a[2] * b[0] - a[0] * b[2];
-    r[2] = a[0] * b[1] - a[1] * b[0];
-    return r;
+function _Char_toLocaleLower(char)
+{
+	return _Utils_chr(char.toLocaleLowerCase());
 }
-var _MJS_v3cross = F2(_MJS_v3crossLocal);
-
-var _MJS_v3mul4x4 = F2(function(m, v) {
-    var w;
-    var tmp = _MJS_v3temp1Local;
-    var r = new Float64Array(3);
-
-    tmp[0] = m[3];
-    tmp[1] = m[7];
-    tmp[2] = m[11];
-    w = _MJS_v3dotLocal(v, tmp) + m[15];
-    tmp[0] = m[0];
-    tmp[1] = m[4];
-    tmp[2] = m[8];
-    r[0] = (_MJS_v3dotLocal(v, tmp) + m[12]) / w;
-    tmp[0] = m[1];
-    tmp[1] = m[5];
-    tmp[2] = m[9];
-    r[1] = (_MJS_v3dotLocal(v, tmp) + m[13]) / w;
-    tmp[0] = m[2];
-    tmp[1] = m[6];
-    tmp[2] = m[10];
-    r[2] = (_MJS_v3dotLocal(v, tmp) + m[14]) / w;
-    return r;
-});
-
-// Vector4
-
-var _MJS_v4 = F4(function(x, y, z, w) {
-    return new Float64Array([x, y, z, w]);
-});
-
-var _MJS_v4getX = function(a) {
-    return a[0];
-};
-
-var _MJS_v4getY = function(a) {
-    return a[1];
-};
-
-var _MJS_v4getZ = function(a) {
-    return a[2];
-};
-
-var _MJS_v4getW = function(a) {
-    return a[3];
-};
-
-var _MJS_v4setX = F2(function(x, a) {
-    return new Float64Array([x, a[1], a[2], a[3]]);
-});
-
-var _MJS_v4setY = F2(function(y, a) {
-    return new Float64Array([a[0], y, a[2], a[3]]);
-});
-
-var _MJS_v4setZ = F2(function(z, a) {
-    return new Float64Array([a[0], a[1], z, a[3]]);
-});
-
-var _MJS_v4setW = F2(function(w, a) {
-    return new Float64Array([a[0], a[1], a[2], w]);
-});
-
-var _MJS_v4toRecord = function(a) {
-    return { x: a[0], y: a[1], z: a[2], w: a[3] };
-};
-
-var _MJS_v4fromRecord = function(r) {
-    return new Float64Array([r.x, r.y, r.z, r.w]);
-};
-
-var _MJS_v4add = F2(function(a, b) {
-    var r = new Float64Array(4);
-    r[0] = a[0] + b[0];
-    r[1] = a[1] + b[1];
-    r[2] = a[2] + b[2];
-    r[3] = a[3] + b[3];
-    return r;
-});
-
-var _MJS_v4sub = F2(function(a, b) {
-    var r = new Float64Array(4);
-    r[0] = a[0] - b[0];
-    r[1] = a[1] - b[1];
-    r[2] = a[2] - b[2];
-    r[3] = a[3] - b[3];
-    return r;
-});
-
-var _MJS_v4negate = function(a) {
-    var r = new Float64Array(4);
-    r[0] = -a[0];
-    r[1] = -a[1];
-    r[2] = -a[2];
-    r[3] = -a[3];
-    return r;
-};
-
-var _MJS_v4direction = F2(function(a, b) {
-    var r = new Float64Array(4);
-    r[0] = a[0] - b[0];
-    r[1] = a[1] - b[1];
-    r[2] = a[2] - b[2];
-    r[3] = a[3] - b[3];
-    var im = 1.0 / _MJS_v4lengthLocal(r);
-    r[0] = r[0] * im;
-    r[1] = r[1] * im;
-    r[2] = r[2] * im;
-    r[3] = r[3] * im;
-    return r;
-});
-
-function _MJS_v4lengthLocal(a) {
-    return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3]);
-}
-var _MJS_v4length = _MJS_v4lengthLocal;
-
-var _MJS_v4lengthSquared = function(a) {
-    return a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3];
-};
-
-var _MJS_v4distance = F2(function(a, b) {
-    var dx = a[0] - b[0];
-    var dy = a[1] - b[1];
-    var dz = a[2] - b[2];
-    var dw = a[3] - b[3];
-    return Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
-});
-
-var _MJS_v4distanceSquared = F2(function(a, b) {
-    var dx = a[0] - b[0];
-    var dy = a[1] - b[1];
-    var dz = a[2] - b[2];
-    var dw = a[3] - b[3];
-    return dx * dx + dy * dy + dz * dz + dw * dw;
-});
-
-var _MJS_v4normalize = function(a) {
-    var r = new Float64Array(4);
-    var im = 1.0 / _MJS_v4lengthLocal(a);
-    r[0] = a[0] * im;
-    r[1] = a[1] * im;
-    r[2] = a[2] * im;
-    r[3] = a[3] * im;
-    return r;
-};
-
-var _MJS_v4scale = F2(function(k, a) {
-    var r = new Float64Array(4);
-    r[0] = a[0] * k;
-    r[1] = a[1] * k;
-    r[2] = a[2] * k;
-    r[3] = a[3] * k;
-    return r;
-});
-
-var _MJS_v4dot = F2(function(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-});
-
-// Matrix4
-
-var _MJS_m4x4temp1Local = new Float64Array(16);
-var _MJS_m4x4temp2Local = new Float64Array(16);
-
-var _MJS_m4x4identity = new Float64Array([
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0
-]);
-
-var _MJS_m4x4fromRecord = function(r) {
-    var m = new Float64Array(16);
-    m[0] = r.m11;
-    m[1] = r.m21;
-    m[2] = r.m31;
-    m[3] = r.m41;
-    m[4] = r.m12;
-    m[5] = r.m22;
-    m[6] = r.m32;
-    m[7] = r.m42;
-    m[8] = r.m13;
-    m[9] = r.m23;
-    m[10] = r.m33;
-    m[11] = r.m43;
-    m[12] = r.m14;
-    m[13] = r.m24;
-    m[14] = r.m34;
-    m[15] = r.m44;
-    return m;
-};
-
-var _MJS_m4x4toRecord = function(m) {
-    return {
-        m11: m[0], m21: m[1], m31: m[2], m41: m[3],
-        m12: m[4], m22: m[5], m32: m[6], m42: m[7],
-        m13: m[8], m23: m[9], m33: m[10], m43: m[11],
-        m14: m[12], m24: m[13], m34: m[14], m44: m[15]
-    };
-};
-
-var _MJS_m4x4inverse = function(m) {
-    var r = new Float64Array(16);
-
-    r[0] = m[5] * m[10] * m[15] - m[5] * m[11] * m[14] - m[9] * m[6] * m[15] +
-        m[9] * m[7] * m[14] + m[13] * m[6] * m[11] - m[13] * m[7] * m[10];
-    r[4] = -m[4] * m[10] * m[15] + m[4] * m[11] * m[14] + m[8] * m[6] * m[15] -
-        m[8] * m[7] * m[14] - m[12] * m[6] * m[11] + m[12] * m[7] * m[10];
-    r[8] = m[4] * m[9] * m[15] - m[4] * m[11] * m[13] - m[8] * m[5] * m[15] +
-        m[8] * m[7] * m[13] + m[12] * m[5] * m[11] - m[12] * m[7] * m[9];
-    r[12] = -m[4] * m[9] * m[14] + m[4] * m[10] * m[13] + m[8] * m[5] * m[14] -
-        m[8] * m[6] * m[13] - m[12] * m[5] * m[10] + m[12] * m[6] * m[9];
-    r[1] = -m[1] * m[10] * m[15] + m[1] * m[11] * m[14] + m[9] * m[2] * m[15] -
-        m[9] * m[3] * m[14] - m[13] * m[2] * m[11] + m[13] * m[3] * m[10];
-    r[5] = m[0] * m[10] * m[15] - m[0] * m[11] * m[14] - m[8] * m[2] * m[15] +
-        m[8] * m[3] * m[14] + m[12] * m[2] * m[11] - m[12] * m[3] * m[10];
-    r[9] = -m[0] * m[9] * m[15] + m[0] * m[11] * m[13] + m[8] * m[1] * m[15] -
-        m[8] * m[3] * m[13] - m[12] * m[1] * m[11] + m[12] * m[3] * m[9];
-    r[13] = m[0] * m[9] * m[14] - m[0] * m[10] * m[13] - m[8] * m[1] * m[14] +
-        m[8] * m[2] * m[13] + m[12] * m[1] * m[10] - m[12] * m[2] * m[9];
-    r[2] = m[1] * m[6] * m[15] - m[1] * m[7] * m[14] - m[5] * m[2] * m[15] +
-        m[5] * m[3] * m[14] + m[13] * m[2] * m[7] - m[13] * m[3] * m[6];
-    r[6] = -m[0] * m[6] * m[15] + m[0] * m[7] * m[14] + m[4] * m[2] * m[15] -
-        m[4] * m[3] * m[14] - m[12] * m[2] * m[7] + m[12] * m[3] * m[6];
-    r[10] = m[0] * m[5] * m[15] - m[0] * m[7] * m[13] - m[4] * m[1] * m[15] +
-        m[4] * m[3] * m[13] + m[12] * m[1] * m[7] - m[12] * m[3] * m[5];
-    r[14] = -m[0] * m[5] * m[14] + m[0] * m[6] * m[13] + m[4] * m[1] * m[14] -
-        m[4] * m[2] * m[13] - m[12] * m[1] * m[6] + m[12] * m[2] * m[5];
-    r[3] = -m[1] * m[6] * m[11] + m[1] * m[7] * m[10] + m[5] * m[2] * m[11] -
-        m[5] * m[3] * m[10] - m[9] * m[2] * m[7] + m[9] * m[3] * m[6];
-    r[7] = m[0] * m[6] * m[11] - m[0] * m[7] * m[10] - m[4] * m[2] * m[11] +
-        m[4] * m[3] * m[10] + m[8] * m[2] * m[7] - m[8] * m[3] * m[6];
-    r[11] = -m[0] * m[5] * m[11] + m[0] * m[7] * m[9] + m[4] * m[1] * m[11] -
-        m[4] * m[3] * m[9] - m[8] * m[1] * m[7] + m[8] * m[3] * m[5];
-    r[15] = m[0] * m[5] * m[10] - m[0] * m[6] * m[9] - m[4] * m[1] * m[10] +
-        m[4] * m[2] * m[9] + m[8] * m[1] * m[6] - m[8] * m[2] * m[5];
-
-    var det = m[0] * r[0] + m[1] * r[4] + m[2] * r[8] + m[3] * r[12];
-
-    if (det === 0) {
-        return elm$core$Maybe$Nothing;
-    }
-
-    det = 1.0 / det;
-
-    for (var i = 0; i < 16; i = i + 1) {
-        r[i] = r[i] * det;
-    }
-
-    return elm$core$Maybe$Just(r);
-};
-
-var _MJS_m4x4inverseOrthonormal = function(m) {
-    var r = _MJS_m4x4transposeLocal(m);
-    var t = [m[12], m[13], m[14]];
-    r[3] = r[7] = r[11] = 0;
-    r[12] = -_MJS_v3dotLocal([r[0], r[4], r[8]], t);
-    r[13] = -_MJS_v3dotLocal([r[1], r[5], r[9]], t);
-    r[14] = -_MJS_v3dotLocal([r[2], r[6], r[10]], t);
-    return r;
-};
-
-function _MJS_m4x4makeFrustumLocal(left, right, bottom, top, znear, zfar) {
-    var r = new Float64Array(16);
-
-    r[0] = 2 * znear / (right - left);
-    r[1] = 0;
-    r[2] = 0;
-    r[3] = 0;
-    r[4] = 0;
-    r[5] = 2 * znear / (top - bottom);
-    r[6] = 0;
-    r[7] = 0;
-    r[8] = (right + left) / (right - left);
-    r[9] = (top + bottom) / (top - bottom);
-    r[10] = -(zfar + znear) / (zfar - znear);
-    r[11] = -1;
-    r[12] = 0;
-    r[13] = 0;
-    r[14] = -2 * zfar * znear / (zfar - znear);
-    r[15] = 0;
-
-    return r;
-}
-var _MJS_m4x4makeFrustum = F6(_MJS_m4x4makeFrustumLocal);
-
-var _MJS_m4x4makePerspective = F4(function(fovy, aspect, znear, zfar) {
-    var ymax = znear * Math.tan(fovy * Math.PI / 360.0);
-    var ymin = -ymax;
-    var xmin = ymin * aspect;
-    var xmax = ymax * aspect;
-
-    return _MJS_m4x4makeFrustumLocal(xmin, xmax, ymin, ymax, znear, zfar);
-});
-
-function _MJS_m4x4makeOrthoLocal(left, right, bottom, top, znear, zfar) {
-    var r = new Float64Array(16);
-
-    r[0] = 2 / (right - left);
-    r[1] = 0;
-    r[2] = 0;
-    r[3] = 0;
-    r[4] = 0;
-    r[5] = 2 / (top - bottom);
-    r[6] = 0;
-    r[7] = 0;
-    r[8] = 0;
-    r[9] = 0;
-    r[10] = -2 / (zfar - znear);
-    r[11] = 0;
-    r[12] = -(right + left) / (right - left);
-    r[13] = -(top + bottom) / (top - bottom);
-    r[14] = -(zfar + znear) / (zfar - znear);
-    r[15] = 1;
-
-    return r;
-}
-var _MJS_m4x4makeOrtho = F6(_MJS_m4x4makeOrthoLocal);
-
-var _MJS_m4x4makeOrtho2D = F4(function(left, right, bottom, top) {
-    return _MJS_m4x4makeOrthoLocal(left, right, bottom, top, -1, 1);
-});
-
-function _MJS_m4x4mulLocal(a, b) {
-    var r = new Float64Array(16);
-    var a11 = a[0];
-    var a21 = a[1];
-    var a31 = a[2];
-    var a41 = a[3];
-    var a12 = a[4];
-    var a22 = a[5];
-    var a32 = a[6];
-    var a42 = a[7];
-    var a13 = a[8];
-    var a23 = a[9];
-    var a33 = a[10];
-    var a43 = a[11];
-    var a14 = a[12];
-    var a24 = a[13];
-    var a34 = a[14];
-    var a44 = a[15];
-    var b11 = b[0];
-    var b21 = b[1];
-    var b31 = b[2];
-    var b41 = b[3];
-    var b12 = b[4];
-    var b22 = b[5];
-    var b32 = b[6];
-    var b42 = b[7];
-    var b13 = b[8];
-    var b23 = b[9];
-    var b33 = b[10];
-    var b43 = b[11];
-    var b14 = b[12];
-    var b24 = b[13];
-    var b34 = b[14];
-    var b44 = b[15];
-
-    r[0] = a11 * b11 + a12 * b21 + a13 * b31 + a14 * b41;
-    r[1] = a21 * b11 + a22 * b21 + a23 * b31 + a24 * b41;
-    r[2] = a31 * b11 + a32 * b21 + a33 * b31 + a34 * b41;
-    r[3] = a41 * b11 + a42 * b21 + a43 * b31 + a44 * b41;
-    r[4] = a11 * b12 + a12 * b22 + a13 * b32 + a14 * b42;
-    r[5] = a21 * b12 + a22 * b22 + a23 * b32 + a24 * b42;
-    r[6] = a31 * b12 + a32 * b22 + a33 * b32 + a34 * b42;
-    r[7] = a41 * b12 + a42 * b22 + a43 * b32 + a44 * b42;
-    r[8] = a11 * b13 + a12 * b23 + a13 * b33 + a14 * b43;
-    r[9] = a21 * b13 + a22 * b23 + a23 * b33 + a24 * b43;
-    r[10] = a31 * b13 + a32 * b23 + a33 * b33 + a34 * b43;
-    r[11] = a41 * b13 + a42 * b23 + a43 * b33 + a44 * b43;
-    r[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14 * b44;
-    r[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24 * b44;
-    r[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34 * b44;
-    r[15] = a41 * b14 + a42 * b24 + a43 * b34 + a44 * b44;
-
-    return r;
-}
-var _MJS_m4x4mul = F2(_MJS_m4x4mulLocal);
-
-var _MJS_m4x4mulAffine = F2(function(a, b) {
-    var r = new Float64Array(16);
-    var a11 = a[0];
-    var a21 = a[1];
-    var a31 = a[2];
-    var a12 = a[4];
-    var a22 = a[5];
-    var a32 = a[6];
-    var a13 = a[8];
-    var a23 = a[9];
-    var a33 = a[10];
-    var a14 = a[12];
-    var a24 = a[13];
-    var a34 = a[14];
-
-    var b11 = b[0];
-    var b21 = b[1];
-    var b31 = b[2];
-    var b12 = b[4];
-    var b22 = b[5];
-    var b32 = b[6];
-    var b13 = b[8];
-    var b23 = b[9];
-    var b33 = b[10];
-    var b14 = b[12];
-    var b24 = b[13];
-    var b34 = b[14];
-
-    r[0] = a11 * b11 + a12 * b21 + a13 * b31;
-    r[1] = a21 * b11 + a22 * b21 + a23 * b31;
-    r[2] = a31 * b11 + a32 * b21 + a33 * b31;
-    r[3] = 0;
-    r[4] = a11 * b12 + a12 * b22 + a13 * b32;
-    r[5] = a21 * b12 + a22 * b22 + a23 * b32;
-    r[6] = a31 * b12 + a32 * b22 + a33 * b32;
-    r[7] = 0;
-    r[8] = a11 * b13 + a12 * b23 + a13 * b33;
-    r[9] = a21 * b13 + a22 * b23 + a23 * b33;
-    r[10] = a31 * b13 + a32 * b23 + a33 * b33;
-    r[11] = 0;
-    r[12] = a11 * b14 + a12 * b24 + a13 * b34 + a14;
-    r[13] = a21 * b14 + a22 * b24 + a23 * b34 + a24;
-    r[14] = a31 * b14 + a32 * b24 + a33 * b34 + a34;
-    r[15] = 1;
-
-    return r;
-});
-
-var _MJS_m4x4makeRotate = F2(function(angle, axis) {
-    var r = new Float64Array(16);
-    axis = _MJS_v3normalizeLocal(axis, _MJS_v3temp1Local);
-    var x = axis[0];
-    var y = axis[1];
-    var z = axis[2];
-    var c = Math.cos(angle);
-    var c1 = 1 - c;
-    var s = Math.sin(angle);
-
-    r[0] = x * x * c1 + c;
-    r[1] = y * x * c1 + z * s;
-    r[2] = z * x * c1 - y * s;
-    r[3] = 0;
-    r[4] = x * y * c1 - z * s;
-    r[5] = y * y * c1 + c;
-    r[6] = y * z * c1 + x * s;
-    r[7] = 0;
-    r[8] = x * z * c1 + y * s;
-    r[9] = y * z * c1 - x * s;
-    r[10] = z * z * c1 + c;
-    r[11] = 0;
-    r[12] = 0;
-    r[13] = 0;
-    r[14] = 0;
-    r[15] = 1;
-
-    return r;
-});
-
-var _MJS_m4x4rotate = F3(function(angle, axis, m) {
-    var r = new Float64Array(16);
-    var im = 1.0 / _MJS_v3lengthLocal(axis);
-    var x = axis[0] * im;
-    var y = axis[1] * im;
-    var z = axis[2] * im;
-    var c = Math.cos(angle);
-    var c1 = 1 - c;
-    var s = Math.sin(angle);
-    var xs = x * s;
-    var ys = y * s;
-    var zs = z * s;
-    var xyc1 = x * y * c1;
-    var xzc1 = x * z * c1;
-    var yzc1 = y * z * c1;
-    var t11 = x * x * c1 + c;
-    var t21 = xyc1 + zs;
-    var t31 = xzc1 - ys;
-    var t12 = xyc1 - zs;
-    var t22 = y * y * c1 + c;
-    var t32 = yzc1 + xs;
-    var t13 = xzc1 + ys;
-    var t23 = yzc1 - xs;
-    var t33 = z * z * c1 + c;
-    var m11 = m[0], m21 = m[1], m31 = m[2], m41 = m[3];
-    var m12 = m[4], m22 = m[5], m32 = m[6], m42 = m[7];
-    var m13 = m[8], m23 = m[9], m33 = m[10], m43 = m[11];
-    var m14 = m[12], m24 = m[13], m34 = m[14], m44 = m[15];
-
-    r[0] = m11 * t11 + m12 * t21 + m13 * t31;
-    r[1] = m21 * t11 + m22 * t21 + m23 * t31;
-    r[2] = m31 * t11 + m32 * t21 + m33 * t31;
-    r[3] = m41 * t11 + m42 * t21 + m43 * t31;
-    r[4] = m11 * t12 + m12 * t22 + m13 * t32;
-    r[5] = m21 * t12 + m22 * t22 + m23 * t32;
-    r[6] = m31 * t12 + m32 * t22 + m33 * t32;
-    r[7] = m41 * t12 + m42 * t22 + m43 * t32;
-    r[8] = m11 * t13 + m12 * t23 + m13 * t33;
-    r[9] = m21 * t13 + m22 * t23 + m23 * t33;
-    r[10] = m31 * t13 + m32 * t23 + m33 * t33;
-    r[11] = m41 * t13 + m42 * t23 + m43 * t33;
-    r[12] = m14,
-    r[13] = m24;
-    r[14] = m34;
-    r[15] = m44;
-
-    return r;
-});
-
-function _MJS_m4x4makeScale3Local(x, y, z) {
-    var r = new Float64Array(16);
-
-    r[0] = x;
-    r[1] = 0;
-    r[2] = 0;
-    r[3] = 0;
-    r[4] = 0;
-    r[5] = y;
-    r[6] = 0;
-    r[7] = 0;
-    r[8] = 0;
-    r[9] = 0;
-    r[10] = z;
-    r[11] = 0;
-    r[12] = 0;
-    r[13] = 0;
-    r[14] = 0;
-    r[15] = 1;
-
-    return r;
-}
-var _MJS_m4x4makeScale3 = F3(_MJS_m4x4makeScale3Local);
-
-var _MJS_m4x4makeScale = function(v) {
-    return _MJS_m4x4makeScale3Local(v[0], v[1], v[2]);
-};
-
-var _MJS_m4x4scale3 = F4(function(x, y, z, m) {
-    var r = new Float64Array(16);
-
-    r[0] = m[0] * x;
-    r[1] = m[1] * x;
-    r[2] = m[2] * x;
-    r[3] = m[3] * x;
-    r[4] = m[4] * y;
-    r[5] = m[5] * y;
-    r[6] = m[6] * y;
-    r[7] = m[7] * y;
-    r[8] = m[8] * z;
-    r[9] = m[9] * z;
-    r[10] = m[10] * z;
-    r[11] = m[11] * z;
-    r[12] = m[12];
-    r[13] = m[13];
-    r[14] = m[14];
-    r[15] = m[15];
-
-    return r;
-});
-
-var _MJS_m4x4scale = F2(function(v, m) {
-    var r = new Float64Array(16);
-    var x = v[0];
-    var y = v[1];
-    var z = v[2];
-
-    r[0] = m[0] * x;
-    r[1] = m[1] * x;
-    r[2] = m[2] * x;
-    r[3] = m[3] * x;
-    r[4] = m[4] * y;
-    r[5] = m[5] * y;
-    r[6] = m[6] * y;
-    r[7] = m[7] * y;
-    r[8] = m[8] * z;
-    r[9] = m[9] * z;
-    r[10] = m[10] * z;
-    r[11] = m[11] * z;
-    r[12] = m[12];
-    r[13] = m[13];
-    r[14] = m[14];
-    r[15] = m[15];
-
-    return r;
-});
-
-function _MJS_m4x4makeTranslate3Local(x, y, z) {
-    var r = new Float64Array(16);
-
-    r[0] = 1;
-    r[1] = 0;
-    r[2] = 0;
-    r[3] = 0;
-    r[4] = 0;
-    r[5] = 1;
-    r[6] = 0;
-    r[7] = 0;
-    r[8] = 0;
-    r[9] = 0;
-    r[10] = 1;
-    r[11] = 0;
-    r[12] = x;
-    r[13] = y;
-    r[14] = z;
-    r[15] = 1;
-
-    return r;
-}
-var _MJS_m4x4makeTranslate3 = F3(_MJS_m4x4makeTranslate3Local);
-
-var _MJS_m4x4makeTranslate = function(v) {
-    return _MJS_m4x4makeTranslate3Local(v[0], v[1], v[2]);
-};
-
-var _MJS_m4x4translate3 = F4(function(x, y, z, m) {
-    var r = new Float64Array(16);
-    var m11 = m[0];
-    var m21 = m[1];
-    var m31 = m[2];
-    var m41 = m[3];
-    var m12 = m[4];
-    var m22 = m[5];
-    var m32 = m[6];
-    var m42 = m[7];
-    var m13 = m[8];
-    var m23 = m[9];
-    var m33 = m[10];
-    var m43 = m[11];
-
-    r[0] = m11;
-    r[1] = m21;
-    r[2] = m31;
-    r[3] = m41;
-    r[4] = m12;
-    r[5] = m22;
-    r[6] = m32;
-    r[7] = m42;
-    r[8] = m13;
-    r[9] = m23;
-    r[10] = m33;
-    r[11] = m43;
-    r[12] = m11 * x + m12 * y + m13 * z + m[12];
-    r[13] = m21 * x + m22 * y + m23 * z + m[13];
-    r[14] = m31 * x + m32 * y + m33 * z + m[14];
-    r[15] = m41 * x + m42 * y + m43 * z + m[15];
-
-    return r;
-});
-
-var _MJS_m4x4translate = F2(function(v, m) {
-    var r = new Float64Array(16);
-    var x = v[0];
-    var y = v[1];
-    var z = v[2];
-    var m11 = m[0];
-    var m21 = m[1];
-    var m31 = m[2];
-    var m41 = m[3];
-    var m12 = m[4];
-    var m22 = m[5];
-    var m32 = m[6];
-    var m42 = m[7];
-    var m13 = m[8];
-    var m23 = m[9];
-    var m33 = m[10];
-    var m43 = m[11];
-
-    r[0] = m11;
-    r[1] = m21;
-    r[2] = m31;
-    r[3] = m41;
-    r[4] = m12;
-    r[5] = m22;
-    r[6] = m32;
-    r[7] = m42;
-    r[8] = m13;
-    r[9] = m23;
-    r[10] = m33;
-    r[11] = m43;
-    r[12] = m11 * x + m12 * y + m13 * z + m[12];
-    r[13] = m21 * x + m22 * y + m23 * z + m[13];
-    r[14] = m31 * x + m32 * y + m33 * z + m[14];
-    r[15] = m41 * x + m42 * y + m43 * z + m[15];
-
-    return r;
-});
-
-var _MJS_m4x4makeLookAt = F3(function(eye, center, up) {
-    var z = _MJS_v3directionLocal(eye, center, _MJS_v3temp1Local);
-    var x = _MJS_v3normalizeLocal(_MJS_v3crossLocal(up, z, _MJS_v3temp2Local), _MJS_v3temp2Local);
-    var y = _MJS_v3normalizeLocal(_MJS_v3crossLocal(z, x, _MJS_v3temp3Local), _MJS_v3temp3Local);
-    var tm1 = _MJS_m4x4temp1Local;
-    var tm2 = _MJS_m4x4temp2Local;
-
-    tm1[0] = x[0];
-    tm1[1] = y[0];
-    tm1[2] = z[0];
-    tm1[3] = 0;
-    tm1[4] = x[1];
-    tm1[5] = y[1];
-    tm1[6] = z[1];
-    tm1[7] = 0;
-    tm1[8] = x[2];
-    tm1[9] = y[2];
-    tm1[10] = z[2];
-    tm1[11] = 0;
-    tm1[12] = 0;
-    tm1[13] = 0;
-    tm1[14] = 0;
-    tm1[15] = 1;
-
-    tm2[0] = 1; tm2[1] = 0; tm2[2] = 0; tm2[3] = 0;
-    tm2[4] = 0; tm2[5] = 1; tm2[6] = 0; tm2[7] = 0;
-    tm2[8] = 0; tm2[9] = 0; tm2[10] = 1; tm2[11] = 0;
-    tm2[12] = -eye[0]; tm2[13] = -eye[1]; tm2[14] = -eye[2]; tm2[15] = 1;
-
-    return _MJS_m4x4mulLocal(tm1, tm2);
-});
-
-
-function _MJS_m4x4transposeLocal(m) {
-    var r = new Float64Array(16);
-
-    r[0] = m[0]; r[1] = m[4]; r[2] = m[8]; r[3] = m[12];
-    r[4] = m[1]; r[5] = m[5]; r[6] = m[9]; r[7] = m[13];
-    r[8] = m[2]; r[9] = m[6]; r[10] = m[10]; r[11] = m[14];
-    r[12] = m[3]; r[13] = m[7]; r[14] = m[11]; r[15] = m[15];
-
-    return r;
-}
-var _MJS_m4x4transpose = _MJS_m4x4transposeLocal;
-
-var _MJS_m4x4makeBasis = F3(function(vx, vy, vz) {
-    var r = new Float64Array(16);
-
-    r[0] = vx[0];
-    r[1] = vx[1];
-    r[2] = vx[2];
-    r[3] = 0;
-    r[4] = vy[0];
-    r[5] = vy[1];
-    r[6] = vy[2];
-    r[7] = 0;
-    r[8] = vz[0];
-    r[9] = vz[1];
-    r[10] = vz[2];
-    r[11] = 0;
-    r[12] = 0;
-    r[13] = 0;
-    r[14] = 0;
-    r[15] = 1;
-
-    return r;
-});
 
 
 
@@ -2186,53 +1219,6 @@ function _String_fromList(chars)
 	return _List_toArray(chars).join('');
 }
 
-
-
-
-function _Char_toCode(char)
-{
-	var code = char.charCodeAt(0);
-	if (0xD800 <= code && code <= 0xDBFF)
-	{
-		return (code - 0xD800) * 0x400 + char.charCodeAt(1) - 0xDC00 + 0x10000
-	}
-	return code;
-}
-
-function _Char_fromCode(code)
-{
-	return _Utils_chr(
-		(code < 0 || 0x10FFFF < code)
-			? '\uFFFD'
-			:
-		(code <= 0xFFFF)
-			? String.fromCharCode(code)
-			:
-		(code -= 0x10000,
-			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
-		)
-	);
-}
-
-function _Char_toUpper(char)
-{
-	return _Utils_chr(char.toUpperCase());
-}
-
-function _Char_toLower(char)
-{
-	return _Utils_chr(char.toLowerCase());
-}
-
-function _Char_toLocaleUpper(char)
-{
-	return _Utils_chr(char.toLocaleUpperCase());
-}
-
-function _Char_toLocaleLower(char)
-{
-	return _Utils_chr(char.toLocaleLowerCase());
-}
 
 
 
@@ -5334,6 +4320,19 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$BasicExample$Position = F2(
+	function (x, y) {
+		return {x: x, y: y};
+	});
+var elm$core$Basics$False = {$: 'False'};
+var elm$core$Basics$True = {$: 'True'};
+var elm$core$Result$isOk = function (result) {
+	if (result.$ === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
+};
 var elm$core$Basics$EQ = {$: 'EQ'};
 var elm$core$Basics$GT = {$: 'GT'};
 var elm$core$Basics$LT = {$: 'LT'};
@@ -5414,14 +4413,29 @@ var elm$core$Array$foldr = F3(
 var elm$core$Array$toList = function (array) {
 	return A3(elm$core$Array$foldr, elm$core$List$cons, _List_Nil, array);
 };
-var elm$core$Basics$add = _Basics_add;
-var elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
+var elm$core$Array$branchFactor = 32;
+var elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
 	});
-var elm$core$Basics$mul = _Basics_mul;
+var elm$core$Basics$ceiling = _Basics_ceiling;
+var elm$core$Basics$fdiv = _Basics_fdiv;
+var elm$core$Basics$logBase = F2(
+	function (base, number) {
+		return _Basics_log(number) / _Basics_log(base);
+	});
 var elm$core$Basics$toFloat = _Basics_toFloat;
-var elm$core$Basics$gt = _Utils_gt;
+var elm$core$Array$shiftStep = elm$core$Basics$ceiling(
+	A2(elm$core$Basics$logBase, 2, elm$core$Array$branchFactor));
+var elm$core$Elm$JsArray$empty = _JsArray_empty;
+var elm$core$Array$empty = A4(elm$core$Array$Array_elm_builtin, 0, elm$core$Array$shiftStep, elm$core$Elm$JsArray$empty, elm$core$Elm$JsArray$empty);
+var elm$core$Array$Leaf = function (a) {
+	return {$: 'Leaf', a: a};
+};
+var elm$core$Array$SubTree = function (a) {
+	return {$: 'SubTree', a: a};
+};
+var elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
 var elm$core$List$foldl = F3(
 	function (func, acc, list) {
 		foldl:
@@ -5444,289 +4458,6 @@ var elm$core$List$foldl = F3(
 var elm$core$List$reverse = function (list) {
 	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
 };
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var elm$core$Basics$le = _Utils_le;
-var elm$core$Basics$sub = _Basics_sub;
-var elm$core$List$rangeHelp = F3(
-	function (lo, hi, list) {
-		rangeHelp:
-		while (true) {
-			if (_Utils_cmp(lo, hi) < 1) {
-				var $temp$lo = lo,
-					$temp$hi = hi - 1,
-					$temp$list = A2(elm$core$List$cons, hi, list);
-				lo = $temp$lo;
-				hi = $temp$hi;
-				list = $temp$list;
-				continue rangeHelp;
-			} else {
-				return list;
-			}
-		}
-	});
-var elm$core$List$range = F2(
-	function (lo, hi) {
-		return A3(elm$core$List$rangeHelp, lo, hi, _List_Nil);
-	});
-var elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
-var elm$core$Maybe$Nothing = {$: 'Nothing'};
-var elm_explorations$linear_algebra$Math$Vector2$vec2 = _MJS_v2;
-var author$project$MultipleTargetsExample$boxPositions = function () {
-	var indexToPosition = function (ii) {
-		return _Utils_Tuple2(
-			function () {
-				switch (ii) {
-					case 0:
-						return 'O2';
-					case 1:
-						return 'H2';
-					case 2:
-						return 'H2';
-					case 3:
-						return 'H2O';
-					case 4:
-						return 'H2O';
-					default:
-						return '';
-				}
-			}(),
-			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, (ii * 250) + 60, 400));
-	};
-	return A2(
-		elm$core$List$map,
-		indexToPosition,
-		A2(elm$core$List$range, 0, 4));
-}();
-var author$project$MultipleTargetsExample$Box = F5(
-	function (id, position, ok, atoms, name) {
-		return {atoms: atoms, id: id, name: name, ok: ok, position: position};
-	});
-var elm$core$Basics$False = {$: 'False'};
-var author$project$MultipleTargetsExample$makeBox = F4(
-	function (id, position, atoms, name) {
-		return A5(author$project$MultipleTargetsExample$Box, id, position, false, atoms, name);
-	});
-var elm$core$String$fromInt = _String_fromNumber;
-var elm$core$Tuple$first = function (_n0) {
-	var x = _n0.a;
-	return x;
-};
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
-var author$project$MultipleTargetsExample$addBox = F2(
-	function (position, group) {
-		var uid = group.uid;
-		var idleBoxes = group.idleBoxes;
-		return _Utils_update(
-			group,
-			{
-				idleBoxes: A2(
-					elm$core$List$cons,
-					A4(
-						author$project$MultipleTargetsExample$makeBox,
-						elm$core$String$fromInt(uid),
-						position.b,
-						function () {
-							switch (uid) {
-								case 0:
-									return _List_fromArray(
-										[
-											{
-											gensoname: 'O',
-											relposition: _Utils_Tuple2(0.0, 0.0),
-											size: '50'
-										},
-											{
-											gensoname: 'O',
-											relposition: _Utils_Tuple2(100.0, 0.0),
-											size: '50'
-										}
-										]);
-								case 1:
-									return _List_fromArray(
-										[
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(0.0, 0.0),
-											size: '40'
-										},
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(80.0, 0.0),
-											size: '40'
-										}
-										]);
-								case 2:
-									return _List_fromArray(
-										[
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(0.0, 0.0),
-											size: '40'
-										},
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(80.0, 0.0),
-											size: '40'
-										}
-										]);
-								case 3:
-									return _List_fromArray(
-										[
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(0.0, 40.0),
-											size: '40'
-										},
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(150.0, 40.0),
-											size: '40'
-										},
-											{
-											gensoname: 'O',
-											relposition: _Utils_Tuple2(75.0, 0.0),
-											size: '50'
-										}
-										]);
-								case 4:
-									return _List_fromArray(
-										[
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(0.0, 40.0),
-											size: '40'
-										},
-											{
-											gensoname: 'H',
-											relposition: _Utils_Tuple2(150.0, 40.0),
-											size: '40'
-										},
-											{
-											gensoname: 'O',
-											relposition: _Utils_Tuple2(75.0, 0.0),
-											size: '50'
-										}
-										]);
-								default:
-									return _List_Nil;
-							}
-						}(),
-						position.a),
-					idleBoxes),
-				uid: uid + 1
-			});
-	});
-var author$project$MultipleTargetsExample$BoxGroup = F3(
-	function (uid, movingBox, idleBoxes) {
-		return {idleBoxes: idleBoxes, movingBox: movingBox, uid: uid};
-	});
-var author$project$MultipleTargetsExample$emptyGroup = A3(author$project$MultipleTargetsExample$BoxGroup, 0, elm$core$Maybe$Nothing, _List_Nil);
-var author$project$MultipleTargetsExample$makeBoxGroup = function (positions) {
-	return A3(elm$core$List$foldl, author$project$MultipleTargetsExample$addBox, author$project$MultipleTargetsExample$emptyGroup, positions);
-};
-var elm$core$Basics$True = {$: 'True'};
-var elm$core$Result$isOk = function (result) {
-	if (result.$ === 'Ok') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$core$Array$branchFactor = 32;
-var elm$core$Array$Array_elm_builtin = F4(
-	function (a, b, c, d) {
-		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
-	});
-var elm$core$Basics$ceiling = _Basics_ceiling;
-var elm$core$Basics$fdiv = _Basics_fdiv;
-var elm$core$Basics$logBase = F2(
-	function (base, number) {
-		return _Basics_log(number) / _Basics_log(base);
-	});
-var elm$core$Array$shiftStep = elm$core$Basics$ceiling(
-	A2(elm$core$Basics$logBase, 2, elm$core$Array$branchFactor));
-var elm$core$Elm$JsArray$empty = _JsArray_empty;
-var elm$core$Array$empty = A4(elm$core$Array$Array_elm_builtin, 0, elm$core$Array$shiftStep, elm$core$Elm$JsArray$empty, elm$core$Elm$JsArray$empty);
-var elm$core$Array$Leaf = function (a) {
-	return {$: 'Leaf', a: a};
-};
-var elm$core$Array$SubTree = function (a) {
-	return {$: 'SubTree', a: a};
-};
-var elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
 var elm$core$Array$compressNodes = F2(
 	function (nodes, acc) {
 		compressNodes:
@@ -5749,7 +4480,15 @@ var elm$core$Array$compressNodes = F2(
 			}
 		}
 	});
+var elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var elm$core$Basics$eq = _Utils_equal;
+var elm$core$Tuple$first = function (_n0) {
+	var x = _n0.a;
+	return x;
+};
 var elm$core$Array$treeFromBuilder = F2(
 	function (nodeList, nodeListSize) {
 		treeFromBuilder:
@@ -5766,15 +4505,19 @@ var elm$core$Array$treeFromBuilder = F2(
 			}
 		}
 	});
+var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
 	});
 var elm$core$Basics$floor = _Basics_floor;
+var elm$core$Basics$gt = _Utils_gt;
 var elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
+var elm$core$Basics$mul = _Basics_mul;
+var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
@@ -5828,6 +4571,7 @@ var elm$core$Array$initializeHelp = F5(
 			}
 		}
 	});
+var elm$core$Basics$le = _Utils_le;
 var elm$core$Basics$remainderBy = _Basics_remainderBy;
 var elm$core$Array$initialize = F2(
 	function (len, fn) {
@@ -5840,6 +4584,10 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
+var elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -5894,6 +4642,27 @@ var elm$core$List$length = function (xs) {
 		xs);
 };
 var elm$core$List$map2 = _List_map2;
+var elm$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_Utils_cmp(lo, hi) < 1) {
+				var $temp$lo = lo,
+					$temp$hi = hi - 1,
+					$temp$list = A2(elm$core$List$cons, hi, list);
+				lo = $temp$lo;
+				hi = $temp$hi;
+				list = $temp$list;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var elm$core$List$range = F2(
+	function (lo, hi) {
+		return A3(elm$core$List$rangeHelp, lo, hi, _List_Nil);
+	});
 var elm$core$List$indexedMap = F2(
 	function (f, xs) {
 		return A3(
@@ -5906,6 +4675,7 @@ var elm$core$List$indexedMap = F2(
 			xs);
 	});
 var elm$core$String$all = _String_all;
+var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$String$join = F2(
 	function (sep, chunks) {
 		return A2(
@@ -6039,19 +4809,15 @@ var zaboco$elm_draggable$Draggable$State = function (a) {
 };
 var zaboco$elm_draggable$Internal$NotDragging = {$: 'NotDragging'};
 var zaboco$elm_draggable$Draggable$init = zaboco$elm_draggable$Draggable$State(zaboco$elm_draggable$Internal$NotDragging);
-var author$project$MultipleTargetsExample$init = function (_n0) {
+var author$project$BasicExample$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
-			boxGroup: author$project$MultipleTargetsExample$makeBoxGroup(author$project$MultipleTargetsExample$boxPositions),
 			drag: zaboco$elm_draggable$Draggable$init,
-			notify1: '',
-			notify2: '',
-			notify3: '',
-			siki: false
+			xy: A2(author$project$BasicExample$Position, 32, 32)
 		},
 		elm$core$Platform$Cmd$none);
 };
-var author$project$MultipleTargetsExample$DragMsg = function (a) {
+var author$project$BasicExample$DragMsg = function (a) {
 	return {$: 'DragMsg', a: a};
 };
 var elm$browser$Browser$Events$Document = {$: 'Document'};
@@ -6122,6 +4888,75 @@ var elm$core$Task$Perform = function (a) {
 	return {$: 'Perform', a: a};
 };
 var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
 var elm$core$Task$map2 = F3(
 	function (func, taskA, taskB) {
 		return A2(
@@ -6749,45 +5584,12 @@ var zaboco$elm_draggable$Draggable$subscriptions = F2(
 						])));
 		}
 	});
-var author$project$MultipleTargetsExample$subscriptions = function (_n0) {
+var author$project$BasicExample$subscriptions = function (_n0) {
 	var drag = _n0.drag;
-	return A2(zaboco$elm_draggable$Draggable$subscriptions, author$project$MultipleTargetsExample$DragMsg, drag);
+	return A2(zaboco$elm_draggable$Draggable$subscriptions, author$project$BasicExample$DragMsg, drag);
 };
-var elm_explorations$linear_algebra$Math$Vector2$add = _MJS_v2add;
-var author$project$MultipleTargetsExample$dragBoxBy = F2(
-	function (delta, box) {
-		return _Utils_update(
-			box,
-			{
-				position: A2(elm_explorations$linear_algebra$Math$Vector2$add, delta, box.position)
-			});
-	});
-var elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var author$project$MultipleTargetsExample$dragActiveBy = F2(
-	function (delta, group) {
-		return _Utils_update(
-			group,
-			{
-				movingBox: A2(
-					elm$core$Maybe$map,
-					author$project$MultipleTargetsExample$dragBoxBy(delta),
-					group.movingBox)
-			});
-	});
-var author$project$MultipleTargetsExample$OnDragBy = function (a) {
+var author$project$BasicExample$OnDragBy = function (a) {
 	return {$: 'OnDragBy', a: a};
-};
-var author$project$MultipleTargetsExample$StartDragging = function (a) {
-	return {$: 'StartDragging', a: a};
 };
 var zaboco$elm_draggable$Draggable$Config = function (a) {
 	return {$: 'Config', a: a};
@@ -6807,38 +5609,26 @@ var zaboco$elm_draggable$Internal$defaultConfig = {
 		return elm$core$Maybe$Nothing;
 	}
 };
-var zaboco$elm_draggable$Draggable$customConfig = function (events) {
+var zaboco$elm_draggable$Draggable$basicConfig = function (onDragByListener) {
+	var defaultConfig = zaboco$elm_draggable$Internal$defaultConfig;
 	return zaboco$elm_draggable$Draggable$Config(
-		A3(elm$core$List$foldl, elm$core$Basics$apL, zaboco$elm_draggable$Internal$defaultConfig, events));
+		_Utils_update(
+			defaultConfig,
+			{
+				onDragBy: A2(elm$core$Basics$composeL, elm$core$Maybe$Just, onDragByListener)
+			}));
 };
-var zaboco$elm_draggable$Draggable$Events$onDragBy = F2(
-	function (toMsg, config) {
-		return _Utils_update(
-			config,
-			{
-				onDragBy: A2(elm$core$Basics$composeL, elm$core$Maybe$Just, toMsg)
-			});
+var author$project$BasicExample$dragConfig = zaboco$elm_draggable$Draggable$basicConfig(author$project$BasicExample$OnDragBy);
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
 	});
-var zaboco$elm_draggable$Draggable$Events$onDragStart = F2(
-	function (toMsg, config) {
-		return _Utils_update(
-			config,
-			{
-				onDragStart: A2(elm$core$Basics$composeL, elm$core$Maybe$Just, toMsg)
-			});
-	});
-var author$project$MultipleTargetsExample$dragConfig = zaboco$elm_draggable$Draggable$customConfig(
-	_List_fromArray(
-		[
-			zaboco$elm_draggable$Draggable$Events$onDragBy(
-			function (_n0) {
-				var dx = _n0.a;
-				var dy = _n0.b;
-				return author$project$MultipleTargetsExample$OnDragBy(
-					A2(elm_explorations$linear_algebra$Math$Vector2$vec2, dx, dy));
-			}),
-			zaboco$elm_draggable$Draggable$Events$onDragStart(author$project$MultipleTargetsExample$StartDragging)
-		]));
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -6847,153 +5637,6 @@ var elm$core$Maybe$withDefault = F2(
 		} else {
 			return _default;
 		}
-	});
-var elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
-var elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
-var author$project$MultipleTargetsExample$notify = F2(
-	function (wkl, boxGroup) {
-		var mbx = boxGroup.movingBox;
-		var dfb = A5(
-			author$project$MultipleTargetsExample$Box,
-			'',
-			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 0.0, 0.0),
-			false,
-			_List_Nil,
-			'');
-		var bx = A2(elm$core$Maybe$withDefault, dfb, mbx);
-		var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
-		var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
-		return ((_Utils_cmp(wkl.xss, xx) < 0) && ((_Utils_cmp(xx, wkl.xee) < 0) && ((_Utils_cmp(wkl.yss, yy) < 0) && ((_Utils_cmp(yy, wkl.yee) < 0) && _Utils_eq(bx.name, wkl.nm))))) ? 'Ok' : '';
-	});
-var elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _n0) {
-				var trues = _n0.a;
-				var falses = _n0.b;
-				return pred(x) ? _Utils_Tuple2(
-					A2(elm$core$List$cons, x, trues),
-					falses) : _Utils_Tuple2(
-					trues,
-					A2(elm$core$List$cons, x, falses));
-			});
-		return A3(
-			elm$core$List$foldr,
-			step,
-			_Utils_Tuple2(_List_Nil, _List_Nil),
-			list);
-	});
-var author$project$MultipleTargetsExample$startDragging = F2(
-	function (id, group) {
-		var idleBoxes = group.idleBoxes;
-		var movingBox = group.movingBox;
-		var _n0 = A2(
-			elm$core$List$partition,
-			A2(
-				elm$core$Basics$composeR,
-				function ($) {
-					return $.id;
-				},
-				elm$core$Basics$eq(id)),
-			idleBoxes);
-		var targetAsList = _n0.a;
-		var others = _n0.b;
-		return _Utils_update(
-			group,
-			{
-				idleBoxes: others,
-				movingBox: elm$core$List$head(targetAsList)
-			});
-	});
-var author$project$MultipleTargetsExample$allBoxes = function (_n0) {
-	var movingBox = _n0.movingBox;
-	var idleBoxes = _n0.idleBoxes;
-	return A2(
-		elm$core$Maybe$withDefault,
-		idleBoxes,
-		A2(
-			elm$core$Maybe$map,
-			function (a) {
-				return A2(elm$core$List$cons, a, idleBoxes);
-			},
-			movingBox));
-};
-var author$project$MultipleTargetsExample$toggleOff = function (box) {
-	return _Utils_update(
-		box,
-		{ok: false});
-};
-var elm$core$Basics$not = _Basics_not;
-var author$project$MultipleTargetsExample$toggleBoxOff = F5(
-	function (id, wkl1, wkl2, wkl3, lbox) {
-		var possiblyToggleBox = function (box) {
-			var bx = box;
-			var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
-			var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
-			return _Utils_eq(box.id, id) ? (((!((_Utils_cmp(wkl1.xss, xx) < 0) && ((_Utils_cmp(xx, wkl1.xee) < 0) && ((_Utils_cmp(wkl1.yss, yy) < 0) && ((_Utils_cmp(yy, wkl1.yee) < 0) && _Utils_eq(bx.name, wkl1.nm)))))) && ((!((_Utils_cmp(wkl2.xss, xx) < 0) && ((_Utils_cmp(xx, wkl2.xee) < 0) && ((_Utils_cmp(wkl2.yss, yy) < 0) && ((_Utils_cmp(yy, wkl2.yee) < 0) && _Utils_eq(bx.name, wkl2.nm)))))) && (!((_Utils_cmp(wkl3.xss, xx) < 0) && ((_Utils_cmp(xx, wkl3.xee) < 0) && ((_Utils_cmp(wkl3.yss, yy) < 0) && ((_Utils_cmp(yy, wkl3.yee) < 0) && _Utils_eq(bx.name, wkl3.nm)))))))) ? author$project$MultipleTargetsExample$toggleOff(bx) : bx) : bx;
-		};
-		return A2(elm$core$List$map, possiblyToggleBox, lbox);
-	});
-var author$project$MultipleTargetsExample$toggleOk = function (box) {
-	return _Utils_update(
-		box,
-		{ok: true});
-};
-var author$project$MultipleTargetsExample$toggleBoxOk = F5(
-	function (id, wkl1, wkl2, wkl3, lbox) {
-		var possiblyToggleBox = function (box) {
-			var bx = box;
-			var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
-			var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
-			return _Utils_eq(bx.id, id) ? (((_Utils_cmp(wkl1.xss, xx) < 0) && ((_Utils_cmp(xx, wkl1.xee) < 0) && ((_Utils_cmp(wkl1.yss, yy) < 0) && ((_Utils_cmp(yy, wkl1.yee) < 0) && _Utils_eq(bx.name, wkl1.nm))))) ? author$project$MultipleTargetsExample$toggleOk(bx) : (((_Utils_cmp(wkl2.xss, xx) < 0) && ((_Utils_cmp(xx, wkl2.xee) < 0) && ((_Utils_cmp(wkl2.yss, yy) < 0) && ((_Utils_cmp(yy, wkl2.yee) < 0) && _Utils_eq(bx.name, wkl2.nm))))) ? author$project$MultipleTargetsExample$toggleOk(bx) : (((_Utils_cmp(wkl3.xss, xx) < 0) && ((_Utils_cmp(xx, wkl3.xee) < 0) && ((_Utils_cmp(wkl3.yss, yy) < 0) && ((_Utils_cmp(yy, wkl3.yee) < 0) && _Utils_eq(bx.name, wkl3.nm))))) ? author$project$MultipleTargetsExample$toggleOk(bx) : bx))) : bx;
-		};
-		return A2(elm$core$List$map, possiblyToggleBox, lbox);
-	});
-var author$project$MultipleTargetsExample$stopDragging = F5(
-	function (id, wkl1, wkl2, wkl3, group) {
-		var mbx = group.movingBox;
-		var dfb = A5(
-			author$project$MultipleTargetsExample$Box,
-			'',
-			A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 0.0, 0.0),
-			false,
-			_List_Nil,
-			'');
-		var bx = A2(elm$core$Maybe$withDefault, dfb, mbx);
-		var xx = elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
-		var yy = elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
-		return _Utils_update(
-			group,
-			{
-				idleBoxes: A5(
-					author$project$MultipleTargetsExample$toggleBoxOff,
-					id,
-					wkl1,
-					wkl2,
-					wkl3,
-					A5(
-						author$project$MultipleTargetsExample$toggleBoxOk,
-						id,
-						wkl1,
-						wkl2,
-						wkl3,
-						author$project$MultipleTargetsExample$allBoxes(group))),
-				movingBox: elm$core$Maybe$Nothing
-			});
 	});
 var zaboco$elm_draggable$Cmd$Extra$message = function (x) {
 	return A2(
@@ -7097,187 +5740,35 @@ var zaboco$elm_draggable$Draggable$update = F3(
 				{drag: dragState}),
 			dragCmd);
 	});
-var author$project$MultipleTargetsExample$update = F2(
+var author$project$BasicExample$update = F2(
 	function (msg, model) {
-		var boxGroup = model.boxGroup;
-		var siki = model.siki;
-		var wkl = F5(
-			function (x1, x2, y1, y2, st) {
-				return {nm: st, xee: x2, xss: x1, yee: y2, yss: y1};
-			});
-		var wkl1 = A5(wkl, 41.0, 257.0, 54.0, 338.0, 'H2O');
-		var wkl2 = A5(wkl, 480.0, 677.0, 52.0, 359.0, 'H2');
-		var wkl3 = A5(wkl, 952.0, 1110.0, 52.0, 349.0, 'O2');
-		switch (msg.$) {
-			case 'OnDragBy':
-				var delta = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							boxGroup: A2(author$project$MultipleTargetsExample$dragActiveBy, delta, boxGroup)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'StartDragging':
-				var id = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							boxGroup: A2(author$project$MultipleTargetsExample$startDragging, id, boxGroup)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'StopDragging':
-				var id = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							boxGroup: A5(author$project$MultipleTargetsExample$stopDragging, id, wkl1, wkl2, wkl3, boxGroup),
-							notify1: A2(author$project$MultipleTargetsExample$notify, wkl1, boxGroup),
-							notify2: A2(author$project$MultipleTargetsExample$notify, wkl2, boxGroup),
-							notify3: A2(author$project$MultipleTargetsExample$notify, wkl3, boxGroup)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'ToggleBoxOk':
-				var id = msg.a;
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 'DragMsg':
-				var dragMsg = msg.a;
-				return A3(zaboco$elm_draggable$Draggable$update, author$project$MultipleTargetsExample$dragConfig, dragMsg, model);
-			default:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							siki: function () {
-								if (!siki) {
-									return true;
-								} else {
-									return false;
-								}
-							}()
-						}),
-					elm$core$Platform$Cmd$none);
+		var xy = model.xy;
+		if (msg.$ === 'OnDragBy') {
+			var _n1 = msg.a;
+			var dx = _n1.a;
+			var dy = _n1.b;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						xy: A2(author$project$BasicExample$Position, xy.x + dx, xy.y + dy)
+					}),
+				elm$core$Platform$Cmd$none);
+		} else {
+			var dragMsg = msg.a;
+			return A3(zaboco$elm_draggable$Draggable$update, author$project$BasicExample$dragConfig, dragMsg, model);
 		}
 	});
-var author$project$MultipleTargetsExample$Sikihyoji = {$: 'Sikihyoji'};
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var author$project$MultipleTargetsExample$background = A2(
-	elm$svg$Svg$rect,
-	_List_fromArray(
-		[
-			elm$svg$Svg$Attributes$x('0'),
-			elm$svg$Svg$Attributes$y('0'),
-			elm$svg$Svg$Attributes$width('1300'),
-			elm$svg$Svg$Attributes$height('430'),
-			elm$svg$Svg$Attributes$fill('#eee')
-		]),
-	_List_Nil);
-var author$project$MultipleTargetsExample$StopDragging = function (a) {
-	return {$: 'StopDragging', a: a};
-};
 var elm$core$String$fromFloat = _String_fromNumber;
-var author$project$MultipleTargetsExample$num = F2(
-	function (attr, value) {
-		return attr(
-			elm$core$String$fromFloat(value));
-	});
-var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
-var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
+var elm$html$Html$div = _VirtualDom_node('div');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
-var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
-var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var author$project$MultipleTargetsExample$circlecreate = F2(
-	function (position, atom) {
-		return A2(
-			elm$svg$Svg$g,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$r(atom.size),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cx,
-							elm_explorations$linear_algebra$Math$Vector2$getX(position) + atom.relposition.a),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$cy,
-							elm_explorations$linear_algebra$Math$Vector2$getY(position) + atom.relposition.b),
-							elm$svg$Svg$Attributes$fill(
-							function () {
-								var _n0 = atom.gensoname;
-								switch (_n0) {
-									case 'H':
-										return 'blue';
-									case 'O':
-										return 'red';
-									default:
-										return 'white';
-								}
-							}()),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$text_,
-					_List_fromArray(
-						[
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$x,
-							(elm_explorations$linear_algebra$Math$Vector2$getX(position) + atom.relposition.a) - 18.0),
-							A2(
-							author$project$MultipleTargetsExample$num,
-							elm$svg$Svg$Attributes$y,
-							(elm_explorations$linear_algebra$Math$Vector2$getY(position) + atom.relposition.b) + 14.0),
-							elm$svg$Svg$Attributes$stroke('black'),
-							elm$svg$Svg$Attributes$fontSize('36pt')
-						]),
-					_List_fromArray(
-						[
-							elm$svg$Svg$text(atom.gensoname)
-						]))
-				]));
-	});
-var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$svg$Svg$Events$on = elm$html$Html$Events$on;
-var elm$svg$Svg$Events$onMouseUp = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'mouseup',
-		elm$json$Json$Decode$succeed(msg));
-};
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var elm$virtual_dom$VirtualDom$Custom = function (a) {
 	return {$: 'Custom', a: a};
 };
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var elm$html$Html$Events$custom = F2(
 	function (event, decoder) {
 		return A2(
@@ -7327,7 +5818,21 @@ var zaboco$elm_draggable$Draggable$mouseTrigger = F2(
 				A2(elm$core$Basics$composeL, zaboco$elm_draggable$Draggable$alwaysPreventDefaultAndStopPropagation, envelope),
 				zaboco$elm_draggable$Draggable$baseDecoder(key)));
 	});
+var elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var elm$core$Basics$round = _Basics_round;
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$defaultOptions = {preventDefault: true, stopPropagation: false};
 var elm$json$Json$Decode$map4 = _Json_map4;
 var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$Event = F4(
@@ -7484,219 +5989,34 @@ var zaboco$elm_draggable$Draggable$touchTriggers = F2(
 					}))
 			]);
 	});
-var author$project$MultipleTargetsExample$boxView = function (_n0) {
-	var id = _n0.id;
-	var position = _n0.position;
-	var ok = _n0.ok;
-	var atoms = _n0.atoms;
+var author$project$BasicExample$view = function (_n0) {
+	var xy = _n0.xy;
+	var translate = 'translate(' + (elm$core$String$fromFloat(xy.x) + ('px, ' + (elm$core$String$fromFloat(xy.y) + 'px)')));
 	return A2(
-		elm$svg$Svg$g,
+		elm$html$Html$div,
 		_Utils_ap(
 			_List_fromArray(
 				[
-					elm$svg$Svg$Attributes$cursor('move'),
-					A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
-					elm$svg$Svg$Events$onMouseUp(
-					author$project$MultipleTargetsExample$StopDragging(id)),
-					A2(
-					elm$svg$Svg$Events$on,
-					'touchend',
-					elm$json$Json$Decode$succeed(
-						author$project$MultipleTargetsExample$StopDragging(id))),
-					function () {
-					if (ok) {
-						return elm$svg$Svg$Attributes$strokeWidth('5');
-					} else {
-						return elm$svg$Svg$Attributes$strokeWidth('1');
-					}
-				}()
+					A2(elm$html$Html$Attributes$style, 'transform', translate),
+					A2(elm$html$Html$Attributes$style, 'padding', '16px'),
+					A2(elm$html$Html$Attributes$style, 'background-color', 'lightgray'),
+					A2(elm$html$Html$Attributes$style, 'width', '64px'),
+					A2(elm$html$Html$Attributes$style, 'cursor', 'move'),
+					A2(zaboco$elm_draggable$Draggable$mouseTrigger, _Utils_Tuple0, author$project$BasicExample$DragMsg)
 				]),
-			A2(zaboco$elm_draggable$Draggable$touchTriggers, id, author$project$MultipleTargetsExample$DragMsg)),
-		A2(
-			elm$core$List$map,
-			function (atom) {
-				return A2(author$project$MultipleTargetsExample$circlecreate, position, atom);
-			},
-			atoms));
-};
-var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
-	return _VirtualDom_nodeNS(
-		_VirtualDom_noScript(tag));
-};
-var elm$svg$Svg$node = elm$virtual_dom$VirtualDom$nodeNS('http://www.w3.org/2000/svg');
-var author$project$MultipleTargetsExample$boxesView = function (boxGroup) {
-	return A3(
-		elm$svg$Svg$node,
-		'g',
-		_List_Nil,
-		A2(
-			elm$core$List$map,
-			author$project$MultipleTargetsExample$boxView,
-			elm$core$List$reverse(
-				author$project$MultipleTargetsExample$allBoxes(boxGroup))));
-};
-var author$project$MultipleTargetsExample$moji = F3(
-	function (xs, ys, txt) {
-		return A2(
-			elm$svg$Svg$text_,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$x(xs),
-					elm$svg$Svg$Attributes$y(ys),
-					elm$svg$Svg$Attributes$fill(
-					function () {
-						if (txt === 'Ok') {
-							return 'red';
-						} else {
-							return 'black';
-						}
-					}()),
-					elm$svg$Svg$Attributes$fontSize('36pt')
-				]),
-			_List_fromArray(
-				[
-					elm$svg$Svg$text(txt)
-				]));
-	});
-var author$project$MultipleTargetsExample$waku = F4(
-	function (boxGroup, notify1, notify2, notify3) {
-		return A2(
-			elm$svg$Svg$g,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A3(author$project$MultipleTargetsExample$moji, '50', '50', '水'),
-					A2(
-					elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x('0'),
-							elm$svg$Svg$Attributes$y('0'),
-							elm$svg$Svg$Attributes$width('350'),
-							elm$svg$Svg$Attributes$height('400'),
-							elm$svg$Svg$Attributes$fill('none'),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A3(author$project$MultipleTargetsExample$moji, '50', '350', notify1),
-					A3(author$project$MultipleTargetsExample$moji, '380', '200', '→'),
-					A3(author$project$MultipleTargetsExample$moji, '500', '50', '水素'),
-					A2(
-					elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x('450'),
-							elm$svg$Svg$Attributes$y('0'),
-							elm$svg$Svg$Attributes$width('350'),
-							elm$svg$Svg$Attributes$height('400'),
-							elm$svg$Svg$Attributes$fill('none'),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A3(author$project$MultipleTargetsExample$moji, '500', '350', notify2),
-					A3(author$project$MultipleTargetsExample$moji, '820', '200', '+'),
-					A3(author$project$MultipleTargetsExample$moji, '950', '50', '酸素'),
-					A2(
-					elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x('900'),
-							elm$svg$Svg$Attributes$y('0'),
-							elm$svg$Svg$Attributes$width('350'),
-							elm$svg$Svg$Attributes$height('400'),
-							elm$svg$Svg$Attributes$fill('none'),
-							elm$svg$Svg$Attributes$stroke('black')
-						]),
-					_List_Nil),
-					A3(author$project$MultipleTargetsExample$moji, '950', '350', notify3)
-				]));
-	});
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$p = _VirtualDom_node('p');
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$style = _VirtualDom_attribute('style');
-var author$project$MultipleTargetsExample$view = function (_n0) {
-	var boxGroup = _n0.boxGroup;
-	var notify1 = _n0.notify1;
-	var notify2 = _n0.notify2;
-	var notify3 = _n0.notify3;
-	var siki = _n0.siki;
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
+			A2(zaboco$elm_draggable$Draggable$touchTriggers, _Utils_Tuple0, author$project$BasicExample$DragMsg)),
 		_List_fromArray(
 			[
-				A2(
-				elm$html$Html$p,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'padding-left', '8px')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text('Drag substance . '),
-						A2(
-						elm$html$Html$button,
-						_List_fromArray(
-							[
-								elm$html$Html$Events$onClick(author$project$MultipleTargetsExample$Sikihyoji)
-							]),
-						_List_fromArray(
-							[
-								elm$svg$Svg$text('化学反応式')
-							])),
-						A2(
-						elm$html$Html$p,
-						_List_fromArray(
-							[
-								A2(elm$html$Html$Attributes$style, 'padding-left', '14px'),
-								A2(
-								elm$html$Html$Attributes$style,
-								'display',
-								function () {
-									if (siki) {
-										return '';
-									} else {
-										return 'none';
-									}
-								}())
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('2H2O ->  2H2  + O2 ')
-							]))
-					])),
-				A2(
-				elm$svg$Svg$svg,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$style('height: 100vh; width: 100vw; position: fixed;')
-					]),
-				_List_fromArray(
-					[
-						author$project$MultipleTargetsExample$background,
-						author$project$MultipleTargetsExample$boxesView(boxGroup),
-						A4(author$project$MultipleTargetsExample$waku, boxGroup, notify1, notify2, notify3)
-					]))
+				elm$html$Html$text('Drag me')
 			]));
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$MultipleTargetsExample$main = elm$browser$Browser$element(
-	{init: author$project$MultipleTargetsExample$init, subscriptions: author$project$MultipleTargetsExample$subscriptions, update: author$project$MultipleTargetsExample$update, view: author$project$MultipleTargetsExample$view});
-_Platform_export({'MultipleTargetsExample':{'init':author$project$MultipleTargetsExample$main(
+var author$project$BasicExample$main = elm$browser$Browser$element(
+	{init: author$project$BasicExample$init, subscriptions: author$project$BasicExample$subscriptions, update: author$project$BasicExample$update, view: author$project$BasicExample$view});
+_Platform_export({'BasicExample':{'init':author$project$BasicExample$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
 
-var app = Elm.MultipleTargetsExample.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
+var app = Elm.BasicExample.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
 if (document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49"))
 {
   document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49").innerText = 'This is a headless program, meaning there is nothing to show here.\n\nI started the program anyway though, and you can access it as `app` in the developer console.';
