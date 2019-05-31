@@ -8,10 +8,11 @@ import Html.Attributes
 import Math.Vector2 as Vector2 exposing (Vec2, getX, getY)
 import Svg exposing (..)
 import Svg.Attributes as Attr
-import Svg.Events exposing (onMouseUp)
+import Svg.Events exposing (onMouseUp,on)
 import Html.Events exposing (onClick)
 import Svg.Keyed
 import Svg.Lazy exposing (lazy)
+import Json.Decode exposing (..)
 
 
 main : Program () Model Msg
@@ -276,8 +277,7 @@ notify wkl boxGroup =
                   yy=Vector2.getY bx.position
                   
                in
-                  if wkl.xss<xx && xx<wkl.xee && wkl.yss<yy && yy<wkl.yee && bx.name==wkl.nm then
-                
+                  if wkl.xss<xx && xx<wkl.xee && wkl.yss<yy && yy<wkl.yee && bx.name==wkl.nm then                
                     "Ok"
                   else
                    ""        
@@ -418,6 +418,7 @@ boxView { id, position, ok ,atoms} =
        [     Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp (StopDragging id)
+        , on "touchstart" (succeed (StopDragging id))
         , ( case ok of
                 True ->  Attr.strokeWidth "5"
                 _ -> Attr.strokeWidth "1"

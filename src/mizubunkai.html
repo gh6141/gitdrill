@@ -7268,6 +7268,7 @@ var elm$html$Html$Events$on = F2(
 			event,
 			elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
+var elm$svg$Svg$Events$on = elm$html$Html$Events$on;
 var elm$svg$Svg$Events$onMouseUp = function (msg) {
 	return A2(
 		elm$html$Html$Events$on,
@@ -7339,6 +7340,11 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
 				elm$svg$Svg$Events$onMouseUp(
 				author$project$MultipleTargetsExample$StopDragging(id)),
+				A2(
+				elm$svg$Svg$Events$on,
+				'touchstart',
+				elm$json$Json$Decode$succeed(
+					author$project$MultipleTargetsExample$StopDragging(id))),
 				function () {
 				if (ok) {
 					return elm$svg$Svg$Attributes$strokeWidth('5');
