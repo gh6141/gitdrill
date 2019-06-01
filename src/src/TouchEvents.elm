@@ -77,9 +77,10 @@ getDirectionY start end =
 {-| Higher level touch event handler
 This takes a TouchEvent type and application `Msg` type.
 The `Msg` type should take a `TouchEvent.Touch` type.
+
     type Msg
         = UserSwipeStart TouchEvents.Touch
-    view model =
+view model =
         div
             [ TouchEvents.onTouchEvent TouchEvents.TouchStart UserSwipeStart
             ]
