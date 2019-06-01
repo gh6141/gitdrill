@@ -261,7 +261,7 @@ dragConfig =
     Draggable.customConfig
         [ onDragBy (\( dx, dy ) -> Vector2.vec2 dx dy |> OnDragBy)
         , onDragStart StartDragging
-        
+        , onDragEnd 
         ]
 
 notify : Wakul -> BoxGroup -> String
