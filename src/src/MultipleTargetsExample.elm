@@ -187,16 +187,10 @@ update msg ({ boxGroup } as model) =
             Draggable.update dragConfig dragMsg model
 
         OnTouchStart touchEvent ->
-             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
+             ( { model | boxGroup = boxGroup  }, Cmd.none )
 
         OnTouchEnd touchEvent ->
-          ( { model | boxGroup = boxGroup |> stopDragging }, Cmd.none )
-            { model
-                | touchPositionX = Just touchEvent.clientX
-                , touchPositionY = Just touchEvent.clientY
-              
-
-            }
+          ( { model | boxGroup = boxGroup  }, Cmd.none ) 
 
 
 subscriptions : Model -> Sub Msg
@@ -249,7 +243,7 @@ boxView { id, position, clicked } =
                 "lightblue"
     in
     Svg.rect
-       ( [ num Attr.width <| getX boxSize
+        [ num Attr.width <| getX boxSize
         , num Attr.height <| getY boxSize
         , num Attr.x (getX position)
         , num Attr.y (getY position)
@@ -261,7 +255,7 @@ boxView { id, position, clicked } =
         ,TE.onTouchEvent TE.TouchStart OnTouchStart
         , TE.onTouchEvent TE.TouchEnd OnTouchEnd
         ]
-        []
+        [] 
 
 
 background : Svg msg
