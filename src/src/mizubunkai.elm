@@ -416,8 +416,8 @@ boxView { id, position, ok ,atoms} =
     
        Svg.g
        ( [ Attr.cursor "move"
-        , Draggable.mouseTrigger id DragMsg        
-        , onMouseUp (StopDragging id)
+  {-      , Draggable.mouseTrigger id DragMsg        
+        , onMouseUp (StopDragging id) -}
         , on "touchend" (succeed ( StopDragging id))
         , ( case ok of
                 True ->  Attr.strokeWidth "5"
