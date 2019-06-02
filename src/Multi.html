@@ -6988,23 +6988,9 @@ var author$project$MultipleTargetsExample$update = F2(
 							boxGroup: A2(author$project$MultipleTargetsExample$toggleBoxClicked, id, boxGroup)
 						}),
 					elm$core$Platform$Cmd$none);
-			case 'DragMsg':
+			default:
 				var dragMsg = msg.a;
 				return A3(zaboco$elm_draggable$Draggable$update, author$project$MultipleTargetsExample$dragConfig, dragMsg, model);
-			case 'OnTouchStart':
-				var touchEvent = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{boxGroup: boxGroup}),
-					elm$core$Platform$Cmd$none);
-			default:
-				var touchEvent = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{boxGroup: boxGroup}),
-					elm$core$Platform$Cmd$none);
 		}
 	});
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -7025,12 +7011,6 @@ var author$project$MultipleTargetsExample$background = A2(
 			elm$svg$Svg$Attributes$fill('#eee')
 		]),
 	_List_Nil);
-var author$project$MultipleTargetsExample$OnTouchEnd = function (a) {
-	return {$: 'OnTouchEnd', a: a};
-};
-var author$project$MultipleTargetsExample$OnTouchStart = function (a) {
-	return {$: 'OnTouchStart', a: a};
-};
 var author$project$MultipleTargetsExample$StopDragging = {$: 'StopDragging'};
 var author$project$MultipleTargetsExample$boxSize = A2(elm_explorations$linear_algebra$Math$Vector2$vec2, 50, 50);
 var elm$core$String$fromFloat = _String_fromNumber;
@@ -7039,29 +7019,8 @@ var author$project$MultipleTargetsExample$num = F2(
 		return attr(
 			elm$core$String$fromFloat(value));
 	});
-var author$project$TouchEvents$TouchEnd = {$: 'TouchEnd'};
-var author$project$TouchEvents$TouchStart = {$: 'TouchStart'};
-var author$project$TouchEvents$Touch = F2(
-	function (clientX, clientY) {
-		return {clientX: clientX, clientY: clientY};
-	});
-var author$project$TouchEvents$touchDecoder = A3(
-	elm$json$Json$Decode$map2,
-	author$project$TouchEvents$Touch,
-	A2(elm$json$Json$Decode$field, 'clientX', elm$json$Json$Decode$float),
-	A2(elm$json$Json$Decode$field, 'clientY', elm$json$Json$Decode$float));
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var author$project$TouchEvents$eventDecoder = F2(
-	function (msg, eventKey) {
-		return A2(
-			elm$json$Json$Decode$at,
-			_List_fromArray(
-				[eventKey, '0']),
-			A2(elm$json$Json$Decode$map, msg, author$project$TouchEvents$touchDecoder));
-	});
+var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7073,37 +7032,6 @@ var elm$html$Html$Events$on = F2(
 			event,
 			elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
-var author$project$TouchEvents$onTouchEnd = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'touchend',
-		A2(author$project$TouchEvents$eventDecoder, msg, 'changedTouches'));
-};
-var author$project$TouchEvents$onTouchMove = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'touchmove',
-		A2(author$project$TouchEvents$eventDecoder, msg, 'touches'));
-};
-var author$project$TouchEvents$onTouchStart = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'touchstart',
-		A2(author$project$TouchEvents$eventDecoder, msg, 'touches'));
-};
-var author$project$TouchEvents$onTouchEvent = F2(
-	function (eventType, msg) {
-		switch (eventType.$) {
-			case 'TouchStart':
-				return author$project$TouchEvents$onTouchStart(msg);
-			case 'TouchEnd':
-				return author$project$TouchEvents$onTouchEnd(msg);
-			default:
-				return author$project$TouchEvents$onTouchMove(msg);
-		}
-	});
-var elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var elm$svg$Svg$Events$onMouseUp = function (msg) {
 	return A2(
 		elm$html$Html$Events$on,
@@ -7164,6 +7092,163 @@ var zaboco$elm_draggable$Draggable$mouseTrigger = F2(
 				A2(elm$core$Basics$composeL, zaboco$elm_draggable$Draggable$alwaysPreventDefaultAndStopPropagation, envelope),
 				zaboco$elm_draggable$Draggable$baseDecoder(key)));
 	});
+var elm$core$Basics$round = _Basics_round;
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$defaultOptions = {preventDefault: true, stopPropagation: false};
+var elm$json$Json$Decode$map4 = _Json_map4;
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$Event = F4(
+	function (keys, changedTouches, targetTouches, touches) {
+		return {changedTouches: changedTouches, keys: keys, targetTouches: targetTouches, touches: touches};
+	});
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$Touch = F4(
+	function (identifier, clientPos, pagePos, screenPos) {
+		return {clientPos: clientPos, identifier: identifier, pagePos: pagePos, screenPos: screenPos};
+	});
+var mpizenberg$elm_pointer_events$Internal$Decode$clientPos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'clientX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'clientY', elm$json$Json$Decode$float));
+var mpizenberg$elm_pointer_events$Internal$Decode$pagePos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'pageX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'pageY', elm$json$Json$Decode$float));
+var mpizenberg$elm_pointer_events$Internal$Decode$screenPos = A3(
+	elm$json$Json$Decode$map2,
+	F2(
+		function (a, b) {
+			return _Utils_Tuple2(a, b);
+		}),
+	A2(elm$json$Json$Decode$field, 'screenX', elm$json$Json$Decode$float),
+	A2(elm$json$Json$Decode$field, 'screenY', elm$json$Json$Decode$float));
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchDecoder = A5(
+	elm$json$Json$Decode$map4,
+	mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$Touch,
+	A2(elm$json$Json$Decode$field, 'identifier', elm$json$Json$Decode$int),
+	mpizenberg$elm_pointer_events$Internal$Decode$clientPos,
+	mpizenberg$elm_pointer_events$Internal$Decode$pagePos,
+	mpizenberg$elm_pointer_events$Internal$Decode$screenPos);
+var mpizenberg$elm_pointer_events$Internal$Decode$all = A2(
+	elm$core$List$foldr,
+	elm$json$Json$Decode$map2(elm$core$List$cons),
+	elm$json$Json$Decode$succeed(_List_Nil));
+var mpizenberg$elm_pointer_events$Internal$Decode$dynamicListOf = function (itemDecoder) {
+	var decodeOne = function (n) {
+		return A2(
+			elm$json$Json$Decode$field,
+			elm$core$String$fromInt(n),
+			itemDecoder);
+	};
+	var decodeN = function (n) {
+		return mpizenberg$elm_pointer_events$Internal$Decode$all(
+			A2(
+				elm$core$List$map,
+				decodeOne,
+				A2(elm$core$List$range, 0, n - 1)));
+	};
+	return A2(
+		elm$json$Json$Decode$andThen,
+		decodeN,
+		A2(elm$json$Json$Decode$field, 'length', elm$json$Json$Decode$int));
+};
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchListDecoder = mpizenberg$elm_pointer_events$Internal$Decode$dynamicListOf;
+var elm$json$Json$Decode$bool = _Json_decodeBool;
+var elm$json$Json$Decode$map3 = _Json_map3;
+var mpizenberg$elm_pointer_events$Internal$Decode$Keys = F3(
+	function (alt, ctrl, shift) {
+		return {alt: alt, ctrl: ctrl, shift: shift};
+	});
+var mpizenberg$elm_pointer_events$Internal$Decode$keys = A4(
+	elm$json$Json$Decode$map3,
+	mpizenberg$elm_pointer_events$Internal$Decode$Keys,
+	A2(elm$json$Json$Decode$field, 'altKey', elm$json$Json$Decode$bool),
+	A2(elm$json$Json$Decode$field, 'ctrlKey', elm$json$Json$Decode$bool),
+	A2(elm$json$Json$Decode$field, 'shiftKey', elm$json$Json$Decode$bool));
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$eventDecoder = A5(
+	elm$json$Json$Decode$map4,
+	mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$Event,
+	mpizenberg$elm_pointer_events$Internal$Decode$keys,
+	A2(
+		elm$json$Json$Decode$field,
+		'changedTouches',
+		mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchListDecoder(mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchDecoder)),
+	A2(
+		elm$json$Json$Decode$field,
+		'targetTouches',
+		mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchListDecoder(mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchDecoder)),
+	A2(
+		elm$json$Json$Decode$field,
+		'touches',
+		mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchListDecoder(mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$touchDecoder)));
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onWithOptions = F3(
+	function (event, options, tag) {
+		return A2(
+			elm$html$Html$Events$custom,
+			event,
+			A2(
+				elm$json$Json$Decode$map,
+				function (ev) {
+					return {
+						message: tag(ev),
+						preventDefault: options.preventDefault,
+						stopPropagation: options.stopPropagation
+					};
+				},
+				mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$eventDecoder));
+	});
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onEnd = A2(mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onWithOptions, 'touchend', mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$defaultOptions);
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onMove = A2(mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onWithOptions, 'touchmove', mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$defaultOptions);
+var mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onStart = A2(mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onWithOptions, 'touchstart', mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$defaultOptions);
+var zaboco$elm_draggable$Draggable$touchTriggers = F2(
+	function (key, envelope) {
+		var touchToMouse = function (touchEvent) {
+			return function (_n1) {
+				var clientX = _n1.a;
+				var clientY = _n1.b;
+				return A2(
+					zaboco$elm_draggable$Internal$Position,
+					elm$core$Basics$round(clientX),
+					elm$core$Basics$round(clientY));
+			}(
+				A2(
+					elm$core$Maybe$withDefault,
+					_Utils_Tuple2(0, 0),
+					A2(
+						elm$core$Maybe$map,
+						function ($) {
+							return $.clientPos;
+						},
+						elm$core$List$head(touchEvent.changedTouches))));
+		};
+		var mouseToEnv = function (internal) {
+			return A2(
+				elm$core$Basics$composeR,
+				touchToMouse,
+				A2(
+					elm$core$Basics$composeR,
+					internal,
+					A2(elm$core$Basics$composeR, zaboco$elm_draggable$Draggable$Msg, envelope)));
+		};
+		return _List_fromArray(
+			[
+				mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onStart(
+				mouseToEnv(
+					zaboco$elm_draggable$Internal$StartDragging(key))),
+				mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onMove(
+				mouseToEnv(zaboco$elm_draggable$Internal$DragAt)),
+				mpizenberg$elm_pointer_events$Html$Events$Extra$Touch$onEnd(
+				mouseToEnv(
+					function (_n0) {
+						return zaboco$elm_draggable$Internal$StopDragging;
+					}))
+			]);
+	});
 var author$project$MultipleTargetsExample$boxView = function (_n0) {
 	var id = _n0.id;
 	var position = _n0.position;
@@ -7171,32 +7256,32 @@ var author$project$MultipleTargetsExample$boxView = function (_n0) {
 	var color = clicked ? 'red' : 'lightblue';
 	return A2(
 		elm$svg$Svg$rect,
-		_List_fromArray(
-			[
-				A2(
-				author$project$MultipleTargetsExample$num,
-				elm$svg$Svg$Attributes$width,
-				elm_explorations$linear_algebra$Math$Vector2$getX(author$project$MultipleTargetsExample$boxSize)),
-				A2(
-				author$project$MultipleTargetsExample$num,
-				elm$svg$Svg$Attributes$height,
-				elm_explorations$linear_algebra$Math$Vector2$getY(author$project$MultipleTargetsExample$boxSize)),
-				A2(
-				author$project$MultipleTargetsExample$num,
-				elm$svg$Svg$Attributes$x,
-				elm_explorations$linear_algebra$Math$Vector2$getX(position)),
-				A2(
-				author$project$MultipleTargetsExample$num,
-				elm$svg$Svg$Attributes$y,
-				elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-				elm$svg$Svg$Attributes$fill(color),
-				elm$svg$Svg$Attributes$stroke('black'),
-				elm$svg$Svg$Attributes$cursor('move'),
-				A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
-				elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging),
-				A2(author$project$TouchEvents$onTouchEvent, author$project$TouchEvents$TouchStart, author$project$MultipleTargetsExample$OnTouchStart),
-				A2(author$project$TouchEvents$onTouchEvent, author$project$TouchEvents$TouchEnd, author$project$MultipleTargetsExample$OnTouchEnd)
-			]),
+		_Utils_ap(
+			_List_fromArray(
+				[
+					A2(
+					author$project$MultipleTargetsExample$num,
+					elm$svg$Svg$Attributes$width,
+					elm_explorations$linear_algebra$Math$Vector2$getX(author$project$MultipleTargetsExample$boxSize)),
+					A2(
+					author$project$MultipleTargetsExample$num,
+					elm$svg$Svg$Attributes$height,
+					elm_explorations$linear_algebra$Math$Vector2$getY(author$project$MultipleTargetsExample$boxSize)),
+					A2(
+					author$project$MultipleTargetsExample$num,
+					elm$svg$Svg$Attributes$x,
+					elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+					A2(
+					author$project$MultipleTargetsExample$num,
+					elm$svg$Svg$Attributes$y,
+					elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+					elm$svg$Svg$Attributes$fill(color),
+					elm$svg$Svg$Attributes$stroke('black'),
+					elm$svg$Svg$Attributes$cursor('move'),
+					A2(zaboco$elm_draggable$Draggable$mouseTrigger, id, author$project$MultipleTargetsExample$DragMsg),
+					elm$svg$Svg$Events$onMouseUp(author$project$MultipleTargetsExample$StopDragging)
+				]),
+			A2(zaboco$elm_draggable$Draggable$touchTriggers, id, author$project$MultipleTargetsExample$DragMsg)),
 		_List_Nil);
 };
 var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
