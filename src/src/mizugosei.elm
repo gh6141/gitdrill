@@ -13,7 +13,7 @@ import Svg.Keyed
 import Svg.Lazy exposing (lazy)
 
 
-main : Program () Model Msg
+main : Program String Model Msg
 main =
     Browser.element
         { init = init
@@ -180,10 +180,10 @@ boxPositions =
 
 
 init : flags -> ( Model, Cmd Msg )
-init _ =
+init dt =
     ( { boxGroup = makeBoxGroup boxPositions
       , drag = Draggable.init
-      , notify1=""
+      , notify1=dt
       , notify2=""
       , notify3=""
       }
