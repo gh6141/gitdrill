@@ -1,3 +1,4 @@
+
 module MultipleTargetsExample exposing (main)
 
 import Browser
@@ -11,7 +12,6 @@ import Svg.Attributes as Attr
 import Svg.Events exposing (onMouseUp)
 import Svg.Keyed
 import Svg.Lazy exposing (lazy)
-import TouchEvents as TE
 
 
 main : Program () Model Msg
@@ -133,13 +133,7 @@ type Msg
     | StartDragging String
     | ToggleBoxClicked String
     | StopDragging
-    | OnTouchStart TE.Touch
-    | OnTouchEnd TE.Touch
 
-type TouchEvent
-    = TouchStart
-    | TouchEnd
-    | TouchMove
 
 boxPositions : List Vec2
 boxPositions =
@@ -185,18 +179,6 @@ update msg ({ boxGroup } as model) =
 
         DragMsg dragMsg ->
             Draggable.update dragConfig dragMsg model
-
-        OnTouchStart touchEvent ->
-             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
-
-        OnTouchEnd touchEvent ->
-          ( { model | boxGroup = boxGroup |> stopDragging }, Cmd.none )
-            { model
-                | touchPositionX = Just touchEvent.clientX
-                , touchPositionY = Just touchEvent.clientY
-              
-
-            }
 
 
 subscriptions : Model -> Sub Msg
@@ -258,9 +240,7 @@ boxView { id, position, clicked } =
         , Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging
-        ,TE.onTouchEvent TE.TouchStart OnTouchStart
-        , TE.onTouchEvent TE.TouchEnd OnTouchEnd
-        ]
+        ]++ (Draggable.touchTriggers id DragMsg) )
         []
 
 

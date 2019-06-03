@@ -127,7 +127,7 @@ stopDragging : Id -> Wakul -> Wakul -> Wakul -> BoxGroup -> BoxGroup
 stopDragging id wkl1 wkl2 wkl3 group =
    let
                   dfb:Box
-                  dfb=Box "" (Vector2.vec2 0.0 0.0) False [] ""
+                  dfb=Box "0" (Vector2.vec2 10.0 10.0) False [ {gensoname="N"  , size="5" , relposition = (5.0,5.0) }] "N"
             
                   mbx=group.movingBox
                   bx=Maybe.withDefault dfb mbx
@@ -417,7 +417,7 @@ boxView { id, position, ok ,atoms} =
        Svg.g
        ( [ Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg        
-        , onMouseUp (StopDragging id)
+        , onMouseUp (StopDragging id) 
         , on "touchend" (succeed ( StopDragging id))
         , ( case ok of
                 True ->  Attr.strokeWidth "5"
