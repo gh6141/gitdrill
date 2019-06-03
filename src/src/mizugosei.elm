@@ -179,7 +179,7 @@ boxPositions =
     List.range 0 4 |> List.map indexToPosition
 
 
-init : flags -> ( Model, Cmd Msg )
+init : String -> ( Model, Cmd Msg )
 init dt =
     ( { boxGroup = makeBoxGroup boxPositions
       , drag = Draggable.init
