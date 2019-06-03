@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+ 
+  <style>
+  .box {
+  width:32px;
+  height:32px;
+  border:solid 1px #d01313;
+}
+
+.dropzone {
+  margin-top:16px;
+  margin-bottom:16px;
+  width: 280px;
+  height: 64px;
+  border: solid 1px #808080;
+}
+</style>
+  <script>
+    function load() {
+      var box = document.querySelector('.box');
+      box.addEventListener('dragstart', onDragStart, false);
+      box.addEventListener('dragend', onDragEnd, false);
+
+      var box = document.querySelector('.dropzone');
+      box.addEventListener('dragenter', onDragEnter, false);
+      box.addEventListener('dragover', onDragOver, false);
+      box.addEventListener('dragleave', onDragLeave, false);
+      box.addEventListener('drop', onDrop, false);
+    }
+
+    function onDragStart(e) {
+      e.dataTransfer.setData('Text', this.id);
+      this.textContent = 'onDragStart';
+    }
+
+    function onDragEnd(e) {
+      this.textContent = 'onDragEnd';
+    }
+
+    function onDragEnter(e) {
+      this.textContent = 'onDragEnter';
+    }
+    
+    function onDragOver(e) {
+      e.preventDefault();
+      this.textContent = 'onDragOver';
+    }
+
+    function onDragLeave(e) {
+      this.textContent = 'onDragLeave';
+    }
+
+    function onDrop(e) {
+      e.preventDefault();
+      this.textContent = 'onDrop';
+    }
+  </script>
+</head>
+<body onload="load();">
+  <div id="box" class="box" draggable="true"></div>
+  <div id="dropzone" class="dropzone"></div>
+
+</body>
+</html>

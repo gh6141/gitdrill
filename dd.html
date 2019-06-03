@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+  <style>
+  .box {
+    width:32px;
+    height:32px;
+    border:solid 1px #002f9f;
+  }
+  
+  .dropzone {
+    margin-top:16px;
+    margin-bottom:16px;
+    width: 280px;
+    height: 64px;
+    border: solid 1px #808080;
+  }
+  </style>
+  
+  <script>
+    function load() {
+      var box = document.querySelector('.box');
+      box.addEventListener('dragstart', onDragStart, false);
+
+      var zone = document.querySelector('.dropzone');
+      zone.addEventListener('dragover', onDragOver, false);
+      zone.addEventListener('drop', onDrop, false);
+   }
+
+    function onDragStart(e) {
+      e.dataTransfer.setData('text', this.id);
+    }
+
+    function onDragOver(e) {
+      e.preventDefault();
+      this.textContent = 'onDragOver';
+    }
+
+    function onDrop(e) {
+      e.preventDefault();
+      this.textContent = 'onDrop';
+    }
+
+  </script>
+</head>
+<body onload="load();">
+  <div class="box" draggable="true"></div>
+  <div id="dropzone" class="dropzone"></div>
+</body>
+</html>
