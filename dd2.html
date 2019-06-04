@@ -1,68 +1,66 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title></title>
- 
-  <style>
-  .box {
-  width:32px;
-  height:32px;
-  border:solid 1px #d01313;
+<style>
+div#fuga {
+	width: 250px ;
+	text-align: center ;
+	padding: 24px 12px ;
+	background-color: blue ;
+	color: #fff ;
 }
 
-.dropzone {
-  margin-top:16px;
-  margin-bottom:16px;
-  width: 280px;
-  height: 64px;
-  border: solid 1px #808080;
-}
+textarea { width: 250px ; height: 60px ; font-size: 16px ; }
+div#result { white-space: pre-wrap ; }
 </style>
-  <script>
-    function load() {
-      var box = document.querySelector('.box');
-      box.addEventListener('dragstart', onDragStart, false);
-      box.addEventListener('dragend', onDragEnd, false);
-
-      var box = document.querySelector('.dropzone');
-      box.addEventListener('dragenter', onDragEnter, false);
-      box.addEventListener('dragover', onDragOver, false);
-      box.addEventListener('dragleave', onDragLeave, false);
-      box.addEventListener('drop', onDrop, false);
-    }
-
-    function onDragStart(e) {
-      e.dataTransfer.setData('Text', this.id);
-      this.textContent = 'onDragStart';
-    }
-
-    function onDragEnd(e) {
-      this.textContent = 'onDragEnd';
-    }
-
-    function onDragEnter(e) {
-      this.textContent = 'onDragEnter';
-    }
-    
-    function onDragOver(e) {
-      e.preventDefault();
-      this.textContent = 'onDragOver';
-    }
-
-    function onDragLeave(e) {
-      this.textContent = 'onDragLeave';
-    }
-
-    function onDrop(e) {
-      e.preventDefault();
-      this.textContent = 'onDrop';
-    }
-  </script>
 </head>
-<body onload="load();">
-  <div id="box" class="box" draggable="true"></div>
-  <div id="dropzone" class="dropzone"></div>
+<body>
+<p><textarea id="hoge" draggable="true">SYNCER</textarea></p>
+<p><textarea id="hoge2" draggable="true">SYNCER</textarea></p>
+<hr>
+<div id="fuga">drop here!</div>
+<hr>
+<div id="result"></div>
+<script>
+var element1 = document.getElementById( "hoge" ) ;
+  var element11 = document.getElementById( "hoge2" ) ;
+var element2 = document.getElementById( "fuga" ) ;
+
+// drag
+var callbackFn1 =  function ( event ) {
+	var dataTransfer = event.dataTransfer ;
+	dataTransfer.setData( "text/plain", "変更されたテキスト"+this.id ) ;
+} ;
+
+element1.ondragstart = callbackFn1 ;
+  element11.ondragstart = callbackFn1 ;
+
+// drop
+var callbackFn2 =  function ( event ) {
+	event.preventDefault() ;
+} ;
+
+var callbackFn3 =  function ( event ) {
+	event.preventDefault() ;
+
+	var dataTransfer = event.dataTransfer ;
+	var types = dataTransfer.types ;
+
+	resultElement.innerHTML = "" ;
+
+	for ( var i=0,l=types.length; l>i; i++ ) {
+		var value = dataTransfer.getData( types[i] ) ;
+		console.log( types[i], value ) ;
+		resultElement.appendChild( document.createTextNode( "type: " + types[i] + "\n" ) ) ;
+		resultElement.appendChild( document.createTextNode( "return value: " + value + "\n\n" ) ) ;
+	}
+} ;
+
+element2.ondragover = callbackFn2 ;
+element2.ondrop = callbackFn3 ;
+
+var resultElement = document.getElementById( "result" ) ;
+</script>
 
 </body>
 </html>
