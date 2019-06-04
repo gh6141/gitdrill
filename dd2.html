@@ -16,7 +16,7 @@ div#result { white-space: pre-wrap ; }
 </head>
 <body>
 <p><textarea id="hoge" draggable="true">SYNCER</textarea></p>
-<p><textarea id="hoge2" draggable="true">SYNCER</textarea></p>
+<p><textarea id="hoge2" draggable="true">SYNCER2</textarea></p>
 <hr>
 <div id="fuga">drop here!</div>
 <hr>
@@ -33,7 +33,9 @@ var callbackFn1 =  function ( event ) {
 } ;
 
 element1.ondragstart = callbackFn1 ;
+element1.ontouchstart=callbackFn1;
   element11.ondragstart = callbackFn1 ;
+  element11.ontouchstart =callbackFn1;
 
 // drop
 var callbackFn2 =  function ( event ) {
@@ -57,7 +59,9 @@ var callbackFn3 =  function ( event ) {
 } ;
 
 element2.ondragover = callbackFn2 ;
+element2.ontouchmove=callbackFn2;
 element2.ondrop = callbackFn3 ;
+element2.ontouchend=callbackFn3;
 
 var resultElement = document.getElementById( "result" ) ;
 </script>
