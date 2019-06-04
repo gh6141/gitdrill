@@ -17,7 +17,7 @@ div#result { white-space: pre-wrap ; }
 <body>
 <p><textarea id="hoge" draggable="true">SYNCER</textarea></p>
 <p><textarea id="hoge2" draggable="true">SYNCER2</textarea></p>
-<div id="hoge3" draggable="true">１問目　</div>
+<p><div id="hoge3" draggable="true">１問目　</div></p>
 <hr>
 <div id="fuga">drop here!</div>
 <hr>
@@ -30,7 +30,7 @@ var element2 = document.getElementById( "fuga" ) ;
 
 // drag
 var callbackFn1 =  function ( event ) {
-	event.preventDefault() ;
+
 	var dataTransfer = event.dataTransfer ;
 	dataTransfer.setData( "text/plain", "変更されたテキスト"+this.id ) ;
 } ;
