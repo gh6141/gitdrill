@@ -37,12 +37,22 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+ let
+     takasa =modBy 5 model +5
+     kaisu=
+      if takasa == 0 then
+         model//5+2
+      else
+         model//5 +1
+   
+ in
+ 
   div []
     [ button [ onClick Decrement ] [ text "-" ]
     ,td [ style "border" "solid thin", style "width" (String.fromInt 30 ++ "px") ] []
             |> List.repeat 1
-            |> tr [ style "height" (String.fromInt (30+model*3) ++ "px") ]
-            |> List.repeat (model//5)
+            |> tr [ style "height" (String.fromInt (takasa*20) ++ "px") ]
+            |> List.repeat (kaisu)
             |> table [ style "border" "solid thin", style "border-collapse" "collapse" ]
 
    , button [ onClick Increment ] [ text "+" ]

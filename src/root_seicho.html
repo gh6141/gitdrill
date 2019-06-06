@@ -4418,7 +4418,9 @@ var elm$core$Basics$apR = F2(
 		return f(x);
 	});
 var elm$core$Basics$append = _Utils_append;
+var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Basics$idiv = _Basics_idiv;
+var elm$core$Basics$modBy = _Basics_modBy;
 var elm$core$Basics$mul = _Basics_mul;
 var elm$core$Basics$le = _Utils_le;
 var elm$core$List$repeatHelp = F3(
@@ -4526,7 +4528,6 @@ var elm$core$Array$compressNodes = F2(
 			}
 		}
 	});
-var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Tuple$first = function (_n0) {
 	var x = _n0.a;
 	return x;
@@ -4872,6 +4873,8 @@ var elm$html$Html$Events$onClick = function (msg) {
 		elm$json$Json$Decode$succeed(msg));
 };
 var author$project$Main$view = function (model) {
+	var takasa = A2(elm$core$Basics$modBy, 5, model) + 5;
+	var kaisu = (!takasa) ? (((model / 5) | 0) + 2) : (((model / 5) | 0) + 1);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -4896,7 +4899,7 @@ var author$project$Main$view = function (model) {
 					]),
 				A2(
 					elm$core$List$repeat,
-					(model / 5) | 0,
+					kaisu,
 					A2(
 						elm$html$Html$tr,
 						_List_fromArray(
@@ -4904,7 +4907,7 @@ var author$project$Main$view = function (model) {
 								A2(
 								elm$html$Html$Attributes$style,
 								'height',
-								elm$core$String$fromInt(30 + (model * 3)) + 'px')
+								elm$core$String$fromInt(takasa * 20) + 'px')
 							]),
 						A2(
 							elm$core$List$repeat,
