@@ -38,22 +38,29 @@ update msg model =
 view : Model -> Html Msg
 view model =
  let
-     takasa =modBy 5 model +5
-     kaisu=
-      if takasa == 0 then
-         model//5+2
-      else
-         model//5 +1
+ --nobikittara tomaru
+     tlim = 10
+     hsaki=5 + modBy 5 model 
+   
+     kaisu= model//5
+     
+    
+     div_tr taka=   tr [ style "height" (String.fromInt (taka*7) ++ "px") ] [td [ style "border" "solid thin", style "width" (String.fromInt 30 ++ "px") ] [text "●"]]
+       
   
  in
- div [] [text "根の生長"]
-  div []
-    [ button [ onClick Decrement ] [ text "-" ]
-    ,td [ style "border" "solid thin", style "width" (String.fromInt 30 ++ "px") ] []
-            |> List.repeat 1
-            |> tr [ style "height" (String.fromInt (takasa*10) ++ "px") ]
-            |> List.repeat (kaisu)
-            |> table [ style "border" "solid thin", style "border-collapse" "collapse" ]
+  div [] [
+  div [style "font-size" "30pt"] [text "根の生長"]
+  ,
+   button [ style "font-size" "40pt" ,onClick Increment ] [ text "+" ]
+  ,
+  div [style "text-align" "center"]
+    [ 
+            [div_tr hsaki]
+            |> List.append [div_tr hsaki]
+            |> List.append ( div_tr tlim |> List.repeat (kaisu) )
+            |> table [ style "border" "solid thin", style "border-collapse" "collapse" , align "center"]
 
-   , button [ onClick Increment ] [ text "+" ]
+ 
     ]
+  ]
