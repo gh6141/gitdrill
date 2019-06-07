@@ -44,14 +44,14 @@ view model =
          model//5+2
       else
          model//5 +1
-   
+  
  in
- 
+ div [] [text "根の生長"]
   div []
     [ button [ onClick Decrement ] [ text "-" ]
     ,td [ style "border" "solid thin", style "width" (String.fromInt 30 ++ "px") ] []
             |> List.repeat 1
-            |> tr [ style "height" (String.fromInt (takasa*20) ++ "px") ]
+            |> tr [ style "height" (String.fromInt (takasa*10) ++ "px") ]
             |> List.repeat (kaisu)
             |> table [ style "border" "solid thin", style "border-collapse" "collapse" ]
 
