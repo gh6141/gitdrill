@@ -100,10 +100,10 @@ view model =
   in
    div []
    (
-    [ button [  Html.Attributes.style "font-size" "30pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ], 
-     button [ Html.Attributes.style "font-size" "30pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    , div [ Html.Attributes.style "font-size" "40pt" ] [ text ( model.mondai) ]    
-    , div [Html.Attributes.style "font-size" "40pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
+    [ button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ], 
+     button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    , div [ Html.Attributes.style "font-size" "30pt" ] [ text ( model.mondai) ]    
+    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
     ] ++
       (model.ans |> List.indexedMap bt)
    )
