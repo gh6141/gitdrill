@@ -1,86 +1,125 @@
+module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
 import Html.Attributes
-import Html.Events exposing (onClick)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Http
+import Json.Decode as D exposing (Decoder)
 
 
+main : Program () Model Msg
 main =
-  Browser.sandbox { init = init, update = update, view = view }
-
-
-
+    Browser.element
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }
 
 
 -- MODEL
+type alias Model =
+    { input : String
+    , userState : UserState
+    ,num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool,url:String
+    }
 
-type alias Model = {num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool}
+type UserState
+    = Init
+    | Waiting
+    | Loaded User
+    | Failed Http.Error
 
-init : Model
-init = {num=0,mondai="",ans=["","",""],ansn=0,maru=False}
+
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( Model "" Init 0 "" ["","",""] 0 False ""
+    , Cmd.none
+    )
 
 
+shutudai: Int -> Model -> Model
+shutudai num model=  case num of
+         0-> {model | mondai="**",ans=["","",""],ansn=0,url=""}
+         1-> {model | mondai="１　細胞分裂のときに核の中にあらわれるひも状のものは何か"
+              ,ans=["染色体","ミトコンドリア","細胞質"]
+              ,ansn=0
+              ,url=""}
+         2-> {model | mondai="２　植物で細胞分裂のさかんなところはどこか"
+              ,ans=["表皮","茎の中心","根の先端"]
+              ,ansn=2
+              ,url=""}
+         3-> {model | mondai="３　酢酸オルセイン溶液は何を染める染色液"
+              ,ans=["染色体","細胞壁","葉緑体"]
+              ,ansn=0
+              ,url=""}
+                                                      
+         _-> {model | mondai="",ans= ["","",""],ansn=0,url=""}
 
-shutudai: Int -> String
-shutudai num =  case num of
-         0-> "＊＊"
-         1-> "１　ものがもえつづけるには、たえず（　　　　　）がいれかわる必要（ひつよう）があります。"
-         2-> "２　空気のなかで、いちばんたくさんある気体（きたい）は（　　　　　）です。"
-         3-> "３　（　　　　）には、ものをもやすはたらきがあります"
-         4-> "４　ちっ素や二酸化炭素には、ものをもやすはたらきは（　　　　　　　　）"
-         5-> "５　ものがもえると、空気中の酸素（さんそ）の一部がつかわれて、（　　　　　　）ができます。"
-         
-         _-> ""     
 
-sentakushi: Int -> List String
-sentakushi num = case num of
-         0-> ["","",""]
-         1-> ["空気（くうき）","ちっ素","二酸化炭素（にさんかたんそ）"]
-         2-> ["酸素（さんそ）","ちっ素","二酸化炭素（にさんかたんそ）"]
-         3-> ["酸素（さんそ）","二酸化炭素（にさんかたんそ）","ちっ素"]
-         4-> ["あります","ありません","あったり、なかったりします"]
-         5-> ["酸素（さんそ）","二酸化炭素（にさんかたんそ）","ちっ素"]
-         _-> ["","",""]
-
-kaito:Int -> Int
-kaito num = case num of
-         0-> 0
-         1-> 0
-         2-> 1
-         3-> 0
-         4-> 1
-         5-> 1
-
-         _ -> 0
 
 
 -- UPDATE
 
-type Msg = Increment | Decrement | Answer Int
+type Msg = Increment | Decrement | Answer Int |Input String
+    | Send
+    | Receive (Result Http.Error User)
 
-update : Msg -> Model -> Model
+
+
+update : Msg -> Model -> (Model,Cmd Msg)
 update msg ({num} as model) =
   case msg of
-    Increment ->
+    Increment -> 
+     (
       {model | num=num + 1 
-      , mondai = shutudai (num+1)
-      , ans = sentakushi (num+1)
-      , ansn= kaito (num+1)
+      , mondai = (shutudai (num+1) model).mondai
+      , ans = (shutudai (num+1) model).ans
+      , ansn= (shutudai (num+1) model).ansn
       , maru=False
+      , url = (shutudai (num+1) model).url
       }
+      ,Cmd.none
+     )
 
     Decrement ->
+      (
       {model | num=num - 1
-      , mondai = shutudai (num-1)
-      , ans =sentakushi (num-1)
-      , ansn = kaito (num-1)
+      , mondai = (shutudai (num+1) model).mondai
+      , ans = (shutudai (num+1) model).ans
+      , ansn= (shutudai (num+1) model).ansn
       , maru=False
+      , url= (shutudai (num+1) model).url
       }
-
+      ,Cmd.none
+      )
     Answer numi->
+      (    
       {model | maru=(model.ansn==numi)
       }
+      ,Cmd.none
+      )
+    Input newInput ->
+            ( { model | input = newInput }, Cmd.none )
 
+    Send ->
+            ( { model
+                | input = ""
+                , userState = Waiting
+              }
+            , Http.get
+                { url = "https://api.github.com/users/" ++ model.input
+                , expect = Http.expectJson Receive userDecoder
+                }
+            )
+
+    Receive (Ok user) ->
+            ( { model | userState = Loaded user }, Cmd.none )
+
+    Receive (Err e) ->
+            ( { model | userState = Failed e }, Cmd.none )
 
 -- VIEW
 
@@ -89,14 +128,86 @@ view model =
   let
     bt numi xs = button [Html.Attributes.style "font-size" "40pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
+  div []
+   [
    div []
    (
-    [ button [  Html.Attributes.style "font-size" "30pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ], 
-     button [ Html.Attributes.style "font-size" "30pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    , div [ Html.Attributes.style "font-size" "40pt" ] [ text ( model.mondai) ]    
-    , div [Html.Attributes.style "font-size" "40pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
+    [ button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ], 
+     button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    , div [ Html.Attributes.style "font-size" "30pt" ] [ text ( model.mondai) ]
+    , (
+     if model.url == ""   then   
+       div [] []
+     else
+       img [src model.url ,width 200 , height 150] [] 
+    )
+    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
     ] ++
       (model.ans |> List.indexedMap bt)
-   )
+   ,
    
-    
+           Html.form [ onSubmit Send ]
+            [ input
+                [ onInput Input
+                , autofocus True
+                , placeholder "GitHub name"
+                , value model.input
+                ]
+                []
+            , button
+                [ disabled
+                    ((model.userState == Waiting)
+                        || String.isEmpty (String.trim model.input)
+                    )
+                ]
+                [ text "Submit" ]
+            ]
+        , case model.userState of
+            Init ->
+                text ""
+
+            Waiting ->
+                text "Waiting..."
+
+            Loaded user ->
+                a
+                    [ href user.htmlUrl
+                    , target "_blank"
+                    ]
+                    [ img [ src user.avatarUrl, width 200 ] []
+                    , div [] [ text user.name ]
+                    , div []
+                        [ case user.bio of
+                            Just bio ->
+                                text bio
+
+                            Nothing ->
+                                text ""
+                        ]
+                    ]
+
+            Failed e ->
+                div [] [ text (Debug.toString e) ]
+           
+    ]
+
+   -- DATA
+
+
+type alias User =
+    { login : String
+    , avatarUrl : String
+    , name : String
+    , htmlUrl : String
+    , bio : Maybe String
+    }
+
+
+userDecoder : Decoder User
+userDecoder =
+    D.map5 User
+        (D.field "login" D.string)
+        (D.field "avatar_url" D.string)
+        (D.field "name" D.string)
+        (D.field "html_url" D.string)
+        (D.maybe (D.field "bio" D.string))
