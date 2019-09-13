@@ -6,7 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
-import Json.Decode as D exposing (Decoder)
+import Json.Decode exposing (Decoder)
 
 
 main : Program () Model Msg
@@ -29,7 +29,7 @@ type alias Model =
 type UserState
     = Init
     | Waiting
-    | Loaded User
+    | Loaded Mondl
     | Failed Http.Error
 
 
@@ -65,7 +65,7 @@ shutudai num model=  case num of
 
 type Msg = Increment | Decrement | Answer Int |Input String
     | Send
-    | Receive (Result Http.Error User)
+    | Receive (Result Http.Error Mondl)
 
 
 
@@ -110,13 +110,13 @@ update msg ({num} as model) =
                 , userState = Waiting
               }
             , Http.get
-                { url = "https://api.github.com/users/" ++ model.input
+                { url = "http://101.128.234.240:8888/disp2/" ++ model.input
                 , expect = Http.expectJson Receive userDecoder
                 }
             )
 
-    Receive (Ok user) ->
-            ( { model | userState = Loaded user }, Cmd.none )
+    Receive (Ok mondl) ->
+            ( { model | userState = Loaded mondl }, Cmd.none )
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
@@ -128,25 +128,10 @@ view model =
   let
     bt numi xs = button [Html.Attributes.style "font-size" "40pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
-  div []
-   [
+  
    div []
-   (
-    [ button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ], 
-     button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    , div [ Html.Attributes.style "font-size" "30pt" ] [ text ( model.mondai) ]
-    , (
-     if model.url == ""   then   
-       div [] []
-     else
-       img [src model.url ,width 200 , height 150] [] 
-    )
-    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
-    ] ++
-      (model.ans |> List.indexedMap bt)
-   ,
-   
-           Html.form [ onSubmit Send ]
+   ([
+      Html.form [ onSubmit Send ]
             [ input
                 [ onInput Input
                 , autofocus True
@@ -169,45 +154,50 @@ view model =
             Waiting ->
                 text "Waiting..."
 
-            Loaded user ->
+            Loaded mondl ->
                 a
-                    [ href user.htmlUrl
+                    [ href mondl.name
                     , target "_blank"
                     ]
-                    [ img [ src user.avatarUrl, width 200 ] []
-                    , div [] [ text user.name ]
-                    , div []
-                        [ case user.bio of
-                            Just bio ->
-                                text bio
-
-                            Nothing ->
-                                text ""
-                        ]
+                    [ img [ src mondl.name, width 200 ] []
+                   
                     ]
 
             Failed e ->
                 div [] [ text (Debug.toString e) ]
-           
-    ]
+   
+     
+    ,button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
+    ,button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    , div [ Html.Attributes.style "font-size" "30pt" ] [ text ( model.mondai) ]
+    , (
+     if model.url == ""   then   
+       div [] []
+     else
+       img [src model.url ,width 200 , height 150] [] 
+    )
+    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
+    ] ++
+      (model.ans |> List.indexedMap bt)
+    )   
+   
+          
+        
 
    -- DATA
+type alias Mond ={mondai:String,ans:List String,ansn:Int,url:String}
 
 
-type alias User =
-    { login : String
-    , avatarUrl : String
-    , name : String
-    , htmlUrl : String
-    , bio : Maybe String
+type alias Mondl =
+    { name : String
+      , mondl: List Mond
     }
 
 
-userDecoder : Decoder User
+userDecoder : Decoder Mondl
 userDecoder =
-    D.map5 User
-        (D.field "login" D.string)
-        (D.field "avatar_url" D.string)
-        (D.field "name" D.string)
-        (D.field "html_url" D.string)
-        (D.maybe (D.field "bio" D.string))
+    Json.Decode.map2 Mondl
+        (Json.Decode.field "name" Json.Decode.string)
+        (Json.Decode.field "mondl" Json.Decode.mondl)
+
+
