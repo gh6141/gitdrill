@@ -47,7 +47,7 @@ update msg model =
         Click ->
             ( model
             , Http.get
-                { url = "https://safe-wave-89074.herokuapp.com/sample.json"
+                { url = "https://safe-wave-89074.herokuapp.com/books"
                   -- url = "https://elm-lang.org/assets/public-opinion.txt"
                   --url ="https://www.google.co.jp/"
                 , expect = Http.expectString GotRepo
