@@ -29,7 +29,7 @@ type alias Model =
 type UserState
     = Init
     | Waiting
-    | Loaded Mondl
+    | Loaded String
     | Failed Http.Error
 
 
@@ -65,7 +65,7 @@ shutudai num model=  case num of
 
 type Msg = Increment | Decrement | Answer Int |Input String
     | Send
-    | Receive (Result Http.Error Mondl)
+    | Receive (Result Http.Error String) --(Result Http.Error Mondl)
 
 
 
@@ -110,8 +110,9 @@ update msg ({num} as model) =
                 , userState = Waiting
               }
             , Http.get
-                { url = "https://safe-wave-89074.herokuapp.com/disp2/" ++ model.input
-                , expect = Http.expectJson Receive mondlDecoder
+                { url = "https://safe-wave-89074.herokuapp.com/disp2/test"
+                , expect = Http.expectString Receive
+                --Http.expectJson Receive mondlDecoder
                 }
             )
 
@@ -135,7 +136,7 @@ view model =
             [ input
                 [ onInput Input
                 , autofocus True
-                , placeholder "GitHub name"
+                , placeholder "File Name"
                 , value model.input
                 ]
                 []
@@ -155,13 +156,7 @@ view model =
                 text "Waiting..."
 
             Loaded mondl ->
-                a
-                    [ href ""
-                    , target "_blank"
-                    ]
-                    [ img [ src "", width 200 ] [text (String.fromInt (List.length mondl) ) ]
-                   
-                    ]
+                div [] [text(mondl)]
 
             Failed e ->
                 div [] [ text (Debug.toString e) ]
@@ -185,7 +180,7 @@ view model =
         
 
    -- DATA
-type alias Mond ={mondai:String,ans1:String,ans2:String,ans3:String,ansn:Int,url:String}
+type alias Mond ={mondai:String,ans1:String,ans2:String,ans3:String,ansn:String,url:String}
 
 type alias Mondl = List Mond
 
@@ -196,9 +191,10 @@ mondDecoder =
         (Json.Decode.field "ans1" Json.Decode.string)
         (Json.Decode.field "ans2" Json.Decode.string)
         (Json.Decode.field "ans3" Json.Decode.string)
-        (Json.Decode.field "ansn" Json.Decode.int)
+        (Json.Decode.field "ansn" Json.Decode.string)
         (Json.Decode.field "url" Json.Decode.string)
 
 
 mondlDecoder : Decoder Mondl
-mondlDecoder =  Json.Decode.list mondDecoder
+mondlDecoder = Json.Decode.list mondDecoder
+
