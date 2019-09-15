@@ -5002,6 +5002,25 @@ var author$project$Main$Receive = function (a) {
 	return {$: 'Receive', a: a};
 };
 var author$project$Main$Waiting = {$: 'Waiting'};
+var author$project$Main$Mond = F6(
+	function (mondai, ans1, ans2, ans3, ansn, url) {
+		return {ans1: ans1, ans2: ans2, ans3: ans3, ansn: ansn, mondai: mondai, url: url};
+	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$int = _Json_decodeInt;
+var elm$json$Json$Decode$map6 = _Json_map6;
+var elm$json$Json$Decode$string = _Json_decodeString;
+var author$project$Main$mondDecoder = A7(
+	elm$json$Json$Decode$map6,
+	author$project$Main$Mond,
+	A2(elm$json$Json$Decode$field, 'mondai', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ans1', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ans2', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ans3', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ansn', elm$json$Json$Decode$int),
+	A2(elm$json$Json$Decode$field, 'url', elm$json$Json$Decode$string));
+var elm$json$Json$Decode$list = _Json_decodeList;
+var author$project$Main$mondlDecoder = elm$json$Json$Decode$list(author$project$Main$mondDecoder);
 var author$project$Main$shutudai = F2(
 	function (num, model) {
 		switch (num) {
@@ -5057,33 +5076,6 @@ var author$project$Main$shutudai = F2(
 					});
 		}
 	});
-var author$project$Main$User = F5(
-	function (login, avatarUrl, name, htmlUrl, bio) {
-		return {avatarUrl: avatarUrl, bio: bio, htmlUrl: htmlUrl, login: login, name: name};
-	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$map5 = _Json_map5;
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$json$Json$Decode$oneOf = _Json_oneOf;
-var elm$json$Json$Decode$succeed = _Json_succeed;
-var elm$json$Json$Decode$maybe = function (decoder) {
-	return elm$json$Json$Decode$oneOf(
-		_List_fromArray(
-			[
-				A2(elm$json$Json$Decode$map, elm$core$Maybe$Just, decoder),
-				elm$json$Json$Decode$succeed(elm$core$Maybe$Nothing)
-			]));
-};
-var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$userDecoder = A6(
-	elm$json$Json$Decode$map5,
-	author$project$Main$User,
-	A2(elm$json$Json$Decode$field, 'login', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'avatar_url', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'name', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'html_url', elm$json$Json$Decode$string),
-	elm$json$Json$Decode$maybe(
-		A2(elm$json$Json$Decode$field, 'bio', elm$json$Json$Decode$string)));
 var elm$core$Result$mapError = F2(
 	function (f, result) {
 		if (result.$ === 'Ok') {
@@ -6018,17 +6010,17 @@ var author$project$Main$update = F2(
 						{input: '', userState: author$project$Main$Waiting}),
 					elm$http$Http$get(
 						{
-							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$userDecoder),
-							url: 'https://api.github.com/users/' + model.input
+							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
+							url: 'https://safe-wave-89074.herokuapp.com/disp2/' + model.input
 						}));
 			default:
 				if (msg.a.$ === 'Ok') {
-					var user = msg.a.a;
+					var mondl = msg.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								userState: author$project$Main$Loaded(user)
+								userState: author$project$Main$Loaded(mondl)
 							}),
 						elm$core$Platform$Cmd$none);
 				} else {
@@ -6057,7 +6049,9 @@ var elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
 var elm$core$String$trim = _String_trim;
+var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
+var elm$json$Json$Decode$succeed = _Json_succeed;
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
 		case 'Normal':
@@ -6257,12 +6251,12 @@ var author$project$Main$view = function (model) {
 						case 'Waiting':
 							return elm$html$Html$text('Waiting...');
 						case 'Loaded':
-							var user = _n0.a;
+							var mondl = _n0.a;
 							return A2(
 								elm$html$Html$a,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$href(user.htmlUrl),
+										elm$html$Html$Attributes$href(''),
 										elm$html$Html$Attributes$target('_blank')
 									]),
 								_List_fromArray(
@@ -6271,31 +6265,14 @@ var author$project$Main$view = function (model) {
 										elm$html$Html$img,
 										_List_fromArray(
 											[
-												elm$html$Html$Attributes$src(user.avatarUrl),
+												elm$html$Html$Attributes$src(''),
 												elm$html$Html$Attributes$width(200)
 											]),
-										_List_Nil),
-										A2(
-										elm$html$Html$div,
-										_List_Nil,
 										_List_fromArray(
 											[
-												elm$html$Html$text(user.name)
-											])),
-										A2(
-										elm$html$Html$div,
-										_List_Nil,
-										_List_fromArray(
-											[
-												function () {
-												var _n1 = user.bio;
-												if (_n1.$ === 'Just') {
-													var bio = _n1.a;
-													return elm$html$Html$text(bio);
-												} else {
-													return elm$html$Html$text('');
-												}
-											}()
+												elm$html$Html$text(
+												elm$core$String$fromInt(
+													elm$core$List$length(mondl)))
 											]))
 									]));
 						default:

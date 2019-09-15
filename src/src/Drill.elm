@@ -6,7 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
-import Json.Decode exposing (Decoder)
+import Json.Decode  exposing (Decoder)
 
 
 main : Program () Model Msg
@@ -110,8 +110,8 @@ update msg ({num} as model) =
                 , userState = Waiting
               }
             , Http.get
-                { url = "http://101.128.234.240:8888/disp2/" ++ model.input
-                , expect = Http.expectJson Receive userDecoder
+                { url = "https://safe-wave-89074.herokuapp.com/disp2/" ++ model.input
+                , expect = Http.expectJson Receive mondlDecoder
                 }
             )
 
@@ -156,10 +156,10 @@ view model =
 
             Loaded mondl ->
                 a
-                    [ href mondl.name
+                    [ href ""
                     , target "_blank"
                     ]
-                    [ img [ src mondl.name, width 200 ] []
+                    [ img [ src "", width 200 ] [text (String.fromInt (List.length mondl) ) ]
                    
                     ]
 
@@ -185,19 +185,20 @@ view model =
         
 
    -- DATA
-type alias Mond ={mondai:String,ans:List String,ansn:Int,url:String}
+type alias Mond ={mondai:String,ans1:String,ans2:String,ans3:String,ansn:Int,url:String}
+
+type alias Mondl = List Mond
+
+mondDecoder : Decoder Mond
+mondDecoder =
+    Json.Decode.map6 Mond
+        (Json.Decode.field "mondai" Json.Decode.string)
+        (Json.Decode.field "ans1" Json.Decode.string)
+        (Json.Decode.field "ans2" Json.Decode.string)
+        (Json.Decode.field "ans3" Json.Decode.string)
+        (Json.Decode.field "ansn" Json.Decode.int)
+        (Json.Decode.field "url" Json.Decode.string)
 
 
-type alias Mondl =
-    { name : String
-      , mondl: List Mond
-    }
-
-
-userDecoder : Decoder Mondl
-userDecoder =
-    Json.Decode.map2 Mondl
-        (Json.Decode.field "name" Json.Decode.string)
-        (Json.Decode.field "mondl" Json.Decode.mondl)
-
-
+mondlDecoder : Decoder Mondl
+mondlDecoder =  Json.Decode.list mondDecoder
