@@ -9,6 +9,14 @@ import Http
 import Json.Decode  exposing (Decoder)
 
 
+getAt : Int -> List a -> Maybe a
+getAt idx xs =
+    if idx < 0 then
+        Nothing
+
+    else
+        List.head <| List.drop idx xs
+
 main : Program () Model Msg
 main =
     Browser.element
@@ -23,40 +31,45 @@ main =
 type alias Model =
     { input : String
     , userState : UserState
+    , mdl:Mondl
     ,num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool,url:String
     }
 
 type UserState
     = Init
     | Waiting
-    | Loaded String
+    | Loaded Mondl
     | Failed Http.Error
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" Init 0 "" ["","",""] 0 False ""
+    ( Model "" Init [] -1 "" ["","",""] 0 False ""
     , Cmd.none
     )
 
 
 shutudai: Int -> Model -> Model
 shutudai num model=  case num of
-         0-> {model | mondai="**",ans=["","",""],ansn=0,url=""}
-         1-> {model | mondai="１　細胞分裂のときに核の中にあらわれるひも状のものは何か"
-              ,ans=["染色体","ミトコンドリア","細胞質"]
-              ,ansn=0
-              ,url=""}
-         2-> {model | mondai="２　植物で細胞分裂のさかんなところはどこか"
-              ,ans=["表皮","茎の中心","根の先端"]
-              ,ansn=2
-              ,url=""}
-         3-> {model | mondai="３　酢酸オルセイン溶液は何を染める染色液"
-              ,ans=["染色体","細胞壁","葉緑体"]
-              ,ansn=0
-              ,url=""}
-                                                      
-         _-> {model | mondai="",ans= ["","",""],ansn=0,url=""}
+         100 -> {model | mondai="**",ans=["","",""],ansn=0,url=""}
+         _-> (
+              let
+                  mondl=model.mdl           
+
+              in
+                case getAt num mondl of
+                   Just mond -> 
+                    {model | mondai=mond.mondai
+                    ,ans=[mond.ans1,mond.ans2,mond.ans3]
+                    ,ansn=(
+                      case  String.toInt mond.ansn of
+                       Just  ani ->  ani-1
+                       Nothing -> 0
+                        )
+                    ,url=mond.url}
+                   Nothing -> {model | mondai="**",ans=["","",""],ansn=0,url=""}
+              
+               )
 
 
 
@@ -65,7 +78,7 @@ shutudai num model=  case num of
 
 type Msg = Increment | Decrement | Answer Int |Input String
     | Send
-    | Receive (Result Http.Error String) --(Result Http.Error Mondl)
+    | Receive (Result Http.Error Mondl) --(Result Http.Error String) 
 
 
 
@@ -110,14 +123,14 @@ update msg ({num} as model) =
                 , userState = Waiting
               }
             , Http.get
-                { url = "https://safe-wave-89074.herokuapp.com/disp2/test"
-                , expect = Http.expectString Receive
-                --Http.expectJson Receive mondlDecoder
+                { url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
+                , expect = --Http.expectString Receive
+                 Http.expectJson Receive mondlDecoder
                 }
             )
 
     Receive (Ok mondl) ->
-            ( { model | userState = Loaded mondl }, Cmd.none )
+            ( { model | userState = Loaded mondl, mdl=mondl}, Cmd.none )
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
@@ -136,7 +149,7 @@ view model =
             [ input
                 [ onInput Input
                 , autofocus True
-                , placeholder "File Name"
+                , placeholder "File Name?"
                 , value model.input
                 ]
                 []
@@ -156,7 +169,12 @@ view model =
                 text "Waiting..."
 
             Loaded mondl ->
-                div [] [text(mondl)]
+                div [] [text(
+                  case mondl of
+                   mond::tail -> "最初の問題:"++mond.mondai
+                   _ -> "error"
+
+                )]
 
             Failed e ->
                 div [] [ text (Debug.toString e) ]
@@ -166,7 +184,7 @@ view model =
     ,button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
     , div [ Html.Attributes.style "font-size" "30pt" ] [ text ( model.mondai) ]
     , (
-     if model.url == ""   then   
+     if model.url == "" || model.url=="http://"  then   
        div [] []
      else
        img [src model.url ,width 200 , height 150] [] 
