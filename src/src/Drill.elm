@@ -7,6 +7,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode  exposing (Decoder)
+--import Markdown exposing (defaultOptions)
+
 
 
 getAt : Int -> List a -> Maybe a
@@ -140,8 +142,8 @@ update msg ({num} as model) =
 view : Model -> Html Msg
 view model =
   let
-    
-    
+
+   --textr raw=  Markdown.toHtmlWith { defaultOptions | sanitize = False }  [] raw
 
     bt numi xs = button [Html.Attributes.style "font-size" "40pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
