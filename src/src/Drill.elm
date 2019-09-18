@@ -140,6 +140,9 @@ update msg ({num} as model) =
 view : Model -> Html Msg
 view model =
   let
+    
+    
+
     bt numi xs = button [Html.Attributes.style "font-size" "40pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
   
