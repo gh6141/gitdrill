@@ -8,6 +8,7 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode  exposing (Decoder)
 
+
 --import Markdown exposing (defaultOptions)
 
 
@@ -32,13 +33,14 @@ main =
 
 -- MODEL
 type alias Model =
-    { input : String
+    { selected : String
+    , input : String
     , userState : UserState
     , mdl:Mondl
     ,num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool,url:String
     , marubatul:List MaruBatu
     }
-
+ 
 type MaruBatu 
     = None | Maru | Batu
 
@@ -51,7 +53,7 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" Init [] -1 "" ["","",""] 0 False "" []
+    ( Model "" "" Init [] -1 "" ["","",""] 0 False "" []
     , Cmd.none
     )
 
@@ -103,15 +105,17 @@ hyoka model =
 
 -- UPDATE
 
-type Msg = Increment | Decrement | Answer Int |Input String
+type Msg =  Increment | Decrement | Answer Int |Input String
     | Send
     | Receive (Result Http.Error Mondl) --(Result Http.Error String) 
 
 
 
 update : Msg -> Model -> (Model,Cmd Msg)
-update msg ({num,marubatul} as model) =
+update msg ({num,marubatul,selected} as model) =
   case msg of
+   -- Select s ->  { model | selected = s }
+
     Increment -> 
      (
       {model | num=num + 1 
@@ -191,21 +195,30 @@ view : Model -> Html Msg
 view model =
   let
 
-    --textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
+    --selectEvent = on "change" (Html.map Select targetValue)
 
+    dummy=["ion","shoka"]
+    --textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
+    op dmy = List.map (\fname -> Html.option [value fname][text fname]) dmy
     bt numi xs = button [Html.Attributes.style "height" "80pt",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
   
    div []
    ([
       Html.form [ onSubmit Send ]
-            [ input
+            [
+
+              select [ name "filelist"] (op dummy)
+         
+
+                
+            , input
                 [ onInput Input
                 , autofocus True
                 , placeholder "問題のファイル名を入力"
                 , value model.input
                 ]
-                []
+                [text model.selected]
             , button
                 [ disabled
                     ((model.userState == Waiting)
