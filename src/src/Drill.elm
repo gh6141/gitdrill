@@ -176,7 +176,7 @@ view model =
             Loaded mondl ->
                 div [] [text(
                   case mondl of
-                   mond::tail -> "最初の問題:"++mond.mondai
+                   mond::tail -> ":"
                    _ -> "error"
 
                 )]
