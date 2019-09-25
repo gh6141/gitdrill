@@ -4496,10 +4496,27 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$Init = {$: 'Init'};
-var author$project$Main$Model = F9(
-	function (input, userState, mdl, num, mondai, ans, ansn, maru, url) {
-		return {ans: ans, ansn: ansn, input: input, maru: maru, mdl: mdl, mondai: mondai, num: num, url: url, userState: userState};
-	});
+var author$project$Main$Model = function (input) {
+	return function (userState) {
+		return function (mdl) {
+			return function (num) {
+				return function (mondai) {
+					return function (ans) {
+						return function (ansn) {
+							return function (maru) {
+								return function (url) {
+									return function (marubatul) {
+										return {ans: ans, ansn: ansn, input: input, maru: maru, marubatul: marubatul, mdl: mdl, mondai: mondai, num: num, url: url, userState: userState};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$negate = function (n) {
 	return -n;
@@ -4982,26 +4999,20 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
-		A9(
-			author$project$Main$Model,
-			'',
-			author$project$Main$Init,
-			_List_Nil,
-			-1,
-			'',
+		author$project$Main$Model('')(author$project$Main$Init)(_List_Nil)(-1)('')(
 			_List_fromArray(
-				['', '', '']),
-			0,
-			false,
-			''),
+				['', '', '']))(0)(false)('')(_List_Nil),
 		elm$core$Platform$Cmd$none);
 };
+var author$project$Main$Batu = {$: 'Batu'};
 var author$project$Main$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
 var author$project$Main$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
+var author$project$Main$Maru = {$: 'Maru'};
+var author$project$Main$None = {$: 'None'};
 var author$project$Main$Receive = function (a) {
 	return {$: 'Receive', a: a};
 };
@@ -5059,6 +5070,83 @@ var author$project$Main$getAt = F2(
 		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
 			A2(elm$core$List$drop, idx, xs));
 	});
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var author$project$Main$hyoka = function (model) {
+	var seikai = elm$core$List$length(
+		A2(
+			elm$core$List$filter,
+			function (bl) {
+				return _Utils_eq(bl, author$project$Main$Maru) ? true : false;
+			},
+			model.marubatul));
+	var kei = elm$core$List$length(model.marubatul);
+	return (_Utils_eq(kei, seikai) && (kei > 0)) ? '全問正解！！すばらしい' : ((((seikai + 1) / (kei + 1)) > 0.7) ? 'よくできています。あと少しで全問正解です。' : '繰り返すことで正答率がアップします。「読み出し」をクリックし再トライ！');
+};
 var elm$core$String$toInt = _String_toInt;
 var author$project$Main$shutudai = F2(
 	function (num, model) {
@@ -5101,11 +5189,50 @@ var author$project$Main$shutudai = F2(
 						ans: _List_fromArray(
 							['', '', '']),
 						ansn: 0,
-						mondai: '**',
+						mondai: author$project$Main$hyoka(model),
 						url: ''
 					});
 			}
 		}
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2(elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
 	});
 var elm$core$Result$mapError = F2(
 	function (f, result) {
@@ -5820,61 +5947,6 @@ var elm$http$Http$onEffects = F4(
 			},
 			A3(elm$http$Http$updateReqs, router, cmds, state.reqs));
 	});
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
 var elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
 		var _n0 = f(mx);
@@ -5991,6 +6063,7 @@ var elm$http$Http$get = function (r) {
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var num = model.num;
+		var marubatul = model.marubatul;
 		switch (msg.$) {
 			case 'Increment':
 				return _Utils_Tuple2(
@@ -6010,12 +6083,12 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							ans: A2(author$project$Main$shutudai, num + 1, model).ans,
-							ansn: A2(author$project$Main$shutudai, num + 1, model).ansn,
+							ans: A2(author$project$Main$shutudai, num - 1, model).ans,
+							ansn: A2(author$project$Main$shutudai, num - 1, model).ansn,
 							maru: false,
-							mondai: A2(author$project$Main$shutudai, num + 1, model).mondai,
+							mondai: A2(author$project$Main$shutudai, num - 1, model).mondai,
 							num: num - 1,
-							url: A2(author$project$Main$shutudai, num + 1, model).url
+							url: A2(author$project$Main$shutudai, num - 1, model).url
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Answer':
@@ -6024,7 +6097,49 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							maru: _Utils_eq(model.ansn, numi)
+							maru: _Utils_eq(model.ansn, numi),
+							marubatul: function () {
+								var second = function (_n6) {
+									var val = _n6.b;
+									return val;
+								};
+								var marubatult = A2(elm$core$List$indexedMap, elm$core$Tuple$pair, marubatul);
+								var first2 = function (_n5) {
+									var value1 = _n5.a;
+									return value1;
+								};
+								var marubatult2 = A2(
+									elm$core$List$map,
+									function (xi) {
+										switch (xi.b.$) {
+											case 'None':
+												var ci = xi.a;
+												var _n2 = xi.b;
+												return _Utils_Tuple2(
+													first2(xi),
+													_Utils_eq(ci, num) ? (_Utils_eq(model.ansn, numi) ? author$project$Main$Maru : author$project$Main$Batu) : author$project$Main$None);
+											case 'Batu':
+												var ci = xi.a;
+												var _n3 = xi.b;
+												return _Utils_Tuple2(
+													first2(xi),
+													author$project$Main$Batu);
+											default:
+												var ci = xi.a;
+												var _n4 = xi.b;
+												return _Utils_Tuple2(
+													first2(xi),
+													author$project$Main$Maru);
+										}
+									},
+									marubatult);
+								return A2(
+									elm$core$List$map,
+									function (tp) {
+										return second(tp);
+									},
+									marubatult2);
+							}()
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Input':
@@ -6038,7 +6153,7 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{input: '', userState: author$project$Main$Waiting}),
+						{userState: author$project$Main$Waiting}),
 					elm$http$Http$get(
 						{
 							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
@@ -6051,7 +6166,12 @@ var author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
+								marubatul: A2(
+									elm$core$List$repeat,
+									elm$core$List$length(mondl),
+									author$project$Main$None),
 								mdl: mondl,
+								num: -1,
 								userState: author$project$Main$Loaded(mondl)
 							}),
 						elm$core$Platform$Cmd$none);
@@ -6076,6 +6196,17 @@ var author$project$Main$Input = function (a) {
 	return {$: 'Input', a: a};
 };
 var author$project$Main$Send = {$: 'Send'};
+var author$project$Main$seikairitu = function (model) {
+	var seikai = elm$core$List$length(
+		A2(
+			elm$core$List$filter,
+			function (bl) {
+				return _Utils_eq(bl, author$project$Main$Maru) ? true : false;
+			},
+			model.marubatul));
+	var kei = elm$core$List$length(model.marubatul);
+	return elm$core$String$fromInt(seikai) + ('/' + elm$core$String$fromInt(kei));
+};
 var elm$core$Debug$toString = _Debug_toString;
 var elm$core$String$isEmpty = function (string) {
 	return string === '';
@@ -6220,7 +6351,8 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$button,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '40pt'),
+						A2(elm$html$Html$Attributes$style, 'height', '80pt'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '30pt'),
 						A2(elm$html$Html$Attributes$style, 'margin', '5pt'),
 						elm$html$Html$Events$onClick(
 						author$project$Main$Answer(numi))
@@ -6250,7 +6382,7 @@ var author$project$Main$view = function (model) {
 								[
 									elm$html$Html$Events$onInput(author$project$Main$Input),
 									elm$html$Html$Attributes$autofocus(true),
-									elm$html$Html$Attributes$placeholder('File Name?'),
+									elm$html$Html$Attributes$placeholder('問題のファイル名を入力'),
 									elm$html$Html$Attributes$value(model.input)
 								]),
 							_List_Nil),
@@ -6264,7 +6396,7 @@ var author$project$Main$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									elm$html$Html$text('Submit')
+									elm$html$Html$text('出題')
 								]))
 						])),
 					function () {
@@ -6273,7 +6405,7 @@ var author$project$Main$view = function (model) {
 						case 'Init':
 							return elm$html$Html$text('');
 						case 'Waiting':
-							return elm$html$Html$text('Waiting...');
+							return elm$html$Html$text('しばらくお待ちください...');
 						case 'Loaded':
 							var mondl = _n0.a;
 							return A2(
@@ -6286,7 +6418,7 @@ var author$project$Main$view = function (model) {
 											if (mondl.b) {
 												var mond = mondl.a;
 												var tail = mondl.b;
-												return '最初の問題:' + mond.mondai;
+												return '問題の準備ができました。「次へ」をクリックしてください。';
 											} else {
 												return 'error';
 											}
@@ -6357,7 +6489,9 @@ var author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							elm$html$Html$text(
-							model.maru ? '〇正解！！' : '　　')
+							_Utils_ap(
+								author$project$Main$seikairitu(model),
+								model.maru ? ' 〇正解！！' : '　　'))
 						]))
 				]),
 			A2(elm$core$List$indexedMap, bt, model.ans)));
@@ -6384,20 +6518,6 @@ var elm$core$Task$Perform = function (a) {
 	return {$: 'Perform', a: a};
 };
 var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
 var elm$core$Task$map = F2(
 	function (func, taskA) {
 		return A2(

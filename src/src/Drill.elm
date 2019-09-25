@@ -7,6 +7,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode  exposing (Decoder)
+
 --import Markdown exposing (defaultOptions)
 
 
@@ -35,7 +36,11 @@ type alias Model =
     , userState : UserState
     , mdl:Mondl
     ,num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool,url:String
+    , marubatul:List MaruBatu
     }
+
+type MaruBatu 
+    = None | Maru | Batu
 
 type UserState
     = Init
@@ -46,7 +51,7 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" Init [] -1 "" ["","",""] 0 False ""
+    ( Model "" Init [] -1 "" ["","",""] 0 False "" []
     , Cmd.none
     )
 
@@ -69,11 +74,31 @@ shutudai num model=  case num of
                        Nothing -> 0
                         )
                     ,url=mond.url}
-                   Nothing -> {model | mondai="**",ans=["","",""],ansn=0,url=""}
+                   Nothing -> {model | mondai=hyoka model,ans=["","",""],ansn=0,url=""}
               
                )
 
+seikairitu: Model -> String
+seikairitu model =
+ let
+    kei=List.length model.marubatul
+    seikai=List.length (List.filter (\bl->if bl==Maru then True else False) model.marubatul)
+ in   
+    (String.fromInt seikai)++"/"++(String.fromInt kei)
 
+hyoka: Model -> String
+hyoka model =
+ let
+    kei=List.length model.marubatul
+    seikai=List.length (List.filter (\bl->if bl==Maru then True else False) model.marubatul)
+ in   
+    if kei==seikai && kei>0 then
+     "全問正解！！すばらしい"
+    else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
+     "よくできています。あと少しで全問正解です。"
+    else 
+     "繰り返すことで正答率がアップします。「読み出し」をクリックし再トライ！"
+   
 
 
 -- UPDATE
@@ -85,7 +110,7 @@ type Msg = Increment | Decrement | Answer Int |Input String
 
 
 update : Msg -> Model -> (Model,Cmd Msg)
-update msg ({num} as model) =
+update msg ({num,marubatul} as model) =
   case msg of
     Increment -> 
      (
@@ -102,17 +127,41 @@ update msg ({num} as model) =
     Decrement ->
       (
       {model | num=num - 1
-      , mondai = (shutudai (num+1) model).mondai
-      , ans = (shutudai (num+1) model).ans
-      , ansn= (shutudai (num+1) model).ansn
+      , mondai = (shutudai (num-1) model).mondai
+      , ans = (shutudai (num-1) model).ans
+      , ansn= (shutudai (num-1) model).ansn
       , maru=False
-      , url= (shutudai (num+1) model).url
+      , url= (shutudai (num-1) model).url
       }
       ,Cmd.none
       )
     Answer numi->
       (    
-      {model | maru=(model.ansn==numi)
+      {model | maru=(model.ansn==numi) ,marubatul= (
+         let
+             first2 : ( a, b ) -> a
+             first2 ( value1, _ ) = value1
+             second :(a,b)->b
+             second(_,val)=val
+             marubatult=List.indexedMap Tuple.pair marubatul
+             marubatult2= List.map (
+              \ xi -> 
+              (case xi of
+                (ci, None) -> (first2(xi),                           
+                 if ci==num then
+                  if model.ansn==numi then
+                   Maru
+                  else
+                   Batu
+                 else
+                  None)
+                (ci, Batu) -> (first2(xi),Batu)
+                (ci, Maru) -> (first2(xi),Maru)
+               )) marubatult
+         in
+           List.map (\ tp -> second(tp)) marubatult2
+      
+      )  
       }
       ,Cmd.none
       )
@@ -121,8 +170,7 @@ update msg ({num} as model) =
 
     Send ->
             ( { model
-                | input = ""
-                , userState = Waiting
+                |  userState = Waiting
               }
             , Http.get
                 { url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
@@ -132,7 +180,7 @@ update msg ({num} as model) =
             )
 
     Receive (Ok mondl) ->
-            ( { model | userState = Loaded mondl, mdl=mondl}, Cmd.none )
+            ( { model | num=-1, userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None }, Cmd.none )
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
@@ -143,9 +191,9 @@ view : Model -> Html Msg
 view model =
   let
 
-   --textr raw=  Markdown.toHtmlWith { defaultOptions | sanitize = False }  [] raw
+    --textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
 
-    bt numi xs = button [Html.Attributes.style "font-size" "40pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
+    bt numi xs = button [Html.Attributes.style "height" "80pt",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
   
    div []
@@ -154,7 +202,7 @@ view model =
             [ input
                 [ onInput Input
                 , autofocus True
-                , placeholder "File Name?"
+                , placeholder "問題のファイル名を入力"
                 , value model.input
                 ]
                 []
@@ -164,19 +212,19 @@ view model =
                         || String.isEmpty (String.trim model.input)
                     )
                 ]
-                [ text "Submit" ]
+                [ text "出題" ]
             ]
         , case model.userState of
             Init ->
                 text ""
 
             Waiting ->
-                text "Waiting..."
+                text "しばらくお待ちください..."
 
             Loaded mondl ->
                 div [] [text(
                   case mondl of
-                   mond::tail -> ":"
+                   mond::tail -> "問題の準備ができました。「次へ」をクリックしてください。"
                    _ -> "error"
 
                 )]
@@ -194,7 +242,7 @@ view model =
      else
        img [src model.url ,width 200 , height 150] [] 
     )
-    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text (if model.maru then "〇正解！！" else "　　")]
+    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "　　") )]
     ] ++
       (model.ans |> List.indexedMap bt)
     )   
