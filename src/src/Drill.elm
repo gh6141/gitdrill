@@ -9,6 +9,7 @@ import Http
 import Json.Decode  exposing (Decoder)
 
 
+
 --import Markdown exposing (defaultOptions)
 
 
@@ -33,7 +34,8 @@ main =
 
 -- MODEL
 type alias Model =
-    { selected : String
+    { flist: List String
+    , selected : String
     , input : String
     , userState : UserState
     , mdl:Mondl
@@ -53,8 +55,14 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model "" "" Init [] -1 "" ["","",""] 0 False "" []
-    , Cmd.none
+    ( Model [] "" "" Init [] -1 "" ["","",""] 0 False "" []
+    
+         , Http.get
+                { url = "https://safe-wave-89074.herokuapp.com/list"
+                , expect = Http.expectString Receive2
+                 --Http.expectJson Receive mondlDecoder
+                }
+    
     )
 
 
@@ -107,7 +115,8 @@ hyoka model =
 
 type Msg =  Increment | Decrement | Answer Int |Input String
     | Send
-    | Receive (Result Http.Error Mondl) --(Result Http.Error String) 
+    | Receive (Result Http.Error Mondl) 
+    | Receive2 (Result Http.Error String) 
 
 
 
@@ -188,6 +197,11 @@ update msg ({num,marubatul,selected} as model) =
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
+    
+    Receive2 (Ok lst) ->
+            ({model | flist =( String.split "," lst ) } ,Cmd.none)
+    Receive2 (Err e) ->
+            ( { model | userState = Failed e }, Cmd.none )
 
 -- VIEW
 
@@ -197,9 +211,9 @@ view model =
 
     --selectEvent = on "change" (Html.map Select targetValue)
 
-    dummy=["ion","shoka"]
+    --dummy=["ion","shoka"]
     --textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
-    op dmy = List.map (\fname -> Html.option [value fname][text fname]) dmy
+    op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
     bt numi xs = button [Html.Attributes.style "height" "80pt",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
   in
   
@@ -208,7 +222,7 @@ view model =
       Html.form [ onSubmit Send ]
             [
 
-              select [ name "filelist"] (op dummy)
+              select [ name "filelist"] (op model.flist)
          
 
                 
