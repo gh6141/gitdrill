@@ -10,6 +10,35 @@ import Json.Decode  exposing (Decoder)
 
 
 
+customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
+customDecoder d f =
+    let
+        resultDecoder x =
+            case x of
+                Ok a ->
+                    Json.Decode.succeed a
+
+                Err e ->
+                    Json.Decode.fail e
+    in
+    Json.Decode.map f d |> Json.Decode.andThen resultDecoder
+
+{-| String or empty target value.
+-}
+targetValueMaybe : Decoder (Maybe String)
+targetValueMaybe =
+    customDecoder targetValue
+        (\s ->
+            Ok <|
+                if s == "" then
+                    Nothing
+
+                else
+                    Just s
+        )
+
+
+
 --import Markdown exposing (defaultOptions)
 
 
@@ -35,7 +64,7 @@ main =
 -- MODEL
 type alias Model =
     { flist: List String
-    , selected : String
+    , selected : Maybe String
     , input : String
     , userState : UserState
     , mdl:Mondl
@@ -55,7 +84,7 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model [] "" "" Init [] -1 "" ["","",""] 0 False "" []
+    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 False "" []
     
          , Http.get
                 { url = "https://safe-wave-89074.herokuapp.com/list"
@@ -107,7 +136,7 @@ hyoka model =
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
      "よくできています。あと少しで全問正解です。"
     else 
-     "繰り返すことで正答率がアップします。「読み出し」をクリックし再トライ！"
+     "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！"
    
 
 
@@ -117,13 +146,14 @@ type Msg =  Increment | Decrement | Answer Int |Input String
     | Send
     | Receive (Result Http.Error Mondl) 
     | Receive2 (Result Http.Error String) 
+    | Select (Maybe String)
 
 
 
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg ({num,marubatul,selected} as model) =
   case msg of
-   -- Select s ->  { model | selected = s }
+    Select s ->  ({ model | selected = s, input=Maybe.withDefault "" s},Cmd.none)
 
     Increment -> 
      (
@@ -186,7 +216,8 @@ update msg ({num,marubatul,selected} as model) =
                 |  userState = Waiting
               }
             , Http.get
-                { url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
+                { --url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
+                  url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
                 , expect = --Http.expectString Receive
                  Http.expectJson Receive mondlDecoder
                 }
@@ -199,7 +230,7 @@ update msg ({num,marubatul,selected} as model) =
             ( { model | userState = Failed e }, Cmd.none )
     
     Receive2 (Ok lst) ->
-            ({model | flist =( String.split "," lst ) } ,Cmd.none)
+            ({model | flist =List.sort ( String.split "," lst ) } ,Cmd.none)
     Receive2 (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
 
@@ -209,7 +240,7 @@ view : Model -> Html Msg
 view model =
   let
 
-    --selectEvent = on "change" (Html.map Select targetValue)
+    selectEvent = on "change" (Json.Decode.map Select targetValueMaybe )
 
     --dummy=["ion","shoka"]
     --textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
@@ -221,18 +252,15 @@ view model =
    ([
       Html.form [ onSubmit Send ]
             [
-
-              select [ name "filelist"] (op model.flist)
-         
-
-                
-            , input
-                [ onInput Input
-                , autofocus True
-                , placeholder "問題のファイル名を入力"
-                , value model.input
-                ]
-                [text model.selected]
+              select [selectEvent, name "filelist"] (op model.flist)
+           -- , input
+           --     [ onInput Input
+           --     , autofocus True
+           --     , placeholder "問題のファイル名を入力"
+           --     , value model.input
+                --,value (Maybe.withDefault "" model.selected)
+           --     ]
+           --     []
             , button
                 [ disabled
                     ((model.userState == Waiting)

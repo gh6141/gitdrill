@@ -4528,6 +4528,7 @@ var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
+var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Result$Ok = function (a) {
 	return {$: 'Ok', a: a};
 };
@@ -4625,7 +4626,6 @@ var elm$core$Basics$compare = _Utils_compare;
 var elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
-var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -5877,7 +5877,7 @@ var elm$http$Http$get = function (r) {
 };
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
-		author$project$Main$Model(_List_Nil)('')('')(author$project$Main$Init)(_List_Nil)(-1)('')(
+		author$project$Main$Model(_List_Nil)(elm$core$Maybe$Nothing)('')(author$project$Main$Init)(_List_Nil)(-1)('')(
 			_List_fromArray(
 				['', '', '']))(0)(false)('')(_List_Nil),
 		elm$http$Http$get(
@@ -5972,7 +5972,7 @@ var author$project$Main$hyoka = function (model) {
 			},
 			model.marubatul));
 	var kei = elm$core$List$length(model.marubatul);
-	return (_Utils_eq(kei, seikai) && (kei > 0)) ? '全問正解！！すばらしい' : ((((seikai + 1) / (kei + 1)) > 0.7) ? 'よくできています。あと少しで全問正解です。' : '繰り返すことで正答率がアップします。「読み出し」をクリックし再トライ！');
+	return (_Utils_eq(kei, seikai) && (kei > 0)) ? '全問正解！！すばらしい' : ((((seikai + 1) / (kei + 1)) > 0.7) ? 'よくできています。あと少しで全問正解です。' : '繰り返すことで正答率がアップします。「出題」をクリックし再トライ！');
 };
 var elm$core$String$toInt = _String_toInt;
 var author$project$Main$shutudai = F2(
@@ -6057,6 +6057,19 @@ var elm$core$List$repeat = F2(
 	function (n, value) {
 		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
 	});
+var elm$core$List$sortBy = _List_sortBy;
+var elm$core$List$sort = function (xs) {
+	return A2(elm$core$List$sortBy, elm$core$Basics$identity, xs);
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var elm$core$Tuple$pair = F2(
@@ -6083,6 +6096,16 @@ var author$project$Main$update = F2(
 		var marubatul = model.marubatul;
 		var selected = model.selected;
 		switch (msg.$) {
+			case 'Select':
+				var s = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							input: A2(elm$core$Maybe$withDefault, '', s),
+							selected: s
+						}),
+					elm$core$Platform$Cmd$none);
 			case 'Increment':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -6175,7 +6198,7 @@ var author$project$Main$update = F2(
 					elm$http$Http$get(
 						{
 							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
-							url: 'https://safe-wave-89074.herokuapp.com/disp2/' + model.input
+							url: 'https://safe-wave-89074.herokuapp.com/disp2/' + A2(elm$core$Maybe$withDefault, '', model.selected)
 						}));
 			case 'Receive':
 				if (msg.a.$ === 'Ok') {
@@ -6210,7 +6233,8 @@ var author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								flist: A2(elm$core$String$split, ',', lst)
+								flist: elm$core$List$sort(
+									A2(elm$core$String$split, ',', lst))
 							}),
 						elm$core$Platform$Cmd$none);
 				} else {
@@ -6230,8 +6254,8 @@ var author$project$Main$Answer = function (a) {
 };
 var author$project$Main$Decrement = {$: 'Decrement'};
 var author$project$Main$Increment = {$: 'Increment'};
-var author$project$Main$Input = function (a) {
-	return {$: 'Input', a: a};
+var author$project$Main$Select = function (a) {
+	return {$: 'Select', a: a};
 };
 var author$project$Main$Send = {$: 'Send'};
 var author$project$Main$seikairitu = function (model) {
@@ -6245,14 +6269,48 @@ var author$project$Main$seikairitu = function (model) {
 	var kei = elm$core$List$length(model.marubatul);
 	return elm$core$String$fromInt(seikai) + ('/' + elm$core$String$fromInt(kei));
 };
+var elm$json$Json$Decode$andThen = _Json_andThen;
+var elm$json$Json$Decode$fail = _Json_fail;
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var author$project$Main$customDecoder = F2(
+	function (d, f) {
+		var resultDecoder = function (x) {
+			if (x.$ === 'Ok') {
+				var a = x.a;
+				return elm$json$Json$Decode$succeed(a);
+			} else {
+				var e = x.a;
+				return elm$json$Json$Decode$fail(e);
+			}
+		};
+		return A2(
+			elm$json$Json$Decode$andThen,
+			resultDecoder,
+			A2(elm$json$Json$Decode$map, f, d));
+	});
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var author$project$Main$targetValueMaybe = A2(
+	author$project$Main$customDecoder,
+	elm$html$Html$Events$targetValue,
+	function (s) {
+		return elm$core$Result$Ok(
+			(s === '') ? elm$core$Maybe$Nothing : elm$core$Maybe$Just(s));
+	});
 var elm$core$Debug$toString = _Debug_toString;
 var elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
 var elm$core$String$trim = _String_trim;
-var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
-var elm$json$Json$Decode$succeed = _Json_succeed;
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
 		case 'Normal':
@@ -6269,7 +6327,6 @@ var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$form = _VirtualDom_node('form');
 var elm$html$Html$img = _VirtualDom_node('img');
-var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -6282,7 +6339,6 @@ var elm$html$Html$Attributes$boolProperty = F2(
 			key,
 			elm$json$Json$Encode$bool(bool));
 	});
-var elm$html$Html$Attributes$autofocus = elm$html$Html$Attributes$boolProperty('autofocus');
 var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
 var elm$html$Html$Attributes$height = function (n) {
 	return A2(
@@ -6299,7 +6355,6 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$name = elm$html$Html$Attributes$stringProperty('name');
-var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
 var elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		elm$html$Html$Attributes$stringProperty,
@@ -6332,37 +6387,6 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
-};
 var elm$html$Html$Events$alwaysPreventDefault = function (msg) {
 	return _Utils_Tuple2(msg, true);
 };
@@ -6386,6 +6410,10 @@ var elm$html$Html$Events$onSubmit = function (msg) {
 			elm$json$Json$Decode$succeed(msg)));
 };
 var author$project$Main$view = function (model) {
+	var selectEvent = A2(
+		elm$html$Html$Events$on,
+		'change',
+		A2(elm$json$Json$Decode$map, author$project$Main$Select, author$project$Main$targetValueMaybe));
 	var op = function (dmy) {
 		return A2(
 			elm$core$List$map,
@@ -6438,22 +6466,10 @@ var author$project$Main$view = function (model) {
 							elm$html$Html$select,
 							_List_fromArray(
 								[
+									selectEvent,
 									elm$html$Html$Attributes$name('filelist')
 								]),
 							op(model.flist)),
-							A2(
-							elm$html$Html$input,
-							_List_fromArray(
-								[
-									elm$html$Html$Events$onInput(author$project$Main$Input),
-									elm$html$Html$Attributes$autofocus(true),
-									elm$html$Html$Attributes$placeholder('問題のファイル名を入力'),
-									elm$html$Html$Attributes$value(model.input)
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text(model.selected)
-								])),
 							A2(
 							elm$html$Html$button,
 							_List_fromArray(
