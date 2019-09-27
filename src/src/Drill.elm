@@ -9,7 +9,6 @@ import Http
 import Json.Decode  exposing (Decoder)
 
 
-
 customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
 customDecoder d f =
     let
@@ -153,7 +152,7 @@ type Msg =  Increment | Decrement | Answer Int |Input String
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg ({num,marubatul,selected} as model) =
   case msg of
-    Select s ->  ({ model | selected = s, input=Maybe.withDefault "" s},Cmd.none)
+    Select s ->  ({ model | userState = Init ,selected = s, input=Maybe.withDefault "" s}, Cmd.none )
 
     Increment -> 
      (
@@ -281,7 +280,6 @@ view model =
                   case mondl of
                    mond::tail -> "問題の準備ができました。「次へ」をクリックしてください。"
                    _ -> "error"
-
                 )]
 
             Failed e ->
