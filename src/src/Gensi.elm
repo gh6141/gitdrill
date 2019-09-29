@@ -44,29 +44,38 @@ snd tpl =
 
 type MaruBatu = Maru | Batu | Mada 
 
-type alias Model = {num:Int,name:String,siki:String,seikai:MaruBatu}
+type alias Model = {num:Int,name:String,siki:String,seikai:MaruBatu,sikil:List String}
 
 init : Model
-init = {num=0,name="",siki="",seikai=Mada}
+init = {num=0,name="",siki="",seikai=Mada,sikil=["","",""]}
   
-
 
 -- UPDATE
 
-type Msg = Increment | Decrement
+type Msg = Increment | Decrement | B1 | B2 | B3
 
 update : Msg -> Model -> Model
 update msg model =
   case msg of
     Increment ->
       {model | num=model.num + 1 , name= fst (Maybe.withDefault ("","")  (getAt model.num data)  ) 
-      ,siki=  snd (Maybe.withDefault ("","")  (getAt model.num data)  ) 
+      ,siki=  snd (Maybe.withDefault ("","")  (getAt model.num data)  )
+      ,sikil=[snd (Maybe.withDefault ("","")  (getAt 4 data)  ),snd (Maybe.withDefault ("","")  (getAt 5 data)  ),snd (Maybe.withDefault ("","")  (getAt model.num data)  )]
       }
 
     Decrement ->
       {model | num=model.num - 1 , name= fst (Maybe.withDefault ("","")  (getAt model.num data)  )
       , siki= snd (Maybe.withDefault ("","")  (getAt model.num data)  ) 
       }
+
+    B1 ->
+      {model|seikai=Maru}
+    
+    B2 ->
+      {model|seikai=Maru}
+    
+    B3 ->
+      {model|seikai=Maru}
 
 
 -- VIEW
@@ -79,4 +88,7 @@ view model =
     , button [ onClick Increment ] [ text "+" ]
     , div [Html.Attributes.style "font-size" "70pt"] [text model.name]
     , div [Html.Attributes.style "font-size" "100pt"] [text model.siki]
+    , button [ Html.Attributes.style "font-size" "100pt",onClick B1 ] [ text (Maybe.withDefault "" (getAt 0 model.sikil)) ]
+    , button [ Html.Attributes.style "font-size" "100pt",onClick B2 ] [ text (Maybe.withDefault "" (getAt 1 model.sikil)) ]
+    , button [ Html.Attributes.style "font-size" "100pt",onClick B3 ] [ text (Maybe.withDefault "" (getAt 2 model.sikil)) ]
     ]
