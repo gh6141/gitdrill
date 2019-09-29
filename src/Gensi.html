@@ -4321,7 +4321,6 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$Mada = {$: 'Mada'};
-var author$project$Main$init = {name: '', num: 0, seikai: author$project$Main$Mada, siki: ''};
 var elm$core$Basics$EQ = {$: 'EQ'};
 var elm$core$Basics$LT = {$: 'LT'};
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4402,6 +4401,15 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
+var author$project$Main$init = {
+	name: '',
+	num: 0,
+	seikai: author$project$Main$Mada,
+	siki: '',
+	sikil: _List_fromArray(
+		['', '', ''])
+};
+var author$project$Main$Maru = {$: 'Maru'};
 var author$project$Main$data = _List_fromArray(
 	[
 		_Utils_Tuple2('ナトリウム原子', 'Na'),
@@ -4488,40 +4496,74 @@ var elm$core$Maybe$withDefault = F2(
 	});
 var author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'Increment') {
-			return _Utils_update(
-				model,
-				{
-					name: author$project$Main$fst(
-						A2(
-							elm$core$Maybe$withDefault,
-							_Utils_Tuple2('', ''),
-							A2(author$project$Main$getAt, model.num, author$project$Main$data))),
-					num: model.num + 1,
-					siki: author$project$Main$snd(
-						A2(
-							elm$core$Maybe$withDefault,
-							_Utils_Tuple2('', ''),
-							A2(author$project$Main$getAt, model.num, author$project$Main$data)))
-				});
-		} else {
-			return _Utils_update(
-				model,
-				{
-					name: author$project$Main$fst(
-						A2(
-							elm$core$Maybe$withDefault,
-							_Utils_Tuple2('', ''),
-							A2(author$project$Main$getAt, model.num, author$project$Main$data))),
-					num: model.num - 1,
-					siki: author$project$Main$snd(
-						A2(
-							elm$core$Maybe$withDefault,
-							_Utils_Tuple2('', ''),
-							A2(author$project$Main$getAt, model.num, author$project$Main$data)))
-				});
+		switch (msg.$) {
+			case 'Increment':
+				return _Utils_update(
+					model,
+					{
+						name: author$project$Main$fst(
+							A2(
+								elm$core$Maybe$withDefault,
+								_Utils_Tuple2('', ''),
+								A2(author$project$Main$getAt, model.num, author$project$Main$data))),
+						num: model.num + 1,
+						siki: author$project$Main$snd(
+							A2(
+								elm$core$Maybe$withDefault,
+								_Utils_Tuple2('', ''),
+								A2(author$project$Main$getAt, model.num, author$project$Main$data))),
+						sikil: _List_fromArray(
+							[
+								author$project$Main$snd(
+								A2(
+									elm$core$Maybe$withDefault,
+									_Utils_Tuple2('', ''),
+									A2(author$project$Main$getAt, 4, author$project$Main$data))),
+								author$project$Main$snd(
+								A2(
+									elm$core$Maybe$withDefault,
+									_Utils_Tuple2('', ''),
+									A2(author$project$Main$getAt, 5, author$project$Main$data))),
+								author$project$Main$snd(
+								A2(
+									elm$core$Maybe$withDefault,
+									_Utils_Tuple2('', ''),
+									A2(author$project$Main$getAt, model.num, author$project$Main$data)))
+							])
+					});
+			case 'Decrement':
+				return _Utils_update(
+					model,
+					{
+						name: author$project$Main$fst(
+							A2(
+								elm$core$Maybe$withDefault,
+								_Utils_Tuple2('', ''),
+								A2(author$project$Main$getAt, model.num, author$project$Main$data))),
+						num: model.num - 1,
+						siki: author$project$Main$snd(
+							A2(
+								elm$core$Maybe$withDefault,
+								_Utils_Tuple2('', ''),
+								A2(author$project$Main$getAt, model.num, author$project$Main$data)))
+					});
+			case 'B1':
+				return _Utils_update(
+					model,
+					{seikai: author$project$Main$Maru});
+			case 'B2':
+				return _Utils_update(
+					model,
+					{seikai: author$project$Main$Maru});
+			default:
+				return _Utils_update(
+					model,
+					{seikai: author$project$Main$Maru});
 		}
 	});
+var author$project$Main$B1 = {$: 'B1'};
+var author$project$Main$B2 = {$: 'B2'};
+var author$project$Main$B3 = {$: 'B3'};
 var author$project$Main$Decrement = {$: 'Decrement'};
 var author$project$Main$Increment = {$: 'Increment'};
 var elm$core$String$fromInt = _String_fromNumber;
@@ -5001,6 +5043,51 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(model.siki)
+					])),
+				A2(
+				elm$html$Html$button,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '100pt'),
+						elm$html$Html$Events$onClick(author$project$Main$B1)
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						A2(
+							elm$core$Maybe$withDefault,
+							'',
+							A2(author$project$Main$getAt, 0, model.sikil)))
+					])),
+				A2(
+				elm$html$Html$button,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '100pt'),
+						elm$html$Html$Events$onClick(author$project$Main$B2)
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						A2(
+							elm$core$Maybe$withDefault,
+							'',
+							A2(author$project$Main$getAt, 1, model.sikil)))
+					])),
+				A2(
+				elm$html$Html$button,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '100pt'),
+						elm$html$Html$Events$onClick(author$project$Main$B3)
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						A2(
+							elm$core$Maybe$withDefault,
+							'',
+							A2(author$project$Main$getAt, 2, model.sikil)))
 					]))
 			]));
 };
