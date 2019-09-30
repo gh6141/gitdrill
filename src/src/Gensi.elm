@@ -8,6 +8,29 @@ import Browser
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (..)
+import Random
+
+partThree : List a -> Random.Generator (List a)
+partThree list =
+    let
+        randomNumbers : Random.Generator (List Int)
+        randomNumbers =
+            Random.list (List.length list) <| Random.int Random.minInt Random.maxInt
+
+        zipWithList : List Int -> List ( a, Int )
+        zipWithList intList =
+            List.map2 Tuple.pair list intList
+
+        listWithRandomNumbers : Random.Generator (List ( a, Int ))
+        listWithRandomNumbers =
+            Random.map zipWithList randomNumbers
+
+
+        sortedGenerator : Random.Generator (List ( a, Int ))
+        sortedGenerator =
+            Random.map (List.sortBy Tuple.second) listWithRandomNumbers
+    in
+    Random.map (List.map Tuple.first) sortedGenerator
 
 
 main =
@@ -60,7 +83,8 @@ update msg model =
     Increment ->
       {model | num=model.num + 1 , name= fst (Maybe.withDefault ("","")  (getAt model.num data)  ) 
       ,siki=  snd (Maybe.withDefault ("","")  (getAt model.num data)  )
-      ,sikil=[snd (Maybe.withDefault ("","")  (getAt 4 data)  ),snd (Maybe.withDefault ("","")  (getAt 5 data)  ),snd (Maybe.withDefault ("","")  (getAt model.num data)  )]
+      ,sikil= partThree [snd (Maybe.withDefault ("","")  (getAt 4 data)  ),snd (Maybe.withDefault ("","")  (getAt 5 data)  ),snd (Maybe.withDefault ("","")  (getAt model.num data)  )]
+             
       }
 
     Decrement ->
@@ -83,9 +107,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ button [ onClick Decrement ] [ text "-" ]
+    [ button [Html.Attributes.style "font-size" "70pt", onClick Decrement ] [ text "もどる" ]
     , div [] [ text (String.fromInt model.num) ]
-    , button [ onClick Increment ] [ text "+" ]
+    , button [ Html.Attributes.style "font-size" "70pt",onClick Increment ] [ text "つぎへ" ]
     , div [Html.Attributes.style "font-size" "70pt"] [text model.name]
     , div [Html.Attributes.style "font-size" "100pt"] [text model.siki]
     , button [ Html.Attributes.style "font-size" "100pt",onClick B1 ] [ text (Maybe.withDefault "" (getAt 0 model.sikil)) ]
