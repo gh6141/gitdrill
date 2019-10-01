@@ -245,7 +245,7 @@ view model =
     selectEvent = on "change" (Json.Decode.map Select targetValueMaybe )
 
     --dummy=["ion","shoka"]
-    textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False ,githubFlavored =Just {  tables =False , breaks =False
+    textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False ,githubFlavored =Just {  tables =True , breaks =True
               } }  [ ] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
     bt numi xs =button [Html.Attributes.style "font-size" "20pt",Html.Attributes.style "height" "60pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
