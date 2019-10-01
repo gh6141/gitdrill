@@ -7,6 +7,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode  exposing (Decoder)
+import Markdown exposing (defaultOptions)
 
 
 customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
@@ -244,9 +245,9 @@ view model =
     selectEvent = on "change" (Json.Decode.map Select targetValueMaybe )
 
     --dummy=["ion","shoka"]
-    --textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
+    textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
-    bt numi xs = button [Html.Attributes.style "height" "80pt",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ text xs]
+    bt numi xs = button [Html.Attributes.style "height" "80pt",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "margin" "5pt", onClick (Answer numi) ] [ textr xs]
   in
   
    div []
@@ -290,7 +291,7 @@ view model =
      
     ,button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
     ,button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    , div [ Html.Attributes.style "font-size" "30pt" ] [ text ( model.mondai) ]
+    , div [ Html.Attributes.style "font-size" "30pt" ] [ textr ( model.mondai) ]
     , (
      if model.url == "" || model.url=="http://"  then   
        div [] []
