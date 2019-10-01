@@ -247,7 +247,7 @@ view model =
     --dummy=["ion","shoka"]
     textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [ Html.Attributes.style "font-size" "20pt"] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
-    bt numi xs =button [Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
+    bt numi xs =button [Html.Attributes.style "height" "60pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
     --bt numi xs =textr xs
 
   in
