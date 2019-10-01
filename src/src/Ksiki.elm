@@ -9,6 +9,7 @@ import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (..)
 import Random exposing (Seed, int, step,initialSeed)
+import Markdown exposing (defaultOptions)
 
 shuffleList : Seed -> List a -> List a
 shuffleList seed list =
@@ -47,7 +48,7 @@ main =
 
 -- Data
 data : List (String,String) 
-data= [("O2","酸素"),("H2","水素"),("CO2","二酸化炭素"),("H2O","水"),("NaCl","塩化ナトリウム"),("CuO","酸化銅"),("Ag2O","酸化銀"),("MgO","酸化マグネシウム"),("NaHCO3","炭酸水素ナトリウム")]
+data= [("O<sub>2</sub>","酸素"),("H<sub>2</sub>","水素"),("CO<sub>2</sub>","二酸化炭素"),("H<sub>2</sub>O","水"),("NaCl","塩化ナトリウム"),("CuO","酸化銅"),("Ag<sub>2</sub>O","酸化銀"),("MgO","酸化マグネシウム"),("NaHCO<sub>3</sub>","炭酸水素ナトリウム")]
 
 --Func
 getAt : Int -> List a -> Maybe a
@@ -136,6 +137,8 @@ update msg model =
 
 
 -- VIEW
+textr : String -> Html Msg
+textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False }  [] raw
 
 view : Model -> Html Msg
 view model =
@@ -143,10 +146,10 @@ view model =
     [ --button [Html.Attributes.style "font-size" "30pt", onClick Decrement ] [ text "もどる" ],
      div [] [ text (String.fromInt model.num) ]
     , button [ Html.Attributes.style "font-size" "30pt",onClick Increment ] [ text "つぎへ" ]
-    , div [Html.Attributes.style "font-size" "60pt"] [text model.name]
+    , div [Html.Attributes.style "font-size" "50pt"] [textr model.name]
     --, div [Html.Attributes.style "font-size" "80pt"] [text model.siki]
-    , button [ Html.Attributes.style "margin" "5pt",Html.Attributes.style "font-size" "100pt",onClick B1 ] [ text (Maybe.withDefault "" (getAt 0 model.sikil)) ]
-    , button [ Html.Attributes.style "margin" "5pt",Html.Attributes.style "font-size" "100pt",onClick B2 ] [ text (Maybe.withDefault "" (getAt 1 model.sikil)) ]
-    , button [ Html.Attributes.style "margin" "5pt",Html.Attributes.style "font-size" "100pt",onClick B3 ] [ text (Maybe.withDefault "" (getAt 2 model.sikil)) ]
+    , button [ Html.Attributes.style "margin" "5pt",Html.Attributes.style "font-size" "50pt",onClick B1 ] [ text (Maybe.withDefault "" (getAt 0 model.sikil)) ]
+    , button [ Html.Attributes.style "margin" "5pt",Html.Attributes.style "font-size" "50pt",onClick B2 ] [ text (Maybe.withDefault "" (getAt 1 model.sikil)) ]
+    , button [ Html.Attributes.style "margin" "5pt",Html.Attributes.style "font-size" "50pt",onClick B3 ] [ text (Maybe.withDefault "" (getAt 2 model.sikil)) ]
     ,div [ Html.Attributes.style "font-size" "40pt" , Html.Attributes.style "color" "red"] [ text ( (String.fromInt model.marukei)++"/"++(String.fromInt (List.length data))++" "++(if model.seikai==Maru then "〇" else if model.seikai==Batu  then "✖" else "") )]
     ]
