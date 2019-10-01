@@ -6528,7 +6528,10 @@ var author$project$Main$view = function (model) {
 			_Utils_update(
 				elm_explorations$markdown$Markdown$defaultOptions,
 				{sanitize: false}),
-			_List_Nil,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'font-size', '20pt')
+				]),
 			raw);
 	};
 	var selectEvent = A2(
@@ -6558,7 +6561,6 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$button,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '30pt'),
 						A2(elm$html$Html$Attributes$style, 'margin', '5pt'),
 						elm$html$Html$Events$onClick(
 						author$project$Main$Answer(numi))
