@@ -69,6 +69,7 @@ type alias Model =
     , mdl:Mondl
     ,num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool,url:String
     , marubatul:List MaruBatu
+    , missl:List String
     }
  
 type MaruBatu 
@@ -83,7 +84,7 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 False "" []
+    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 False "" [] []
     
          , Http.get
                 { url = "https://safe-wave-89074.herokuapp.com/list"
@@ -133,7 +134,7 @@ hyoka model =
     if kei==seikai && kei>0 then
      "全問正解！！すばらしい"
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
-     "よくできています。あと少しで全問正解です。"
+     "よくできています。あと少しで全問正解です。　　間違えた問題＝＞"++(String.join "　" model.missl)
     else 
      "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！"
    
@@ -203,7 +204,8 @@ update msg ({num,marubatul,selected} as model) =
          in
            List.map (\ tp -> second(tp)) marubatult2
       
-      )  
+      )
+      ,missl=if   model.ansn /= numi then model.mondai::model.missl else model.missl
       }
       ,Cmd.none
       )
