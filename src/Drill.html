@@ -6000,24 +6000,6 @@ var author$project$Main$Receive = function (a) {
 	return {$: 'Receive', a: a};
 };
 var author$project$Main$Waiting = {$: 'Waiting'};
-var author$project$Main$Mond = F6(
-	function (mondai, ans1, ans2, ans3, ansn, url) {
-		return {ans1: ans1, ans2: ans2, ans3: ans3, ansn: ansn, mondai: mondai, url: url};
-	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$map6 = _Json_map6;
-var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$mondDecoder = A7(
-	elm$json$Json$Decode$map6,
-	author$project$Main$Mond,
-	A2(elm$json$Json$Decode$field, 'mondai', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'ans1', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'ans2', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'ans3', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'ansn', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'url', elm$json$Json$Decode$string));
-var elm$json$Json$Decode$list = _Json_decodeList;
-var author$project$Main$mondlDecoder = elm$json$Json$Decode$list(author$project$Main$mondDecoder);
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -6053,6 +6035,24 @@ var author$project$Main$getAt = F2(
 		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
 			A2(elm$core$List$drop, idx, xs));
 	});
+var author$project$Main$Mond = F6(
+	function (mondai, ans1, ans2, ans3, ansn, url) {
+		return {ans1: ans1, ans2: ans2, ans3: ans3, ansn: ansn, mondai: mondai, url: url};
+	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$map6 = _Json_map6;
+var elm$json$Json$Decode$string = _Json_decodeString;
+var author$project$Main$mondDecoder = A7(
+	elm$json$Json$Decode$map6,
+	author$project$Main$Mond,
+	A2(elm$json$Json$Decode$field, 'mondai', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ans1', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ans2', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ans3', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'ansn', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'url', elm$json$Json$Decode$string));
+var elm$json$Json$Decode$list = _Json_decodeList;
+var author$project$Main$mondlDecoder = elm$json$Json$Decode$list(author$project$Main$mondDecoder);
 var elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -6284,7 +6284,13 @@ var author$project$Main$update = F2(
 									},
 									marubatult2);
 							}(),
-							missl: (!_Utils_eq(model.ansn, numi)) ? A2(elm$core$List$cons, model.mondai, model.missl) : model.missl
+							missl: (!_Utils_eq(model.ansn, numi)) ? A2(
+								elm$core$List$cons,
+								model.mondai + ('(答：' + (A2(
+									elm$core$Maybe$withDefault,
+									'',
+									A2(author$project$Main$getAt, model.ansn, model.ans)) + ')')),
+								model.missl) : model.missl
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Input':
@@ -6298,7 +6304,7 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{userState: author$project$Main$Waiting}),
+						{missl: _List_Nil, userState: author$project$Main$Waiting}),
 					elm$http$Http$get(
 						{
 							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),

@@ -206,7 +206,7 @@ update msg ({num,marubatul,selected} as model) =
            List.map (\ tp -> second(tp)) marubatult2
       
       )
-      ,missl=if   model.ansn /= numi then model.mondai::model.missl else model.missl
+      ,missl=if   model.ansn /= numi then (model.mondai++"(答："++(Maybe.withDefault "" (getAt model.ansn model.ans))++")")::model.missl else model.missl
       }
       ,Cmd.none
       )
@@ -215,7 +215,7 @@ update msg ({num,marubatul,selected} as model) =
 
     Send ->
             ( { model
-                |  userState = Waiting
+                |  userState = Waiting ,missl=[]
               }
             , Http.get
                 { --url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
