@@ -137,7 +137,7 @@ hyoka model =
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
      "よくできています。あと少しで全問正解です。　　間違えた問題＝＞"++(String.join "　" model.missl)
     else 
-     "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！"
+     "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！  間違えた問題＝＞"++(String.join "　" model.missl)
    
 
 
