@@ -298,7 +298,7 @@ view model =
      if model.url == "" || model.url=="http://"  then   
        div [] []
      else
-       img [src model.url ,width 200 , height 150] [] 
+       img [src model.url ] [] 
     )
     , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "　　") )]
     ] ++

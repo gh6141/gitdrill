@@ -6450,12 +6450,6 @@ var elm$html$Html$Attributes$boolProperty = F2(
 			elm$json$Json$Encode$bool(bool));
 	});
 var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
-var elm$html$Html$Attributes$height = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'height',
-		elm$core$String$fromInt(n));
-};
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -6474,12 +6468,6 @@ var elm$html$Html$Attributes$src = function (url) {
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$html$Html$Attributes$width = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'width',
-		elm$core$String$fromInt(n));
-};
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6686,9 +6674,7 @@ var author$project$Main$view = function (model) {
 					elm$html$Html$img,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$src(model.url),
-							elm$html$Html$Attributes$width(200),
-							elm$html$Html$Attributes$height(150)
+							elm$html$Html$Attributes$src(model.url)
 						]),
 					_List_Nil),
 					A2(
