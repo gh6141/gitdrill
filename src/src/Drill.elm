@@ -294,13 +294,15 @@ view model =
     ,button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
     ,button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
     , div [ Html.Attributes.style "font-size" "30pt" ] [ textr ( model.mondai) ]
+    
+    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "　　") )]
+    
     , (
      if model.url == "" || model.url=="http://"  then   
        div [] []
      else
        img [src model.url ] [] 
     )
-    , div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "　　") )]
     ] ++
       (model.ans |> List.indexedMap bt)
     )   
