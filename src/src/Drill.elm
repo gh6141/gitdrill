@@ -294,6 +294,7 @@ view model =
     ,button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
     ,button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
     , div [ Html.Attributes.style "font-size" "30pt" ] [ textr ( model.mondai) ]
+
    ]
    ++(model.ans |> List.indexedMap bt)++
    [
@@ -301,13 +302,17 @@ view model =
     ] ++
     [
      (
+
      if model.url == "" || model.url=="http://"  then   
        div [] []
      else
        img [src model.url ] [] 
+
      )
     ]
       
+
+
     )   
    
           
