@@ -6669,30 +6669,38 @@ var author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							textr(model.mondai)
-						])),
-					((model.url === '') || (model.url === 'http://')) ? A2(elm$html$Html$div, _List_Nil, _List_Nil) : A2(
-					elm$html$Html$img,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$src(model.url)
-						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'font-size', '30pt'),
-							A2(elm$html$Html$Attributes$style, 'color', 'red')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							_Utils_ap(
-								author$project$Main$seikairitu(model),
-								model.maru ? ' 〇正解！！' : '　　'))
 						]))
 				]),
-			A2(elm$core$List$indexedMap, bt, model.ans)));
+			_Utils_ap(
+				A2(elm$core$List$indexedMap, bt, model.ans),
+				_Utils_ap(
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$style, 'font-size', '30pt'),
+									A2(elm$html$Html$Attributes$style, 'color', 'red')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									_Utils_ap(
+										author$project$Main$seikairitu(model),
+										model.maru ? ' 〇正解！！' : '　　'))
+								]))
+						]),
+					_List_fromArray(
+						[
+							((model.url === '') || (model.url === 'http://')) ? A2(elm$html$Html$div, _List_Nil, _List_Nil) : A2(
+							elm$html$Html$img,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$src(model.url)
+								]),
+							_List_Nil)
+						])))));
 };
 var elm$browser$Browser$External = function (a) {
 	return {$: 'External', a: a};
