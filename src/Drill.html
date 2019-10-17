@@ -6073,7 +6073,10 @@ var author$project$Main$hyoka = function (model) {
 			},
 			model.marubatul));
 	var kei = elm$core$List$length(model.marubatul);
-	return (_Utils_eq(kei, seikai) && (kei > 0)) ? '全問正解！！すばらしい' : ((((seikai + 1) / (kei + 1)) > 0.7) ? ((elm$core$List$length(model.missl) > 0) ? ('よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>' + A2(elm$core$String$join, '<br>', model.missl)) : 'よくできています。あと少しで全問正解です。') : ((elm$core$List$length(model.missl) > 0) ? ('繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>' + A2(
+	return (_Utils_eq(kei, seikai) && (kei > 0)) ? '全問正解！！すばらしい' : ((((seikai + 1) / (kei + 1)) > 0.7) ? ((elm$core$List$length(model.missl) > 0) ? ('よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>' + A2(
+		elm$core$String$join,
+		'<br>',
+		elm$core$List$reverse(model.missl))) : 'よくできています。あと少しで全問正解です。') : ((elm$core$List$length(model.missl) > 0) ? ('繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>' + A2(
 		elm$core$String$join,
 		'<br>',
 		elm$core$List$reverse(model.missl))) : '繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ '));

@@ -137,7 +137,7 @@ hyoka model =
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
      (
       if (List.length model.missl)>0  then
-       "よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>"++(String.join "<br>" model.missl)
+       "よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
       else
        "よくできています。あと少しで全問正解です。"
      )
