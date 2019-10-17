@@ -298,7 +298,7 @@ view model =
    ]
    ++(model.ans |> List.indexedMap bt)++
    [
-     div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "　　") )]
+     div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "✖") )]
     ] ++
     [
      (
