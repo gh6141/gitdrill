@@ -68,7 +68,7 @@ type alias Model =
     , input : String
     , userState : UserState
     , mdl:Mondl
-    ,num:Int,mondai:String,ans:List String,ansn:Int,maru:Bool,url:String
+    ,num:Int,mondai:String,ans:List String,ansn:Int,maru:MaruBatu,url:String
     , marubatul:List MaruBatu
     , missl:List String
     }
@@ -85,7 +85,7 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 False "" [] []
+    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] []
     
          , Http.get
                 { url = "https://safe-wave-89074.herokuapp.com/list"
@@ -98,7 +98,7 @@ init _ =
 
 shutudai: Int -> Model -> Model
 shutudai num model=  case num of
-         100 -> {model | mondai="**",ans=["","",""],ansn=0,url=""}
+         100 -> {model | mondai="**",ans=["","",""],ansn=0,url="",maru=None}
          _-> (
               let
                   mondl=model.mdl           
@@ -113,8 +113,8 @@ shutudai num model=  case num of
                        Just  ani ->  ani-1
                        Nothing -> 0
                         )
-                    ,url=mond.url}
-                   Nothing -> {model | mondai=hyoka model,ans=["","",""],ansn=0,url=""}
+                    ,url=mond.url,maru=None}
+                   Nothing -> {model | mondai=hyoka model,ans=["","",""],ansn=0,url="",maru=None}
               
                )
 
@@ -135,10 +135,19 @@ hyoka model =
     if kei==seikai && kei>0 then
      "全問正解！！すばらしい"
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
-     "よくできています。あと少しで全問正解です。　　間違えた問題＝＞"++(String.join "　" model.missl)
+     (
+      if (List.length model.missl)>0  then
+       "よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>"++(String.join "<br>" model.missl)
+      else
+       "よくできています。あと少しで全問正解です。"
+     )
     else 
-     "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！  間違えた問題＝＞"++(String.join "　" model.missl)
-   
+     (
+         if (List.length model.missl)>0 then
+          "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
+         else
+           "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ "
+      )
 
 
 -- UPDATE
@@ -162,7 +171,7 @@ update msg ({num,marubatul,selected} as model) =
       , mondai = (shutudai (num+1) model).mondai
       , ans = (shutudai (num+1) model).ans
       , ansn= (shutudai (num+1) model).ansn
-      , maru=False
+      , maru=None
       , url = (shutudai (num+1) model).url
       }
       ,Cmd.none
@@ -174,14 +183,14 @@ update msg ({num,marubatul,selected} as model) =
       , mondai = (shutudai (num-1) model).mondai
       , ans = (shutudai (num-1) model).ans
       , ansn= (shutudai (num-1) model).ansn
-      , maru=False
+      , maru= None
       , url= (shutudai (num-1) model).url
       }
       ,Cmd.none
       )
     Answer numi->
       (    
-      {model | maru=(model.ansn==numi) ,marubatul= (
+      {model | maru=if (model.ansn==numi) then Maru else Batu ,marubatul= (
          let
              first2 : ( a, b ) -> a
              first2 ( value1, _ ) = value1
@@ -206,8 +215,16 @@ update msg ({num,marubatul,selected} as model) =
            List.map (\ tp -> second(tp)) marubatult2
       
       )
-      ,missl=if   model.ansn /= numi then (model.mondai++"(答："++(Maybe.withDefault "" (getAt model.ansn model.ans))++")")::model.missl else model.missl
-      }
+      ,missl=(
+          let
+            cl=(model.mondai++"<font color='green'>(正解："++(Maybe.withDefault "" (getAt model.ansn model.ans))++")</font>")
+            btf =  not  (List.member cl model.missl)
+              
+          in                
+          
+           if model.ansn /= numi && btf then cl::model.missl else model.missl
+      
+      )}
       ,Cmd.none
       )
     Input newInput ->
@@ -215,7 +232,7 @@ update msg ({num,marubatul,selected} as model) =
 
     Send ->
             ( { model
-                |  userState = Waiting ,missl=[]
+                |  userState = Waiting ,missl=[],maru=None
               }
             , Http.get
                 { --url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
@@ -226,13 +243,13 @@ update msg ({num,marubatul,selected} as model) =
             )
 
     Receive (Ok mondl) ->
-            ( { model | num=-1, userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None }, Cmd.none )
+            ( { model | num=-1, userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None ,maru=None}, Cmd.none )
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
     
     Receive2 (Ok lst) ->
-            ({model | flist =List.sort ( String.split "," lst ) } ,Cmd.none)
+            ({model | flist =List.sort ( String.split "," lst ) ,maru=None } ,Cmd.none)
     Receive2 (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
 
@@ -298,7 +315,7 @@ view model =
    ]
    ++(model.ans |> List.indexedMap bt)++
    [
-     div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru then " 〇正解！！" else "✖") )]
+     div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
     ] ++
     [
      (
