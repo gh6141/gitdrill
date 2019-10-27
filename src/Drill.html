@@ -4608,7 +4608,9 @@ var author$project$Main$Model = function (flist) {
 										return function (url) {
 											return function (marubatul) {
 												return function (missl) {
-													return {ans: ans, ansn: ansn, flist: flist, input: input, maru: maru, marubatul: marubatul, mdl: mdl, missl: missl, mondai: mondai, num: num, selected: selected, url: url, userState: userState};
+													return function (user) {
+														return {ans: ans, ansn: ansn, flist: flist, input: input, maru: maru, marubatul: marubatul, mdl: mdl, missl: missl, mondai: mondai, num: num, selected: selected, url: url, user: user, userState: userState};
+													};
 												};
 											};
 										};
@@ -5981,7 +5983,7 @@ var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
 		author$project$Main$Model(_List_Nil)(elm$core$Maybe$Nothing)('')(author$project$Main$Init)(_List_Nil)(-1)('')(
 			_List_fromArray(
-				['', '', '']))(0)(author$project$Main$None)('')(_List_Nil)(_List_Nil),
+				['', '', '']))(0)(author$project$Main$None)('')(_List_Nil)(_List_Nil)(''),
 		elm$http$Http$get(
 			{
 				expect: elm$http$Http$expectString(author$project$Main$Receive2),
@@ -6073,13 +6075,13 @@ var author$project$Main$hyoka = function (model) {
 			},
 			model.marubatul));
 	var kei = elm$core$List$length(model.marubatul);
-	return (_Utils_eq(kei, seikai) && (kei > 0)) ? '全問正解！！すばらしい' : ((((seikai + 1) / (kei + 1)) > 0.7) ? ((elm$core$List$length(model.missl) > 0) ? ('よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>' + A2(
+	return (_Utils_eq(kei, seikai) && (kei > 0)) ? (model.user + 'さん　全問正解！！すばらしい') : ((((seikai + 1) / (kei + 1)) > 0.7) ? ((elm$core$List$length(model.missl) > 0) ? (model.user + ('さん　よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>' + A2(
 		elm$core$String$join,
 		'<br>',
-		elm$core$List$reverse(model.missl))) : 'よくできています。あと少しで全問正解です。') : ((elm$core$List$length(model.missl) > 0) ? ('繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>' + A2(
+		elm$core$List$reverse(model.missl)))) : (model.user + 'さん　よくできています。あと少しで全問正解です。')) : ((elm$core$List$length(model.missl) > 0) ? (model.user + ('さん　繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>' + A2(
 		elm$core$String$join,
 		'<br>',
-		elm$core$List$reverse(model.missl))) : '繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ '));
+		elm$core$List$reverse(model.missl)))) : (model.user + 'さん　繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ ')));
 };
 var elm$core$String$toInt = _String_toInt;
 var author$project$Main$shutudai = F2(
@@ -6127,7 +6129,7 @@ var author$project$Main$shutudai = F2(
 						ansn: 0,
 						maru: author$project$Main$None,
 						mondai: author$project$Main$hyoka(model),
-						url: ''
+						url: 'POST'
 					});
 			}
 		}
@@ -6232,6 +6234,11 @@ var elm$http$Http$expectJson = F2(
 						A2(elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
+var elm$http$Http$post = function (r) {
+	return elm$http$Http$request(
+		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: elm$core$Maybe$Nothing, tracker: elm$core$Maybe$Nothing, url: r.url});
+};
+var elm$http$Http$stringBody = _Http_pair;
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var num = model.num;
@@ -6333,13 +6340,18 @@ var author$project$Main$update = F2(
 								return ((!_Utils_eq(model.ansn, numi)) && btf) ? A2(elm$core$List$cons, cl, model.missl) : model.missl;
 							}()
 						}),
-					elm$core$Platform$Cmd$none);
+					(model.url === 'POST') ? elm$http$Http$post(
+						{
+							body: A2(elm$http$Http$stringBody, 'text/plain', model.mondai),
+							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
+							url: 'https://safe-wave-89074.herokuapp.com/hyoka/' + (A2(elm$core$Maybe$withDefault, '', model.selected) + ('_' + model.user))
+						}) : elm$core$Platform$Cmd$none);
 			case 'Input':
 				var newInput = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{input: newInput}),
+						{user: newInput}),
 					elm$core$Platform$Cmd$none);
 			case 'Send':
 				return _Utils_Tuple2(
@@ -6407,6 +6419,9 @@ var author$project$Main$Answer = function (a) {
 };
 var author$project$Main$Decrement = {$: 'Decrement'};
 var author$project$Main$Increment = {$: 'Increment'};
+var author$project$Main$Input = function (a) {
+	return {$: 'Input', a: a};
+};
 var author$project$Main$Select = function (a) {
 	return {$: 'Select', a: a};
 };
@@ -6480,6 +6495,7 @@ var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$form = _VirtualDom_node('form');
 var elm$html$Html$img = _VirtualDom_node('img');
+var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -6502,6 +6518,7 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$name = elm$html$Html$Attributes$stringProperty('name');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
 var elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		elm$html$Html$Attributes$stringProperty,
@@ -6527,6 +6544,28 @@ var elm$html$Html$Events$onClick = function (msg) {
 		elm$html$Html$Events$on,
 		'click',
 		elm$json$Json$Decode$succeed(msg));
+};
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
 };
 var elm$html$Html$Events$alwaysPreventDefault = function (msg) {
 	return _Utils_Tuple2(msg, true);
@@ -6640,7 +6679,15 @@ var author$project$Main$view = function (model) {
 							_List_fromArray(
 								[
 									elm$html$Html$text('出題')
-								]))
+								])),
+							A2(
+							elm$html$Html$input,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$placeholder('User'),
+									elm$html$Html$Events$onInput(author$project$Main$Input)
+								]),
+							_List_Nil)
 						])),
 					function () {
 					var _n0 = model.userState;
