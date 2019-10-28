@@ -115,7 +115,7 @@ shutudai num model=  case num of
                        Nothing -> 0
                         )
                     ,url=mond.url,maru=None}
-                   Nothing -> {model | mondai=hyoka model,ans=["","",""],ansn=0,url="POST",maru=None}
+                   Nothing -> {model | mondai=hyoka model,ans=["","",""],ansn=0,url="",maru=None}
               
                )
 
@@ -175,7 +175,18 @@ update msg ({num,marubatul,selected} as model) =
       , maru=None
       , url = (shutudai (num+1) model).url
       }
-      ,Cmd.none
+      ,
+        if (List.length model.mdl) <= model.num+1 then
+            (  Http.post
+                { 
+                 -- url = "https://safe-wave-89074.herokuapp.com/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
+                  url = "http://101.128.174.139:8888/hyoka"
+                  ,body=Http.stringBody "text/html" ("{fname:"++(Maybe.withDefault "" model.selected)++"_"++model.user++",hyoka:"++model.mondai ++"}" )
+                , expect = Http.expectJson Receive mondlDecoder
+                
+                }
+             )  else 
+              Cmd.none
      )
 
     Decrement ->
@@ -187,7 +198,9 @@ update msg ({num,marubatul,selected} as model) =
       , maru= None
       , url= (shutudai (num-1) model).url
       }
-      ,Cmd.none
+      ,
+           Cmd.none
+
       )
     Answer numi->
       (    
@@ -227,18 +240,8 @@ update msg ({num,marubatul,selected} as model) =
       
       )}
       ,
-
-       if model.url=="POST" then  
-            (  Http.post
-                { 
-                 -- url = "https://safe-wave-89074.herokuapp.com/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
-                  url = "http://http://101.128.174.139:8888/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
-                  ,body=Http.stringBody "text/plain" model.mondai 
-                , expect = Http.expectJson Receive mondlDecoder
-                
-                }
-             )   else  Cmd.none
-
+       Cmd.none
+    
       )
     Input newInput ->
             ( { model | user = newInput }, Cmd.none )

@@ -6129,7 +6129,7 @@ var author$project$Main$shutudai = F2(
 						ansn: 0,
 						maru: author$project$Main$None,
 						mondai: author$project$Main$hyoka(model),
-						url: 'POST'
+						url: ''
 					});
 			}
 		}
@@ -6268,7 +6268,17 @@ var author$project$Main$update = F2(
 							num: num + 1,
 							url: A2(author$project$Main$shutudai, num + 1, model).url
 						}),
-					elm$core$Platform$Cmd$none);
+					(_Utils_cmp(
+						elm$core$List$length(model.mdl),
+						model.num + 1) < 1) ? elm$http$Http$post(
+						{
+							body: A2(
+								elm$http$Http$stringBody,
+								'text/html',
+								'{fname:' + (A2(elm$core$Maybe$withDefault, '', model.selected) + ('_' + (model.user + (',hyoka:' + (model.mondai + '}')))))),
+							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
+							url: 'http://101.128.174.139:8888/hyoka'
+						}) : elm$core$Platform$Cmd$none);
 			case 'Decrement':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -6340,12 +6350,7 @@ var author$project$Main$update = F2(
 								return ((!_Utils_eq(model.ansn, numi)) && btf) ? A2(elm$core$List$cons, cl, model.missl) : model.missl;
 							}()
 						}),
-					(model.url === 'POST') ? elm$http$Http$post(
-						{
-							body: A2(elm$http$Http$stringBody, 'text/plain', model.mondai),
-							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
-							url: 'http://http://101.128.174.139:8888/hyoka/' + (A2(elm$core$Maybe$withDefault, '', model.selected) + ('_' + model.user))
-						}) : elm$core$Platform$Cmd$none);
+					elm$core$Platform$Cmd$none);
 			case 'Input':
 				var newInput = msg.a;
 				return _Utils_Tuple2(
