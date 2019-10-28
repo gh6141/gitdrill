@@ -158,6 +158,7 @@ type Msg =  Increment | Decrement | Answer Int |Input String
     | Receive (Result Http.Error Mondl) 
     | Receive2 (Result Http.Error String) 
     | Select (Maybe String)
+    | GotText (Result Http.Error String)
 
 
 
@@ -179,11 +180,13 @@ update msg ({num,marubatul,selected} as model) =
         if (List.length model.mdl) <= model.num+1 then
             (  Http.post
                 { 
-                 -- url = "https://safe-wave-89074.herokuapp.com/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
-                  url = "http://101.128.174.139:8888/hyoka"
-                  ,body=Http.stringBody "text/html" ("{fname:"++(Maybe.withDefault "" model.selected)++"_"++model.user++",hyoka:"++model.mondai ++"}" )
-                , expect = Http.expectJson Receive mondlDecoder
+                 -- url = "https://safe-wave-89074.herokuapp.com/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user) model.mondai
+                  url = "https://safe-wave-89074.herokuapp.com/hyoka/"
+                  ,body= Http.multipartBody
+                         [ Http.stringPart "hyoka" ((seikairitu model)++"\n"++(String.join "\n" (List.reverse model.missl)))
+                          , Http.stringPart "fname"  ((Maybe.withDefault "" model.selected)++"_"++(model.user))]
                 
+                  ,expect=Http.expectString GotText
                 }
              )  else 
               Cmd.none
@@ -268,6 +271,13 @@ update msg ({num,marubatul,selected} as model) =
             ({model | flist =List.sort ( String.split "," lst ) ,maru=None } ,Cmd.none)
     Receive2 (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
+    GotText result ->
+      case result of
+        Ok fullText ->
+          ({model|user=model.user}, Cmd.none)
+
+        Err e ->
+          ({ model | userState = Failed e }, Cmd.none)
 
 -- VIEW
 
