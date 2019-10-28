@@ -134,20 +134,20 @@ hyoka model =
     seikai=List.length (List.filter (\bl->if bl==Maru then True else False) model.marubatul)
  in   
     if kei==seikai && kei>0 then
-     model.user++"さん　全問正解！！すばらしい"
+     "全問正解！！すばらしい"
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
      (
       if (List.length model.missl)>0  then
-       model.user++"さん　よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
+       "よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
       else
-       model.user++"さん　よくできています。あと少しで全問正解です。"
+       "よくできています。あと少しで全問正解です。"
      )
     else 
      (
          if (List.length model.missl)>0 then
-          model.user++"さん　繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
+          "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
          else
-           model.user++"さん　繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ "
+           "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ "
       )
 
 
@@ -231,7 +231,8 @@ update msg ({num,marubatul,selected} as model) =
        if model.url=="POST" then  
             (  Http.post
                 { 
-                  url = "https://safe-wave-89074.herokuapp.com/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
+                 -- url = "https://safe-wave-89074.herokuapp.com/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
+                  url = "http://http://101.128.174.139:8888/hyoka/"++(Maybe.withDefault "" model.selected)++"_"++(model.user)
                   ,body=Http.stringBody "text/plain" model.mondai 
                 , expect = Http.expectJson Receive mondlDecoder
                 
