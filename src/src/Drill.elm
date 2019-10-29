@@ -180,9 +180,9 @@ update msg ({num,marubatul,selected} as model) =
         if (List.length model.mdl) <= model.num+1 then
             (  Http.post
                 { 
-                  --url = "/hyoka"
-                  url = "https://safe-wave-89074.herokuapp.com/hyoka"
-                        --  "http://192.168.1.103:8888/hyoka"
+                  -- url = "/hyoka"
+                  url = --"https://safe-wave-89074.herokuapp.com/hyoka"
+                          "http://192.168.1.103:8888/hyoka"
                   ,body= Http.multipartBody
                          [ Http.stringPart "hyoka" ((seikairitu model)++"\n"++(String.join "\n" (List.reverse model.missl)))
                           , Http.stringPart "fname"  ((Maybe.withDefault "" model.selected)++"_"++(model.user))]
