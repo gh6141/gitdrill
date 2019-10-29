@@ -5994,6 +5994,9 @@ var author$project$Main$Batu = {$: 'Batu'};
 var author$project$Main$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
+var author$project$Main$GotText = function (a) {
+	return {$: 'GotText', a: a};
+};
 var author$project$Main$Loaded = function (a) {
 	return {$: 'Loaded', a: a};
 };
@@ -6066,6 +6069,17 @@ var elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
+var author$project$Main$seikairitu = function (model) {
+	var seikai = elm$core$List$length(
+		A2(
+			elm$core$List$filter,
+			function (bl) {
+				return _Utils_eq(bl, author$project$Main$Maru) ? true : false;
+			},
+			model.marubatul));
+	var kei = elm$core$List$length(model.marubatul);
+	return elm$core$String$fromInt(seikai) + ('/' + elm$core$String$fromInt(kei));
+};
 var author$project$Main$hyoka = function (model) {
 	var seikai = elm$core$List$length(
 		A2(
@@ -6234,11 +6248,17 @@ var elm$http$Http$expectJson = F2(
 						A2(elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
+var elm$http$Http$multipartBody = function (parts) {
+	return A2(
+		_Http_pair,
+		'',
+		_Http_toFormData(parts));
+};
 var elm$http$Http$post = function (r) {
 	return elm$http$Http$request(
 		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: elm$core$Maybe$Nothing, tracker: elm$core$Maybe$Nothing, url: r.url});
 };
-var elm$http$Http$stringBody = _Http_pair;
+var elm$http$Http$stringPart = _Http_pair;
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var num = model.num;
@@ -6272,12 +6292,23 @@ var author$project$Main$update = F2(
 						elm$core$List$length(model.mdl),
 						model.num + 1) < 1) ? elm$http$Http$post(
 						{
-							body: A2(
-								elm$http$Http$stringBody,
-								'text/html',
-								'{fname:' + (A2(elm$core$Maybe$withDefault, '', model.selected) + ('_' + (model.user + (',hyoka:' + (model.mondai + '}')))))),
-							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
-							url: 'http://101.128.174.139:8888/hyoka'
+							body: elm$http$Http$multipartBody(
+								_List_fromArray(
+									[
+										A2(
+										elm$http$Http$stringPart,
+										'hyoka',
+										author$project$Main$seikairitu(model) + ('\n' + A2(
+											elm$core$String$join,
+											'\n',
+											elm$core$List$reverse(model.missl)))),
+										A2(
+										elm$http$Http$stringPart,
+										'fname',
+										A2(elm$core$Maybe$withDefault, '', model.selected) + ('_' + model.user))
+									])),
+							expect: elm$http$Http$expectString(author$project$Main$GotText),
+							url: 'http://192.168.1.103:8888/hyoka'
 						}) : elm$core$Platform$Cmd$none);
 			case 'Decrement':
 				return _Utils_Tuple2(
@@ -6395,7 +6426,7 @@ var author$project$Main$update = F2(
 							}),
 						elm$core$Platform$Cmd$none);
 				}
-			default:
+			case 'Receive2':
 				if (msg.a.$ === 'Ok') {
 					var lst = msg.a.a;
 					return _Utils_Tuple2(
@@ -6409,6 +6440,25 @@ var author$project$Main$update = F2(
 						elm$core$Platform$Cmd$none);
 				} else {
 					var e = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								userState: author$project$Main$Failed(e)
+							}),
+						elm$core$Platform$Cmd$none);
+				}
+			default:
+				var result = msg.a;
+				if (result.$ === 'Ok') {
+					var fullText = result.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{userState: author$project$Main$Init}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					var e = result.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -6431,17 +6481,6 @@ var author$project$Main$Select = function (a) {
 	return {$: 'Select', a: a};
 };
 var author$project$Main$Send = {$: 'Send'};
-var author$project$Main$seikairitu = function (model) {
-	var seikai = elm$core$List$length(
-		A2(
-			elm$core$List$filter,
-			function (bl) {
-				return _Utils_eq(bl, author$project$Main$Maru) ? true : false;
-			},
-			model.marubatul));
-	var kei = elm$core$List$length(model.marubatul);
-	return elm$core$String$fromInt(seikai) + ('/' + elm$core$String$fromInt(kei));
-};
 var elm$json$Json$Decode$andThen = _Json_andThen;
 var elm$json$Json$Decode$fail = _Json_fail;
 var elm$json$Json$Decode$map = _Json_map1;
