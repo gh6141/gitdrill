@@ -269,7 +269,7 @@ update msg ({num,marubatul,selected} as model) =
             ( { model | userState = Failed e }, Cmd.none )
     
     Receive2 (Ok lst) ->
-            ({model | flist =List.sort ( String.split "," lst ) ,maru=None } ,Cmd.none)
+            ({model | flist ="select"::List.sort ( String.split "," lst ) ,maru=None } ,Cmd.none)
     Receive2 (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
     GotText result ->

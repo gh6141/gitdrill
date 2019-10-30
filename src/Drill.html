@@ -6433,8 +6433,11 @@ var author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								flist: elm$core$List$sort(
-									A2(elm$core$String$split, ',', lst)),
+								flist: A2(
+									elm$core$List$cons,
+									'select',
+									elm$core$List$sort(
+										A2(elm$core$String$split, ',', lst))),
 								maru: author$project$Main$None
 							}),
 						elm$core$Platform$Cmd$none);
