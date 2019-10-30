@@ -294,31 +294,22 @@ view model =
     bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
     --bt numi xs =textr xs
    --background-color:white;
-  in
-  
-   div []
-   ([
-      Html.form [ onSubmit Send ]
+
+    gazo=  img [src model.url ] [] 
+
+    hform =Html.form [ onSubmit Send ]
             [
               select [selectEvent, name "filelist"] (op model.flist)
-           -- , input
-           --     [ onInput Input
-           --     , autofocus True
-           --     , placeholder "問題のファイル名を入力"
-           --     , value model.input
-                --,value (Maybe.withDefault "" model.selected)
-           --     ]
-           --     []
-            , button
+              , button
                 [ disabled
                     ((model.userState == Waiting)
                         || String.isEmpty (String.trim model.input)
                     )
                 ]
                 [ text "出題"]
-            , input [placeholder "User", onInput Input][]
+              , input [placeholder "User", onInput Input][]
             ]
-        , case model.userState of
+    dmsg = case model.userState of
             Init ->
                 text ""
 
@@ -335,30 +326,23 @@ view model =
             Failed e ->
                 div [] [ text (Debug.toString e) ]
    
-     
-    ,button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
-    ,button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    , div [ Html.Attributes.style "font-size" "30pt" ] [ textr ( model.mondai) ]
+    btn1=button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
+    btn2=button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    dmon=div [ Html.Attributes.style "font-size" "30pt" ] [ textr ( model.mondai) ]
+    dansl=div [] (model.ans |> List.indexedMap bt)
+    dhyoka= div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
+    
+  
 
-   ]
-   ++(model.ans |> List.indexedMap bt)++
-   [
-     div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
-    ] ++
-    [
-     (
-
-     if model.url == "" || model.url=="http://"  then   
-       div [] []
-     else
-       img [src model.url ] [] 
-
-     )
-    ]
-      
-
-
-    )   
+  in
+    
+      if model.url == "" || model.url=="http://"  then   
+       div [] [hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]
+      else
+       table [] [tr [] [
+         td [Html.Attributes.style "valign" "top"] [div [] [hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]] 
+        ,td [] [gazo]
+       ]]
    
           
         
