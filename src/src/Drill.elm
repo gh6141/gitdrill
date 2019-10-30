@@ -336,13 +336,18 @@ view model =
 
   in
     
-      if model.url == "" || model.url=="http://"  then   
-       div [] [hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]
-      else
-       table [] [tr [] [
+      table [] [tr [] [
          td [Html.Attributes.style "valign" "top"] [div [] [hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]] 
-        ,td [] [gazo]
+        ,td [] [
+           if model.url /= "" && model.url /="http://"  then   
+             gazo
+           else
+             div [] []
+          ]
        ]]
+
+     
+      
    
           
         
