@@ -89,7 +89,8 @@ init _ =
     ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""
     
          , Http.get
-                { url = "https://safe-wave-89074.herokuapp.com/list"
+                { --url = "https://safe-wave-89074.herokuapp.com/list"
+                    url = "/list"
                 , expect = Http.expectString Receive2
                  --Http.expectJson Receive mondlDecoder
                 }
@@ -181,8 +182,8 @@ update msg ({num,marubatul,selected} as model) =
             (  Http.post
                 { 
                   -- url = "/hyoka"
-                  url = "https://safe-wave-89074.herokuapp.com/hyoka"
-                          --"http://192.168.1.103:8888/hyoka"
+                  url = --"https://safe-wave-89074.herokuapp.com/hyoka"
+                          "/hyoka"
                   ,body= Http.multipartBody
                          [ Http.stringPart "hyoka" ((seikairitu model)++"\n"++(String.join "\n" (List.reverse model.missl)))
                           , Http.stringPart "fname"  ((Maybe.withDefault "" model.selected)++"_"++(model.user))]
@@ -255,8 +256,8 @@ update msg ({num,marubatul,selected} as model) =
                 |  userState = Waiting ,missl=[],maru=None
               }
             , Http.get
-                { --url = "https://safe-wave-89074.herokuapp.com/disp2/"++model.input
-                  url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
+                { url = "/disp2/"++(Maybe.withDefault "" model.selected)
+                  --url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
                 , expect = --Http.expectString Receive
                  Http.expectJson Receive mondlDecoder
                 }
