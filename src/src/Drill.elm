@@ -8,7 +8,14 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode  exposing (Decoder)
 import Markdown exposing (defaultOptions)
+import Url
 
+
+urlEncode:Maybe String -> Maybe String
+urlEncode ma =
+    case ma of
+     Nothing -> Just "" 
+     Just a -> Just (Url.percentEncode a)
 
 customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
 customDecoder d f =
@@ -186,7 +193,7 @@ update msg ({num,marubatul,selected} as model) =
                           "/hyoka"
                   ,body= Http.multipartBody
                          [ Http.stringPart "hyoka" ((seikairitu model)++"\n"++(String.join "\n" (List.reverse model.missl)))
-                          , Http.stringPart "fname"  ((Maybe.withDefault "" model.selected)++"_"++(model.user))]
+                          , Http.stringPart "fname"  ((Maybe.withDefault "" (urlEncode model.selected))++"_"++(model.user))]
                 
                   ,expect=Http.expectString GotText
                 }
@@ -256,7 +263,7 @@ update msg ({num,marubatul,selected} as model) =
                 |  userState = Waiting ,missl=[],maru=None
               }
             , Http.get
-                { url = "/disp2/"++(Maybe.withDefault "" model.selected)
+                { url = "/disp2/"++(Maybe.withDefault "" (urlEncode model.selected) )
                   --url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
                 , expect = --Http.expectString Receive
                  Http.expectJson Receive mondlDecoder

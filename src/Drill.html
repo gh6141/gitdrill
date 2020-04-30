@@ -2498,6 +2498,23 @@ function _Http_track(router, xhr, tracker)
 	});
 }
 
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return elm$core$Maybe$Nothing;
+	}
+}
+
 
 
 // HELPERS
@@ -6148,6 +6165,16 @@ var author$project$Main$shutudai = F2(
 			}
 		}
 	});
+var elm$url$Url$percentEncode = _Url_percentEncode;
+var author$project$Main$urlEncode = function (ma) {
+	if (ma.$ === 'Nothing') {
+		return elm$core$Maybe$Just('');
+	} else {
+		var a = ma.a;
+		return elm$core$Maybe$Just(
+			elm$url$Url$percentEncode(a));
+	}
+};
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Basics$not = _Basics_not;
 var elm$core$List$map = F2(
@@ -6305,7 +6332,10 @@ var author$project$Main$update = F2(
 										A2(
 										elm$http$Http$stringPart,
 										'fname',
-										A2(elm$core$Maybe$withDefault, '', model.selected) + ('_' + model.user))
+										A2(
+											elm$core$Maybe$withDefault,
+											'',
+											author$project$Main$urlEncode(model.selected)) + ('_' + model.user))
 									])),
 							expect: elm$http$Http$expectString(author$project$Main$GotText),
 							url: '/hyoka'
@@ -6397,7 +6427,10 @@ var author$project$Main$update = F2(
 					elm$http$Http$get(
 						{
 							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
-							url: '/disp2/' + A2(elm$core$Maybe$withDefault, '', model.selected)
+							url: '/disp2/' + A2(
+								elm$core$Maybe$withDefault,
+								'',
+								author$project$Main$urlEncode(model.selected))
 						}));
 			case 'Receive':
 				if (msg.a.$ === 'Ok') {
