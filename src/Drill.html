@@ -6285,6 +6285,7 @@ var elm$http$Http$post = function (r) {
 	return elm$http$Http$request(
 		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: elm$core$Maybe$Nothing, tracker: elm$core$Maybe$Nothing, url: r.url});
 };
+var elm$http$Http$stringBody = _Http_pair;
 var elm$http$Http$stringPart = _Http_pair;
 var author$project$Main$update = F2(
 	function (msg, model) {
@@ -6424,13 +6425,17 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{maru: author$project$Main$None, missl: _List_Nil, userState: author$project$Main$Waiting}),
-					elm$http$Http$get(
+					elm$http$Http$post(
 						{
+							body: A2(
+								elm$http$Http$stringBody,
+								'application/x-www-form-urlencoded',
+								'mondaimei=' + A2(
+									elm$core$Maybe$withDefault,
+									'',
+									author$project$Main$urlEncode(model.selected))),
 							expect: A2(elm$http$Http$expectJson, author$project$Main$Receive, author$project$Main$mondlDecoder),
-							url: '/disp2/' + A2(
-								elm$core$Maybe$withDefault,
-								'',
-								author$project$Main$urlEncode(model.selected))
+							url: '/disp2/read'
 						}));
 			case 'Receive':
 				if (msg.a.$ === 'Ok') {

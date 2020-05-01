@@ -262,9 +262,14 @@ update msg ({num,marubatul,selected} as model) =
             ( { model
                 |  userState = Waiting ,missl=[],maru=None
               }
-            , Http.get
-                { url = "/disp2/"++(Maybe.withDefault "" (urlEncode model.selected) )
+            , Http.post
+                { --url = "/disp2/"++(Maybe.withDefault "" (urlEncode model.selected) )
+                  url = "/disp2/read"
                   --url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
+                , body =  Http.stringBody "application/x-www-form-urlencoded"
+                        (
+                          "mondaimei="++ (Maybe.withDefault "" (urlEncode model.selected))
+                        )
                 , expect = --Http.expectString Receive
                  Http.expectJson Receive mondlDecoder
                 }
