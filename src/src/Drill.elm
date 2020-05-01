@@ -9,6 +9,9 @@ import Http
 import Json.Decode  exposing (Decoder)
 import Markdown exposing (defaultOptions)
 import Url
+import Task
+import Time
+import Platform.Cmd
 
 
 urlEncode:Maybe String -> Maybe String
@@ -79,6 +82,8 @@ type alias Model =
     , marubatul:List MaruBatu
     , missl:List String
     ,user:String
+    ,zone : Time.Zone
+    ,time : Time.Posix
     }
  
 type MaruBatu 
@@ -93,14 +98,17 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""
-    
-         , Http.get
+    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""  Time.utc (Time.millisToPosix 0)
+  
+         ! [ 
+            Http.get
                 { --url = "https://safe-wave-89074.herokuapp.com/list"
                     url = "/list"
                 , expect = Http.expectString Receive2
                  --Http.expectJson Receive mondlDecoder
                 }
+            ,Task.perform AdjustTimeZone Time.here
+           ]
     
     )
 
@@ -167,6 +175,8 @@ type Msg =  Increment | Decrement | Answer Int |Input String
     | Receive2 (Result Http.Error String) 
     | Select (Maybe String)
     | GotText (Result Http.Error String)
+    | Tick Time.Posix
+    | AdjustTimeZone Time.Zone
 
 
 
@@ -293,6 +303,16 @@ update msg ({num,marubatul,selected} as model) =
         Err e ->
           ({ model | userState = Failed e }, Cmd.none)
 
+    Tick newTime ->
+      ( { model | time = newTime }
+      , Cmd.none
+      )
+
+    AdjustTimeZone newZone ->
+      ( { model | zone = newZone }
+      , Cmd.none
+      )
+
 -- VIEW
 
 view : Model -> Html Msg
@@ -310,6 +330,10 @@ view model =
 
     gazo=  img [src model.url ] [] 
 
+    hour   = String.fromInt (Time.toHour   model.zone model.time)
+    minute = String.fromInt (Time.toMinute model.zone model.time)
+    second = String.fromInt (Time.toSecond model.zone model.time)
+
     hform =Html.form [ onSubmit Send ]
             [
               select [selectEvent, name "filelist"] (op model.flist)
@@ -320,7 +344,7 @@ view model =
                     )
                 ]
                 [ text "出題"]
-              , input [placeholder "User", onInput Input][]
+              , input [placeholder "User", onInput Input][text (hour ++ ":" ++ minute ++ ":" ++ second)]
             ]
     dmsg = case model.userState of
             Init ->
