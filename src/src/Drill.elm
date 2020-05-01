@@ -100,15 +100,15 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""  Time.utc (Time.millisToPosix 0)
   
-         ! [ 
-            Http.get
-                { --url = "https://safe-wave-89074.herokuapp.com/list"
+     ,Cmd.batch [ 
+                Http.get
+                 { --url = "https://safe-wave-89074.herokuapp.com/list"
                     url = "/list"
-                , expect = Http.expectString Receive2
-                 --Http.expectJson Receive mondlDecoder
-                }
-            ,Task.perform AdjustTimeZone Time.here
-           ]
+                 , expect = Http.expectString Receive2
+                   --Http.expectJson Receive mondlDecoder
+                 }
+                ,Task.perform AdjustTimeZone Time.here
+               ]
     
     )
 
