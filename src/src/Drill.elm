@@ -10,7 +10,7 @@ import Json.Decode  exposing (Decoder)
 import Markdown exposing (defaultOptions)
 import Url
 import Task
-import Time
+import Time exposing (Month(..), Posix, Weekday(..), Zone)
 import Platform.Cmd
 
 
@@ -67,7 +67,8 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , --subscriptions = \_ -> Sub.none
+         subscriptions=subscriptions
         }
         
 
@@ -83,7 +84,7 @@ type alias Model =
     , missl:List String
     ,user:String
     ,zone : Time.Zone
-    ,time : Time.Posix
+    ,posix : Time.Posix
     }
  
 type MaruBatu 
@@ -98,7 +99,7 @@ type UserState
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""  Time.utc (Time.millisToPosix 0)
+    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""  Time.utc (Time.millisToPosix 0 )
   
      ,Cmd.batch [ 
                 Http.get
@@ -107,7 +108,7 @@ init _ =
                  , expect = Http.expectString Receive2
                    --Http.expectJson Receive mondlDecoder
                  }
-                ,Task.perform AdjustTimeZone Time.here
+                , setSystemTime
                ]
     
     )
@@ -175,8 +176,9 @@ type Msg =  Increment | Decrement | Answer Int |Input String
     | Receive2 (Result Http.Error String) 
     | Select (Maybe String)
     | GotText (Result Http.Error String)
-    | Tick Time.Posix
-    | AdjustTimeZone Time.Zone
+    | SetSystemTime ( Time.Zone, Time.Posix )
+    | SetCurrentTime Time.Posix
+
 
 
 
@@ -193,6 +195,19 @@ update msg ({num,marubatul,selected} as model) =
       , ansn= (shutudai (num+1) model).ansn
       , maru=None
       , url = (shutudai (num+1) model).url
+        ,
+             user=  
+              let
+                  year=Time.toYear model.zone model.posix
+                --month=Time.toMonth model.zone model.posix
+                  month = Time.toMonth model.zone model.posix |> toMonthNumber
+                  day=Time.toDay model.zone model.posix
+                  h = Time.toHour model.zone model.posix
+                  m = Time.toMinute model.zone model.posix
+
+              in
+               (String.fromInt year)++"-"++month++"-"++(String.fromInt day)++"-"++(String.fromInt h) ++ ":" ++ (String.fromInt m)
+
       }
       ,
         if (List.length model.mdl) <= model.num+1 then
@@ -303,15 +318,11 @@ update msg ({num,marubatul,selected} as model) =
         Err e ->
           ({ model | userState = Failed e }, Cmd.none)
 
-    Tick newTime ->
-      ( { model | time = newTime }
-      , Cmd.none
-      )
+    SetSystemTime ( zone, time ) ->
+            ( {model | zone = zone, posix = time   }, Cmd.none )
 
-    AdjustTimeZone newZone ->
-      ( { model | zone = newZone }
-      , Cmd.none
-      )
+    SetCurrentTime time ->
+            ( { model | posix = time }, Cmd.none )
 
 -- VIEW
 
@@ -329,10 +340,8 @@ view model =
    --background-color:white;
 
     gazo=  img [src model.url ] [] 
+    
 
-    hour   = String.fromInt (Time.toHour   model.zone model.time)
-    minute = String.fromInt (Time.toMinute model.zone model.time)
-    second = String.fromInt (Time.toSecond model.zone model.time)
 
     hform =Html.form [ onSubmit Send ]
             [
@@ -344,7 +353,7 @@ view model =
                     )
                 ]
                 [ text "出題"]
-              , input [placeholder "User", onInput Input][text (hour ++ ":" ++ minute ++ ":" ++ second)]
+              , input [placeholder "User", onInput Input,value model.user][]
             ]
     dmsg = case model.userState of
             Init ->
@@ -407,4 +416,30 @@ mondDecoder =
 
 mondlDecoder : Decoder Mondl
 mondlDecoder = Json.Decode.list mondDecoder
+
+setSystemTime : Cmd Msg
+setSystemTime =
+    Task.perform SetSystemTime <| Task.map2 Tuple.pair Time.here Time.now
+
+
+toMonthNumber : Time.Month -> String
+toMonthNumber month =
+    case month of
+        Jan ->            "1"
+        Feb ->            "2"
+        Mar ->            "3"
+        Apr ->            "4"
+        May ->            "5"
+        Jun ->            "6"
+        Jul ->            "7"
+        Aug ->            "8"
+        Sep ->            "9"
+        Oct ->            "10"
+        Nov ->            "11"
+        Dec ->            "12"
+   
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Time.every 60000 SetCurrentTime
 
