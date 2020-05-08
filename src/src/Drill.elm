@@ -173,7 +173,25 @@ type Msg =  Increment | Decrement | Answer Int |Input String
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg ({num,marubatul,selected} as model) =
   case msg of
-    Select s ->  ({ model | userState = Init ,selected = s, input=Maybe.withDefault "" s}, Cmd.none )
+    Select s ->  ({ model |
+     --userState = Init ,selected = s, input=Maybe.withDefault "" s
+     userState = Waiting ,missl=[],maru=None, selected = s, input=Maybe.withDefault "" s
+     
+     }, 
+     Http.post
+                {
+                  url = "/disp2/read"
+                , body =  Http.stringBody "application/x-www-form-urlencoded"
+                        (
+                        --  "mondaimei="++ (Maybe.withDefault "" (urlEncode model.selected))
+                         "mondaimei="++ (Maybe.withDefault "" (urlEncode s))
+                        )
+                , expect =  Http.expectJson Receive mondlDecoder
+                }
+    
+    --Cmd.none
+    
+     )
 
     Increment -> 
      (
@@ -313,13 +331,13 @@ view model =
     hform =Html.form [ onSubmit Send ]
             [
               select [selectEvent, name "filelist"] (op model.flist)
-              , button
-                [ disabled
-                    ((model.userState == Waiting)
-                        || String.isEmpty (String.trim model.input)
-                    )
-                ]
-                [ text "出題"]
+              --,button
+              --  [ disabled
+              --      ((model.userState == Waiting)
+              --          || String.isEmpty (String.trim model.input)
+              --      )
+              --  ]
+              --  [ text "出題"]
               , input [placeholder "User", onInput Input][]
             ]
     dmsg = case model.userState of
