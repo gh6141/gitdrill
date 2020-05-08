@@ -365,13 +365,13 @@ view model =
             [
               select [selectEvent, name "filelist"] (op model.flist)
 
-              , button
-                [ disabled
-                    ((model.userState == Waiting)
-                        || String.isEmpty (String.trim model.input)
-                    )
-                ]
-                [ text "出題"]
+             -- , button
+             --   [ disabled
+             --       ((model.userState == Waiting)
+             --           || String.isEmpty (String.trim model.input)
+              --      )
+             --   ]
+             --   [ text "出題"]
               , input [placeholder "User", onInput Input,value model.user][]
 
             ]

@@ -7151,10 +7151,6 @@ var author$project$Main$targetValueMaybe = A2(
 			(s === '') ? elm$core$Maybe$Nothing : elm$core$Maybe$Just(s));
 	});
 var elm$core$Debug$toString = _Debug_toString;
-var elm$core$String$isEmpty = function (string) {
-	return string === '';
-};
-var elm$core$String$trim = _String_trim;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
@@ -7180,15 +7176,6 @@ var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$html$Html$tr = _VirtualDom_node('tr');
-var elm$json$Json$Encode$bool = _Json_wrap;
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
-	});
-var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -7324,18 +7311,6 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$Attributes$name('filelist')
 					]),
 				op(model.flist)),
-				A2(
-				elm$html$Html$button,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$disabled(
-						_Utils_eq(model.userState, author$project$Main$Waiting) || elm$core$String$isEmpty(
-							elm$core$String$trim(model.input)))
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text('出題')
-					])),
 				A2(
 				elm$html$Html$input,
 				_List_fromArray(
@@ -7526,6 +7501,9 @@ var elm$core$String$startsWith = _String_startsWith;
 var elm$url$Url$Http = {$: 'Http'};
 var elm$url$Url$Https = {$: 'Https'};
 var elm$core$String$indexes = _String_indexes;
+var elm$core$String$isEmpty = function (string) {
+	return string === '';
+};
 var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
