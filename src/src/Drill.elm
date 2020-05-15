@@ -350,28 +350,15 @@ view model =
 
     selectEvent = on "change" (Json.Decode.map Select targetValueMaybe )
 
-    --dummy=["ion","shoka"]
     textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False  }  [ ] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
     bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
-    --bt numi xs =textr xs
-   --background-color:white;
 
     gazo=  img [src model.url ] [] 
     
-
-
     hform =Html.form [ onSubmit Send ]
             [
               select [selectEvent, name "filelist"] (op model.flist)
-
-             -- , button
-             --   [ disabled
-             --       ((model.userState == Waiting)
-             --           || String.isEmpty (String.trim model.input)
-              --      )
-             --   ]
-             --   [ text "出題"]
               , input [placeholder "User", onInput Input,value model.user][]
 
             ]
