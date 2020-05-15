@@ -352,7 +352,7 @@ view model =
 
     textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False  }  [ ] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
-    bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "30pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
+    bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "24pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
 
     gazo=  img [src model.url ] [] 
     
