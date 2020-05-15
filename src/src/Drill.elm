@@ -379,11 +379,11 @@ view model =
             Failed e ->
                 div [] [ text (Debug.toString e) ]
    
-    btn1=button [  Html.Attributes.style "font-size" "26pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
-    btn2=button [ Html.Attributes.style "font-size" "26pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    dmon=div [ Html.Attributes.style "font-size" "30pt" ] [ textr ( model.mondai) ]
+    btn1=button [  Html.Attributes.style "font-size" "18pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
+    btn2=button [ Html.Attributes.style "font-size" "18pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    dmon=div [ Html.Attributes.style "font-size" "22pt" ] [ textr ( model.mondai) ]
     dansl=div [] (model.ans |> List.indexedMap bt)
-    dhyoka= div [Html.Attributes.style "font-size" "30pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
+    dhyoka= div [Html.Attributes.style "font-size" "22pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
     
   
 
