@@ -7434,6 +7434,11 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
 	});
+var rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Size = function (a) {
+	return {$: 'Size', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$large = rundis$elm_bootstrap$Bootstrap$Internal$Button$Size(rundis$elm_bootstrap$Bootstrap$General$Internal$LG);
 var rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
 	return {$: 'Coloring', a: a};
 };
@@ -7443,9 +7448,11 @@ var rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined = function (a) {
 var rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary = {$: 'Primary'};
 var rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary = rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary = {$: 'Secondary'};
-var rundis$elm_bootstrap$Bootstrap$Button$outlineSecondary = rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
-	rundis$elm_bootstrap$Bootstrap$Internal$Button$Outlined(rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary));
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
+	return {$: 'Roled', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$primary = rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
 var elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));
@@ -7467,6 +7474,7 @@ var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
 			elm$html$Html$Attributes$href('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
 		]),
 	_List_Nil);
+var rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$ml1 = elm$html$Html$Attributes$class('ml-1');
 var author$project$Main$view = function (model) {
 	var textr = function (raw) {
 		return A3(
@@ -7540,32 +7548,20 @@ var author$project$Main$view = function (model) {
 				return elm$html$Html$text('しばらくお待ちください...');
 			case 'Loaded':
 				var mondl = _n0.a;
-				return A2(
-					elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							function () {
-								if (mondl.b) {
-									var mond = mondl.a;
-									var tail = mondl.b;
-									return '問題の準備ができました。「次へ」をクリックしてください。';
-								} else {
-									return 'error';
-								}
-							}())
-						]));
+				return elm$html$Html$text(
+					function () {
+						if (mondl.b) {
+							var mond = mondl.a;
+							var tail = mondl.b;
+							return '問題の準備ができました。「次へ」をクリックしてください。';
+						} else {
+							return 'error';
+						}
+					}());
 			default:
 				var e = _n0.a;
-				return A2(
-					elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							elm$core$Debug$toString(e))
-						]));
+				return elm$html$Html$text(
+					elm$core$Debug$toString(e));
 		}
 	}();
 	var dmon = A2(
@@ -7596,10 +7592,12 @@ var author$project$Main$view = function (model) {
 		rundis$elm_bootstrap$Bootstrap$Button$button,
 		_List_fromArray(
 			[
+				rundis$elm_bootstrap$Bootstrap$Button$large,
 				rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary,
 				rundis$elm_bootstrap$Bootstrap$Button$attrs(
 				_List_fromArray(
 					[
+						rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$ml1,
 						elm$html$Html$Events$onClick(author$project$Main$Increment)
 					]))
 			]),
@@ -7611,10 +7609,12 @@ var author$project$Main$view = function (model) {
 		rundis$elm_bootstrap$Bootstrap$Button$button,
 		_List_fromArray(
 			[
+				rundis$elm_bootstrap$Bootstrap$Button$large,
 				rundis$elm_bootstrap$Bootstrap$Button$outlinePrimary,
 				rundis$elm_bootstrap$Bootstrap$Button$attrs(
 				_List_fromArray(
 					[
+						rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$ml1,
 						elm$html$Html$Events$onClick(author$project$Main$Decrement)
 					]))
 			]),
@@ -7628,10 +7628,12 @@ var author$project$Main$view = function (model) {
 				rundis$elm_bootstrap$Bootstrap$Button$button,
 				_List_fromArray(
 					[
-						rundis$elm_bootstrap$Bootstrap$Button$outlineSecondary,
+						rundis$elm_bootstrap$Bootstrap$Button$large,
+						rundis$elm_bootstrap$Bootstrap$Button$primary,
 						rundis$elm_bootstrap$Bootstrap$Button$attrs(
 						_List_fromArray(
 							[
+								rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$ml1,
 								elm$html$Html$Events$onClick(
 								author$project$Main$Answer(numi))
 							]))
@@ -7650,6 +7652,7 @@ var author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
+				rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
 				A2(
 				elm$html$Html$tr,
 				_List_Nil,
@@ -7667,7 +7670,19 @@ var author$project$Main$view = function (model) {
 								elm$html$Html$div,
 								_List_Nil,
 								_List_fromArray(
-									[rundis$elm_bootstrap$Bootstrap$CDN$stylesheet, hform, dmsg, btn1, btn2, dmon, dansl, dhyoka]))
+									[
+										hform,
+										A2(
+										elm$html$Html$div,
+										_List_Nil,
+										_List_fromArray(
+											[dmsg])),
+										btn1,
+										btn2,
+										dmon,
+										dansl,
+										dhyoka
+									]))
 							])),
 						A2(
 						elm$html$Html$td,

@@ -15,6 +15,7 @@ import Platform.Cmd
 
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
+import Bootstrap.Utilities.Spacing as Spacing
 
 
 urlEncode:Maybe String -> Maybe String
@@ -356,7 +357,7 @@ view model =
     textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False  }  [ ] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
     --bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "24pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
-    bt numi xs =Button.button [Button.outlineSecondary, Button.attrs [onClick (Answer numi)] ] [ textr xs]
+    bt numi xs =Button.button [Button.large ,Button.primary, Button.attrs [Spacing.ml1 ,onClick (Answer numi)] ] [ textr xs]
 
     gazo=  img [src model.url ] [] 
     
@@ -364,7 +365,7 @@ view model =
             [
               select [selectEvent, name "filelist"] (op model.flist)
               , input [placeholder "User", onInput Input,value model.user][]
-
+           
             ]
     dmsg = case model.userState of
             Init ->
@@ -374,20 +375,23 @@ view model =
                 text "しばらくお待ちください..."
 
             Loaded mondl ->
-                div [] [text(
+               -- div [] [text(
+                  text (
                   case mondl of
                    mond::tail -> "問題の準備ができました。「次へ」をクリックしてください。"
                    _ -> "error"
-                )]
+                  )
+                --)]
 
             Failed e ->
-                div [] [ text (Debug.toString e) ]
+                --div [] [ text (Debug.toString e) ]
+                 text (Debug.toString e) 
    
     --btn1=button [  Html.Attributes.style "font-size" "18pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
-    btn1=Button.button [Button.outlinePrimary ,Button.attrs [onClick Decrement]] [ text "もどる" ]
+    btn1=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Decrement]] [ text "もどる" ]
   
     --btn2=Button.button [ Html.Attributes.style "font-size" "18pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
-    btn2=Button.button [Button.outlinePrimary ,Button.attrs [onClick Increment]] [text "つぎへ"]
+    btn2=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Increment]] [text "つぎへ"]
       
        
     dmon=div [ Html.Attributes.style "font-size" "22pt" ] [ textr ( model.mondai) ]
@@ -398,10 +402,10 @@ view model =
 
   in
       
-      table [] [tr [] [
+      table [] [CDN.stylesheet,tr [] [
          td [Html.Attributes.style "valign" "top"] [div [] [
-           CDN.stylesheet,
-           hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]] 
+           hform,div [] [dmsg],
+          btn1,btn2,dmon,dansl,dhyoka]] 
         ,td [] [
            if model.url /= "" && model.url /="http://"  then   
              gazo
