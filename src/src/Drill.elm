@@ -13,6 +13,9 @@ import Task
 import Time exposing (Month(..), Posix, Weekday(..), Zone)
 import Platform.Cmd
 
+import Bootstrap.Button as Button
+import Bootstrap.CDN as CDN
+
 
 urlEncode:Maybe String -> Maybe String
 urlEncode ma =
@@ -352,7 +355,8 @@ view model =
 
     textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False  }  [ ] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
-    bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "24pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
+    --bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "24pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
+    bt numi xs =Button.button [Button.outlineSecondary, Button.attrs [onClick (Answer numi)] ] [ textr xs]
 
     gazo=  img [src model.url ] [] 
     
@@ -379,8 +383,13 @@ view model =
             Failed e ->
                 div [] [ text (Debug.toString e) ]
    
-    btn1=button [  Html.Attributes.style "font-size" "18pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
-    btn2=button [ Html.Attributes.style "font-size" "18pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    --btn1=button [  Html.Attributes.style "font-size" "18pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
+    btn1=Button.button [Button.outlinePrimary ,Button.attrs [onClick Decrement]] [ text "もどる" ]
+  
+    --btn2=Button.button [ Html.Attributes.style "font-size" "18pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
+    btn2=Button.button [Button.outlinePrimary ,Button.attrs [onClick Increment]] [text "つぎへ"]
+      
+       
     dmon=div [ Html.Attributes.style "font-size" "22pt" ] [ textr ( model.mondai) ]
     dansl=div [] (model.ans |> List.indexedMap bt)
     dhyoka= div [Html.Attributes.style "font-size" "22pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
@@ -388,9 +397,11 @@ view model =
   
 
   in
-    
+      
       table [] [tr [] [
-         td [Html.Attributes.style "valign" "top"] [div [] [hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]] 
+         td [Html.Attributes.style "valign" "top"] [div [] [
+           CDN.stylesheet,
+           hform,dmsg,btn1,btn2,dmon,dansl,dhyoka]] 
         ,td [] [
            if model.url /= "" && model.url /="http://"  then   
              gazo
