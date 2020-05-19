@@ -99,7 +99,7 @@ type UserState
     | Waiting
     | Loaded Mondl
     | Failed Http.Error
-
+    | Hyoka
 
 init : () -> ( Model, Cmd Msg )
 init _ =
@@ -335,7 +335,7 @@ update msg ({num,marubatul,selected} as model) =
     GotText result ->
       case result of
         Ok fullText ->
-          ({model|userState=Init}, Cmd.none)
+          ({model|userState=Hyoka}, Cmd.none)
 
         Err e ->
           ({ model | userState = Failed e }, Cmd.none)
@@ -367,13 +367,15 @@ view model =
               , input [placeholder "User", onInput Input,value model.user][]
             ]
     dmsg = case model.userState of
-            Init ->  [div [] [text ""]]
+           -- Init ->  [div [] [text ""]]
+            Init ->  [div [] [text "問題を選んでください"]]
             Waiting ->  [div [] [text "しばらくお待ちください..."]]
             Loaded mondl ->
                ( case mondl of
                    mond::tail -> [btn1,btn2,dmon,dansl,dhyoka]
                    _ -> [div [] [text "error"]]  )     
             Failed e -> [div [] [text (Debug.toString e)]]
+            Hyoka -> [btn1,btn2,dmon,dansl,dhyoka]
 
     btn1=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Decrement]] [ text "もどる" ]
     btn2=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Increment]] [text "つぎへ"]
