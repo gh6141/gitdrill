@@ -17,6 +17,9 @@ import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
 import Bootstrap.Utilities.Spacing as Spacing
 
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Col as Col
+import Bootstrap.Grid.Row as Row
 
 urlEncode:Maybe String -> Maybe String
 urlEncode ma =
@@ -146,7 +149,7 @@ seikairitu model =
     kei=List.length model.marubatul
     seikai=List.length (List.filter (\bl->if bl==Maru then True else False) model.marubatul)
  in   
-    (String.fromInt seikai)++"/"++(String.fromInt kei)
+    "正解数"++(String.fromInt seikai)++"/全"++(String.fromInt kei)++"問中"
 
 hyoka: Model -> String
 hyoka model =
@@ -221,7 +224,6 @@ update msg ({num,marubatul,selected} as model) =
              user=  
               let
                   year=Time.toYear model.zone model.posix
-                --month=Time.toMonth model.zone model.posix
                   month = Time.toMonth model.zone model.posix |> toMonthNumber
                   day=Time.toDay model.zone model.posix
                   h = Time.toHour model.zone model.posix
@@ -323,7 +325,11 @@ update msg ({num,marubatul,selected} as model) =
             )
 
     Receive (Ok mondl) ->
-            ( { model | num=-1, userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None ,maru=None}, Cmd.none )
+            ( { model | num=-1,  userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None ,maru=None
+    
+            }
+                   
+            , Cmd.none )
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
@@ -357,10 +363,14 @@ view model =
     textr raw=  Markdown.toHtmlWith {  defaultOptions | sanitize = False  }  [ ] raw
     op dmy = List.map (\fname -> Html.option [value fname][text fname]) model.flist
     --bt numi xs =button [Html.Attributes.style "background-color" "whitesmoke",Html.Attributes.style "font-size" "24pt",Html.Attributes.style "height" "80pt",Html.Attributes.style "margin" "5pt",onClick (Answer numi) ] [ textr xs]
-    bt numi xs =Button.button [Button.large ,Button.primary, Button.attrs [Spacing.ml1 ,onClick (Answer numi)] ] [ textr xs]
+    bt numi xs =Button.button [Button.large ,Button.outlinePrimary, Button.attrs [Spacing.m1 ,onClick (Answer numi)] ] [ textr xs]
 
     gazo=  img [src model.url ] [] 
     
+    btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Decrement]] [ text "もどる" ]
+    btn2=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Increment]] [text "つぎへ"]
+     
+
     hform =Html.form [ onSubmit Send ]
             [
               select [selectEvent, name "filelist"] (op model.flist)
@@ -372,14 +382,12 @@ view model =
             Waiting ->  [div [] [text "しばらくお待ちください..."]]
             Loaded mondl ->
                ( case mondl of
-                   mond::tail -> [btn1,btn2,dmon,dansl,dhyoka]
+                   mond::tail -> [dmon,dansl]
                    _ -> [div [] [text "error"]]  )     
             Failed e -> [div [] [text (Debug.toString e)]]
-            Hyoka -> [btn1,btn2,dmon,dansl,dhyoka]
+            Hyoka -> [dmon]
 
-    btn1=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Decrement]] [ text "もどる" ]
-    btn2=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Increment]] [text "つぎへ"]
-     
+  
     dmon=div [ Html.Attributes.style "font-size" "22pt" ] [ textr ( model.mondai) ]
     dansl=div [] (model.ans |> List.indexedMap bt)
     dhyoka= div [Html.Attributes.style "font-size" "22pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
@@ -388,19 +396,31 @@ view model =
 
   in
       
-      table [] 
-       [ CDN.stylesheet,tr [] 
-          [
-            td [Html.Attributes.style "valign" "top"] [div [] ([hform]++dmsg)]         
-           ,td [] 
-            [
-             if model.url /= "" && model.url /="http://"  then   
+
+    Grid.container [Spacing.mt4Md]
+    [ CDN.stylesheet 
+      ,Grid.row 
+        [Row.middleMd]
+        [Grid.col
+          [Col.md4]
+          [div[] [hform,btn1,btn2,dhyoka]]
+        ]
+      
+      ,Grid.row
+        [Row.middleMd]
+        [ Grid.col
+            [ Col.md7 ]
+            [ div [] dmsg ]
+        , Grid.col
+            [ Col.md4 ]
+            [  if model.url /= "" && model.url /="http://"  then   
                gazo
              else
-               div [] []
-            ]
-          ] 
-       ]
+               div [] []  ]
+        ]
+    
+    ]
+
 
      
       
