@@ -105,11 +105,12 @@ type UserState
     | Failed Http.Error
     | Hyoka
 
+minit: Model
+minit =Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""  Time.utc (Time.millisToPosix 0 )  
+
 init : () -> ( Model, Cmd Msg )
-init _ =
-    ( Model [] Nothing "" Init [] -1 "" ["","",""] 0 None "" [] [] ""  Time.utc (Time.millisToPosix 0 )
-  
-     ,Cmd.batch [ 
+init _ = ( minit 
+         ,Cmd.batch [ 
                 Http.get
                  { --url = "https://safe-wave-89074.herokuapp.com/list"
                     url = "/list"
@@ -326,9 +327,15 @@ update msg ({num,marubatul,selected} as model) =
             )
 
     Receive (Ok mondl) ->
-            ( { model | num=-1,  userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None ,maru=None
-    
-            }
+            ( { model | num=0,  userState = Loaded mondl, mdl=mondl,marubatul=List.repeat (List.length mondl) None ,maru=None
+                    , mondai = (Maybe.withDefault mdinit (List.head mondl)).mondai
+                    , ans =  [(Maybe.withDefault mdinit (List.head mondl)).ans1,
+                              (Maybe.withDefault mdinit (List.head mondl)).ans2,
+                              (Maybe.withDefault mdinit (List.head mondl)).ans3
+                              ]
+                    , ansn= ( Maybe.withDefault  0 ( String.toInt (Maybe.withDefault mdinit (List.head mondl)).ansn ) )-1
+                    , url =  (Maybe.withDefault mdinit (List.head mondl)).url
+           }
                    
             , Cmd.none )
 
@@ -431,6 +438,9 @@ view model =
 
    -- DATA
 type alias Mond ={mondai:String,ans1:String,ans2:String,ans3:String,ansn:String,url:String}
+
+mdinit:Mond
+mdinit=Mond "" "" "" "" "" ""
 
 type alias Mondl = List Mond
 
