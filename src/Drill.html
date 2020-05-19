@@ -6510,7 +6510,7 @@ var author$project$Main$seikairitu = function (model) {
 			},
 			model.marubatul));
 	var kei = elm$core$List$length(model.marubatul);
-	return '正解数' + (elm$core$String$fromInt(seikai) + ('/全' + (elm$core$String$fromInt(kei) + '問中')));
+	return elm$core$String$fromInt(seikai) + ('/' + elm$core$String$fromInt(kei));
 };
 var author$project$Main$hyoka = function (model) {
 	var seikai = elm$core$List$length(
@@ -7166,7 +7166,6 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	}
 };
 var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$form = _VirtualDom_node('form');
 var elm$html$Html$img = _VirtualDom_node('img');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
@@ -7472,6 +7471,11 @@ var rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
 			elm$html$Html$Attributes$href('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
 		]),
 	_List_Nil);
+var elm$html$Html$form = _VirtualDom_node('form');
+var rundis$elm_bootstrap$Bootstrap$Form$form = F2(
+	function (attributes, children) {
+		return A2(elm$html$Html$form, attributes, children);
+	});
 var rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
 	return {$: 'Column', a: a};
 };
@@ -8294,7 +8298,7 @@ var rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			A2(elm$core$List$map, rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
 var rundis$elm_bootstrap$Bootstrap$General$Internal$MD = {$: 'MD'};
-var rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4 = {$: 'Col4'};
+var rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col11 = {$: 'Col11'};
 var rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
 	return {$: 'ColWidth', a: a};
 };
@@ -8303,6 +8307,8 @@ var rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
 		return rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth(
 			A2(rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
 	});
+var rundis$elm_bootstrap$Bootstrap$Grid$Col$md11 = A2(rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, rundis$elm_bootstrap$Bootstrap$General$Internal$MD, rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col11);
+var rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4 = {$: 'Col4'};
 var rundis$elm_bootstrap$Bootstrap$Grid$Col$md4 = A2(rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, rundis$elm_bootstrap$Bootstrap$General$Internal$MD, rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col4);
 var rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col7 = {$: 'Col7'};
 var rundis$elm_bootstrap$Bootstrap$Grid$Col$md7 = A2(rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, rundis$elm_bootstrap$Bootstrap$General$Internal$MD, rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col7);
@@ -8354,7 +8360,7 @@ var author$project$Main$view = function (model) {
 			model.flist);
 	};
 	var hform = A2(
-		elm$html$Html$form,
+		rundis$elm_bootstrap$Bootstrap$Form$form,
 		_List_fromArray(
 			[
 				elm$html$Html$Events$onSubmit(author$project$Main$Send)
@@ -8366,7 +8372,8 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						selectEvent,
-						elm$html$Html$Attributes$name('filelist')
+						elm$html$Html$Attributes$name('filelist'),
+						rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1
 					]),
 				op(model.flist)),
 				A2(
@@ -8375,7 +8382,8 @@ var author$project$Main$view = function (model) {
 					[
 						elm$html$Html$Attributes$placeholder('User'),
 						elm$html$Html$Events$onInput(author$project$Main$Input),
-						elm$html$Html$Attributes$value(model.user)
+						elm$html$Html$Attributes$value(model.user),
+						rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1
 					]),
 				_List_Nil)
 			]));
@@ -8547,7 +8555,7 @@ var author$project$Main$view = function (model) {
 						A2(
 						rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_fromArray(
-							[rundis$elm_bootstrap$Bootstrap$Grid$Col$md4]),
+							[rundis$elm_bootstrap$Bootstrap$Grid$Col$md11]),
 						_List_fromArray(
 							[
 								A2(

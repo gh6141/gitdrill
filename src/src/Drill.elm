@@ -20,6 +20,7 @@ import Bootstrap.Utilities.Spacing as Spacing
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
+import Bootstrap.Form as Form
 
 urlEncode:Maybe String -> Maybe String
 urlEncode ma =
@@ -149,7 +150,7 @@ seikairitu model =
     kei=List.length model.marubatul
     seikai=List.length (List.filter (\bl->if bl==Maru then True else False) model.marubatul)
  in   
-    "正解数"++(String.fromInt seikai)++"/全"++(String.fromInt kei)++"問中"
+    (String.fromInt seikai)++"/"++(String.fromInt kei)
 
 hyoka: Model -> String
 hyoka model =
@@ -371,10 +372,10 @@ view model =
     btn2=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Increment]] [text "つぎへ"]
      
 
-    hform =Html.form [ onSubmit Send ]
+    hform =Form.form [ onSubmit Send ]
             [
-              select [selectEvent, name "filelist"] (op model.flist)
-              , input [placeholder "User", onInput Input,value model.user][]
+              select [selectEvent, name "filelist",Spacing.m1] (op model.flist)
+              , input [placeholder "User", onInput Input,value model.user,Spacing.m1][]
             ]
     dmsg = case model.userState of
            -- Init ->  [div [] [text ""]]
@@ -402,7 +403,7 @@ view model =
       ,Grid.row 
         [Row.middleMd]
         [Grid.col
-          [Col.md4]
+          [Col.md11]
           [div[] [hform,btn1,btn2,dhyoka]]
         ]
       
