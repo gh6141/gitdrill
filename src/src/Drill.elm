@@ -365,7 +365,7 @@ view model =
             [
               select [selectEvent, name "filelist"] (op model.flist)
               , input [placeholder "User", onInput Input,value model.user][]
-           
+              , span [] [dmsg]
             ]
     dmsg = case model.userState of
             Init ->
@@ -378,7 +378,7 @@ view model =
                -- div [] [text(
                   text (
                   case mondl of
-                   mond::tail -> "問題の準備ができました。「次へ」をクリックしてください。"
+                   mond::tail -> "問題の準備ができました。"
                    _ -> "error"
                   )
                 --)]
@@ -404,7 +404,7 @@ view model =
       
       table [] [CDN.stylesheet,tr [] [
          td [Html.Attributes.style "valign" "top"] [div [] [
-           hform,div [] [dmsg],
+           hform,
           btn1,btn2,dmon,dansl,dhyoka]] 
         ,td [] [
            if model.url /= "" && model.url /="http://"  then   
