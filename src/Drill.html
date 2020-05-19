@@ -7170,7 +7170,6 @@ var elm$html$Html$img = _VirtualDom_node('img');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
-var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -7507,38 +7506,6 @@ var author$project$Main$view = function (model) {
 			},
 			model.flist);
 	};
-	var gazo = A2(
-		elm$html$Html$img,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$src(model.url)
-			]),
-		_List_Nil);
-	var dmsg = function () {
-		var _n0 = model.userState;
-		switch (_n0.$) {
-			case 'Init':
-				return elm$html$Html$text('');
-			case 'Waiting':
-				return elm$html$Html$text('しばらくお待ちください...');
-			case 'Loaded':
-				var mondl = _n0.a;
-				return elm$html$Html$text(
-					function () {
-						if (mondl.b) {
-							var mond = mondl.a;
-							var tail = mondl.b;
-							return '問題の準備ができました。';
-						} else {
-							return 'error';
-						}
-					}());
-			default:
-				var e = _n0.a;
-				return elm$html$Html$text(
-					elm$core$Debug$toString(e));
-		}
-	}();
 	var hform = A2(
 		elm$html$Html$form,
 		_List_fromArray(
@@ -7563,13 +7530,15 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$Events$onInput(author$project$Main$Input),
 						elm$html$Html$Attributes$value(model.user)
 					]),
-				_List_Nil),
-				A2(
-				elm$html$Html$span,
-				_List_Nil,
-				_List_fromArray(
-					[dmsg]))
+				_List_Nil)
 			]));
+	var gazo = A2(
+		elm$html$Html$img,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$src(model.url)
+			]),
+		_List_Nil);
 	var dmon = A2(
 		elm$html$Html$div,
 		_List_fromArray(
@@ -7653,6 +7622,65 @@ var author$project$Main$view = function (model) {
 		elm$html$Html$div,
 		_List_Nil,
 		A2(elm$core$List$indexedMap, bt, model.ans));
+	var dmsg = function () {
+		var _n0 = model.userState;
+		switch (_n0.$) {
+			case 'Init':
+				return _List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('')
+							]))
+					]);
+			case 'Waiting':
+				return _List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('しばらくお待ちください...')
+							]))
+					]);
+			case 'Loaded':
+				var mondl = _n0.a;
+				if (mondl.b) {
+					var mond = mondl.a;
+					var tail = mondl.b;
+					return _List_fromArray(
+						[btn1, btn2, dmon, dansl, dhyoka]);
+				} else {
+					return _List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('error')
+								]))
+						]);
+				}
+			default:
+				var e = _n0.a;
+				return _List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								elm$core$Debug$toString(e))
+							]))
+					]);
+		}
+	}();
 	return A2(
 		elm$html$Html$table,
 		_List_Nil,
@@ -7675,8 +7703,10 @@ var author$project$Main$view = function (model) {
 								A2(
 								elm$html$Html$div,
 								_List_Nil,
-								_List_fromArray(
-									[hform, btn1, btn2, dmon, dansl, dhyoka]))
+								_Utils_ap(
+									_List_fromArray(
+										[hform]),
+									dmsg))
 							])),
 						A2(
 						elm$html$Html$td,

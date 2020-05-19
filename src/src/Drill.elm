@@ -365,35 +365,19 @@ view model =
             [
               select [selectEvent, name "filelist"] (op model.flist)
               , input [placeholder "User", onInput Input,value model.user][]
-              , span [] [dmsg]
             ]
     dmsg = case model.userState of
-            Init ->
-                text ""
-
-            Waiting ->
-                text "しばらくお待ちください..."
-
+            Init ->  [div [] [text ""]]
+            Waiting ->  [div [] [text "しばらくお待ちください..."]]
             Loaded mondl ->
-               -- div [] [text(
-                  text (
-                  case mondl of
-                   mond::tail -> "問題の準備ができました。"
-                   _ -> "error"
-                  )
-                --)]
+               ( case mondl of
+                   mond::tail -> [btn1,btn2,dmon,dansl,dhyoka]
+                   _ -> [div [] [text "error"]]  )     
+            Failed e -> [div [] [text (Debug.toString e)]]
 
-            Failed e ->
-                --div [] [ text (Debug.toString e) ]
-                 text (Debug.toString e) 
-   
-    --btn1=button [  Html.Attributes.style "font-size" "18pt", Html.Attributes.style "background-color" "green",onClick Decrement ] [ text "もどる" ]
     btn1=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Decrement]] [ text "もどる" ]
-  
-    --btn2=Button.button [ Html.Attributes.style "font-size" "18pt" ,Html.Attributes.style "background-color" "green", onClick Increment ] [ text "つぎへ" ]
     btn2=Button.button [Button.large ,Button.outlinePrimary ,Button.attrs [Spacing.ml1  ,onClick Increment]] [text "つぎへ"]
-      
-       
+     
     dmon=div [ Html.Attributes.style "font-size" "22pt" ] [ textr ( model.mondai) ]
     dansl=div [] (model.ans |> List.indexedMap bt)
     dhyoka= div [Html.Attributes.style "font-size" "22pt", Html.Attributes.style "color" "red"][text ( (seikairitu model)++(if model.maru==Maru then " 〇正解！！" else if model.maru==Batu then "✖" else "") )]
@@ -402,17 +386,19 @@ view model =
 
   in
       
-      table [] [CDN.stylesheet,tr [] [
-         td [Html.Attributes.style "valign" "top"] [div [] [
-           hform,
-          btn1,btn2,dmon,dansl,dhyoka]] 
-        ,td [] [
-           if model.url /= "" && model.url /="http://"  then   
-             gazo
-           else
-             div [] []
-          ]
-       ]]
+      table [] 
+       [ CDN.stylesheet,tr [] 
+          [
+            td [Html.Attributes.style "valign" "top"] [div [] ([hform]++dmsg)]         
+           ,td [] 
+            [
+             if model.url /= "" && model.url /="http://"  then   
+               gazo
+             else
+               div [] []
+            ]
+          ] 
+       ]
 
      
       
