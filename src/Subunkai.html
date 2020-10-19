@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Seiza</title>
+  <title>Subunkai</title>
 </head>
 
 <body>
@@ -4797,17 +4797,17 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Seiza$init = function (_n0) {
+var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
 		{wa: 1},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$Seiza$subscriptions = function (model) {
+var author$project$Subunkai$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Seiza$update = F2(
+var author$project$Subunkai$update = F2(
 	function (msg, model) {
 		return _Utils_Tuple2(
 			_Utils_update(
@@ -4907,6 +4907,8 @@ var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -4916,7 +4918,7 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var author$project$Seiza$view = function (model) {
+var author$project$Subunkai$view = function (model) {
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -4924,7 +4926,10 @@ var author$project$Seiza$view = function (model) {
 			[
 				A2(
 				elm$html$Html$select,
-				_List_Nil,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+					]),
 				A2(
 					elm$core$List$map,
 					function (s) {
@@ -5170,12 +5175,12 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$Seiza$main = elm$browser$Browser$element(
-	{init: author$project$Seiza$init, subscriptions: author$project$Seiza$subscriptions, update: author$project$Seiza$update, view: author$project$Seiza$view});
-_Platform_export({'Seiza':{'init':author$project$Seiza$main(
+var author$project$Subunkai$main = elm$browser$Browser$element(
+	{init: author$project$Subunkai$init, subscriptions: author$project$Subunkai$subscriptions, update: author$project$Subunkai$update, view: author$project$Subunkai$view});
+_Platform_export({'Subunkai':{'init':author$project$Subunkai$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
 
-var app = Elm.Seiza.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
+var app = Elm.Subunkai.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
 if (document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49"))
 {
   document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49").innerText = 'This is a headless program, meaning there is nothing to show here.\n\nI started the program anyway though, and you can access it as `app` in the developer console.';

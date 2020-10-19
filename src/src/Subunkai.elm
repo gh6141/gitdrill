@@ -1,4 +1,4 @@
-module Seiza exposing (..)
+module Subunkai exposing (..)
 
 import Browser
 import Html exposing (..)
@@ -10,6 +10,7 @@ import Task
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
 import Bootstrap.Utilities.Spacing as Spacing
+
 
 main =
   Browser.element
@@ -49,7 +50,7 @@ view : Model -> Html Msg
 view model =
   div []
     [
-    select [] (List.map (\s -> Html.option [value s][text s]) ["1","2","3","4","5"])
+    select [ style "font-size" "20px" ] (List.map (\s -> Html.option [value s][text s]) ["1","2","3","4","5"])
     ]
 
 subscriptions : Model -> Sub Msg
