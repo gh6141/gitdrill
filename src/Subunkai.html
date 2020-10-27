@@ -2324,6 +2324,89 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
+}
+
+
+
 
 // HELPERS
 
@@ -4320,8 +4403,8 @@ function _Browser_load(url)
 		}
 	}));
 }
-var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
+var elm$core$Basics$False = {$: 'False'};
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
 		return true;
@@ -4799,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{wa: 1},
+		{ans: '2', imgdisp: true, init: '', ldisp: true, marubatu: '', mon1: '1', mon2: '1', rdisp: true, sdisp: true, selected1: '1', selected2: '1', selectedwa: '2'},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4807,13 +4890,345 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Subunkai$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var author$project$Subunkai$Newface = function (a) {
+	return {$: 'Newface', a: a};
+};
+var author$project$Subunkai$Newface2 = function (a) {
+	return {$: 'Newface2', a: a};
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$core$String$toInt = _String_toInt;
+var author$project$Subunkai$toint = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toInt(st));
+};
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var elm$core$Task$andThen = _Scheduler_andThen;
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var elm$random$Random$next = function (_n0) {
+	var state0 = _n0.a;
+	var incr = _n0.b;
+	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var elm$random$Random$initialSeed = function (x) {
+	var _n0 = elm$random$Random$next(
+		A2(elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _n0.a;
+	var incr = _n0.b;
+	var state2 = (state1 + x) >>> 0;
+	return elm$random$Random$next(
+		A2(elm$random$Random$Seed, state2, incr));
+};
+var elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var elm$time$Time$customZone = elm$time$Time$Zone;
+var elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var elm$time$Time$millisToPosix = elm$time$Time$Posix;
+var elm$time$Time$now = _Time_now(elm$time$Time$millisToPosix);
+var elm$time$Time$posixToMillis = function (_n0) {
+	var millis = _n0.a;
+	return millis;
+};
+var elm$random$Random$init = A2(
+	elm$core$Task$andThen,
+	function (time) {
+		return elm$core$Task$succeed(
+			elm$random$Random$initialSeed(
+				elm$time$Time$posixToMillis(time)));
+	},
+	elm$time$Time$now);
+var elm$core$Platform$sendToApp = _Platform_sendToApp;
+var elm$random$Random$step = F2(
+	function (_n0, seed) {
+		var generator = _n0.a;
+		return generator(seed);
+	});
+var elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _n1 = A2(elm$random$Random$step, generator, seed);
+			var value = _n1.a;
+			var newSeed = _n1.b;
+			return A2(
+				elm$core$Task$andThen,
+				function (_n2) {
+					return A3(elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2(elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var elm$random$Random$onSelfMsg = F3(
+	function (_n0, _n1, seed) {
+		return elm$core$Task$succeed(seed);
+	});
+var elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var elm$random$Random$map = F2(
+	function (func, _n0) {
+		var genA = _n0.a;
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n1 = genA(seed0);
+				var a = _n1.a;
+				var seed1 = _n1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var elm$random$Random$cmdMap = F2(
+	function (func, _n0) {
+		var generator = _n0.a;
+		return elm$random$Random$Generate(
+			A2(elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager(elm$random$Random$init, elm$random$Random$onEffects, elm$random$Random$onSelfMsg, elm$random$Random$cmdMap);
+var elm$random$Random$command = _Platform_leaf('Random');
+var elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return elm$random$Random$command(
+			elm$random$Random$Generate(
+				A2(elm$random$Random$map, tagger, generator)));
+	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$core$Bitwise$and = _Bitwise_and;
+var elm$core$Bitwise$xor = _Bitwise_xor;
+var elm$random$Random$peel = function (_n0) {
+	var state = _n0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var elm$random$Random$int = F2(
+	function (a, b) {
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _n0.a;
+				var hi = _n0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
+						elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = elm$random$Random$peel(seed);
+							var seedN = elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
+	});
 var author$project$Subunkai$update = F2(
 	function (msg, model) {
-		return _Utils_Tuple2(
-			_Utils_update(
-				model,
-				{wa: 1}),
-			elm$core$Platform$Cmd$none);
+		var mb = F3(
+			function (wa, s1, s2) {
+				return (!((author$project$Subunkai$toint(wa) * author$project$Subunkai$toint(s1)) * author$project$Subunkai$toint(s2))) ? '' : (_Utils_eq(
+					author$project$Subunkai$toint(wa),
+					author$project$Subunkai$toint(s1) + author$project$Subunkai$toint(s2)) ? '〇' : '✖');
+			});
+		switch (msg.$) {
+			case 'Change':
+				var st = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							init: st,
+							marubatu: A3(mb, st, model.selected1, model.selected2),
+							selectedwa: st
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'Change1':
+				var st = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							init: st,
+							marubatu: A3(mb, model.selectedwa, st, model.selected2),
+							selected1: st
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'Change2':
+				var st = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							init: st,
+							marubatu: A3(mb, model.selectedwa, model.selected1, st),
+							selected2: st
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'Disp':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{imgdisp: true}),
+					elm$core$Platform$Cmd$none);
+			case 'Hide':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{imgdisp: false}),
+					elm$core$Platform$Cmd$none);
+			case 'HideS':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{sdisp: false}),
+					elm$core$Platform$Cmd$none);
+			case 'HideL':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ldisp: false}),
+					elm$core$Platform$Cmd$none);
+			case 'HideR':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{rdisp: false}),
+					elm$core$Platform$Cmd$none);
+			case 'Next':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{init: '?', marubatu: ''}),
+					A2(
+						elm$random$Random$generate,
+						author$project$Subunkai$Newface,
+						A2(elm$random$Random$int, 2, 5)));
+			case 'Newface':
+				var su = msg.a;
+				return _Utils_eq(
+					model.ans,
+					elm$core$String$fromInt(su)) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							ans: elm$core$String$fromInt(su),
+							selectedwa: elm$core$String$fromInt(su)
+						}),
+					A2(
+						elm$random$Random$generate,
+						author$project$Subunkai$Newface,
+						A2(elm$random$Random$int, 2, 5))) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							ans: elm$core$String$fromInt(su),
+							selectedwa: elm$core$String$fromInt(su)
+						}),
+					A2(
+						elm$random$Random$generate,
+						author$project$Subunkai$Newface2,
+						A2(elm$random$Random$int, 1, su - 1)));
+			default:
+				var su = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							mon1: elm$core$String$fromInt(su),
+							mon2: elm$core$String$fromInt(
+								author$project$Subunkai$toint(model.ans) - su),
+							selected1: elm$core$String$fromInt(su),
+							selected2: elm$core$String$fromInt(
+								author$project$Subunkai$toint(model.ans) - su)
+						}),
+					elm$core$Platform$Cmd$none);
+		}
+	});
+var author$project$Subunkai$Change = function (a) {
+	return {$: 'Change', a: a};
+};
+var author$project$Subunkai$Change1 = function (a) {
+	return {$: 'Change1', a: a};
+};
+var author$project$Subunkai$Change2 = function (a) {
+	return {$: 'Change2', a: a};
+};
+var author$project$Subunkai$Disp = {$: 'Disp'};
+var author$project$Subunkai$Hide = {$: 'Hide'};
+var author$project$Subunkai$HideL = {$: 'HideL'};
+var author$project$Subunkai$HideR = {$: 'HideR'};
+var author$project$Subunkai$HideS = {$: 'HideS'};
+var author$project$Subunkai$Next = {$: 'Next'};
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$map2 = _Json_map2;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
@@ -4870,6 +5285,24 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$json$Json$Decode$string = _Json_decodeString;
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var author$project$Subunkai$onChange = function (handler) {
+	return A2(
+		elm$html$Html$Events$on,
+		'change',
+		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
+};
+var elm$core$Basics$not = _Basics_not;
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -4884,31 +5317,35 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$core$Basics$identity = function (x) {
-	return x;
-};
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$json$Json$Decode$map2 = _Json_map2;
-var elm$json$Json$Decode$succeed = _Json_succeed;
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
+var elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2(elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$img = _VirtualDom_node('img');
+var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -4917,35 +5354,548 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			elm$json$Json$Encode$string(string));
 	});
+var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$hidden = elm$html$Html$Attributes$boolProperty('hidden');
+var elm$html$Html$Attributes$maxlength = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'maxlength',
+		elm$core$String$fromInt(n));
+};
+var elm$html$Html$Attributes$selected = elm$html$Html$Attributes$boolProperty('selected');
+var elm$html$Html$Attributes$size = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'size',
+		elm$core$String$fromInt(n));
+};
+var elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
+	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
+};
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var elm$html$Html$Attributes$classList = function (classes) {
+	return elm$html$Html$Attributes$class(
+		A2(
+			elm$core$String$join,
+			' ',
+			A2(
+				elm$core$List$map,
+				elm$core$Tuple$first,
+				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
+};
+var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
+var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
+	switch (size.$) {
+		case 'XS':
+			return elm$core$Maybe$Nothing;
+		case 'SM':
+			return elm$core$Maybe$Just('sm');
+		case 'MD':
+			return elm$core$Maybe$Just('md');
+		case 'LG':
+			return elm$core$Maybe$Just('lg');
+		default:
+			return elm$core$Maybe$Just('xl');
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: elm$core$Maybe$Just(size)
+					});
+			case 'Coloring':
+				var coloring = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						coloring: elm$core$Maybe$Just(coloring)
+					});
+			case 'Block':
+				return _Utils_update(
+					options,
+					{block: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			default:
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+		}
+	});
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions = {attributes: _List_Nil, block: false, coloring: elm$core$Maybe$Nothing, disabled: false, size: elm$core$Maybe$Nothing};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass = function (role) {
+	switch (role.$) {
+		case 'Primary':
+			return 'primary';
+		case 'Secondary':
+			return 'secondary';
+		case 'Success':
+			return 'success';
+		case 'Info':
+			return 'info';
+		case 'Warning':
+			return 'warning';
+		case 'Danger':
+			return 'danger';
+		case 'Dark':
+			return 'dark';
+		case 'Light':
+			return 'light';
+		default:
+			return 'link';
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes = function (modifiers) {
+	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier, rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('btn', true),
+						_Utils_Tuple2('btn-block', options.block),
+						_Utils_Tuple2('disabled', options.disabled)
+					])),
+				elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			function () {
+				var _n0 = A2(elm$core$Maybe$andThen, rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption, options.size);
+				if (_n0.$ === 'Just') {
+					var s = _n0.a;
+					return _List_fromArray(
+						[
+							elm$html$Html$Attributes$class('btn-' + s)
+						]);
+				} else {
+					return _List_Nil;
+				}
+			}(),
+			_Utils_ap(
+				function () {
+					var _n1 = options.coloring;
+					if (_n1.$ === 'Just') {
+						if (_n1.a.$ === 'Roled') {
+							var role = _n1.a.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$class(
+									'btn-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						} else {
+							var role = _n1.a.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$class(
+									'btn-outline-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						}
+					} else {
+						return _List_Nil;
+					}
+				}(),
+				options.attributes)));
+};
+var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
+	function (options, children) {
+		return A2(
+			elm$html$Html$button,
+			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
+			children);
+	});
+var rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Size = function (a) {
+	return {$: 'Size', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$large = rundis$elm_bootstrap$Bootstrap$Internal$Button$Size(rundis$elm_bootstrap$Bootstrap$General$Internal$LG);
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
+	return {$: 'Coloring', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary = {$: 'Primary'};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
+	return {$: 'Roled', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$primary = rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
+var rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1 = elm$html$Html$Attributes$class('m-1');
 var author$project$Subunkai$view = function (model) {
+	var img2 = A2(
+		elm$html$Html$img,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$src('car2.jpg')
+			]),
+		_List_Nil);
+	var list2 = A2(
+		elm$core$List$repeat,
+		author$project$Subunkai$toint(model.mon2),
+		img2);
+	var img1 = A2(
+		elm$html$Html$img,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$src('car1.jpg')
+			]),
+		_List_Nil);
+	var list1 = A2(
+		elm$core$List$repeat,
+		author$project$Subunkai$toint(model.mon1),
+		img1);
+	var handler2 = function (selectedText) {
+		return author$project$Subunkai$Change2(selectedText);
+	};
+	var handler1 = function (selectedText) {
+		return author$project$Subunkai$Change1(selectedText);
+	};
+	var handler = function (selectedText) {
+		return author$project$Subunkai$Change(selectedText);
+	};
 	return A2(
 		elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				A2(elm$html$Html$Attributes$style, 'font-size', '70px'),
+				A2(elm$html$Html$Attributes$style, 'margin', '10px')
+			]),
 		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$select,
+				elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
-					]),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+										elm$html$Html$Events$onClick(author$project$Subunkai$Next)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('つぎへ')
+							]))
+					])),
 				A2(
-					elm$core$List$map,
-					function (s) {
-						return A2(
-							elm$html$Html$option,
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$align('center')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$input,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$hidden(!model.sdisp),
+								A2(elm$html$Html$Attributes$style, 'text-align', 'center'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+								elm$html$Html$Attributes$type_('text'),
+								elm$html$Html$Attributes$maxlength(1),
+								elm$html$Html$Attributes$size(1),
+								elm$html$Html$Attributes$value(model.ans)
+							]),
+						_List_Nil),
+						A2(
+						elm$html$Html$select,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$hidden(model.sdisp),
+								A2(elm$html$Html$Attributes$style, 'text-align-last', 'center'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+								author$project$Subunkai$onChange(handler)
+							]),
+						A2(
+							elm$core$List$map,
+							function (s) {
+								return A2(
+									elm$html$Html$option,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$selected(
+											_Utils_eq(s, model.init)),
+											elm$html$Html$Attributes$value(s)
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('　' + (s + '　'))
+										]));
+							},
 							_List_fromArray(
-								[
-									elm$html$Html$Attributes$value(s)
-								]),
+								['?', '1', '2', '3', '4', '5']))),
+						elm$html$Html$text('は　')
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$align('center')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$input,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$hidden(!model.ldisp),
+								A2(elm$html$Html$Attributes$style, 'text-align', 'center'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+								elm$html$Html$Attributes$type_('text'),
+								elm$html$Html$Attributes$maxlength(1),
+								elm$html$Html$Attributes$size(1),
+								elm$html$Html$Attributes$value(model.mon1)
+							]),
+						_List_Nil),
+						A2(
+						elm$html$Html$select,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$hidden(model.ldisp),
+								A2(elm$html$Html$Attributes$style, 'text-align-last', 'center'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+								author$project$Subunkai$onChange(handler1)
+							]),
+						A2(
+							elm$core$List$map,
+							function (s) {
+								return A2(
+									elm$html$Html$option,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$selected(
+											_Utils_eq(s, model.init)),
+											elm$html$Html$Attributes$value(s)
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('　' + (s + '　'))
+										]));
+							},
 							_List_fromArray(
-								[
-									elm$html$Html$text(s)
-								]));
-					},
-					_List_fromArray(
-						['1', '2', '3', '4', '5'])))
+								['?', '1', '2', '3', '4', '5']))),
+						elm$html$Html$text('と'),
+						A2(
+						elm$html$Html$input,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$hidden(!model.rdisp),
+								A2(elm$html$Html$Attributes$style, 'text-align', 'center'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+								elm$html$Html$Attributes$type_('text'),
+								elm$html$Html$Attributes$maxlength(1),
+								elm$html$Html$Attributes$size(1),
+								elm$html$Html$Attributes$value(model.mon2)
+							]),
+						_List_Nil),
+						A2(
+						elm$html$Html$select,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$hidden(model.rdisp),
+								A2(elm$html$Html$Attributes$style, 'text-align-last', 'center'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+								author$project$Subunkai$onChange(handler2)
+							]),
+						A2(
+							elm$core$List$map,
+							function (s) {
+								return A2(
+									elm$html$Html$option,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$selected(
+											_Utils_eq(s, model.init)),
+											elm$html$Html$Attributes$value(s)
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('　' + (s + '　'))
+										]));
+							},
+							_List_fromArray(
+								['?', '1', '2', '3', '4', '5']))),
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '120px'),
+								A2(elm$html$Html$Attributes$style, 'color', '#ff0000')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(model.marubatu)
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$Attributes$style,
+								'display',
+								(!model.imgdisp) ? 'none' : '')
+							]),
+						_Utils_ap(list1, list2))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$large,
+								rundis$elm_bootstrap$Bootstrap$Button$primary,
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1,
+										elm$html$Html$Events$onClick(author$project$Subunkai$Disp)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('All Disp')
+							])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$large,
+								rundis$elm_bootstrap$Bootstrap$Button$primary,
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1,
+										elm$html$Html$Events$onClick(author$project$Subunkai$Hide)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Image Hide')
+							])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$large,
+								rundis$elm_bootstrap$Bootstrap$Button$primary,
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1,
+										elm$html$Html$Events$onClick(author$project$Subunkai$HideS)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Sum Hide')
+							])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$large,
+								rundis$elm_bootstrap$Bootstrap$Button$primary,
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1,
+										elm$html$Html$Events$onClick(author$project$Subunkai$HideL)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Left Hide')
+							])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$large,
+								rundis$elm_bootstrap$Bootstrap$Button$primary,
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1,
+										elm$html$Html$Events$onClick(author$project$Subunkai$HideR)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Right Hide')
+							]))
+					]))
 			]));
 };
 var elm$browser$Browser$External = function (a) {
@@ -4969,9 +5919,7 @@ var elm$core$Basics$never = function (_n0) {
 var elm$core$Task$Perform = function (a) {
 	return {$: 'Perform', a: a};
 };
-var elm$core$Task$succeed = _Scheduler_succeed;
 var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
-var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$map = F2(
 	function (func, taskA) {
 		return A2(
@@ -5004,7 +5952,6 @@ var elm$core$Task$sequence = function (tasks) {
 		elm$core$Task$succeed(_List_Nil),
 		tasks);
 };
-var elm$core$Platform$sendToApp = _Platform_sendToApp;
 var elm$core$Task$spawnCmd = F2(
 	function (router, _n0) {
 		var task = _n0.a;
@@ -5067,7 +6014,6 @@ var elm$core$String$left = F2(
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
 var elm$core$String$contains = _String_contains;
-var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
