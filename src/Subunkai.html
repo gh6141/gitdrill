@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '2', imgdisp: true, init: '', ldisp: true, marubatu: '', mon1: '1', mon2: '1', rdisp: true, sdisp: true, selected1: '1', selected2: '1', selectedwa: '2'},
+		{ans: '2', count: 0, imgdisp: true, init: '', ldisp: true, limit: 3, marubatu: '', mon1: '1', mon2: '1', rdisp: true, sdisp: true, selected1: '1', selected2: '1', selectedwa: '2', stage: 1},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4912,6 +4912,7 @@ var author$project$Subunkai$toint = function (st) {
 		0,
 		elm$core$String$toInt(st));
 };
+var elm$core$Basics$not = _Basics_not;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5069,11 +5070,95 @@ var elm$random$Random$int = F2(
 	});
 var author$project$Subunkai$update = F2(
 	function (msg, model) {
+		var stg = F3(
+			function (wa, s1, s2) {
+				return (_Utils_eq(
+					author$project$Subunkai$toint(wa),
+					author$project$Subunkai$toint(s1) + author$project$Subunkai$toint(s2)) && (!(!((author$project$Subunkai$toint(wa) * author$project$Subunkai$toint(s1)) * author$project$Subunkai$toint(s2))))) ? ((model.count > 4) ? (model.stage + 1) : model.stage) : model.stage;
+			});
+		var stagecfg = function (stgx2) {
+			switch (stgx2) {
+				case 1:
+					return {idp: true, ldp: true, rdp: true, sdp: false};
+				case 2:
+					return {idp: true, ldp: false, rdp: true, sdp: true};
+				case 3:
+					return {idp: true, ldp: true, rdp: false, sdp: true};
+				case 4:
+					return {idp: true, ldp: true, rdp: true, sdp: false};
+				case 5:
+					return {idp: true, ldp: false, rdp: true, sdp: true};
+				case 6:
+					return {idp: true, ldp: true, rdp: false, sdp: true};
+				case 7:
+					return {idp: true, ldp: true, rdp: true, sdp: false};
+				case 8:
+					return {idp: true, ldp: false, rdp: true, sdp: true};
+				case 9:
+					return {idp: true, ldp: true, rdp: false, sdp: true};
+				case 10:
+					return {idp: false, ldp: true, rdp: true, sdp: false};
+				case 11:
+					return {idp: false, ldp: false, rdp: true, sdp: true};
+				case 12:
+					return {idp: false, ldp: true, rdp: false, sdp: true};
+				case 13:
+					return {idp: false, ldp: true, rdp: true, sdp: false};
+				case 14:
+					return {idp: false, ldp: false, rdp: true, sdp: true};
+				case 15:
+					return {idp: false, ldp: true, rdp: false, sdp: true};
+				default:
+					return {idp: false, ldp: false, rdp: false, sdp: true};
+			}
+		};
 		var mb = F3(
 			function (wa, s1, s2) {
 				return (!((author$project$Subunkai$toint(wa) * author$project$Subunkai$toint(s1)) * author$project$Subunkai$toint(s2))) ? '' : (_Utils_eq(
 					author$project$Subunkai$toint(wa),
 					author$project$Subunkai$toint(s1) + author$project$Subunkai$toint(s2)) ? '〇' : '✖');
+			});
+		var lim = function (stgx) {
+			switch (stgx) {
+				case 1:
+					return 3;
+				case 2:
+					return 3;
+				case 3:
+					return 3;
+				case 4:
+					return 4;
+				case 5:
+					return 4;
+				case 6:
+					return 4;
+				case 7:
+					return 5;
+				case 8:
+					return 5;
+				case 9:
+					return 5;
+				case 10:
+					return 3;
+				case 11:
+					return 3;
+				case 12:
+					return 3;
+				case 13:
+					return 5;
+				case 14:
+					return 5;
+				case 15:
+					return 5;
+				default:
+					return 6;
+			}
+		};
+		var cd = F3(
+			function (wa, s1, s2) {
+				return (_Utils_eq(
+					author$project$Subunkai$toint(wa),
+					author$project$Subunkai$toint(s1) + author$project$Subunkai$toint(s2)) && (!(!((author$project$Subunkai$toint(wa) * author$project$Subunkai$toint(s1)) * author$project$Subunkai$toint(s2))))) ? ((model.count > 4) ? 0 : (model.count + 1)) : 0;
 			});
 		switch (msg.$) {
 			case 'Change':
@@ -5082,9 +5167,21 @@ var author$project$Subunkai$update = F2(
 					_Utils_update(
 						model,
 						{
+							count: A3(cd, st, model.selected1, model.selected2),
+							imgdisp: stagecfg(
+								A3(stg, st, model.selected1, model.selected2)).idp,
 							init: st,
+							ldisp: stagecfg(
+								A3(stg, st, model.selected1, model.selected2)).ldp,
+							limit: lim(
+								A3(stg, st, model.selected1, model.selected2)),
 							marubatu: A3(mb, st, model.selected1, model.selected2),
-							selectedwa: st
+							rdisp: stagecfg(
+								A3(stg, st, model.selected1, model.selected2)).rdp,
+							sdisp: stagecfg(
+								A3(stg, st, model.selected1, model.selected2)).sdp,
+							selectedwa: st,
+							stage: A3(stg, st, model.selected1, model.selected2)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Change1':
@@ -5093,9 +5190,21 @@ var author$project$Subunkai$update = F2(
 					_Utils_update(
 						model,
 						{
+							count: A3(cd, model.selectedwa, st, model.selected2),
+							imgdisp: stagecfg(
+								A3(stg, model.selectedwa, st, model.selected2)).idp,
 							init: st,
+							ldisp: stagecfg(
+								A3(stg, model.selectedwa, st, model.selected2)).ldp,
+							limit: lim(
+								A3(stg, model.selectedwa, st, model.selected2)),
 							marubatu: A3(mb, model.selectedwa, st, model.selected2),
-							selected1: st
+							rdisp: stagecfg(
+								A3(stg, model.selectedwa, st, model.selected2)).rdp,
+							sdisp: stagecfg(
+								A3(stg, model.selectedwa, st, model.selected2)).sdp,
+							selected1: st,
+							stage: A3(stg, model.selectedwa, st, model.selected2)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Change2':
@@ -5104,9 +5213,21 @@ var author$project$Subunkai$update = F2(
 					_Utils_update(
 						model,
 						{
+							count: A3(cd, model.selectedwa, model.selected1, st),
+							imgdisp: stagecfg(
+								A3(stg, model.selectedwa, model.selected1, st)).idp,
 							init: st,
+							ldisp: stagecfg(
+								A3(stg, model.selectedwa, model.selected1, st)).ldp,
+							limit: lim(
+								A3(stg, model.selectedwa, model.selected1, st)),
 							marubatu: A3(mb, model.selectedwa, model.selected1, st),
-							selected2: st
+							rdisp: stagecfg(
+								A3(stg, model.selectedwa, model.selected1, st)).rdp,
+							sdisp: stagecfg(
+								A3(stg, model.selectedwa, model.selected1, st)).sdp,
+							selected2: st,
+							stage: A3(stg, model.selectedwa, model.selected1, st)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Disp':
@@ -5147,7 +5268,7 @@ var author$project$Subunkai$update = F2(
 					A2(
 						elm$random$Random$generate,
 						author$project$Subunkai$Newface,
-						A2(elm$random$Random$int, 2, 5)));
+						A2(elm$random$Random$int, 2, model.limit)));
 			case 'Newface':
 				var su = msg.a;
 				return _Utils_eq(
@@ -5162,7 +5283,7 @@ var author$project$Subunkai$update = F2(
 					A2(
 						elm$random$Random$generate,
 						author$project$Subunkai$Newface,
-						A2(elm$random$Random$int, 2, 5))) : _Utils_Tuple2(
+						A2(elm$random$Random$int, 2, model.limit))) : _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
@@ -5302,7 +5423,6 @@ var author$project$Subunkai$onChange = function (handler) {
 		'change',
 		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
 };
-var elm$core$Basics$not = _Basics_not;
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5337,6 +5457,19 @@ var elm$core$List$repeatHelp = F3(
 var elm$core$List$repeat = F2(
 	function (n, value) {
 		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3(elm$core$String$repeatHelp, n, chunk, '');
 	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$img = _VirtualDom_node('img');
@@ -5642,13 +5775,24 @@ var author$project$Subunkai$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text('つぎへ')
+							])),
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(
+								'　ステージ' + (elm$core$String$fromInt(model.stage) + ('：' + (A2(elm$core$String$repeat, model.stage, '〇') + (' ' + elm$core$String$fromInt(model.count))))))
 							]))
 					])),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$align('center')
+						elm$html$Html$Attributes$align('left')
 					]),
 				_List_fromArray(
 					[
