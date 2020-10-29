@@ -5230,6 +5230,15 @@ var author$project$Subunkai$update = F2(
 							stage: A3(stg, model.selectedwa, model.selected1, st)
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Changestg':
+				var st = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							stage: author$project$Subunkai$toint(st)
+						}),
+					elm$core$Platform$Cmd$none);
 			case 'Disp':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5318,6 +5327,9 @@ var author$project$Subunkai$Change1 = function (a) {
 };
 var author$project$Subunkai$Change2 = function (a) {
 	return {$: 'Change2', a: a};
+};
+var author$project$Subunkai$Changestg = function (a) {
+	return {$: 'Changestg', a: a};
 };
 var author$project$Subunkai$Disp = {$: 'Disp'};
 var author$project$Subunkai$Hide = {$: 'Hide'};
@@ -5738,6 +5750,9 @@ var author$project$Subunkai$view = function (model) {
 		elm$core$List$repeat,
 		author$project$Subunkai$toint(model.mon1),
 		img1);
+	var handlerstg = function (selectedText) {
+		return author$project$Subunkai$Changestg(selectedText);
+	};
 	var handler2 = function (selectedText) {
 		return author$project$Subunkai$Change2(selectedText);
 	};
@@ -5784,8 +5799,36 @@ var author$project$Subunkai$view = function (model) {
 							]),
 						_List_fromArray(
 							[
+								elm$html$Html$text('　ステージ'),
+								A2(
+								elm$html$Html$select,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+										author$project$Subunkai$onChange(handlerstg)
+									]),
+								A2(
+									elm$core$List$map,
+									function (s) {
+										return A2(
+											elm$html$Html$option,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$selected(
+													_Utils_eq(
+														author$project$Subunkai$toint(s),
+														model.stage)),
+													elm$html$Html$Attributes$value(s)
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('　' + (s + '　'))
+												]));
+									},
+									_List_fromArray(
+										['?', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']))),
 								elm$html$Html$text(
-								'　ステージ' + (elm$core$String$fromInt(model.stage) + ('：' + (A2(elm$core$String$repeat, model.stage, '〇') + (' ' + elm$core$String$fromInt(model.count))))))
+								A2(elm$core$String$repeat, model.stage, '〇') + (' ' + elm$core$String$fromInt(model.count)))
 							]))
 					])),
 				A2(

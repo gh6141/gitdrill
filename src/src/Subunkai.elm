@@ -50,7 +50,7 @@ init _ =
   )
 
 type Msg
-    = Change String | Change1 String | Change2 String | Disp | Hide |HideS |HideL | HideR| Next | Newface Int | Newface2 Int
+    = Change String | Change1 String | Change2 String | Changestg String | Disp | Hide |HideS |HideL | HideR| Next | Newface Int | Newface2 Int
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -159,6 +159,9 @@ update msg model =
        }
     , Cmd.none
      )
+  
+   Changestg st ->
+     ({model | stage=(toint st)},Cmd.none)
 
    Disp ->
       ( { model | imgdisp=True }
@@ -215,6 +218,8 @@ view model =
             Change1 selectedText
         handler2 selectedText =
             Change2 selectedText
+        handlerstg selectedText =
+            Changestg selectedText
 
         img1=img [src "/py/car1.jpg"] []
         img2=img [src "/py/car2.jpg"] []
@@ -227,7 +232,9 @@ view model =
     [
       div []
       [Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-      ,span [style "font-size" "20px"] [text ("　ステージ"++(String.fromInt model.stage)++"："++(String.repeat model.stage "〇")++" "++(String.fromInt model.count))]
+      ,span [style "font-size" "20px"] [text ("　ステージ")
+      ,select [style "font-size" "50px" ,onChange handlerstg ] (List.map (\s -> Html.option [selected ((toint s)==model.stage),value s][text ("　"++s++"　")]) (["?","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]))
+      ,text ((String.repeat model.stage "〇")++" "++(String.fromInt model.count))]
   
       ]
     ,
