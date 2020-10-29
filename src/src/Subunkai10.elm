@@ -44,8 +44,8 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {selectedwa="2",selected1="1",selected2="1",init="",marubatu="",mon1="1",mon2="1",ans="2",imgdisp=True
-     ,sdisp=True,ldisp=True,rdisp=True,stage=1,count=0,limit=3}
+  ( {selectedwa="6",selected1="3",selected2="3",init="",marubatu="",mon1="3",mon2="3",ans="6",imgdisp=True
+     ,sdisp=True,ldisp=True,rdisp=True,stage=1,count=0,limit=7}
   , Cmd.none
   )
 
@@ -82,38 +82,36 @@ update msg model =
         model.stage
    
    lim stgx = case stgx of
-               1 -> 3
-               2 -> 3
-               3 -> 3
-               4 -> 4
-               5 -> 4
-               6 -> 4
-               7 -> 5
-               8 -> 5
-               9 -> 5
-               10 -> 3
-               11 -> 3
-               12 -> 3
-               13 -> 5
-               14 -> 5
-               15 -> 5
-               _ -> 6
+               1 -> 7
+               2 -> 7
+               3 -> 8
+               4 -> 8
+               5 -> 9
+               6 -> 9
+               7 -> 10
+               8 -> 10
+               9 -> 6
+               10 -> 7
+               11 -> 8
+               12 -> 9
+               13 -> 10
+               _ -> 10
    stagecfg stgx2 = case stgx2 of
-               1 -> {sdp=False,ldp=True,rdp=True,idp=True}
+               1 -> {sdp=True,ldp=True,rdp=False,idp=True}
                2 -> {sdp=True,ldp=False,rdp=True,idp=True}
                3 -> {sdp=True,ldp=True,rdp=False,idp=True}
-               4 -> {sdp=False,ldp=True,rdp=True,idp=True}
-               5 -> {sdp=True,ldp=False,rdp=True,idp=True}
-               6 -> {sdp=True,ldp=True,rdp=False,idp=True}
-               7 -> {sdp=False,ldp=True,rdp=True,idp=True}
+               4 -> {sdp=True,ldp=False,rdp=True,idp=True}
+               5 -> {sdp=True,ldp=True,rdp=False,idp=True}
+               6 -> {sdp=True,ldp=False,rdp=True,idp=True}
+               7 -> {sdp=True,ldp=True,rdp=False,idp=True}
                8 -> {sdp=True,ldp=False,rdp=True,idp=True}
-               9 -> {sdp=True,ldp=True,rdp=False,idp=True}
-               10 -> {sdp=False,ldp=True,rdp=True,idp=False}
-               11 -> {sdp=True,ldp=False,rdp=True,idp=False}
-               12 -> {sdp=True,ldp=True,rdp=False,idp=False}
-               13 -> {sdp=False,ldp=True,rdp=True,idp=False}
-               14 -> {sdp=True,ldp=False,rdp=True,idp=False}
-               15 -> {sdp=True,ldp=True,rdp=False,idp=False}
+
+               9 -> {sdp=True,ldp=True,rdp=False,idp=False}
+               10 -> {sdp=True,ldp=False,rdp=True,idp=False}
+               11 -> {sdp=True,ldp=True,rdp=False,idp=False}
+               12 -> {sdp=True,ldp=False,rdp=True,idp=False}
+               13 -> {sdp=True,ldp=True,rdp=False,idp=False}
+
                _ -> {sdp=True,ldp=False,rdp=False,idp=False}
 
 
@@ -182,12 +180,12 @@ update msg model =
       ,imgdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).idp
       
       }
-       ,   Random.generate Newface (Random.int 2 model.limit)
+       ,   Random.generate Newface (Random.int 6 model.limit)
       )
   
    Newface su ->
      if model.ans== (String.fromInt su) then        
-      ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su} , Random.generate Newface (Random.int 2 model.limit))
+      ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su} , Random.generate Newface (Random.int 6 model.limit))
      else
        ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su } , Random.generate Newface2 (Random.int 1 (su-1) ))
   
@@ -195,7 +193,7 @@ update msg model =
      --if model.mon1== (String.fromInt su) then        
      -- ( {model | mon1 =String.fromInt su , mon2=String.fromInt ( (toint model.ans)-su ) 
       --,selected1=String.fromInt su, selected2=String.fromInt ( (toint model.ans)-su ) 
-    -- } , Random.generate Newface2 (Random.int 1 ((toint model.ans)-1) ))
+    -- } , Random.generate Newface2 (Random.int 6 ((toint model.ans)-1) ))
      --else
        ( {model | mon1 =String.fromInt su , mon2=String.fromInt  ( (toint model.ans)-su ) 
          , selected1 =String.fromInt su , selected2=String.fromInt  ( (toint model.ans)-su ) 
@@ -235,17 +233,17 @@ view model =
     div [align "left"]
     [
      input [hidden (not model.sdisp)  ,style "text-align" "center",style "font-size" "50px", type_ "text",maxlength 1,size 1 ,value model.ans] []
-    ,select [hidden model.sdisp,style "text-align-last" "center",style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","1","2","3","4","5"])
+    ,select [hidden model.sdisp,style "text-align-last" "center",style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","6","7","8","9","10"])
      ,text "は　"
     ]
     ,
     div [align "center"]
     [    
      input [hidden  (not model.ldisp) ,style "text-align" "center",style "font-size" "50px", type_ "text",maxlength 1,size 1 ,value model.mon1] []
-    ,select [hidden model.ldisp,style "text-align-last" "center",style "font-size" "50px" ,onChange handler1 ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","1","2","3","4","5"])
+    ,select [hidden model.ldisp,style "text-align-last" "center",style "font-size" "50px" ,onChange handler1 ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","1","2","3","4","5","6","7","8","9","10"])
     ,text "と"
     ,input [hidden  (not model.rdisp) ,style "text-align" "center",style "font-size" "50px", type_ "text",maxlength 1,size 1 ,value model.mon2] []
-    ,select [hidden model.rdisp,style "text-align-last" "center",style "font-size" "50px" ,onChange handler2 ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","1","2","3","4","5"])
+    ,select [hidden model.rdisp,style "text-align-last" "center",style "font-size" "50px" ,onChange handler2 ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","1","2","3","4","5","6","7","8","9","10"])
     ,span [style "font-size" "120px",style "color" "#ff0000"] [text model.marubatu],
     div [style "display" (if model.imgdisp==False then "none" else "")] (list1 ++ list2)
     ]

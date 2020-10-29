@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '2', count: 0, imgdisp: true, init: '', ldisp: true, limit: 3, marubatu: '', mon1: '1', mon2: '1', rdisp: true, sdisp: true, selected1: '1', selected2: '1', selectedwa: '2', stage: 1},
+		{ans: '6', count: 0, imgdisp: true, init: '', ldisp: true, limit: 7, marubatu: '', mon1: '3', mon2: '3', rdisp: true, sdisp: true, selected1: '3', selected2: '3', selectedwa: '6', stage: 1},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5079,34 +5079,30 @@ var author$project$Subunkai$update = F2(
 		var stagecfg = function (stgx2) {
 			switch (stgx2) {
 				case 1:
-					return {idp: true, ldp: true, rdp: true, sdp: false};
+					return {idp: true, ldp: true, rdp: false, sdp: true};
 				case 2:
 					return {idp: true, ldp: false, rdp: true, sdp: true};
 				case 3:
 					return {idp: true, ldp: true, rdp: false, sdp: true};
 				case 4:
-					return {idp: true, ldp: true, rdp: true, sdp: false};
-				case 5:
 					return {idp: true, ldp: false, rdp: true, sdp: true};
-				case 6:
+				case 5:
 					return {idp: true, ldp: true, rdp: false, sdp: true};
+				case 6:
+					return {idp: true, ldp: false, rdp: true, sdp: true};
 				case 7:
-					return {idp: true, ldp: true, rdp: true, sdp: false};
+					return {idp: true, ldp: true, rdp: false, sdp: true};
 				case 8:
 					return {idp: true, ldp: false, rdp: true, sdp: true};
 				case 9:
-					return {idp: true, ldp: true, rdp: false, sdp: true};
-				case 10:
-					return {idp: false, ldp: true, rdp: true, sdp: false};
-				case 11:
-					return {idp: false, ldp: false, rdp: true, sdp: true};
-				case 12:
 					return {idp: false, ldp: true, rdp: false, sdp: true};
-				case 13:
-					return {idp: false, ldp: true, rdp: true, sdp: false};
-				case 14:
+				case 10:
 					return {idp: false, ldp: false, rdp: true, sdp: true};
-				case 15:
+				case 11:
+					return {idp: false, ldp: true, rdp: false, sdp: true};
+				case 12:
+					return {idp: false, ldp: false, rdp: true, sdp: true};
+				case 13:
 					return {idp: false, ldp: true, rdp: false, sdp: true};
 				default:
 					return {idp: false, ldp: false, rdp: false, sdp: true};
@@ -5121,37 +5117,33 @@ var author$project$Subunkai$update = F2(
 		var lim = function (stgx) {
 			switch (stgx) {
 				case 1:
-					return 3;
+					return 7;
 				case 2:
-					return 3;
+					return 7;
 				case 3:
-					return 3;
+					return 8;
 				case 4:
-					return 4;
+					return 8;
 				case 5:
-					return 4;
+					return 9;
 				case 6:
-					return 4;
+					return 9;
 				case 7:
-					return 5;
+					return 10;
 				case 8:
-					return 5;
+					return 10;
 				case 9:
-					return 5;
-				case 10:
-					return 3;
-				case 11:
-					return 3;
-				case 12:
-					return 3;
-				case 13:
-					return 5;
-				case 14:
-					return 5;
-				case 15:
-					return 5;
-				default:
 					return 6;
+				case 10:
+					return 7;
+				case 11:
+					return 8;
+				case 12:
+					return 9;
+				case 13:
+					return 10;
+				default:
+					return 10;
 			}
 		};
 		var cd = F3(
@@ -5258,7 +5250,7 @@ var author$project$Subunkai$update = F2(
 					A2(
 						elm$random$Random$generate,
 						author$project$Subunkai$Newface,
-						A2(elm$random$Random$int, 2, model.limit)));
+						A2(elm$random$Random$int, 6, model.limit)));
 			case 'Newface':
 				var su = msg.a;
 				return _Utils_eq(
@@ -5273,7 +5265,7 @@ var author$project$Subunkai$update = F2(
 					A2(
 						elm$random$Random$generate,
 						author$project$Subunkai$Newface,
-						A2(elm$random$Random$int, 2, model.limit))) : _Utils_Tuple2(
+						A2(elm$random$Random$int, 6, model.limit))) : _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
@@ -5859,7 +5851,7 @@ var author$project$Subunkai$view = function (model) {
 										]));
 							},
 							_List_fromArray(
-								['?', '1', '2', '3', '4', '5']))),
+								['?', '6', '7', '8', '9', '10']))),
 						elm$html$Html$text('は　')
 					])),
 				A2(
@@ -5909,7 +5901,7 @@ var author$project$Subunkai$view = function (model) {
 										]));
 							},
 							_List_fromArray(
-								['?', '1', '2', '3', '4', '5']))),
+								['?', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']))),
 						elm$html$Html$text('と'),
 						A2(
 						elm$html$Html$input,
@@ -5950,7 +5942,7 @@ var author$project$Subunkai$view = function (model) {
 										]));
 							},
 							_List_fromArray(
-								['?', '1', '2', '3', '4', '5']))),
+								['?', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']))),
 						A2(
 						elm$html$Html$span,
 						_List_fromArray(
