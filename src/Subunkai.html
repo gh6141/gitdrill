@@ -5416,6 +5416,7 @@ var author$project$Subunkai$onChange = function (handler) {
 		'change',
 		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
 };
+var elm$core$Basics$modBy = _Basics_modBy;
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5709,6 +5710,20 @@ var rundis$elm_bootstrap$Bootstrap$Button$primary = rundis$elm_bootstrap$Bootstr
 	rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
 var rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1 = elm$html$Html$Attributes$class('m-1');
 var author$project$Subunkai$view = function (model) {
+	var img4 = A2(
+		elm$html$Html$img,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$src('/py/cari2.jpg')
+			]),
+		_List_Nil);
+	var img3 = A2(
+		elm$html$Html$img,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$src('/py/cari1.jpg')
+			]),
+		_List_Nil);
 	var img2 = A2(
 		elm$html$Html$img,
 		_List_fromArray(
@@ -5719,7 +5734,7 @@ var author$project$Subunkai$view = function (model) {
 	var list2 = A2(
 		elm$core$List$repeat,
 		author$project$Subunkai$toint(model.mon2),
-		img2);
+		(!A2(elm$core$Basics$modBy, 2, model.stage)) ? img2 : img4);
 	var img1 = A2(
 		elm$html$Html$img,
 		_List_fromArray(
@@ -5730,7 +5745,7 @@ var author$project$Subunkai$view = function (model) {
 	var list1 = A2(
 		elm$core$List$repeat,
 		author$project$Subunkai$toint(model.mon1),
-		img1);
+		(!A2(elm$core$Basics$modBy, 2, model.stage)) ? img1 : img3);
 	var handlerstg = function (selectedText) {
 		return author$project$Subunkai$Changestg(selectedText);
 	};

@@ -214,10 +214,13 @@ view model =
         handlerstg selectedText =
             Changestg selectedText
 
-        img1=img [src "/py/car1.jpg"] []
-        img2=img [src "/py/car2.jpg"] []
-        list1=List.repeat (toint model.mon1) img1
-        list2=List.repeat (toint model.mon2) img2
+         
+        img1=img [src ("/py/car1.jpg")] []
+        img2=img [src ("/py/car2.jpg")] []
+        img3=img [src ("/py/cari1.jpg")] []
+        img4=img [src ("/py/cari2.jpg")] []
+        list1=List.repeat (toint model.mon1) (if (modBy 2 model.stage ) == 0 then img1 else img3)
+        list2=List.repeat (toint model.mon2) (if (modBy 2 model.stage ) == 0 then img2 else img4)
   
                   
  in
