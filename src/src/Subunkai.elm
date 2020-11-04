@@ -40,12 +40,13 @@ type alias Model =
     ,stage:Int
     ,count:Int
     ,limit:Int
+    ,slimit:Int
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {selectedwa="2",selected1="1",selected2="1",init="",marubatu="",mon1="1",mon2="1",ans="2",imgdisp=True
-     ,sdisp=True,ldisp=True,rdisp=True,stage=1,count=0,limit=3}
+     ,sdisp=True,ldisp=True,rdisp=True,stage=1,count=0,limit=3,slimit=2}
   , Cmd.none
   )
 
@@ -82,22 +83,22 @@ update msg model =
         model.stage
    
    lim stgx = case stgx of
-               1 -> 3
-               2 -> 3
-               3 -> 3
-               4 -> 4
-               5 -> 4
-               6 -> 4
-               7 -> 5
-               8 -> 5
-               9 -> 5
-               10 -> 3
-               11 -> 3
-               12 -> 3
-               13 -> 5
-               14 -> 5
-               15 -> 5
-               _ -> 6
+               1 -> (2,3)
+               2 -> (2,3)
+               3 -> (2,3)
+               4 -> (2,4)
+               5 -> (2,4)
+               6 -> (3,4)
+               7 -> (3,5)
+               8 -> (4,5)
+               9 -> (4,5)
+               10 -> (2,3)
+               11 -> (2,3)
+               12 -> (2,3)
+               13 -> (3,5)
+               14 -> (4,5)
+               15 -> (4,5)
+               _ -> (2,6)
    stagecfg stgx2 = case stgx2 of
                1 -> {sdp=False,ldp=True,rdp=True,idp=True}
                2 -> {sdp=True,ldp=False,rdp=True,idp=True}
@@ -175,19 +176,20 @@ update msg model =
    Next ->
       ( {model |  marubatu="",init="?"
             ,stage=(stg model.selectedwa model.selected1 model.selected2)
-      ,limit=lim (stg model.selectedwa model.selected1 model.selected2)
+      ,limit=snd (lim (stg model.selectedwa model.selected1 model.selected2))
+      ,slimit=fst (lim (stg model.selectedwa model.selected1 model.selected2))
       ,sdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).sdp
       ,ldisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).ldp
       ,rdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).rdp
       ,imgdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).idp
       
       }
-       ,   Random.generate Newface (Random.int 2 model.limit)
+       ,   Random.generate Newface (Random.int model.slimit model.limit)
       )
   
    Newface su ->
      if model.ans== (String.fromInt su) then        
-      ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su} , Random.generate Newface (Random.int 2 model.limit))
+      ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su} , Random.generate Newface (Random.int model.slimit model.limit))
      else
        ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su } , Random.generate Newface2 (Random.int 1 (su-1) ))
   
@@ -273,3 +275,15 @@ onChange handler =
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+
+fst tuple =
+    let
+        (value1, _) = tuple
+    in
+    value1
+
+snd tuple =
+    let
+        (_, value2) = tuple
+    in
+    value2

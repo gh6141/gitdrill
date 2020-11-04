@@ -40,12 +40,13 @@ type alias Model =
     ,stage:Int
     ,count:Int
     ,limit:Int
+    ,slimit:Int
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {selectedwa="6",selected1="3",selected2="3",init="",marubatu="",mon1="3",mon2="3",ans="6",imgdisp=True
-     ,sdisp=True,ldisp=True,rdisp=True,stage=1,count=0,limit=7}
+     ,sdisp=True,ldisp=True,rdisp=True,stage=1,count=0,limit=7,slimit=6}
   , Cmd.none
   )
 
@@ -82,20 +83,20 @@ update msg model =
         model.stage
    
    lim stgx = case stgx of
-               1 -> 7
-               2 -> 7
-               3 -> 8
-               4 -> 8
-               5 -> 9
-               6 -> 9
-               7 -> 10
-               8 -> 10
-               9 -> 6
-               10 -> 7
-               11 -> 8
-               12 -> 9
-               13 -> 10
-               _ -> 10
+               1 -> (6,7)
+               2 -> (6,7)
+               3 -> (7,8)
+               4 -> (7,8)
+               5 -> (8,9)
+               6 -> (8,9)
+               7 -> (9,10)
+               8 -> (9,10)
+               9 -> (9,10)
+               10 -> (6,7)
+               11 -> (7,8)
+               12 -> (8,9)
+               13 -> (9,10)
+               _ -> (6,10)
    stagecfg stgx2 = case stgx2 of
                1 -> {sdp=True,ldp=True,rdp=False,idp=True}
                2 -> {sdp=True,ldp=False,rdp=True,idp=True}
@@ -105,8 +106,8 @@ update msg model =
                6 -> {sdp=True,ldp=False,rdp=True,idp=True}
                7 -> {sdp=True,ldp=True,rdp=False,idp=True}
                8 -> {sdp=True,ldp=False,rdp=True,idp=True}
+               9 -> {sdp=True,ldp=True,rdp=False,idp=True}
 
-               9 -> {sdp=True,ldp=True,rdp=False,idp=False}
                10 -> {sdp=True,ldp=False,rdp=True,idp=False}
                11 -> {sdp=True,ldp=True,rdp=False,idp=False}
                12 -> {sdp=True,ldp=False,rdp=True,idp=False}
@@ -173,28 +174,25 @@ update msg model =
    Next ->
       ( {model |  marubatu="",init="?"
             ,stage=(stg model.selectedwa model.selected1 model.selected2)
-      ,limit=lim (stg model.selectedwa model.selected1 model.selected2)
+      ,limit=snd (lim (stg model.selectedwa model.selected1 model.selected2))
+      ,slimit=fst (lim (stg model.selectedwa model.selected1 model.selected2))
       ,sdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).sdp
       ,ldisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).ldp
       ,rdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).rdp
       ,imgdisp=(stagecfg (stg model.selectedwa model.selected1 model.selected2)).idp
       
       }
-       ,   Random.generate Newface (Random.int 6 model.limit)
+       ,   Random.generate Newface (Random.int model.slimit model.limit)
       )
   
    Newface su ->
      if model.ans== (String.fromInt su) then        
-      ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su} , Random.generate Newface (Random.int 6 model.limit))
+      ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su} , Random.generate Newface (Random.int model.slimit model.limit))
      else
        ( {model |  ans =String.fromInt su ,selectedwa=String.fromInt su } , Random.generate Newface2 (Random.int 1 (su-1) ))
   
    Newface2 su ->
-     --if model.mon1== (String.fromInt su) then        
-     -- ( {model | mon1 =String.fromInt su , mon2=String.fromInt ( (toint model.ans)-su ) 
-      --,selected1=String.fromInt su, selected2=String.fromInt ( (toint model.ans)-su ) 
-    -- } , Random.generate Newface2 (Random.int 6 ((toint model.ans)-1) ))
-     --else
+
        ( {model | mon1 =String.fromInt su , mon2=String.fromInt  ( (toint model.ans)-su ) 
          , selected1 =String.fromInt su , selected2=String.fromInt  ( (toint model.ans)-su ) 
         }, Cmd.none)
@@ -211,10 +209,12 @@ view model =
             Change2 selectedText
         handlerstg selectedText =
             Changestg selectedText
-        img1=img [src ("https://rasp.cld9.work/py/car1.jpg")] []
-        img2=img [src ("https://rasp.cld9.work/py/car2.jpg")] []
-        img3=img [src ("https://rasp.cld9.work/py/cari1.jpg")] []
-        img4=img [src ("https://rasp.cld9.work/py/cari2.jpg")] []
+        isizex="90px"
+        isizey="60px"
+        img1=img [src ("https://rasp.cld9.work/py/car1.jpg"),style "width" isizex, style "height" isizey] []
+        img2=img [src ("https://rasp.cld9.work/py/car2.jpg") ,style "width" isizex, style "height" isizey] []
+        img3=img [src ("https://rasp.cld9.work/py/cari1.jpg"),style "width" isizex, style "height" isizey] []
+        img4=img [src ("https://rasp.cld9.work/py/cari2.jpg"),style "width" isizex, style "height" isizey] []
         list1=List.repeat (toint model.mon1) (if (modBy 2 model.stage ) == 0 then img1 else img3)
         list2=List.repeat (toint model.mon2) (if (modBy 2 model.stage ) == 0 then img2 else img4)
   
@@ -269,3 +269,15 @@ onChange handler =
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+
+fst tuple =
+    let
+        (value1, _) = tuple
+    in
+    value1
+
+snd tuple =
+    let
+        (_, value2) = tuple
+    in
+    value2

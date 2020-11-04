@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '6', count: 0, imgdisp: true, init: '', ldisp: true, limit: 7, marubatu: '', mon1: '3', mon2: '3', rdisp: true, sdisp: true, selected1: '3', selected2: '3', selectedwa: '6', stage: 1},
+		{ans: '6', count: 0, imgdisp: true, init: '', ldisp: true, limit: 7, marubatu: '', mon1: '3', mon2: '3', rdisp: true, sdisp: true, selected1: '3', selected2: '3', selectedwa: '6', slimit: 6, stage: 1},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4895,6 +4895,16 @@ var author$project$Subunkai$Newface = function (a) {
 };
 var author$project$Subunkai$Newface2 = function (a) {
 	return {$: 'Newface2', a: a};
+};
+var author$project$Subunkai$fst = function (tuple) {
+	var _n0 = tuple;
+	var value1 = _n0.a;
+	return value1;
+};
+var author$project$Subunkai$snd = function (tuple) {
+	var _n0 = tuple;
+	var value2 = _n0.b;
+	return value2;
 };
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -5095,7 +5105,7 @@ var author$project$Subunkai$update = F2(
 				case 8:
 					return {idp: true, ldp: false, rdp: true, sdp: true};
 				case 9:
-					return {idp: false, ldp: true, rdp: false, sdp: true};
+					return {idp: true, ldp: true, rdp: false, sdp: true};
 				case 10:
 					return {idp: false, ldp: false, rdp: true, sdp: true};
 				case 11:
@@ -5117,33 +5127,33 @@ var author$project$Subunkai$update = F2(
 		var lim = function (stgx) {
 			switch (stgx) {
 				case 1:
-					return 7;
+					return _Utils_Tuple2(6, 7);
 				case 2:
-					return 7;
+					return _Utils_Tuple2(6, 7);
 				case 3:
-					return 8;
+					return _Utils_Tuple2(7, 8);
 				case 4:
-					return 8;
+					return _Utils_Tuple2(7, 8);
 				case 5:
-					return 9;
+					return _Utils_Tuple2(8, 9);
 				case 6:
-					return 9;
+					return _Utils_Tuple2(8, 9);
 				case 7:
-					return 10;
+					return _Utils_Tuple2(9, 10);
 				case 8:
-					return 10;
+					return _Utils_Tuple2(9, 10);
 				case 9:
-					return 6;
+					return _Utils_Tuple2(9, 10);
 				case 10:
-					return 7;
+					return _Utils_Tuple2(6, 7);
 				case 11:
-					return 8;
+					return _Utils_Tuple2(7, 8);
 				case 12:
-					return 9;
+					return _Utils_Tuple2(8, 9);
 				case 13:
-					return 10;
+					return _Utils_Tuple2(9, 10);
 				default:
-					return 10;
+					return _Utils_Tuple2(6, 10);
 			}
 		};
 		var cd = F3(
@@ -5238,19 +5248,23 @@ var author$project$Subunkai$update = F2(
 							init: '?',
 							ldisp: stagecfg(
 								A3(stg, model.selectedwa, model.selected1, model.selected2)).ldp,
-							limit: lim(
-								A3(stg, model.selectedwa, model.selected1, model.selected2)),
+							limit: author$project$Subunkai$snd(
+								lim(
+									A3(stg, model.selectedwa, model.selected1, model.selected2))),
 							marubatu: '',
 							rdisp: stagecfg(
 								A3(stg, model.selectedwa, model.selected1, model.selected2)).rdp,
 							sdisp: stagecfg(
 								A3(stg, model.selectedwa, model.selected1, model.selected2)).sdp,
+							slimit: author$project$Subunkai$fst(
+								lim(
+									A3(stg, model.selectedwa, model.selected1, model.selected2))),
 							stage: A3(stg, model.selectedwa, model.selected1, model.selected2)
 						}),
 					A2(
 						elm$random$Random$generate,
 						author$project$Subunkai$Newface,
-						A2(elm$random$Random$int, 6, model.limit)));
+						A2(elm$random$Random$int, model.slimit, model.limit)));
 			case 'Newface':
 				var su = msg.a;
 				return _Utils_eq(
@@ -5265,7 +5279,7 @@ var author$project$Subunkai$update = F2(
 					A2(
 						elm$random$Random$generate,
 						author$project$Subunkai$Newface,
-						A2(elm$random$Random$int, 6, model.limit))) : _Utils_Tuple2(
+						A2(elm$random$Random$int, model.slimit, model.limit))) : _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
@@ -5702,25 +5716,33 @@ var rundis$elm_bootstrap$Bootstrap$Button$primary = rundis$elm_bootstrap$Bootstr
 	rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled(rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
 var rundis$elm_bootstrap$Bootstrap$Utilities$Spacing$m1 = elm$html$Html$Attributes$class('m-1');
 var author$project$Subunkai$view = function (model) {
+	var isizey = '60px';
+	var isizex = '90px';
 	var img4 = A2(
 		elm$html$Html$img,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/cari2.jpg')
+				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/cari2.jpg'),
+				A2(elm$html$Html$Attributes$style, 'width', isizex),
+				A2(elm$html$Html$Attributes$style, 'height', isizey)
 			]),
 		_List_Nil);
 	var img3 = A2(
 		elm$html$Html$img,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/cari1.jpg')
+				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/cari1.jpg'),
+				A2(elm$html$Html$Attributes$style, 'width', isizex),
+				A2(elm$html$Html$Attributes$style, 'height', isizey)
 			]),
 		_List_Nil);
 	var img2 = A2(
 		elm$html$Html$img,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/car2.jpg')
+				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/car2.jpg'),
+				A2(elm$html$Html$Attributes$style, 'width', isizex),
+				A2(elm$html$Html$Attributes$style, 'height', isizey)
 			]),
 		_List_Nil);
 	var list2 = A2(
@@ -5731,7 +5753,9 @@ var author$project$Subunkai$view = function (model) {
 		elm$html$Html$img,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/car1.jpg')
+				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/car1.jpg'),
+				A2(elm$html$Html$Attributes$style, 'width', isizex),
+				A2(elm$html$Html$Attributes$style, 'height', isizey)
 			]),
 		_List_Nil);
 	var list1 = A2(
