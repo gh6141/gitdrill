@@ -4,15 +4,19 @@ import Browser
 import Draggable
 import Draggable.Events exposing (onClick, onDragBy, onDragStart)
 import Html exposing (Html,button,select)
-import Html.Attributes
+import Html.Attributes exposing(selected,value)
 import Math.Vector2 as Vector2 exposing (Vec2, getX, getY)
 import Svg exposing (..)
 import Svg.Attributes as Attr
 import Svg.Events exposing (onMouseUp,on)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick,on)
 import Svg.Keyed
 import Svg.Lazy exposing (lazy)
 import Json.Decode exposing (..)
+
+import Random
+
+
 
 
 
@@ -97,13 +101,12 @@ addBox position ({ uid, idleBoxes } as group)  =
      { group
         | idleBoxes = makeBox (String.fromInt uid) (Tuple.second position)
           ( case uid of
-            0 -> makeAtomList 3
-            1 ->  makeAtomList 4
-            2 ->   makeAtomList 5
-            3 ->  makeAtomList 6
-            4 ->  makeAtomList 7
-
-            
+            0 -> makeAtomList 4
+            1 -> makeAtomList 5
+            2 -> makeAtomList 6
+            3 -> makeAtomList 7
+            4 -> makeAtomList 8
+            5 -> makeAtomList 9          
             _ -> []
           )  (Tuple.first position)
          :: idleBoxes
@@ -136,8 +139,8 @@ startDragging id ({ idleBoxes, movingBox } as group) =
     }
 
 
-stopDragging : Id -> Wakul -> Wakul -> Wakul -> BoxGroup -> BoxGroup
-stopDragging id wkl1 wkl2 wkl3 group =
+stopDragging : Id -> Wakul ->  BoxGroup -> BoxGroup
+stopDragging id wkl1 group =
    let
                   dfb:Box
                   dfb=Box "0" (Vector2.vec2 10.0 10.0) False [ {gensoname="N"  , size="5" , relposition = (5.0,5.0) }] "N"
@@ -151,7 +154,7 @@ stopDragging id wkl1 wkl2 wkl3 group =
 
    in
     { group
-        | idleBoxes = allBoxes group |> toggleBoxOk id wkl1 wkl2 wkl3 |> toggleBoxOff id wkl1 wkl2 wkl3
+        | idleBoxes = allBoxes group |> toggleBoxOk id wkl1  |> toggleBoxOff id wkl1 
         , movingBox = Nothing
     }
 
@@ -161,8 +164,8 @@ dragActiveBy delta group =
     { group | movingBox = group.movingBox |> Maybe.map (dragBoxBy delta) }
 
 
-toggleBoxOk : Id -> Wakul -> Wakul -> Wakul -> List Box -> List Box
-toggleBoxOk id wkl1 wkl2 wkl3 lbox =
+toggleBoxOk : Id -> Wakul ->  List Box -> List Box
+toggleBoxOk id wkl1 lbox =
     let
               
         possiblyToggleBox box =
@@ -179,10 +182,6 @@ toggleBoxOk id wkl1 wkl2 wkl3 lbox =
              (
               if wkl1.xss<xx && xx<wkl1.xee && wkl1.yss<yy && yy<wkl1.yee && bx.name==wkl1.nm then
                 toggleOk bx
-              else if wkl2.xss<xx && xx<wkl2.xee && wkl2.yss<yy && yy<wkl2.yee && bx.name==wkl2.nm then
-                toggleOk bx
-              else if wkl3.xss<xx && xx<wkl3.xee && wkl3.yss<yy && yy<wkl3.yee && bx.name==wkl3.nm then
-                toggleOk bx
               else
                 bx
              )
@@ -191,8 +190,8 @@ toggleBoxOk id wkl1 wkl2 wkl3 lbox =
     in
      lbox |> List.map possiblyToggleBox 
 
-toggleBoxOff : Id -> Wakul -> Wakul -> Wakul -> List Box -> List Box
-toggleBoxOff id  wkl1 wkl2 wkl3 lbox =
+toggleBoxOff : Id -> Wakul ->  List Box -> List Box
+toggleBoxOff id  wkl1  lbox =
     let
       
         possiblyToggleBox box =
@@ -204,9 +203,8 @@ toggleBoxOff id  wkl1 wkl2 wkl3 lbox =
           in
             if box.id == id then
                (
-              if not (wkl1.xss<xx && xx<wkl1.xee && wkl1.yss<yy && yy<wkl1.yee && bx.name==wkl1.nm) && 
-                 not (wkl2.xss<xx && xx<wkl2.xee && wkl2.yss<yy && yy<wkl2.yee && bx.name==wkl2.nm) &&
-                 not (wkl3.xss<xx && xx<wkl3.xee && wkl3.yss<yy && yy<wkl3.yee && bx.name==wkl3.nm) then
+              if not (wkl1.xss<xx && xx<wkl1.xee && wkl1.yss<yy && yy<wkl1.yee && bx.name==wkl1.nm)  
+                  then
                   toggleOff bx
               else
                 bx
@@ -223,9 +221,8 @@ type alias Model =
     , drag : Draggable.State Id
     , notify1 : String
     , seikai : Bool
-    , start:Int
-
-    }
+    , kazu:Int
+      }
 
 
 type Msg
@@ -235,34 +232,29 @@ type Msg
     | ToggleBoxOk String
     | StopDragging String
     | Next
+    | Newface Int
 
 
-boxPositions : List (String,Vec2)
-boxPositions =
+boxPositions : Int -> List (String,Vec2)
+boxPositions ichi =
     let
         
         indexToPosition = ( \ii -> (
-            case ii of
-             0 -> "O2"
-             1 -> "H2"
-             2 -> "H2"
-             3 -> "H2O"
-             4 -> "H2O"
-             _ -> ""
-            
+             if ii==(ichi-4) then "icchi" else "" 
             , Vector2.vec2  ((toFloat (modBy 2 ii))*350+420)  (toFloat (50+(ii // 2)*120))) )
-           -- toFloat >> (*) 110 >> (+) 60 >> Vector2.vec2 80
+
     in
-    List.range 0 4 |> List.map indexToPosition
+    List.range 0 5 |> List.map indexToPosition
 
 
 init : flags -> ( Model, Cmd Msg )
 init _ =
-    ( { boxGroup = makeBoxGroup boxPositions
+    ( { boxGroup = makeBoxGroup (boxPositions 4)
       , drag = Draggable.init
       , notify1=""
       , seikai = False
-      ,start=3
+      ,kazu=4
+      
       }
     , Cmd.none
     )
@@ -307,9 +299,8 @@ update msg ({ boxGroup,seikai} as model) =
     wkl : Float -> Float -> Float -> Float  -> String -> Wakul 
     wkl x1 x2 y1 y2 st={xss=x1,xee=x2,yss=y1,yee=y2,nm=st}
 
-    wkl1= wkl 41.0 257.0 54.0 338.0 "H2O"
-    wkl2= wkl 480.0 677.0 52.0 359.0 "H2"
-    wkl3= wkl 952.0 1110.0 52.0 349.0 "O2"
+    wkl1= wkl 41.0 257.0 54.0 338.0 "icchi"
+
  
   in
     ( case msg of
@@ -322,7 +313,7 @@ update msg ({ boxGroup,seikai} as model) =
         StopDragging id ->
             ( { model | 
                   notify1= boxGroup |> notify wkl1
-                , boxGroup = boxGroup |> stopDragging id wkl1 wkl2 wkl3       
+                , boxGroup = boxGroup |> stopDragging id wkl1        
                 
                 }, Cmd.none )
 
@@ -336,7 +327,18 @@ update msg ({ boxGroup,seikai} as model) =
             ( {model |
                 seikai = False
 
-            },Cmd.none)    
+            },Random.generate Newface (Random.int 4 9))    
+
+        Newface su ->
+          if model.kazu== su then        
+            ( {model |  kazu =su } , Random.generate Newface (Random.int 4 9))
+           else
+            ( {model |  kazu =su  ,seikai=False
+              ,notify1= boxGroup |> notify wkl1
+             --   , boxGroup = boxGroup |> stopDragging id wkl1   
+             ,boxGroup = makeBoxGroup (boxPositions su)
+            } , Cmd.none )
+  
       )
     
 
@@ -355,22 +357,26 @@ boxSize =
 
 
 view : Model -> Html Msg
-view { boxGroup,notify1,seikai,start} =
+view { boxGroup,notify1,seikai,kazu} =
     Html.div
         []
         [ Html.p
             [ Html.Attributes.style "padding-left" "8px" ]
-            [ Html.text "ただしいものを、わくのなかへ " ,Html.button [ Html.Attributes.style "fontSize" "20px",onClick Next ] [ text "つぎへ" ]  ] 
+            [ Html.button [ Html.Attributes.style "fontSize" "30px",onClick Next ] [ text "つぎへ" ]  
+              ,Html.text "　　　　" 
+              ,select [Html.Attributes.style "font-size" "50px"  ] (List.map (\s -> Html.option [selected (s==(String.fromInt kazu)), Html.Attributes.value s][text s]) (["?","4","5","6","7","8","9"]))
+               ,Html.text "をしかくのなかへ " 
+            ] 
 
-            ,select [] (List.map (\s -> Html.option [selected (s=="3"),value s][text ("　"++s++"　")]) ["?","3","4","5","6","7","8","9","10"])
-         
-       
+            
         , Svg.svg
             [ Attr.style "height: 100vh; width: 100vw; position: fixed;"
             ]
-            [ background
+            [
+                background
             , boxesView boxGroup
-            , waku boxGroup notify1 start
+            , waku boxGroup notify1 
+          
             ]
      
         ]
@@ -443,12 +449,11 @@ background =
         ]
         []
 
-waku : BoxGroup -> String ->  Int -> Svg msg
-waku boxGroup notify1 st=
+waku : BoxGroup -> String  -> Svg msg
+waku boxGroup notify1 =
    Svg.g []
     [
-     moji "50" "50" (String.fromInt st)
-     ,Svg.rect
+      Svg.rect
        [ Attr.x "0"
        , Attr.y "0"
        , Attr.width "350"
@@ -458,9 +463,6 @@ waku boxGroup notify1 st=
        ]
        []
     ,moji "50" "350" notify1
-
-
-
 
     ]
     
