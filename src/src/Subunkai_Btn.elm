@@ -39,7 +39,7 @@ type alias Model =
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",marubatu="　",mon1="2",mon2="1",imgdisp=True,
-     ldisp=True,rdisp=True,imgl=Array.fromList [True,True,True]}
+     ldisp=True,rdisp=True,imgl=Array.fromList (List.repeat 9 True)}
   , Cmd.none
   )
 
@@ -91,7 +91,7 @@ update msg model =
      )
   
    Next ->
-      ( {model |  marubatu="　" ,imgl=Array.fromList [True,True,True]
+      ( {model |  marubatu="　" ,imgl=Array.fromList (List.repeat 9 True)
          
       }
        ,   Random.generate Newface (Random.int 1 ((toint model.init)-1))

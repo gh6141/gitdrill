@@ -4649,6 +4649,28 @@ var elm$core$Array$fromList = function (list) {
 		return A3(elm$core$Array$fromListHelp, list, _List_Nil, 0);
 	}
 };
+var elm$core$Basics$le = _Utils_le;
+var elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2(elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3(elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
@@ -4685,7 +4707,6 @@ var elm$core$Array$initializeHelp = F5(
 			}
 		}
 	});
-var elm$core$Basics$le = _Utils_le;
 var elm$core$Basics$remainderBy = _Basics_remainderBy;
 var elm$core$Array$initialize = F2(
 	function (len, fn) {
@@ -4920,8 +4941,7 @@ var author$project$Subunkai$init = function (_n0) {
 		{
 			imgdisp: true,
 			imgl: elm$core$Array$fromList(
-				_List_fromArray(
-					[true, true, true])),
+				A2(elm$core$List$repeat, 9, true)),
 			init: '3',
 			ldisp: true,
 			marubatu: '　',
@@ -5246,8 +5266,7 @@ var author$project$Subunkai$update = F2(
 						model,
 						{
 							imgl: elm$core$Array$fromList(
-								_List_fromArray(
-									[true, true, true])),
+								A2(elm$core$List$repeat, 9, true)),
 							marubatu: '　'
 						}),
 					A2(
