@@ -36,7 +36,7 @@ type alias Wakumaru =
   {
     id:Int
     ,kazu:Int
-    ,iro:Bool
+    ,iro:String
   }
 
 type alias Model =
@@ -54,12 +54,12 @@ type alias Model =
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",marubatu="　",mon1="1",mon2="2",imgdisp=True,
-     ldisp={id=0,kazu=0,iro=False},rdisp={id=0,kazu=0,iro=False},sentakusil=[{id=0,kazu=1,hyoji=True},{id=1,kazu=2,hyoji=True},{id=2,kazu=3,hyoji=True}]}
+     ldisp={id=0,kazu=0,iro="black"},rdisp={id=0,kazu=0,iro="black"},sentakusil=[{id=0,kazu=1,hyoji=True},{id=1,kazu=2,hyoji=True},{id=2,kazu=3,hyoji=True}]}
   , Cmd.none
   )
 
 type Msg
-    = Change String|  Next | Newface Int | Btn Int 
+    = Change String|  Next | Newface Int | Btn Int | Lft Wakumaru | Rht Wakumaru
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -90,7 +90,7 @@ update msg model =
   
   
    Next ->
-      ( {model |  marubatu="　" ,ldisp={kazu=0,iro=False,id=0},rdisp={kazu=0,iro=False,id=0}
+      ( {model |  marubatu="　" ,ldisp={kazu=0,iro="black",id=0},rdisp={kazu=0,iro="black",id=0}
          
       }
        ,   Random.generate Newface (Random.int 1 ((toint model.init)-1))
@@ -103,7 +103,8 @@ update msg model =
       let
         m1=String.fromInt su 
         m2=String.fromInt ((toint model.init)- su) 
-        sentaku= [{id=0,kazu=toint m1,hyoji=True},{id=1,kazu=toint m2,hyoji=True},{id=2,kazu=(toint m1)+1,hyoji=True},{id=3,kazu=(toint m2)+1,hyoji=True}]
+       -- sentaku= [{id=0,kazu=toint m1,hyoji=True},{id=1,kazu=toint m2,hyoji=True},{id=2,kazu=(toint m1)+1,hyoji=True},{id=3,kazu=(toint m2)+1,hyoji=True}]
+        sentaku= [{id=0,kazu=toint m1,hyoji=True},{id=1,kazu=toint m2,hyoji=True},{id=2,kazu=(toint m1)+1,hyoji=True}]
       in
 
        ( {model |  mon2=m2  ,mon1=m1
@@ -117,29 +118,51 @@ update msg model =
       
       m1= 
        if model.ldisp.kazu==0 then
-        sentakusu
+        {kazu=sentakusu,id=si,iro="#00ff00"}
        else
-        model.ldisp.kazu
+        model.ldisp
       
       
       m2=
         if (model.rdisp.kazu==0 && model.ldisp.kazu/=0) then
-         sentakusu
+         {kazu=sentakusu,id=si,iro="#ff0000"}
         else
-         model.rdisp.kazu
+         model.rdisp
 
       stkl=
        List.map (\xx -> if si==xx.id then {id=xx.id,kazu=xx.kazu,hyoji=False} else {id=xx.id,kazu=xx.kazu,hyoji=xx.hyoji} ) model.sentakusil
 
-
+    
 
     in
-     ( {model | ldisp={kazu=m1,iro=False,id=0}  ,rdisp={kazu=m2,iro=False,id=0}
-                , marubatu=(mb model.init (String.fromInt m1) (String.fromInt m2))
+     ( {model | ldisp=m1 ,rdisp=m2
+                , marubatu=(mb model.init (String.fromInt m1.kazu) (String.fromInt m2.kazu))
                 , sentakusil=stkl
                  } ,Cmd.none)
+   Lft wkm ->
+      let
+        stkl= List.map (\xx -> 
+         if wkm.id==xx.id then 
+          {id=xx.id,kazu=xx.kazu,hyoji=True} 
+         else
+          {id=xx.id,kazu=xx.kazu,hyoji=xx.hyoji} ) model.sentakusil
+
+      in
+      ({model | ldisp={iro="#000000",kazu=0,id=model.ldisp.id} ,marubatu=(mb model.init "0" (String.fromInt model.rdisp.kazu))
+           ,sentakusil=stkl},Cmd.none)
+
+   Rht wkm ->
+       let
+         stkl= List.map (\xx -> 
+          if wkm.id==xx.id then
+           {id=xx.id,kazu=xx.kazu,hyoji=True}
+          else 
+           {id=xx.id,kazu=xx.kazu,hyoji=xx.hyoji} ) model.sentakusil
 
 
+       in
+       ({model |rdisp={iro="#000000",kazu=0,id=model.rdisp.id}, marubatu=(mb model.init "0" (String.fromInt model.ldisp.kazu))
+       , sentakusil=stkl  },Cmd.none)
      
 
 
@@ -160,16 +183,27 @@ view model =
              List.repeat (toint model.init) (td [style "border" "solid thin", style "width" "1em"] [text "　"])    
           else if model.rdisp.kazu==0  then
               List.map (\xx -> 
-                td [style "border" "solid thin", style "width" "1em"] [text (if xx<=model.ldisp.kazu then "●" else "　")]              
+               if xx<=model.ldisp.kazu then
+                td [title (String.fromInt model.ldisp.kazu),onClick (Lft model.ldisp) ,style "border" "solid thin", style "width" "1em",style "color" model.ldisp.iro] [text "●"]  
+               else if xx>model.ldisp.kazu && xx<=model.ldisp.kazu+model.rdisp.kazu then
+                td [title (String.fromInt model.rdisp.kazu),onClick (Rht model.rdisp) ,style "border" "solid thin", style "width" "1em",style "color" model.rdisp.iro] [text "●"]     
+               else
+                td [style "border" "solid thin", style "width" "1em"] [text "　"]           
               ) (List.range 1 (toint model.init))     
           else 
               List.map (\xx ->
                if xx <= (toint model.init)  && xx <= (model.ldisp.kazu+model.rdisp.kazu) then
-                td [style "border" "solid thin", style "width" "1em"] [text "●" ] 
+                if xx<=model.ldisp.kazu then 
+                 td [title (String.fromInt model.ldisp.kazu),onClick (Lft model.ldisp) ,style "border" "solid thin", style "width" "1em",style "color" model.ldisp.iro] [text "●" ] 
+                else
+                 td [title (String.fromInt model.rdisp.kazu),onClick (Rht model.rdisp) ,style "border" "solid thin", style "width" "1em",style "color" model.rdisp.iro] [text "●" ] 
                else if xx <= (model.ldisp.kazu+model.rdisp.kazu) then
-                td [] [text "●" ] 
+                if xx<=model.ldisp.kazu then 
+                 td [title (String.fromInt model.ldisp.kazu),onClick (Lft model.ldisp) ,style "color" model.ldisp.iro] [text "●" ] 
+                else
+                  td [title (String.fromInt model.rdisp.kazu),onClick (Rht model.rdisp) ,style "color" model.rdisp.iro] [text "●" ]
                else
-                td [style "border" "solid thin", style "width" "1em"] [text "　" ]               
+                td [style "border" "solid thin", style "width" "1em",style "color" "#000000"] [text "　" ]               
               ) (List.range 1 (Basics.max (model.ldisp.kazu+model.rdisp.kazu) (toint model.init)))
 
   
@@ -195,7 +229,7 @@ view model =
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
 
-        listmaru = List.map (\xx->tr [] [td [onClick (Btn xx.id),colspan xx.kazu,style "font-size" "40px" ] [text  (String.repeat xx.kazu (if xx.hyoji then "●" else "　")  )]])   model.sentakusil
+        listmaru = List.map (\xx->tr [] [td [title (String.fromInt xx.kazu),onClick (Btn xx.id),colspan xx.kazu,style "font-size" "40px" ] [text  (String.repeat xx.kazu (if xx.hyoji then "●" else "　")  )]])   model.sentakusil
 
         sujibutton=
            table []  listmaru

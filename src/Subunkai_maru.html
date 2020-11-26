@@ -4403,8 +4403,8 @@ function _Browser_load(url)
 		}
 	}));
 }
-var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
+var elm$core$Basics$False = {$: 'False'};
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
 		return true;
@@ -4885,11 +4885,11 @@ var author$project$Subunkai_maru$init = function (_n0) {
 		{
 			imgdisp: true,
 			init: '3',
-			ldisp: {id: 0, iro: false, kazu: 0},
+			ldisp: {id: 0, iro: 'black', kazu: 0},
 			marubatu: '　',
 			mon1: '1',
 			mon2: '2',
-			rdisp: {id: 0, iro: false, kazu: 0},
+			rdisp: {id: 0, iro: 'black', kazu: 0},
 			sentakusil: _List_fromArray(
 				[
 					{hyoji: true, id: 0, kazu: 1},
@@ -5399,9 +5399,9 @@ var author$project$Subunkai_maru$update = F2(
 					_Utils_update(
 						model,
 						{
-							ldisp: {id: 0, iro: false, kazu: 0},
+							ldisp: {id: 0, iro: 'black', kazu: 0},
 							marubatu: '　',
-							rdisp: {id: 0, iro: false, kazu: 0}
+							rdisp: {id: 0, iro: 'black', kazu: 0}
 						}),
 					A2(
 						elm$random$Random$generate,
@@ -5444,11 +5444,6 @@ var author$project$Subunkai_maru$update = F2(
 							hyoji: true,
 							id: 2,
 							kazu: author$project$Subunkai_maru$toint(m1) + 1
-						},
-							{
-							hyoji: true,
-							id: 3,
-							kazu: author$project$Subunkai_maru$toint(m2) + 1
 						}
 						]);
 					return _Utils_Tuple2(
@@ -5464,7 +5459,7 @@ var author$project$Subunkai_maru$update = F2(
 							}),
 						elm$core$Platform$Cmd$none);
 				}
-			default:
+			case 'Btn':
 				var si = msg.a;
 				var stkl = A2(
 					elm$core$List$map,
@@ -5482,19 +5477,61 @@ var author$project$Subunkai_maru$update = F2(
 								return _Utils_eq(xx.id, si);
 							},
 							model.sentakusil))).kazu;
-				var m2 = ((!model.rdisp.kazu) && model.ldisp.kazu) ? sentakusu : model.rdisp.kazu;
-				var m1 = (!model.ldisp.kazu) ? sentakusu : model.ldisp.kazu;
+				var m2 = ((!model.rdisp.kazu) && model.ldisp.kazu) ? {id: si, iro: '#ff0000', kazu: sentakusu} : model.rdisp;
+				var m1 = (!model.ldisp.kazu) ? {id: si, iro: '#00ff00', kazu: sentakusu} : model.ldisp;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							ldisp: {id: 0, iro: false, kazu: m1},
+							ldisp: m1,
 							marubatu: A3(
 								mb,
 								model.init,
-								elm$core$String$fromInt(m1),
-								elm$core$String$fromInt(m2)),
-							rdisp: {id: 0, iro: false, kazu: m2},
+								elm$core$String$fromInt(m1.kazu),
+								elm$core$String$fromInt(m2.kazu)),
+							rdisp: m2,
+							sentakusil: stkl
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'Lft':
+				var wkm = msg.a;
+				var stkl = A2(
+					elm$core$List$map,
+					function (xx) {
+						return _Utils_eq(wkm.id, xx.id) ? {hyoji: true, id: xx.id, kazu: xx.kazu} : {hyoji: xx.hyoji, id: xx.id, kazu: xx.kazu};
+					},
+					model.sentakusil);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							ldisp: {id: model.ldisp.id, iro: '#000000', kazu: 0},
+							marubatu: A3(
+								mb,
+								model.init,
+								'0',
+								elm$core$String$fromInt(model.rdisp.kazu)),
+							sentakusil: stkl
+						}),
+					elm$core$Platform$Cmd$none);
+			default:
+				var wkm = msg.a;
+				var stkl = A2(
+					elm$core$List$map,
+					function (xx) {
+						return _Utils_eq(wkm.id, xx.id) ? {hyoji: true, id: xx.id, kazu: xx.kazu} : {hyoji: xx.hyoji, id: xx.id, kazu: xx.kazu};
+					},
+					model.sentakusil);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							marubatu: A3(
+								mb,
+								model.init,
+								'0',
+								elm$core$String$fromInt(model.ldisp.kazu)),
+							rdisp: {id: model.rdisp.id, iro: '#000000', kazu: 0},
 							sentakusil: stkl
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5506,7 +5543,13 @@ var author$project$Subunkai_maru$Btn = function (a) {
 var author$project$Subunkai_maru$Change = function (a) {
 	return {$: 'Change', a: a};
 };
+var author$project$Subunkai_maru$Lft = function (a) {
+	return {$: 'Lft', a: a};
+};
 var author$project$Subunkai_maru$Next = {$: 'Next'};
+var author$project$Subunkai_maru$Rht = function (a) {
+	return {$: 'Rht', a: a};
+};
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5618,6 +5661,7 @@ var elm$html$Html$Attributes$boolProperty = F2(
 var elm$html$Html$Attributes$selected = elm$html$Html$Attributes$boolProperty('selected');
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$html$Html$Attributes$title = elm$html$Html$Attributes$stringProperty('title');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$html$Html$Events$onClick = function (msg) {
 	return A2(
@@ -5829,40 +5873,33 @@ var author$project$Subunkai_maru$view = function (model) {
 					]))) : ((!model.rdisp.kazu) ? A2(
 			elm$core$List$map,
 			function (xx) {
-				return A2(
+				return (_Utils_cmp(xx, model.ldisp.kazu) < 1) ? A2(
 					elm$html$Html$td,
 					_List_fromArray(
 						[
+							elm$html$Html$Attributes$title(
+							elm$core$String$fromInt(model.ldisp.kazu)),
+							elm$html$Html$Events$onClick(
+							author$project$Subunkai_maru$Lft(model.ldisp)),
 							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
-							A2(elm$html$Html$Attributes$style, 'width', '1em')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							(_Utils_cmp(xx, model.ldisp.kazu) < 1) ? '●' : '　')
-						]));
-			},
-			A2(
-				elm$core$List$range,
-				1,
-				author$project$Subunkai_maru$toint(model.init))) : A2(
-			elm$core$List$map,
-			function (xx) {
-				return ((_Utils_cmp(
-					xx,
-					author$project$Subunkai_maru$toint(model.init)) < 1) && (_Utils_cmp(xx, model.ldisp.kazu + model.rdisp.kazu) < 1)) ? A2(
-					elm$html$Html$td,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
-							A2(elm$html$Html$Attributes$style, 'width', '1em')
+							A2(elm$html$Html$Attributes$style, 'width', '1em'),
+							A2(elm$html$Html$Attributes$style, 'color', model.ldisp.iro)
 						]),
 					_List_fromArray(
 						[
 							elm$html$Html$text('●')
-						])) : ((_Utils_cmp(xx, model.ldisp.kazu + model.rdisp.kazu) < 1) ? A2(
+						])) : (((_Utils_cmp(xx, model.ldisp.kazu) > 0) && (_Utils_cmp(xx, model.ldisp.kazu + model.rdisp.kazu) < 1)) ? A2(
 					elm$html$Html$td,
-					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$title(
+							elm$core$String$fromInt(model.rdisp.kazu)),
+							elm$html$Html$Events$onClick(
+							author$project$Subunkai_maru$Rht(model.rdisp)),
+							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
+							A2(elm$html$Html$Attributes$style, 'width', '1em'),
+							A2(elm$html$Html$Attributes$style, 'color', model.rdisp.iro)
+						]),
 					_List_fromArray(
 						[
 							elm$html$Html$text('●')
@@ -5872,6 +5909,83 @@ var author$project$Subunkai_maru$view = function (model) {
 						[
 							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
 							A2(elm$html$Html$Attributes$style, 'width', '1em')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('　')
+						])));
+			},
+			A2(
+				elm$core$List$range,
+				1,
+				author$project$Subunkai_maru$toint(model.init))) : A2(
+			elm$core$List$map,
+			function (xx) {
+				return ((_Utils_cmp(
+					xx,
+					author$project$Subunkai_maru$toint(model.init)) < 1) && (_Utils_cmp(xx, model.ldisp.kazu + model.rdisp.kazu) < 1)) ? ((_Utils_cmp(xx, model.ldisp.kazu) < 1) ? A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$title(
+							elm$core$String$fromInt(model.ldisp.kazu)),
+							elm$html$Html$Events$onClick(
+							author$project$Subunkai_maru$Lft(model.ldisp)),
+							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
+							A2(elm$html$Html$Attributes$style, 'width', '1em'),
+							A2(elm$html$Html$Attributes$style, 'color', model.ldisp.iro)
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('●')
+						])) : A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$title(
+							elm$core$String$fromInt(model.rdisp.kazu)),
+							elm$html$Html$Events$onClick(
+							author$project$Subunkai_maru$Rht(model.rdisp)),
+							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
+							A2(elm$html$Html$Attributes$style, 'width', '1em'),
+							A2(elm$html$Html$Attributes$style, 'color', model.rdisp.iro)
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('●')
+						]))) : ((_Utils_cmp(xx, model.ldisp.kazu + model.rdisp.kazu) < 1) ? ((_Utils_cmp(xx, model.ldisp.kazu) < 1) ? A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$title(
+							elm$core$String$fromInt(model.ldisp.kazu)),
+							elm$html$Html$Events$onClick(
+							author$project$Subunkai_maru$Lft(model.ldisp)),
+							A2(elm$html$Html$Attributes$style, 'color', model.ldisp.iro)
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('●')
+						])) : A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$title(
+							elm$core$String$fromInt(model.rdisp.kazu)),
+							elm$html$Html$Events$onClick(
+							author$project$Subunkai_maru$Rht(model.rdisp)),
+							A2(elm$html$Html$Attributes$style, 'color', model.rdisp.iro)
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('●')
+						]))) : A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'border', 'solid thin'),
+							A2(elm$html$Html$Attributes$style, 'width', '1em'),
+							A2(elm$html$Html$Attributes$style, 'color', '#000000')
 						]),
 					_List_fromArray(
 						[
@@ -5898,6 +6012,8 @@ var author$project$Subunkai_maru$view = function (model) {
 						elm$html$Html$td,
 						_List_fromArray(
 							[
+								elm$html$Html$Attributes$title(
+								elm$core$String$fromInt(xx.kazu)),
 								elm$html$Html$Events$onClick(
 								author$project$Subunkai_maru$Btn(xx.id)),
 								elm$html$Html$Attributes$colspan(xx.kazu),
