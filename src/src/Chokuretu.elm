@@ -205,7 +205,7 @@ view model =
 
 
         sbutton : Int -> Html Msg
-        sbutton ii = (button [style "font-size" "45px"   ,onClick (Btn ii)] [ text (" "++(btnLabel ii)++" ")])
+        sbutton ii = (button [style "font-size" "40px"   ,onClick (Btn ii)] [ text (" "++(btnLabel ii)++" ")])
 
         sujibutton=
            table []
@@ -249,8 +249,8 @@ view model =
           ]
         ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "360px", style "left" "320px"] [input [ placeholder "式?", value model.siki,style "font-size" "36px",style "color" "red"] [] ]
         ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "530px"][sujibutton]
-        ,div[style "position" "absolute", style "top" "220px", style "left" "480px",style "font-size" "140px",style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text "〇"]
+        ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "600px"][sujibutton]
+        ,div[style "position" "absolute", style "top" "180px", style "left" "480px",style "font-size" "120px",style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text "〇"]
 
         ,div[style "visibility" (if model.rmode/=True then "visible" else "hidden"),style "position" "absolute", style "top" "360px", style "left" "340px"][
           select [style "font-size" "30px" ,onChange handlerl ] (List.map (\s -> Html.option [selected (s==model.left),value s][text ("　"++s++"　")]) sList)        
