@@ -10,6 +10,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Random
 import Json.Decode as Json
+import Task
 
 
 -- MAIN
@@ -25,149 +26,221 @@ main =
 
 -- MODEL
 
+type alias LrIR =
+ {
+  lI:Float
+  ,lR:Float
+  ,rR:Float
+ }
 
+ 
 type alias Model =
-  { denatsu : String
-    ,denryu :String
-    ,teiko :String
-    ,siki :String
-    ,mode :String
-    ,rmode : Bool
-    ,maru : Bool
-    ,left : String
-    ,mid :String
-    ,right :String
-
+  { maru : Bool
+  ,siki:String
+  ,rmode :Bool
+  ,lr :LrIR
+  ,dlr :DispData
+  ,stage :Int
+  ,point :Int
+  ,cursor :String
+  ,seisu :Bool
+  ,plimit:Int
   }
+
+type alias DispData =
+  {
+   lv:String
+   ,rv:String
+   ,lr:String
+   ,rr:String
+   ,li:String
+   ,ri:String
+   ,i:String
+   ,v:String
+  }
+
+type alias OnOff =
+ { 
+    lv:Bool
+   ,rv:Bool
+   ,lr:Bool
+   ,rr:Bool
+   ,li:Bool
+   ,ri:Bool
+   ,i:Bool
+   ,v:Bool
+ }
+
+lflg=    [{lv=True,rv=True,lr=True,rr=True,li=True,ri=True,i=True,v=True}
+           ,{lv=True,rv=False,lr=True,rr=True,li=True,ri=True,i=True,v=True} --1
+           ,{lv=False,rv=False,lr=True,rr=True,li=True,ri=True,i=True,v=True} --2
+           ,{lv=True,rv=True,lr=True,rr=False,li=False,ri=False,i=False,v=True}  --3
+           ,{lv=False,rv=True,lr=False,rr=True,li=False,ri=False,i=False,v=True}  --4
+           ,{lv=True,rv=False,lr=False,rr=True,li=True,ri=True,i=True,v=False}  --5
+           ,{lv=False,rv=False,lr=True,rr=True,li=False,ri=False,i=False,v=True}  --6
+          ]
+l0={lv=True,rv=True,lr=True,rr=True,li=True,ri=True,i=True,v=True}
+
+lrString : LrIR -> Int ->  DispData
+lrString lr stage = {
+   lv=if (Maybe.withDefault l0 (getAt stage lflg)).lv then  String.fromFloat (lr.lI*lr.lR) else ""
+   ,rv=if (Maybe.withDefault l0 (getAt stage lflg)).rv then String.fromFloat (lr.lI*lr.rR) else ""
+   ,lr=if (Maybe.withDefault l0 (getAt stage lflg)).lr then  String.fromFloat lr.lR else ""
+   ,rr=if (Maybe.withDefault l0 (getAt stage lflg)).rr then  String.fromFloat lr.rR else ""
+   ,li=if (Maybe.withDefault l0 (getAt stage lflg)).li then  String.fromFloat lr.lI else ""
+   ,ri=if (Maybe.withDefault l0 (getAt stage lflg)).ri then String.fromFloat lr.lI else ""
+   ,i=if (Maybe.withDefault l0 (getAt stage lflg)).i then String.fromFloat lr.lI else ""
+   ,v=if (Maybe.withDefault l0 (getAt stage lflg)).v then String.fromFloat (lr.lI*(lr.lR+lr.rR)) else ""
+ }
+
+lrHenko : DispData -> String -> String -> Bool -> DispData
+lrHenko dlr slr moji flg =
+  
+ {   --flg:trueのときボタン入力　falseのときキー入力
+   lv=if slr=="lv" then (if flg then dlr.lv++moji else moji) else dlr.lv
+   ,rv=if slr=="rv" then (if flg then dlr.rv++moji else moji) else dlr.rv
+   ,lr=if slr=="lr" then (if flg then dlr.lr++moji else moji) else dlr.lr
+   ,rr=if slr=="rr" then (if flg then dlr.rr++moji else moji) else dlr.rr
+   ,li=if slr=="li" then (if flg then dlr.li++moji else moji) else dlr.li
+   ,ri=if slr=="ri" then (if flg then dlr.ri++moji else moji) else dlr.ri
+   ,i=if slr=="i" then (if flg then dlr.i++moji else moji) else dlr.i
+   ,v=if slr=="v" then (if flg then dlr.v++moji else moji) else dlr.v
+ }
+
+ 
+   
+
+
+
+seikaiHanbetu : LrIR -> DispData -> Bool
+seikaiHanbetu lr dlr = 
+    (dlr.lv==String.fromFloat (lr.lI*lr.lR)) 
+   &&(dlr.rv==String.fromFloat (lr.lI*lr.rR))
+   &&(dlr.lr==String.fromFloat lr.lR)
+   &&(dlr.rr==String.fromFloat lr.rR)
+   &&(dlr.li==String.fromFloat lr.lI)
+   &&(dlr.ri==String.fromFloat lr.lI)
+   &&(dlr.i==String.fromFloat lr.lI)
+   &&(dlr.v==String.fromFloat (lr.lI*(lr.lR+lr.rR)))
+
 
 
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { denatsu = "10",denryu ="5",teiko="2" ,siki="",mode="V",rmode=False,maru=False,left="",mid="",right=""} , Cmd.none )
+  ( { maru=False,siki="",rmode=True,lr={lI=0,lR=0,rR=0}
+  ,dlr={ lv="",rv="",lr="",rr="" ,li="",ri="" ,i="",v=""}
+  ,stage=1,point=0,cursor="",seisu=True,plimit=3
+  } , Cmd.none )
 
 
 
 -- UPDATE
 
+ 
+
 
 type Msg
-  = Change String |ChangeS String String  | NewAns (Int,Int) | Btn Int |Mode String 
-
+  = Change String | NewAns LrIR | Btn String | Tasikame |CTlr String| CTli String| CTlv String
+   | CTrr String|CTri String |CTrv String |CTi String |CTv String | Seisu Bool
+   | CTc String | CTii (String,String) |CTiiB (String,String)
 btnLabel : Int -> String
 btnLabel xi = case xi of
-               10 -> "×"
-               11 -> "÷"
-               12 -> "="
+               12 -> "."
                13 -> "C"
                _  -> String.fromInt xi
-
-type alias SikiNaiyo =
- {
-  x:Int
-  ,enzan :String
-  ,y :Int
- }
-
-sikiParse : String -> SikiNaiyo
-sikiParse txt =
-  let 
-
-    tmpnaiyo enz =
-       let 
-          lst=String.split enz txt
-          tpl=case lst of 
-               xs :: ys ::[] -> Tuple.pair (toint xs) (toint ys)
-               _ -> Tuple.pair 0 0
-    
-       in
-         {x=  Tuple.first tpl
-          ,enzan=enz
-          ,y = Tuple.second tpl
-        }
-
-  in
-    if (String.contains "×" txt)   then
-      tmpnaiyo "×"      
-    else if  (String.contains "÷" txt) then
-      tmpnaiyo "÷"
-    else
-     {x=0,enzan="",y=0}
-
-kotae snaiyo =
-  if snaiyo.enzan=="×" then
-    String.fromInt (snaiyo.x * snaiyo.y)
-  else if snaiyo.enzan=="÷" then
-    String.fromInt (snaiyo.x // snaiyo.y)
-  else
-   "0"
- 
 
 
 
 update : Msg -> Model -> ( Model,Cmd Msg)
 update msg model =
- let
-   hanbetu snum =
-      if model.mode=="V" then
-         if snum==model.denatsu then True else False
-      else if model.mode=="I" then
-         if snum==model.denryu then True else False
-      else
-         if snum==model.teiko then True else False 
+  let
+   lrhenkan :Int -> Int -> Int ->  LrIR
+   lrhenkan lIx lRx rRx = 
+    let 
+      flix=toFloat lIx
+      flrx=toFloat lRx
+      frrx=toFloat rRx
+    in   
+    {
+     lI= if model.seisu then flix else flix/10
+     ,lR= if model.seisu then flrx else flrx*10.0
+     ,rR= if model.seisu then frrx else frrx*10.0
+     }
 
+   ansGenerator : Random.Generator LrIR
+   ansGenerator = Random.map3  lrhenkan (Random.int 2 5) (Random.int 2 5) (Random.int 2 5)
 
- in
-
-
+  in
 
   case msg of
     Change newContent ->
-      ({ model | maru=False ,left="",mid="",right=""}, Random.generate NewAns ansGenerator)
-    ChangeS snum lmr->
-      let
-        sikip l m r s= case lmr of
-          "L" -> s++m++r
-          "M" -> l++s++r
-          "R" -> l++m++s
-          _ -> ""
-
+      let 
+         flgp=model.point>=model.plimit
       in
-       ({ model |
-       left= if lmr=="L" then snum else model.left
-       ,mid= if lmr=="M" then snum else model.mid
-       ,right= if lmr=="R" then snum else model.right
-       ,maru=hanbetu(kotae(sikiParse (sikip model.left model.mid model.right snum)))
-        }, Cmd.none)
- 
-    NewAns (x,y) ->
-      ( {model | siki="",denatsu=String.fromInt x,denryu=String.fromInt y ,teiko=String.fromInt (x//y)
-       ,mode=
-        case (modBy 3 x) of
-          0 -> "I"
-          1 -> "R"
-          2 -> "V"
-          _ -> "V"       
-       }  
-      , if (modBy y x) ==0 && not (x//y ==1) then  Cmd.none else ( Random.generate NewAns ansGenerator) )
-    Btn ii ->
-     if ii==12 then
-      ({model | siki=model.siki++(btnLabel ii)++kotae(sikiParse model.siki) ,maru=hanbetu(kotae(sikiParse model.siki))  },Cmd.none) 
+      ({ model | maru=False
+      ,stage=if flgp then model.stage+1 else model.stage
+      ,point=if flgp then 0 else model.point
+      }, Random.generate NewAns ansGenerator)
+                                    --generate : (a -> msg) -> Generator a -> Cmd msg
+    NewAns lr ->
+      ( {model | maru=False,lr=lr,dlr=(lrString lr model.stage)},Cmd.none )
+    Btn txt ->
+     if txt=="C" then
+      if model.cursor=="li" || model.cursor=="ri" || model.cursor=="i" then
+             (model,
+       Cmd.batch [Task.perform CTiiB <| Task.succeed ("ri","") 
+       , Task.perform CTiiB <| Task.succeed ("li","")
+       , Task.perform CTiiB <| Task.succeed ("i","")]      
+       ) 
+      else
+       ({model | dlr= lrHenko model.dlr model.cursor  "" False},
+       Cmd.none
+       ) 
+     else if model.cursor=="li" || model.cursor=="ri" || model.cursor=="i" then
+      ({model | cursor=model.cursor},
+      Cmd.batch [Task.perform CTiiB <| Task.succeed ("ri",txt) 
+      , Task.perform CTiiB <| Task.succeed ("li",txt)
+      , Task.perform CTiiB <| Task.succeed ("i",txt)]      
+      ) 
      else
-      ({model | siki=if ii/=13 then model.siki++(btnLabel ii) else "" },Cmd.none)
-    Mode md ->
-     if md=="FREE" then 
-       ( {model | rmode=True}   ,   Cmd.none )
-     else
-     ( {model | rmode=False}   ,  Cmd.none )
+      ({model | dlr= lrHenko model.dlr model.cursor  txt True},
+      Cmd.none      
+      ) --input のときはTrue
+    Tasikame ->
+      ({model | maru=(seikaiHanbetu model.lr model.dlr )
+      ,point=if (seikaiHanbetu model.lr model.dlr ) then model.point+1 else 0
+      },Cmd.none)
+    CTlr txt ->
+      ({model| dlr= lrHenko model.dlr "lr" txt False },Cmd.none)  --buttonのときは　False
+    CTli txt ->
+      ({model| dlr= lrHenko model.dlr "li" txt False },
+      Cmd.batch [Task.perform CTii <| Task.succeed ("ri",txt) 
+      , Task.perform CTii <| Task.succeed ("i",txt)]) --batchで電流は同時に変更
+    CTlv txt ->
+      ({model| dlr= lrHenko model.dlr "lv" txt False },Cmd.none)
+    CTrr txt ->
+      ({model| dlr= lrHenko model.dlr "rr" txt  False},Cmd.none)
+    CTri txt ->
+      ({model| dlr= lrHenko model.dlr "ri" txt False },Cmd.none)
+    CTrv txt ->
+      ({model| dlr= lrHenko model.dlr "rv" txt  False},Cmd.none)
+    CTv txt ->
+      ({model| dlr= lrHenko model.dlr "v" txt  False},Cmd.none)
+    CTi txt ->
+      ({model| dlr= lrHenko model.dlr "i" txt False  },Cmd.none)
+    CTc lvtxt ->
+      ({model|cursor=lvtxt},Cmd.none) 
+    CTii (txt,lt) ->
+      ({model|dlr=lrHenko model.dlr txt lt False},Cmd.none)
+    CTiiB (txt,lt) ->
+       --Cのとき　電流3か所けすため lt/=""
+      ({model|dlr=lrHenko model.dlr txt lt (lt/="")},Cmd.none)
+    
+    Seisu bl->
+      ({model | seisu=bl},Cmd.none)
+
+    
  
-
-ansGenerator : Random.Generator (Int, Int)
-ansGenerator =
-  Random.map2 Tuple.pair
-    (Random.int 2 30)
-    (Random.int 2 30)
-
-
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
@@ -178,13 +251,6 @@ subscriptions model =
 
 
 
-onChange : (String -> msg) -> Attribute msg
-onChange handler =
-    on "change" (Json.map handler Html.Events.targetValue)
-
-handlerl selectedText = ChangeS selectedText "L"
-handlerm selectedText = ChangeS selectedText "M"
-handlerr selectedText = ChangeS selectedText "R"
 
 -- VIEW
 
@@ -195,17 +261,9 @@ view model =
   let
 
 
-     
-
-        sList = case model.mode of
-          "I" -> ["",model.denatsu,model.teiko]
-          "V" -> ["",model.denryu,model.teiko]
-          "R" -> ["",model.denryu,model.denatsu]
-          _ -> ["","",""]
-
 
         sbutton : Int -> Html Msg
-        sbutton ii = (button [style "font-size" "40px"   ,onClick (Btn ii)] [ text (" "++(btnLabel ii)++" ")])
+        sbutton ii = (button [style "font-size" "40px"   ,onClick (Btn (btnLabel ii))] [ text (" "++(btnLabel ii)++" ")])
 
         sujibutton=
            table []
@@ -224,13 +282,12 @@ view model =
                td [] [sbutton 1]
                ,td [] [sbutton 2]
                ,td [] [sbutton 3]
-               ,td [] [sbutton 13]
+               
              ]
              ,tr [] [
                td [] [sbutton 0]
-               ,td [] [sbutton 10]
-               ,td [] [sbutton 11]
                ,td [] [sbutton 12]
+               ,td [] [sbutton 13]
              ]
             
             ]
@@ -238,25 +295,42 @@ view model =
   in
 
   div [style "position" "relative"]
-    [     Html.img [src "py/teiko_kairo.jpg"][]
-        , div [style "position" "absolute", style "top" "100px", style "left" "210px",style "font-size" "30px",style "color" "red"] [text (if model.mode=="V" then "?" else model.denatsu)]
-        , div [style "position" "absolute", style "top" "260px", style "left" "430px",style "font-size" "30px",style "color" "red"] [text (if model.mode=="I" then "?" else model.denryu)]
-        , div [style "position" "absolute", style "top" "300px", style "left" "190px",style "font-size" "30px",style "color" "red"] [text (if model.mode=="R" then "?" else model.teiko)]
+    [     Html.img [src "py/chokuretu.jpg"][]
+        --left
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "85px"] [input [ onClick (CTc "lv"), onInput CTlv,size 2,placeholder "電圧?", style "font-size" "18px",style "background-color" "coral",value model.dlr.lv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "85px"] [input [ onClick (CTc "lr"), onInput CTlr,size 2,placeholder "抵抗?", style "font-size" "18px",style "background-color" "khaki",value  model.dlr.lr] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "85px"] [input [ onClick (CTc "li"),  onInput CTli,size 2,placeholder "電流?", style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.li] [] ]
+        --right
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "218px"] [input [  onClick (CTc "rv"), onInput CTrv,size 2,placeholder "電圧?", style "font-size" "18px",style "background-color" "coral",value model.dlr.rv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "218px"] [input [  onClick (CTc "rr"), onInput CTrr,size 2,placeholder "抵抗?", style "font-size" "18px",style "background-color" "khaki",value  model.dlr.rr] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "218px"] [input [  onClick (CTc "ri"), onInput CTri,size 2,placeholder "電流?", style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
+        --all
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "38px"] [input [onClick (CTc "i"),   onInput CTi,size 2,placeholder "電流?", style "font-size" "18px",style "background-color" "lightblue",value model.dlr.i] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "160px"] [input [onClick (CTc "v"),   onInput CTv,size 2,placeholder "電圧?", style "font-size" "18px",style "background-color" "coral",value model.dlr.v] [] ]
 
-        ,div[style "position" "absolute", style "top" "380px", style "left" "50px"][
-          button [ style "font-size" "12px",onClick (Mode "FREE")][text "自由入力"]
-         , button [ style "font-size" "12px",onClick (Mode "SELECT")][text "選択入力"]
-          ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "360px", style "left" "320px"] [input [ placeholder "式?", value model.siki,style "font-size" "36px",style "color" "red"] [] ]
+        --stage
+        ,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
+
         ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "600px"][sujibutton]
-        ,div[style "position" "absolute", style "top" "180px", style "left" "480px",style "font-size" "120px",style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text "〇"]
+        ,div[style "position" "absolute", style "top" "100px", style "left" "400px"][button [ style "font-size" "24px",onClick Tasikame][text "たしかめ"]]
+        ,div[style "position" "absolute", style "top" "170px", style "left" "400px"][button [ style "font-size" "12px",onClick (Seisu True)][text "整数"]]
+        ,div[style "position" "absolute", style "top" "170px", style "left" "450px"][button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]]
+        
+        ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "520px"][sujibutton]
+        ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "font-size" (if (model.stage==6 && model.point>=model.plimit ) then "30px" else "120px"),style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text (if model.stage==6 && model.point>=model.plimit then "合格！!すばらしい" else "〇")]
+        --point
+        ,div[style "position" "absolute", style "top" "250px", style "left" "40px",style "font-size" "20px"][text (String.repeat model.point "〇")]
 
-        ,div[style "visibility" (if model.rmode/=True then "visible" else "hidden"),style "position" "absolute", style "top" "360px", style "left" "340px"][
-          select [style "font-size" "30px" ,onChange handlerl ] (List.map (\s -> Html.option [selected (s==model.left),value s][text ("　"++s++"　")]) sList)        
-          ,select [style "font-size" "30px" ,onChange handlerm ] (List.map (\s -> Html.option [selected (s==model.mid),value s][text ("　"++s++"　")]) ["","×","÷"])        
-          ,select [style "font-size" "30px" ,onChange handlerr ] (List.map (\s -> Html.option [selected (s==model.right),value s][text ("　"++s++"　")]) sList)
-          ,span [style "font-size" "50px" ][text (if model.maru==True then "="++(kotae (sikiParse (model.left++model.mid++model.right))) else "")]
-        ]
+   
       
     ]
+
+    --     ****************:
+    
+getAt : Int -> List a -> Maybe a
+getAt idx xs =
+    if idx < 0 then
+        Nothing
+
+    else
+        List.head <| List.drop idx xs
