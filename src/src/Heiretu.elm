@@ -1,8 +1,4 @@
--- A text input for reversing text. Very useful!
---
--- Read how it works:
---   https://guide.elm-lang.org/architecture/text_fields.html
---
+
 
 import Browser
 import Html exposing (..)
@@ -45,7 +41,6 @@ type alias Model =
   ,cursor :String
   ,seisu :Bool
   ,plimit:Int
-  ,ilist:List String
   }
 
 type alias DispData =
@@ -71,15 +66,6 @@ type alias OnOff =
    ,i:Bool
    ,v:Bool
  }
-
-ilst=[
-  ["rv"] --1
-  ,["lv","rv"] --2
-  ,["li","rr"] --3
-  ,["ri","lv","lr"] --4
-  ,["rv","v","lr","i"] --5
-  ,["i","lv","rv"] --6
- ]
 
 lflg=    [{lv=True,rv=True,lr=True,rr=True,li=True,ri=True,i=True,v=True}
            ,{lv=True,rv=False,lr=True,rr=True,li=True,ri=True,i=True,v=True} --1
@@ -139,7 +125,7 @@ init : () -> (Model,Cmd Msg)
 init _ =
   ( { maru=False,siki="",rmode=True,lr={lI=0,lR=0,rR=0}
   ,dlr={ lv="",rv="",lr="",rr="" ,li="",ri="" ,i="",v=""}
-  ,stage=1,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 1 ilst)
+  ,stage=1,point=0,cursor="",seisu=True,plimit=3
   } , Cmd.none )
 
 
@@ -186,14 +172,10 @@ update msg model =
     Change newContent ->
       let 
          flgp=model.point>=model.plimit
-         stagex=if flgp then model.stage+1 else model.stage
-         ilistx=lgetAt stagex ilst
       in
       ({ model | maru=False
-      ,stage=stagex
+      ,stage=if flgp then model.stage+1 else model.stage
       ,point=if flgp then 0 else model.point
-      ,ilist=ilistx
-      ,cursor=sgetAt 1 ilistx
       }, Random.generate NewAns ansGenerator)
                                     --generate : (a -> msg) -> Generator a -> Cmd msg
     NewAns lr ->
@@ -311,16 +293,16 @@ view model =
   div [style "position" "relative"]
     [     Html.img [src "py/chokuretu.jpg"][]
         --left
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "85px"] [input [ onClick (CTc "lv"), onInput CTlv,size 2,placeholder (if model.cursor=="lv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.lv] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "85px"] [input [ onClick (CTc "lr"), onInput CTlr,size 2,placeholder (if model.cursor=="lr" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.lr] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "85px"] [input [ onClick (CTc "li"),  onInput CTli,size 2,placeholder (if model.cursor=="li" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.li] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "85px"] [input [ onClick (CTc "lv"), onInput CTlv,size 2,placeholder "電圧?", style "font-size" "18px",style "background-color" "coral",value model.dlr.lv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "85px"] [input [ onClick (CTc "lr"), onInput CTlr,size 2,placeholder "抵抗?", style "font-size" "18px",style "background-color" "khaki",value  model.dlr.lr] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "85px"] [input [ onClick (CTc "li"),  onInput CTli,size 2,placeholder "電流?", style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.li] [] ]
         --right
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "218px"] [input [  onClick (CTc "rv"), onInput CTrv,size 2,placeholder (if model.cursor=="rv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.rv] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "218px"] [input [  onClick (CTc "rr"), onInput CTrr,size 2,placeholder (if model.cursor=="rr" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.rr] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "218px"] [input [  onClick (CTc "ri"), onInput CTri,size 2,placeholder (if model.cursor=="ri" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "218px"] [input [  onClick (CTc "rv"), onInput CTrv,size 2,placeholder "電圧?", style "font-size" "18px",style "background-color" "coral",value model.dlr.rv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "218px"] [input [  onClick (CTc "rr"), onInput CTrr,size 2,placeholder "抵抗?", style "font-size" "18px",style "background-color" "khaki",value  model.dlr.rr] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "218px"] [input [  onClick (CTc "ri"), onInput CTri,size 2,placeholder "電流?", style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
         --all
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "38px"] [input [onClick (CTc "i"),   onInput CTi,size 2,placeholder (if model.cursor=="i" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value model.dlr.i] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "160px"] [input [onClick (CTc "v"),   onInput CTv,size 2,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.v] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "38px"] [input [onClick (CTc "i"),   onInput CTi,size 2,placeholder "電流?", style "font-size" "18px",style "background-color" "lightblue",value model.dlr.i] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "160px"] [input [onClick (CTc "v"),   onInput CTv,size 2,placeholder "電圧?", style "font-size" "18px",style "background-color" "coral",value model.dlr.v] [] ]
 
         --stage
         ,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
@@ -340,9 +322,7 @@ view model =
     ]
 
     --     ****************:
-lgetAt idx lst =Maybe.withDefault [] (getAt idx lst) 
-sgetAt idx lst =Maybe.withDefault "" (getAt idx lst)
-
+    
 getAt : Int -> List a -> Maybe a
 getAt idx xs =
     if idx < 0 then
