@@ -46,6 +46,7 @@ type alias Model =
   ,seisu :Bool
   ,plimit:Int
   ,ilist:List String
+  ,cursori:Int
   }
 
 type alias DispData =
@@ -139,7 +140,7 @@ init : () -> (Model,Cmd Msg)
 init _ =
   ( { maru=False,siki="",rmode=True,lr={lI=0,lR=0,rR=0}
   ,dlr={ lv="",rv="",lr="",rr="" ,li="",ri="" ,i="",v=""}
-  ,stage=1,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 2 ilst)
+  ,stage=1,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 2 ilst),cursori=0
   } , Cmd.none )
 
 
@@ -202,11 +203,27 @@ update msg model =
       ( {model | maru=False,lr=lr
       ,dlr=(lrString lr model.stage)
       ,cursor=sgetAt 0 model.ilist
+      ,cursori=0
       --,dlr= lrHenko model.dlr "ri" (sgetAt 0 model.ilist) False
       --,cursor="rv"
       
       },Cmd.none )
     Btn txt ->
+     let
+        ci = 
+         case model.cursor of
+           "li" -> ( if (model.dlr.li++txt==String.fromFloat model.lr.lI) then model.cursori+1 else model.cursori )
+           "lv" -> ( if (model.dlr.lv++txt==String.fromFloat (model.lr.lI*model.lr.lR)) then model.cursori+1 else model.cursori )
+           "lr" -> ( if (model.dlr.lr++txt==String.fromFloat model.lr.lR) then model.cursori+1 else model.cursori )
+           "ri" -> ( if (model.dlr.ri++txt==String.fromFloat model.lr.lI) then model.cursori+1 else model.cursori )
+           "rv" -> ( if (model.dlr.rv++txt==String.fromFloat (model.lr.lI*model.lr.rR)) then model.cursori+1 else model.cursori )
+           "rr" -> ( if (model.dlr.rr++txt==String.fromFloat model.lr.rR) then model.cursori+1 else model.cursori )
+           "i"  -> ( if (model.dlr.i++txt==String.fromFloat model.lr.lI) then model.cursori+1 else model.cursori )
+           "v"  -> ( if (model.dlr.v++txt==String.fromFloat (model.lr.lI*(model.lr.lR+model.lr.rR))) then model.cursori+1 else model.cursori )
+           _   -> model.cursori
+     in
+
+
      if txt=="C" then
       if model.cursor=="li" || model.cursor=="ri" || model.cursor=="i" then
              (model,
@@ -219,13 +236,18 @@ update msg model =
        Cmd.none
        ) 
      else if model.cursor=="li" || model.cursor=="ri" || model.cursor=="i" then
-      ({model | cursor=model.cursor},
+      ({model | cursor=sgetAt ci model.ilist
+        ,cursori=ci
+      },
       Cmd.batch [Task.perform CTiiB <| Task.succeed ("ri",txt) 
       , Task.perform CTiiB <| Task.succeed ("li",txt)
       , Task.perform CTiiB <| Task.succeed ("i",txt)]      
       ) 
      else
-      ({model | dlr= lrHenko model.dlr model.cursor  txt True},
+      ({model | dlr= lrHenko model.dlr model.cursor  txt True
+              ,cursor=sgetAt ci model.ilist
+        ,cursori=ci
+      },
       Cmd.none      
       ) --input のときはTrue
     Tasikame ->
@@ -233,27 +255,41 @@ update msg model =
       ,point=if (seikaiHanbetu model.lr model.dlr ) then model.point+1 else 0
       },Cmd.none)
     CTlr txt ->
-      ({model| dlr= lrHenko model.dlr "lr" txt False },Cmd.none)  --buttonのときは　False
+       ({model| dlr= lrHenko model.dlr "lr" txt False
+       },Cmd.none)  --buttonのときは　False
     CTli txt ->
-      ({model| dlr= lrHenko model.dlr "li" txt False },
+       ({model| dlr= lrHenko model.dlr "li" txt False      
+        },
       Cmd.batch [Task.perform CTii <| Task.succeed ("ri",txt) 
       , Task.perform CTii <| Task.succeed ("i",txt)]) --batchで電流は同時に変更
     CTlv txt ->
-      ({model| dlr= lrHenko model.dlr "lv" txt False },Cmd.none)
+       ({model| dlr= lrHenko model.dlr "lv" txt False       
+            },Cmd.none)
     CTrr txt ->
-      ({model| dlr= lrHenko model.dlr "rr" txt  False},Cmd.none)
+       ({model| dlr= lrHenko model.dlr "rr" txt  False      
+        },Cmd.none)
     CTri txt ->
-      ({model| dlr= lrHenko model.dlr "ri" txt False },Cmd.none)
+        ({model| dlr= lrHenko model.dlr "ri" txt False 
+
+      },Cmd.none)
     CTrv txt ->
-      ({model| dlr= lrHenko model.dlr "rv" txt  False},Cmd.none)
+
+      ({model| dlr= lrHenko model.dlr "rv" txt  False
+      },Cmd.none)
     CTv txt ->
-      ({model| dlr= lrHenko model.dlr "v" txt  False},Cmd.none)
+      ({model| dlr= lrHenko model.dlr "v" txt  False
+      },Cmd.none)
     CTi txt ->
-      ({model| dlr= lrHenko model.dlr "i" txt False  },Cmd.none)
+
+      ({model| dlr= lrHenko model.dlr "i" txt False 
+       },Cmd.none)
     CTc lvtxt ->
       ({model|cursor=lvtxt},Cmd.none) 
     CTii (txt,lt) ->
-      ({model|dlr=lrHenko model.dlr txt lt False},Cmd.none)
+
+      ({model|dlr=lrHenko model.dlr txt lt False
+
+      },Cmd.none)
     CTiiB (txt,lt) ->
        --Cのとき　電流3か所けすため lt/=""
       ({model|dlr=lrHenko model.dlr txt lt (lt/="")},Cmd.none)
