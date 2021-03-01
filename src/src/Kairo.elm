@@ -37,13 +37,14 @@ type alias Model =
     ,left : String
     ,mid :String
     ,right :String
+    ,seisu :Bool
 
   }
 
 
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { denatsu = "10",denryu ="5",teiko="2" ,siki="",mode="V",rmode=False,maru=False,left="",mid="",right=""} , Cmd.none )
+  ( { denatsu = "10",denryu ="5",teiko="2" ,siki="",mode="V",rmode=False,maru=False,left="",mid="",right="",seisu=True} , Cmd.none )
 
 
 
@@ -51,7 +52,7 @@ init _ =
 
 
 type Msg
-  = Change String |ChangeS String String  | NewAns (Int,Int) | Btn Int |Mode String 
+  = Change String |ChangeS String String  | NewAns (Int,Int) | Btn Int |Mode String |Seisu Bool
 
 btnLabel : Int -> String
 btnLabel xi = case xi of
@@ -59,13 +60,14 @@ btnLabel xi = case xi of
                11 -> "÷"
                12 -> "="
                13 -> "C"
+               14 -> "."
                _  -> String.fromInt xi
 
 type alias SikiNaiyo =
  {
-  x:Int
+  x:Float
   ,enzan :String
-  ,y :Int
+  ,y :Float
  }
 
 sikiParse : String -> SikiNaiyo
@@ -76,7 +78,7 @@ sikiParse txt =
        let 
           lst=String.split enz txt
           tpl=case lst of 
-               xs :: ys ::[] -> Tuple.pair (toint xs) (toint ys)
+               xs :: ys ::[] -> Tuple.pair (tofloat xs) (tofloat ys)
                _ -> Tuple.pair 0 0
     
        in
@@ -95,9 +97,9 @@ sikiParse txt =
 
 kotae snaiyo =
   if snaiyo.enzan=="×" then
-    String.fromInt (snaiyo.x * snaiyo.y)
+    String.fromFloat (snaiyo.x * snaiyo.y)
   else if snaiyo.enzan=="÷" then
-    String.fromInt (snaiyo.x // snaiyo.y)
+    String.fromFloat (snaiyo.x / snaiyo.y)
   else
    "0"
  
@@ -140,7 +142,12 @@ update msg model =
         }, Cmd.none)
  
     NewAns (x,y) ->
-      ( {model | siki="",denatsu=String.fromInt x,denryu=String.fromInt y ,teiko=String.fromInt (x//y)
+     let
+       xx=tofloat (String.fromInt x)
+       yy=tofloat (String.fromInt y)
+       xy=tofloat (String.fromInt (x//y))
+     in
+      ( {model | siki="",denatsu=(String.fromFloat xx),denryu=(String.fromFloat (if model.seisu then yy else yy/10)) ,teiko=(String.fromFloat (if model.seisu then xy else 10*xy))
        ,mode=
         case (modBy 3 x) of
           0 -> "I"
@@ -159,6 +166,11 @@ update msg model =
        ( {model | rmode=True}   ,   Cmd.none )
      else
      ( {model | rmode=False}   ,  Cmd.none )
+    Seisu bl ->
+     if bl then 
+      ({model|seisu=True},Cmd.none)
+     else
+      ({model|seisu=False},Cmd.none)
  
 
 ansGenerator : Random.Generator (Int, Int)
@@ -171,6 +183,8 @@ ansGenerator =
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+
+tofloat st=  Maybe.withDefault 0 (String.toFloat st) 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -219,6 +233,7 @@ view model =
                td [] [sbutton 4]
                ,td [] [sbutton 5]
                ,td [] [sbutton 6]
+               ,td [] [sbutton 14]
              ]
              ,tr [] [
                td [] [sbutton 1]
@@ -246,6 +261,8 @@ view model =
         ,div[style "position" "absolute", style "top" "380px", style "left" "50px"][
           button [ style "font-size" "12px",onClick (Mode "FREE")][text "自由入力"]
          , button [ style "font-size" "12px",onClick (Mode "SELECT")][text "選択入力"]
+         ,button [ style "font-size" "12px",onClick (Seisu True)][text "整数"]
+         , button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]
           ]
         ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "360px", style "left" "320px"] [input [ placeholder "式?", value model.siki,style "font-size" "36px",style "color" "red"] [] ]
         ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
