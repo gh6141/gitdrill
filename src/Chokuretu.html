@@ -4951,7 +4951,7 @@ var author$project$Main$init = function (_n0) {
 		{
 			cursor: '',
 			dlr: {i: '', li: '', lr: '', lv: '', ri: '', rr: '', rv: '', v: ''},
-			ilist: A2(author$project$Main$lgetAt, 0, author$project$Main$ilst),
+			ilist: A2(author$project$Main$lgetAt, 2, author$project$Main$ilst),
 			lr: {lI: 0, lR: 0, rR: 0},
 			maru: false,
 			plimit: 3,
@@ -5413,12 +5413,11 @@ var author$project$Main$update = F2(
 				var newContent = msg.a;
 				var flgp = _Utils_cmp(model.point, model.plimit) > -1;
 				var stagex = flgp ? (model.stage + 1) : model.stage;
-				var ilistx = A2(author$project$Main$lgetAt, stagex, author$project$Main$ilst);
+				var ilistx = A2(author$project$Main$lgetAt, stagex - 1, author$project$Main$ilst);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							cursor: A2(author$project$Main$sgetAt, 0, ilistx),
 							ilist: ilistx,
 							maru: false,
 							point: flgp ? 0 : model.point,
@@ -5431,6 +5430,7 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
+							cursor: A2(author$project$Main$sgetAt, 0, model.ilist),
 							dlr: A2(author$project$Main$lrString, lr, model.stage),
 							lr: lr,
 							maru: false

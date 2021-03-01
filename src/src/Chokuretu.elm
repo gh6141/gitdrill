@@ -139,7 +139,7 @@ init : () -> (Model,Cmd Msg)
 init _ =
   ( { maru=False,siki="",rmode=True,lr={lI=0,lR=0,rR=0}
   ,dlr={ lv="",rv="",lr="",rr="" ,li="",ri="" ,i="",v=""}
-  ,stage=1,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 1 ilst)
+  ,stage=1,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 2 ilst)
   } , Cmd.none )
 
 
@@ -187,17 +187,25 @@ update msg model =
       let 
          flgp=model.point>=model.plimit
          stagex=if flgp then model.stage+1 else model.stage
-         ilistx=lgetAt stagex ilst
+         ilistx=lgetAt (stagex-1) ilst
       in
       ({ model | maru=False
       ,stage=stagex
       ,point=if flgp then 0 else model.point
       ,ilist=ilistx
-      ,cursor=sgetAt 1 ilistx
+      
+      --,cursor="lv"
       }, Random.generate NewAns ansGenerator)
                                     --generate : (a -> msg) -> Generator a -> Cmd msg
     NewAns lr ->
-      ( {model | maru=False,lr=lr,dlr=(lrString lr model.stage)},Cmd.none )
+
+      ( {model | maru=False,lr=lr
+      ,dlr=(lrString lr model.stage)
+      ,cursor=sgetAt 0 model.ilist
+      --,dlr= lrHenko model.dlr "ri" (sgetAt 0 model.ilist) False
+      --,cursor="rv"
+      
+      },Cmd.none )
     Btn txt ->
      if txt=="C" then
       if model.cursor=="li" || model.cursor=="ri" || model.cursor=="i" then
@@ -340,7 +348,9 @@ view model =
     ]
 
     --     ****************:
+lgetAt : Int -> List (List String) -> List String
 lgetAt idx lst =Maybe.withDefault [] (getAt idx lst) 
+
 sgetAt idx lst =Maybe.withDefault "" (getAt idx lst)
 
 getAt : Int -> List a -> Maybe a
