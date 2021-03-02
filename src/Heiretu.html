@@ -5002,9 +5002,11 @@ var author$project$Main$lflg = _List_fromArray(
 		{di: false, dr: false, dv: false, i: true, r: true, ui: false, ur: true, uv: false, v: false},
 		{di: false, dr: true, dv: false, i: true, r: false, ui: true, ur: true, uv: false, v: false}
 	]);
+var elm$core$Basics$round = _Basics_round;
 var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$Main$lrString = F2(
 	function (lr, stage) {
+		var ii = elm$core$Basics$round(((lr.v / lr.uR) + (lr.v / lr.dR)) * 10.0) / 10;
 		return {
 			di: A2(
 				elm$core$Maybe$withDefault,
@@ -5021,11 +5023,11 @@ var author$project$Main$lrString = F2(
 			i: A2(
 				elm$core$Maybe$withDefault,
 				author$project$Main$l0,
-				A2(author$project$Main$getAt, stage, author$project$Main$lflg)).i ? elm$core$String$fromFloat((lr.v / lr.uR) + (lr.v / lr.dR)) : '',
+				A2(author$project$Main$getAt, stage, author$project$Main$lflg)).i ? elm$core$String$fromFloat(ii) : '',
 			r: A2(
 				elm$core$Maybe$withDefault,
 				author$project$Main$l0,
-				A2(author$project$Main$getAt, stage, author$project$Main$lflg)).r ? elm$core$String$fromFloat(lr.v / ((lr.v / lr.uR) + (lr.v / lr.dR))) : '',
+				A2(author$project$Main$getAt, stage, author$project$Main$lflg)).r ? elm$core$String$fromFloat(lr.v / ii) : '',
 			ui: A2(
 				elm$core$Maybe$withDefault,
 				author$project$Main$l0,
@@ -5044,27 +5046,37 @@ var author$project$Main$lrString = F2(
 				A2(author$project$Main$getAt, stage, author$project$Main$lflg)).v ? elm$core$String$fromFloat(lr.v) : ''
 		};
 	});
+var elm$core$String$toFloat = _String_toFloat;
+var author$project$Main$tofloat = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0.0,
+		elm$core$String$toFloat(st));
+};
 var author$project$Main$seikaiHanbetu = F2(
 	function (lr, dlr) {
+		var ii = (lr.v / lr.uR) + (lr.v / lr.dR);
 		return _Utils_eq(
-			dlr.uv,
-			elm$core$String$fromFloat(lr.v)) && (_Utils_eq(
-			dlr.dv,
-			elm$core$String$fromFloat(lr.v)) && (_Utils_eq(
-			dlr.ur,
-			elm$core$String$fromFloat(lr.uR)) && (_Utils_eq(
-			dlr.dr,
-			elm$core$String$fromFloat(lr.dR)) && (_Utils_eq(
-			dlr.ui,
-			elm$core$String$fromFloat(lr.v / lr.uR)) && (_Utils_eq(
-			dlr.di,
-			elm$core$String$fromFloat(lr.v / lr.dR)) && (_Utils_eq(
-			dlr.i,
-			elm$core$String$fromFloat((lr.v / lr.uR) + (lr.v / lr.dR))) && (_Utils_eq(
-			dlr.v,
-			elm$core$String$fromFloat(lr.v)) && _Utils_eq(
-			dlr.r,
-			elm$core$String$fromFloat(lr.v / ((lr.v / lr.uR) + (lr.v / lr.dR)))))))))));
+			author$project$Main$tofloat(dlr.uv),
+			lr.v) && (_Utils_eq(
+			author$project$Main$tofloat(dlr.dv),
+			lr.v) && (_Utils_eq(
+			author$project$Main$tofloat(dlr.ur),
+			lr.uR) && (_Utils_eq(
+			author$project$Main$tofloat(dlr.dr),
+			lr.dR) && (_Utils_eq(
+			author$project$Main$tofloat(dlr.ui),
+			lr.v / lr.uR) && (_Utils_eq(
+			author$project$Main$tofloat(dlr.di),
+			lr.v / lr.dR) && (_Utils_eq(
+			elm$core$Basics$round(
+				author$project$Main$tofloat(dlr.i) * 10.0),
+			elm$core$Basics$round(ii * 10.0)) && (_Utils_eq(
+			author$project$Main$tofloat(dlr.v),
+			lr.v) && _Utils_eq(
+			elm$core$Basics$round(
+				author$project$Main$tofloat(dlr.r)),
+			elm$core$Basics$round(lr.v / ii)))))))));
 	});
 var author$project$Main$sgetAt = F2(
 	function (idx, lst) {
@@ -5076,7 +5088,6 @@ var author$project$Main$sgetAt = F2(
 var elm$core$Basics$ge = _Utils_ge;
 var elm$core$Basics$modBy = _Basics_modBy;
 var elm$core$Basics$neq = _Utils_notEqual;
-var elm$core$Basics$round = _Basics_round;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };

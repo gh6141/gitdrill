@@ -89,16 +89,20 @@ lflg=    [  {uv=True,dv=True,ur=True,dr=True,ui=True,di=False,i=True,v=True,r=Tr
 l0={uv=True,dv=True,ur=True,dr=True,ui=True,di=True,i=True,v=True,r=True}
 
 lrString : LrVR -> Int ->  DispData
-lrString lr stage = {
+lrString lr stage =
+ let
+   ii=toFloat (round ((lr.v/lr.uR+lr.v/lr.dR)*10.0))/10
+ in
+ {
    uv=if (Maybe.withDefault l0 (getAt stage lflg)).uv then  String.fromFloat (lr.v) else ""
    ,dv=if (Maybe.withDefault l0 (getAt stage lflg)).dv then String.fromFloat (lr.v) else ""
    ,ur=if (Maybe.withDefault l0 (getAt stage lflg)).ur then  String.fromFloat lr.uR else ""
    ,dr=if (Maybe.withDefault l0 (getAt stage lflg)).dr then  String.fromFloat lr.dR else ""
    ,ui=if (Maybe.withDefault l0 (getAt stage lflg)).ui then  String.fromFloat (lr.v/lr.uR) else ""
    ,di=if (Maybe.withDefault l0 (getAt stage lflg)).di then String.fromFloat (lr.v/lr.dR) else ""
-   ,i=if (Maybe.withDefault l0 (getAt stage lflg)).i then String.fromFloat ( (lr.v/lr.uR+lr.v/lr.dR)) else ""
+   ,i=if (Maybe.withDefault l0 (getAt stage lflg)).i then String.fromFloat ii else ""
    ,v=if (Maybe.withDefault l0 (getAt stage lflg)).v then String.fromFloat (lr.v) else ""
-   ,r=if (Maybe.withDefault l0 (getAt stage lflg)).r then String.fromFloat ( (lr.v/(lr.v/lr.uR+lr.v/lr.dR))) else ""
+   ,r=if (Maybe.withDefault l0 (getAt stage lflg)).r then String.fromFloat  (lr.v/ii) else ""
 
  }
 
@@ -124,15 +128,19 @@ lrHenko dlr slr moji flg =
 
 seikaiHanbetu : LrVR -> DispData -> Bool
 seikaiHanbetu lr dlr = 
-    (dlr.uv==String.fromFloat lr.v) 
-   &&(dlr.dv==String.fromFloat (lr.v))
-   &&(dlr.ur==String.fromFloat lr.uR)
-   &&(dlr.dr==String.fromFloat lr.dR)
-   &&(dlr.ui==String.fromFloat (lr.v/lr.uR))
-   &&(dlr.di==String.fromFloat (lr.v/lr.dR))
-   &&(dlr.i==String.fromFloat ( (lr.v/lr.uR+lr.v/lr.dR)) )
-   &&(dlr.v==String.fromFloat (lr.v))
-   &&(dlr.r==String.fromFloat ( (lr.v/(lr.v/lr.uR+lr.v/lr.dR))) )
+  let
+    ii= lr.v/lr.uR+lr.v/lr.dR
+  in
+      ( (tofloat dlr.uv) == lr.v) 
+     &&( (tofloat dlr.dv)==lr.v)
+     &&( (tofloat dlr.ur)== lr.uR)
+     &&( (tofloat dlr.dr)==lr.dR)
+     &&( (tofloat dlr.ui)==(lr.v/lr.uR))
+     &&( (tofloat dlr.di)== (lr.v/lr.dR))
+     &&( round ((tofloat dlr.i)*10.0) == round  (ii*10.0) ) 
+     &&( (tofloat dlr.v)== lr.v)
+     &&( ( round (tofloat dlr.r))==( round (lr.v/ii)) ) 
+  
 
 
 
@@ -316,6 +324,8 @@ update msg model =
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+
+tofloat st = Maybe.withDefault 0.0 (String.toFloat st) 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
