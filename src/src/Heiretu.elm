@@ -74,9 +74,9 @@ ilst=[
   ["di"] --0
   ,["ui","uv"] --1
   ,["i","uv"] --2
-  ,["uv","ui","i"] --3
-  ,["uv","ui","di","ur"] --4
-  ,["dv","ui","di","i","r"] --5
+  ,["uv","di","i"] --3
+  ,["v","ui","di","dr"] --4
+  ,["uv","di","r"] --5
  ]
 
 lflg=    [  {uv=True,dv=True,ur=True,dr=True,ui=True,di=False,i=True,v=True,r=True} --0
@@ -96,9 +96,9 @@ lrString lr stage = {
    ,dr=if (Maybe.withDefault l0 (getAt stage lflg)).dr then  String.fromFloat lr.dR else ""
    ,ui=if (Maybe.withDefault l0 (getAt stage lflg)).ui then  String.fromFloat (lr.v/lr.uR) else ""
    ,di=if (Maybe.withDefault l0 (getAt stage lflg)).di then String.fromFloat (lr.v/lr.dR) else ""
-   ,i=if (Maybe.withDefault l0 (getAt stage lflg)).i then String.fromFloat (lr.v/lr.uR+lr.v/lr.dR) else ""
+   ,i=if (Maybe.withDefault l0 (getAt stage lflg)).i then String.fromFloat ( (lr.v/lr.uR+lr.v/lr.dR)) else ""
    ,v=if (Maybe.withDefault l0 (getAt stage lflg)).v then String.fromFloat (lr.v) else ""
-   ,r=if (Maybe.withDefault l0 (getAt stage lflg)).r then String.fromFloat (lr.v/(lr.v/lr.uR+lr.v/lr.dR)) else ""
+   ,r=if (Maybe.withDefault l0 (getAt stage lflg)).r then String.fromFloat ( (lr.v/(lr.v/lr.uR+lr.v/lr.dR))) else ""
 
  }
 
@@ -130,9 +130,9 @@ seikaiHanbetu lr dlr =
    &&(dlr.dr==String.fromFloat lr.dR)
    &&(dlr.ui==String.fromFloat (lr.v/lr.uR))
    &&(dlr.di==String.fromFloat (lr.v/lr.dR))
-   &&(dlr.i==String.fromFloat (lr.v/lr.uR+lr.v/lr.dR))
+   &&(dlr.i==String.fromFloat ( (lr.v/lr.uR+lr.v/lr.dR)) )
    &&(dlr.v==String.fromFloat (lr.v))
-   &&(dlr.r==String.fromFloat (lr.v/(lr.v/lr.uR+lr.v/lr.dR)))
+   &&(dlr.r==String.fromFloat ( (lr.v/(lr.v/lr.uR+lr.v/lr.dR))) )
 
 
 
@@ -166,28 +166,29 @@ update : Msg -> Model -> ( Model,Cmd Msg)
 update msg model =
   let
    lrhenkan :Int -> Int -> Int ->  LrVR
-   lrhenkan lIx lRx rRx = 
+   lrhenkan vx uRx dRx = 
     let 
-      flix=toFloat lIx
-      flrx=toFloat lRx
-      frrx=toFloat rRx
+      fvx=toFloat vx
+      furx=toFloat uRx
+      fdrx=toFloat dRx
     in   
     {
-     v= if model.seisu then flix else flix
-     ,uR= if model.seisu then flrx else flrx*10.0
-     ,dR= if model.seisu then frrx else frrx*10.0
+    -- v= if model.seisu then fvx else fvx
+     v=fvx
+    , uR= if model.seisu then furx else furx*10.0
+     ,dR= if model.seisu then fdrx else fdrx*10.0
      }
 
    ansGenerator : Random.Generator LrVR
-   ansGenerator = Random.map3  lrhenkan (Random.int 2 50) (Random.int 2 50) (Random.int 2 50)
+   ansGenerator = Random.map3  lrhenkan (Random.int 2 36) (Random.int 2 6) (Random.int 2 6)
 
    seisuHanbetu :LrVR -> Bool
    seisuHanbetu lr =
      let
-       ii=round (lr.v/lr.uR+lr.v/lr.dR)
+       ii=round (if model.seisu then (lr.v/lr.uR+lr.v/lr.dR) else 10.0*(lr.v/lr.uR+lr.v/lr.dR) )
      in
-      ((modBy (round lr.dR)  (round lr.v))==0)
-      &&((modBy (round lr.uR) (round lr.v))==0)
+      ((modBy (round (if model.seisu then lr.dR else lr.dR/10.0))  (round lr.v))==0)
+      &&((modBy (round (if model.seisu then lr.uR else lr.uR/10.0)) (round lr.v))==0)
       &&((modBy ii (round lr.v))==0)
      
 
@@ -198,7 +199,7 @@ update msg model =
       let 
          flgp=model.point>=model.plimit
          stagex=if flgp then model.stage+1 else model.stage
-         ilistx=lgetAt (stagex-1) ilst
+         ilistx=lgetAt (stagex) ilst
       in
       ({ model | maru=False
       ,stage=stagex
@@ -214,8 +215,6 @@ update msg model =
       ,dlr=(lrString lr model.stage)
       ,cursor=sgetAt 0 model.ilist
       ,cursori=0
-      --,dlr= lrHenko model.dlr "ri" (sgetAt 0 model.ilist) False
-      --,cursor="rv"
       
       },if (seisuHanbetu lr ) then Cmd.none else (Random.generate NewAns ansGenerator) )
     Btn txt ->

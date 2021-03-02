@@ -4492,11 +4492,11 @@ var author$project$Main$ilst = _List_fromArray(
 		_List_fromArray(
 		['i', 'uv']),
 		_List_fromArray(
-		['uv', 'ui', 'i']),
+		['uv', 'di', 'i']),
 		_List_fromArray(
-		['uv', 'ui', 'di', 'ur']),
+		['v', 'ui', 'di', 'dr']),
 		_List_fromArray(
-		['dv', 'ui', 'di', 'i', 'r'])
+		['uv', 'di', 'r'])
 	]);
 var elm$core$Basics$apL = F2(
 	function (f, x) {
@@ -5401,41 +5401,44 @@ var elm$random$Random$map3 = F4(
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var seisuHanbetu = function (lr) {
-			var ii = elm$core$Basics$round((lr.v / lr.uR) + (lr.v / lr.dR));
+			var ii = elm$core$Basics$round(
+				model.seisu ? ((lr.v / lr.uR) + (lr.v / lr.dR)) : (10.0 * ((lr.v / lr.uR) + (lr.v / lr.dR))));
 			return (!A2(
 				elm$core$Basics$modBy,
-				elm$core$Basics$round(lr.dR),
+				elm$core$Basics$round(
+					model.seisu ? lr.dR : (lr.dR / 10.0)),
 				elm$core$Basics$round(lr.v))) && ((!A2(
 				elm$core$Basics$modBy,
-				elm$core$Basics$round(lr.uR),
+				elm$core$Basics$round(
+					model.seisu ? lr.uR : (lr.uR / 10.0)),
 				elm$core$Basics$round(lr.v))) && (!A2(
 				elm$core$Basics$modBy,
 				ii,
 				elm$core$Basics$round(lr.v))));
 		};
 		var lrhenkan = F3(
-			function (lIx, lRx, rRx) {
-				var frrx = rRx;
-				var flrx = lRx;
-				var flix = lIx;
+			function (vx, uRx, dRx) {
+				var fvx = vx;
+				var furx = uRx;
+				var fdrx = dRx;
 				return {
-					dR: model.seisu ? frrx : (frrx * 10.0),
-					uR: model.seisu ? flrx : (flrx * 10.0),
-					v: model.seisu ? flix : flix
+					dR: model.seisu ? fdrx : (fdrx * 10.0),
+					uR: model.seisu ? furx : (furx * 10.0),
+					v: fvx
 				};
 			});
 		var ansGenerator = A4(
 			elm$random$Random$map3,
 			lrhenkan,
-			A2(elm$random$Random$int, 2, 50),
-			A2(elm$random$Random$int, 2, 50),
-			A2(elm$random$Random$int, 2, 50));
+			A2(elm$random$Random$int, 2, 36),
+			A2(elm$random$Random$int, 2, 6),
+			A2(elm$random$Random$int, 2, 6));
 		switch (msg.$) {
 			case 'Change':
 				var newContent = msg.a;
 				var flgp = _Utils_cmp(model.point, model.plimit) > -1;
 				var stagex = flgp ? (model.stage + 1) : model.stage;
-				var ilistx = A2(author$project$Main$lgetAt, stagex - 1, author$project$Main$ilst);
+				var ilistx = A2(author$project$Main$lgetAt, stagex, author$project$Main$ilst);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
