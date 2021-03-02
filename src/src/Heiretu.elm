@@ -71,7 +71,7 @@ type alias OnOff =
  }
 
 ilst=[
-  ["dv"] --0
+  ["di"] --0
   ,["ui","uv"] --1
   ,["i","uv"] --2
   ,["uv","ui","i"] --3
@@ -79,12 +79,12 @@ ilst=[
   ,["dv","ui","di","i","r"] --5
  ]
 
-lflg=    [  {uv=True,dv=True,lr=True,dr=True,ui=True,di=False,i=True,v=True,r=True} --0
-           ,{uv=False,dv=False,ur=True,dr=True,ui=False,di=True,i=True,v=True,r=True} --1
+lflg=    [  {uv=True,dv=True,ur=True,dr=True,ui=True,di=False,i=True,v=True,r=True} --0
+           ,{uv=False,dv=False,ur=True,dr=True,ui=False,di=True,i=True,v=False,r=True} --1
            ,{uv=False,dv=False,ur=True,dr=True,ui=True,di=True,i=False,v=False,r=True}  --2
            ,{uv=False,dv=False,ur=True,dr=True,ui=True,di=False,i=False,v=False,r=True}  --3
-           ,{uv=False,dv=False,ur=True,dr=False,ui=False,di=False,i=True,v=True,r=True}  --4
-           ,{uv=False,dv=False,ur=True,dr=True,ui=False,di=False,i=False,v=True,r=False}  --5
+           ,{uv=False,dv=False,ur=True,dr=False,ui=False,di=False,i=True,v=False,r=True}  --4
+           ,{uv=False,dv=False,ur=True,dr=True,ui=True,di=False,i=True,v=False,r=False}  --5
           ]
 l0={uv=True,dv=True,ur=True,dr=True,ui=True,di=True,i=True,v=True,r=True}
 
@@ -140,7 +140,7 @@ init : () -> (Model,Cmd Msg)
 init _ =
   ( { maru=False,siki="",rmode=True,lr={v=0,uR=0,dR=0}
   ,dlr={ uv="",dv="",ur="",dr="" ,ui="",di="" ,i="",v="",r=""}
-  ,stage=1,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 2 ilst),cursori=0
+  ,stage=0,point=0,cursor="",seisu=True,plimit=3,ilist=(lgetAt 2 ilst),cursori=0
   } , Cmd.none )
 
 
@@ -152,7 +152,7 @@ init _ =
 
 type Msg
   = Change String | NewAns LrVR | Btn String | Tasikame |CTur String| CTuv String| CTui String
-   | CTdr String|CTdv String |CTdi String |CTi String |CTv String | Seisu Bool
+   | CTdr String|CTdv String |CTdi String |CTi String |CTv String |CTr String | Seisu Bool
    | CTc String | CTii (String,String) |CTiiB (String,String)
 btnLabel : Int -> String
 btnLabel xi = case xi of
@@ -173,13 +173,23 @@ update msg model =
       frrx=toFloat rRx
     in   
     {
-     v= if model.seisu then flix else flix/10
+     v= if model.seisu then flix else flix
      ,uR= if model.seisu then flrx else flrx*10.0
      ,dR= if model.seisu then frrx else frrx*10.0
      }
 
    ansGenerator : Random.Generator LrVR
-   ansGenerator = Random.map3  lrhenkan (Random.int 2 5) (Random.int 2 5) (Random.int 2 5)
+   ansGenerator = Random.map3  lrhenkan (Random.int 2 50) (Random.int 2 50) (Random.int 2 50)
+
+   seisuHanbetu :LrVR -> Bool
+   seisuHanbetu lr =
+     let
+       ii=round (lr.v/lr.uR+lr.v/lr.dR)
+     in
+      ((modBy (round lr.dR)  (round lr.v))==0)
+      &&((modBy (round lr.uR) (round lr.v))==0)
+      &&((modBy ii (round lr.v))==0)
+     
 
   in
 
@@ -207,14 +217,14 @@ update msg model =
       --,dlr= lrHenko model.dlr "ri" (sgetAt 0 model.ilist) False
       --,cursor="rv"
       
-      },Cmd.none )
+      },if (seisuHanbetu lr ) then Cmd.none else (Random.generate NewAns ansGenerator) )
     Btn txt ->
      let
         ci = 
          case model.cursor of
-           "ui" -> ( if (model.dlr.ui++txt==String.fromFloat model.lr.v/model.lr.uR) then model.cursori+1 else model.cursori )
+           "ui" -> ( if (model.dlr.ui++txt==String.fromFloat (model.lr.v/model.lr.uR)) then model.cursori+1 else model.cursori )
            "uv" -> ( if (model.dlr.uv++txt==String.fromFloat (model.lr.v)) then model.cursori+1 else model.cursori )
-           "ur" -> ( if (model.dlr.ur++txt==String.fromFloat model.lr.uR) then model.cursori+1 else model.cursori )
+           "ur" -> ( if (model.dlr.ur++txt==String.fromFloat (model.lr.uR)) then model.cursori+1 else model.cursori )
            "di" -> ( if (model.dlr.di++txt==String.fromFloat (model.lr.v/model.lr.dR)) then model.cursori+1 else model.cursori )
            "dv" -> ( if (model.dlr.dv++txt==String.fromFloat (model.lr.v)) then model.cursori+1 else model.cursori )
            "dr" -> ( if (model.dlr.dr++txt==String.fromFloat model.lr.dR) then model.cursori+1 else model.cursori )
@@ -283,8 +293,10 @@ update msg model =
       },      Cmd.batch [Task.perform CTii <| Task.succeed ("dv",txt) 
       , Task.perform CTii <| Task.succeed ("uv",txt)]) --batchで同時に変更
     CTi txt ->
-
       ({model| dlr= lrHenko model.dlr "i" txt False 
+       },Cmd.none)
+    CTr txt ->
+      ({model| dlr= lrHenko model.dlr "r" txt False 
        },Cmd.none)
     CTc lvtxt ->
       ({model|cursor=lvtxt},Cmd.none) 
@@ -358,16 +370,17 @@ view model =
   div [style "position" "relative"]
     [     Html.img [src "py/heiretu.jpg"][]
         --left
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "85px"] [input [ onClick (CTc "uv"), onInput CTuv,size 2,placeholder (if model.cursor=="uv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.uv] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "85px"] [input [ onClick (CTc "ur"), onInput CTur,size 2,placeholder (if model.cursor=="ur" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.ur] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "85px"] [input [ onClick (CTc "ui"),  onInput CTui,size 2,placeholder (if model.cursor=="ui" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.ui] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "3px", style "left" "232px"] [input [ onClick (CTc "uv"), onInput CTuv,size 2,placeholder (if model.cursor=="uv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.uv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "51px", style "left" "232px"] [input [ onClick (CTc "ur"), onInput CTur,size 2,placeholder (if model.cursor=="ur" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.ur] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "51px", style "left" "85px"] [input [ onClick (CTc "ui"),  onInput CTui,size 2,placeholder (if model.cursor=="ui" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.ui] [] ]
         --right
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "218px"] [input [  onClick (CTc "dv"), onInput CTdv,size 2,placeholder (if model.cursor=="dv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.dv] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "218px"] [input [  onClick (CTc "dr"), onInput CTdr,size 2,placeholder (if model.cursor=="dr" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.dr] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "90px", style "left" "218px"] [input [  onClick (CTc "di"), onInput CTdi,size 2,placeholder (if model.cursor=="di" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.di] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "84px", style "left" "232px"] [input [  onClick (CTc "dv"), onInput CTdv,size 2,placeholder (if model.cursor=="dv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.dv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "131px", style "left" "232px"] [input [  onClick (CTc "dr"), onInput CTdr,size 2,placeholder (if model.cursor=="dr" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.dr] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "131px", style "left" "85px"] [input [  onClick (CTc "di"), onInput CTdi,size 2,placeholder (if model.cursor=="di" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.di] [] ]
         --all
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "38px"] [input [onClick (CTc "i"),   onInput CTi,size 2,placeholder (if model.cursor=="i" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value model.dlr.i] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "160px"] [input [onClick (CTc "v"),   onInput CTv,size 2,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.v] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "208px", style "left" "54px"] [input [onClick (CTc "i"),   onInput CTi,size 2,placeholder (if model.cursor=="i" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value model.dlr.i] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "208px", style "left" "152px"] [input [onClick (CTc "v"),   onInput CTv,size 2,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.v] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "220px", style "left" "310px"] [input [onClick (CTc "r"),   onInput CTr,size 2,placeholder (if model.cursor=="r" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value model.dlr.r] [] ]
 
         --stage
         ,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
@@ -378,7 +391,7 @@ view model =
         ,div[style "position" "absolute", style "top" "170px", style "left" "450px"][button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]]
         
         ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "520px"][sujibutton]
-        ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "font-size" (if (model.stage==6 && model.point>=model.plimit ) then "30px" else "120px"),style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text (if model.stage==6 && model.point>=model.plimit then "合格！!すばらしい" else "〇")]
+        ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "font-size" (if (model.stage==5 && model.point>=model.plimit ) then "30px" else "120px"),style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text (if model.stage==5 && model.point>=model.plimit then "合格！!すばらしい" else "〇")]
         --point
         ,div[style "position" "absolute", style "top" "250px", style "left" "40px",style "font-size" "20px"][text (String.repeat model.point "〇")]
 
