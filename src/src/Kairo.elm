@@ -219,7 +219,7 @@ view model =
 
 
         sbutton : Int -> Html Msg
-        sbutton ii = (button [style "font-size" "45px"   ,onClick (Btn ii)] [ text (" "++(btnLabel ii)++" ")])
+        sbutton ii = (button [style "font-size" "36px"   ,onClick (Btn ii)] [ text (" "++(btnLabel ii)++" ")])
 
         sujibutton=
            table []
@@ -265,7 +265,7 @@ view model =
          , button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]
           ]
         ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "360px", style "left" "320px"] [input [ placeholder "式?", value model.siki,style "font-size" "36px",style "color" "red"] [] ]
-        ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
+        ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "24px",onClick (Change "")][text "つぎへ"]]
         ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "530px"][sujibutton]
         ,div[style "position" "absolute", style "top" "220px", style "left" "480px",style "font-size" "140px",style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text "〇"]
 
