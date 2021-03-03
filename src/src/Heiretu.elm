@@ -394,8 +394,8 @@ view model =
         --stage
         ,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
 
-        ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "position" "absolute", style "top" "100px", style "left" "400px"][button [ style "font-size" "24px",onClick Tasikame][text "たしかめ"]]
+        ,div[style "position" "absolute", style "top" "30px", style "left" "400px"][button [ style "font-size" "24px",onClick (Change "")][text "つぎへ"]]
+        ,div[style "position" "absolute", style "top" "100px", style "left" "400px"][button [ style "font-size" "20px",onClick Tasikame][text "たしかめ"]]
         ,div[style "position" "absolute", style "top" "170px", style "left" "400px"][button [ style "font-size" "12px",onClick (Seisu True)][text "整数"]]
         ,div[style "position" "absolute", style "top" "170px", style "left" "450px"][button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]]
         
