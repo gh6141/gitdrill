@@ -345,7 +345,7 @@ view model =
 
 
         sbutton : Int -> Html Msg
-        sbutton ii = (button [style "font-size" "40px"   ,onClick (Btn (btnLabel ii))] [ text (" "++(btnLabel ii)++" ")])
+        sbutton ii = (button [style "font-size" "30px"   ,onClick (Btn (btnLabel ii))] [ text (" "++(btnLabel ii)++" ")])
 
         sujibutton=
            table []
@@ -379,17 +379,17 @@ view model =
   div [style "position" "relative"]
     [     Html.img [src "py/heiretu.jpg"][]
         --left
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "3px", style "left" "232px"] [input [ onClick (CTc "uv"), onInput CTuv,size 2,placeholder (if model.cursor=="uv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.uv] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "51px", style "left" "232px"] [input [ onClick (CTc "ur"), onInput CTur,size 2,placeholder (if model.cursor=="ur" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.ur] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "51px", style "left" "85px"] [input [ onClick (CTc "ui"),  onInput CTui,size 2,placeholder (if model.cursor=="ui" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.ui] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "3px", style "left" "232px"] [input [ onClick (CTc "uv"), onInput CTuv,size 3,placeholder (if model.cursor=="uv" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.uv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "51px", style "left" "232px"] [input [ onClick (CTc "ur"), onInput CTur,size 3,placeholder (if model.cursor=="ur" then "?" else ""), style "font-size" "16px",style "background-color" "khaki",value  model.dlr.ur] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "51px", style "left" "85px"] [input [ onClick (CTc "ui"),  onInput CTui,size 3,placeholder (if model.cursor=="ui" then "?" else ""), style "font-size" "16px",style "background-color" "lightblue",value  model.dlr.ui] [] ]
         --right
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "84px", style "left" "232px"] [input [  onClick (CTc "dv"), onInput CTdv,size 2,placeholder (if model.cursor=="dv" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.dv] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "131px", style "left" "232px"] [input [  onClick (CTc "dr"), onInput CTdr,size 2,placeholder (if model.cursor=="dr" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value  model.dlr.dr] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "131px", style "left" "85px"] [input [  onClick (CTc "di"), onInput CTdi,size 2,placeholder (if model.cursor=="di" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value  model.dlr.di] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "84px", style "left" "232px"] [input [  onClick (CTc "dv"), onInput CTdv,size 3,placeholder (if model.cursor=="dv" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.dv] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "131px", style "left" "232px"] [input [  onClick (CTc "dr"), onInput CTdr,size 3,placeholder (if model.cursor=="dr" then "?" else ""), style "font-size" "16px",style "background-color" "khaki",value  model.dlr.dr] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "131px", style "left" "85px"] [input [  onClick (CTc "di"), onInput CTdi,size 3,placeholder (if model.cursor=="di" then "?" else ""), style "font-size" "16px",style "background-color" "lightblue",value  model.dlr.di] [] ]
         --all
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "208px", style "left" "54px"] [input [onClick (CTc "i"),   onInput CTi,size 2,placeholder (if model.cursor=="i" then "?" else ""), style "font-size" "18px",style "background-color" "lightblue",value model.dlr.i] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "208px", style "left" "152px"] [input [onClick (CTc "v"),   onInput CTv,size 2,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "18px",style "background-color" "coral",value model.dlr.v] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "220px", style "left" "310px"] [input [onClick (CTc "r"),   onInput CTr,size 2,placeholder (if model.cursor=="r" then "?" else ""), style "font-size" "18px",style "background-color" "khaki",value model.dlr.r] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "208px", style "left" "54px"] [input [onClick (CTc "i"),   onInput CTi,size 3,placeholder (if model.cursor=="i" then "?" else ""), style "font-size" "16px",style "background-color" "lightblue",value model.dlr.i] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "208px", style "left" "152px"] [input [onClick (CTc "v"),   onInput CTv,size 3,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.v] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "220px", style "left" "310px"] [input [onClick (CTc "r"),   onInput CTr,size 3,placeholder (if model.cursor=="r" then "?" else ""), style "font-size" "16px",style "background-color" "khaki",value model.dlr.r] [] ]
 
         --stage
         ,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
