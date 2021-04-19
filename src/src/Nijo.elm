@@ -39,12 +39,13 @@ type alias Model =
    ,y : String
    ,cl :List Circle 
    ,plus: Bool
+   ,kizami :Float
   }
 
 
 
 init : Model
-init = {cid=0,x="0",y="0",cl=[],plus=True}
+init = {cid=0,x="0",y="0",cl=[],plus=True,kizami=0.1}
 
 
 -- UPDATE
@@ -53,14 +54,14 @@ type Msg
   = Increment
   | Decrement
   | X2
-  | Mx2
+  | Mx2 | Kizami01 | Kizami001
 
 
 update : Msg -> Model -> Model
 update msg model =
  let
          idx=model.cid+1
-         kizami=0.1
+         kizami=model.kizami
          plusminus=if model.plus then 1.0 else -1.0
  in
   case msg of
@@ -77,9 +78,14 @@ update msg model =
       ,cl= {id=idx,xi=-(toFloat idx)*kizami,yi=plusminus*((toFloat idx)*kizami)^2} :: model.cl}
 
     X2 ->
-      {model|plus=True}
+      {model|plus=True,cid=0,x="0",y="0",cl=[]}
     Mx2 ->
-      {model|plus=False}
+      {model|plus=False,cid=0,x="0",y="0",cl=[]}
+    
+    Kizami01 ->
+       {model|cid=0,x="0",y="0",cl=[],kizami=0.1}
+    Kizami001 ->
+       {model|cid=0,x="0",y="0",cl=[],kizami=0.05}
 
 
 -- VIEW
@@ -116,11 +122,11 @@ view model =
   
   in
    div []
-    [ button [ onClick Increment ] [ text "+" ]
+    [ div [] [button [ onClick Increment ] [ text "プラス" ] ,button [ onClick Decrement ] [ text "マイナス" ]  ]
     , div [] [ text ((if model.plus then "y=x^2" else "y=-x^2")++":   "++"x="++model.x++"  y="++model.y ) ]
-    , button [ onClick Decrement ] [ text "-" ]
-    , button [onClick X2] [text "y=x^2"]
-    , button [onClick Mx2] [text "y=-x^2"]
+    , div [] [ button [onClick X2] [text "y=x^2"]  , button [onClick Mx2] [text "y=-x^2"]      ]
+    , div [] [ button [onClick Kizami01] [text "きざみ０．１"]  , button [onClick Kizami001] [text "きざみ０．０５"]      ]
+
     , svg
     [ viewBox "0 0 800 600"
     , width "1000"

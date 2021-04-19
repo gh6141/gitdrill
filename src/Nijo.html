@@ -4401,7 +4401,7 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Nijo$init = {cid: 0, cl: _List_Nil, plus: true, x: '0', y: '0'};
+var author$project$Nijo$init = {cid: 0, cl: _List_Nil, kizami: 0.1, plus: true, x: '0', y: '0'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$mul = _Basics_mul;
@@ -4418,7 +4418,7 @@ var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$Nijo$update = F2(
 	function (msg, model) {
 		var plusminus = model.plus ? 1.0 : (-1.0);
-		var kizami = 0.1;
+		var kizami = model.kizami;
 		var idx = model.cid + 1;
 		switch (msg.$) {
 			case 'Increment':
@@ -4458,15 +4458,25 @@ var author$project$Nijo$update = F2(
 			case 'X2':
 				return _Utils_update(
 					model,
-					{plus: true});
+					{cid: 0, cl: _List_Nil, plus: true, x: '0', y: '0'});
+			case 'Mx2':
+				return _Utils_update(
+					model,
+					{cid: 0, cl: _List_Nil, plus: false, x: '0', y: '0'});
+			case 'Kizami01':
+				return _Utils_update(
+					model,
+					{cid: 0, cl: _List_Nil, kizami: 0.1, x: '0', y: '0'});
 			default:
 				return _Utils_update(
 					model,
-					{plus: false});
+					{cid: 0, cl: _List_Nil, kizami: 5.0e-2, x: '0', y: '0'});
 		}
 	});
 var author$project$Nijo$Decrement = {$: 'Decrement'};
 var author$project$Nijo$Increment = {$: 'Increment'};
+var author$project$Nijo$Kizami001 = {$: 'Kizami001'};
+var author$project$Nijo$Kizami01 = {$: 'Kizami01'};
 var author$project$Nijo$Mx2 = {$: 'Mx2'};
 var author$project$Nijo$X2 = {$: 'X2'};
 var elm$core$Basics$identity = function (x) {
@@ -5075,14 +5085,30 @@ var author$project$Nijo$view = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$button,
+				elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$Events$onClick(author$project$Nijo$Increment)
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text('+')
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Increment)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('プラス')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Decrement)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('マイナス')
+							]))
 					])),
 				A2(
 				elm$html$Html$div,
@@ -5093,34 +5119,56 @@ var author$project$Nijo$view = function (model) {
 						(model.plus ? 'y=x^2' : 'y=-x^2') + (':   ' + ('x=' + (model.x + ('  y=' + model.y)))))
 					])),
 				A2(
-				elm$html$Html$button,
+				elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$Events$onClick(author$project$Nijo$Decrement)
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text('-')
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$X2)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('y=x^2')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Mx2)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('y=-x^2')
+							]))
 					])),
 				A2(
-				elm$html$Html$button,
+				elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$Events$onClick(author$project$Nijo$X2)
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text('y=x^2')
-					])),
-				A2(
-				elm$html$Html$button,
-				_List_fromArray(
-					[
-						elm$html$Html$Events$onClick(author$project$Nijo$Mx2)
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text('y=-x^2')
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Kizami01)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('きざみ０．１')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Kizami001)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('きざみ０．０５')
+							]))
 					])),
 				A2(
 				elm$svg$Svg$svg,
