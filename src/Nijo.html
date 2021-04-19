@@ -4401,14 +4401,16 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Nijo$init = {cid: 0, cl: _List_Nil, kizami: 0.1, plus: true, x: '0', y: '0'};
+var author$project$Nijo$init = {cid: 0, cl: _List_Nil, ichi: 50, kizami: 0.1, plus: true, sayu: 1.0, x: '0', y: '0'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$add = _Basics_add;
+var elm$core$Basics$gt = _Utils_gt;
 var elm$core$Basics$mul = _Basics_mul;
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
 var elm$core$Basics$pow = _Basics_pow;
+var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Basics$toFloat = _Basics_toFloat;
 var elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
@@ -4434,6 +4436,7 @@ var author$project$Nijo$update = F2(
 								yi: plusminus * A2(elm$core$Basics$pow, idx * kizami, 2)
 							},
 							model.cl),
+						sayu: 1.0,
 						x: elm$core$String$fromFloat(idx * kizami),
 						y: elm$core$String$fromFloat(
 							A2(elm$core$Basics$pow, idx, 2) * A2(elm$core$Basics$pow, kizami, 2))
@@ -4451,6 +4454,7 @@ var author$project$Nijo$update = F2(
 								yi: plusminus * A2(elm$core$Basics$pow, idx * kizami, 2)
 							},
 							model.cl),
+						sayu: -1.0,
 						x: elm$core$String$fromFloat(idx * kizami),
 						y: elm$core$String$fromFloat(
 							A2(elm$core$Basics$pow, idx, 2) * A2(elm$core$Basics$pow, kizami, 2))
@@ -4467,17 +4471,34 @@ var author$project$Nijo$update = F2(
 				return _Utils_update(
 					model,
 					{cid: 0, cl: _List_Nil, kizami: 0.1, x: '0', y: '0'});
-			default:
+			case 'Kizami001':
 				return _Utils_update(
 					model,
 					{cid: 0, cl: _List_Nil, kizami: 5.0e-2, x: '0', y: '0'});
+			case 'Kakudai':
+				return _Utils_update(
+					model,
+					{ichi: model.ichi + 10});
+			case 'Shukusho':
+				return _Utils_update(
+					model,
+					{
+						ichi: (model.ichi > 10) ? (model.ichi - 10) : 10
+					});
+			default:
+				return _Utils_update(
+					model,
+					{cid: 0, cl: _List_Nil, x: '0', y: '0'});
 		}
 	});
 var author$project$Nijo$Decrement = {$: 'Decrement'};
+var author$project$Nijo$Genten = {$: 'Genten'};
 var author$project$Nijo$Increment = {$: 'Increment'};
+var author$project$Nijo$Kakudai = {$: 'Kakudai'};
 var author$project$Nijo$Kizami001 = {$: 'Kizami001'};
 var author$project$Nijo$Kizami01 = {$: 'Kizami01'};
 var author$project$Nijo$Mx2 = {$: 'Mx2'};
+var author$project$Nijo$Shukusho = {$: 'Shukusho'};
 var author$project$Nijo$X2 = {$: 'X2'};
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -4585,12 +4606,10 @@ var elm$core$Basics$apL = F2(
 		return f(x);
 	});
 var elm$core$Basics$floor = _Basics_floor;
-var elm$core$Basics$gt = _Utils_gt;
 var elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
-var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
@@ -4976,6 +4995,21 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$core$String$slice = _String_slice;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
+var elm$core$String$toFloat = _String_toFloat;
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -5043,6 +5077,13 @@ var author$project$Nijo$view = function (model) {
 				elm$svg$Svg$Attributes$stroke('black')
 			]),
 		_List_Nil);
+	var tofloat = function (xs) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$String$toFloat(xs));
+	};
+	var plusminus = model.plus ? 1.0 : (-1.0);
 	var mojidisp = F3(
 		function (xi, yi, moji) {
 			return A2(
@@ -5062,14 +5103,62 @@ var author$project$Nijo$view = function (model) {
 		});
 	var xmoji = A3(mojidisp, (x0 * 2) + 10, y0, 'x');
 	var ymoji = A3(mojidisp, x0 + 10, 10, 'y');
-	var ichi = 50;
+	var ichi = model.ichi;
+	var xichi = x0 + elm$core$Basics$round(
+		(model.sayu * ichi) * tofloat(model.x));
+	var yline = A2(
+		elm$svg$Svg$line,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$x1(
+				elm$core$String$fromInt(xichi)),
+				elm$svg$Svg$Attributes$y1(
+				elm$core$String$fromInt(0)),
+				elm$svg$Svg$Attributes$x2(
+				elm$core$String$fromInt(xichi)),
+				elm$svg$Svg$Attributes$y2(
+				elm$core$String$fromInt(y0 * 2)),
+				elm$svg$Svg$Attributes$stroke('green')
+			]),
+		_List_Nil);
+	var yichi = y0 - elm$core$Basics$round(
+		(plusminus * ichi) * tofloat(model.y));
+	var xline = A2(
+		elm$svg$Svg$line,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$x1(
+				elm$core$String$fromInt(0)),
+				elm$svg$Svg$Attributes$y1(
+				elm$core$String$fromInt(yichi)),
+				elm$svg$Svg$Attributes$x2(
+				elm$core$String$fromInt(x0 * 2)),
+				elm$svg$Svg$Attributes$y2(
+				elm$core$String$fromInt(yichi)),
+				elm$svg$Svg$Attributes$stroke('green')
+			]),
+		_List_Nil);
 	var fsize = 10;
 	var ichimx = A3(mojidisp, (x0 - ichi) - ((fsize / 2) | 0), y0 + 15, '-1');
 	var ichimy = A3(mojidisp, x0 + 5, (y0 + ichi) + ((fsize / 2) | 0), '-1');
 	var ichix = A3(mojidisp, (x0 + ichi) - ((fsize / 2) | 0), y0 + 15, '1');
 	var ichiy = A3(mojidisp, x0 + 5, (y0 - ichi) + ((fsize / 2) | 0), '1');
+	var xzahyo = A3(
+		mojidisp,
+		xichi - ((fsize / 2) | 0),
+		y0 + 15,
+		_Utils_ap(
+			(model.sayu < 0) ? '-' : '',
+			A2(elm$core$String$left, 4, model.x)));
+	var yzahyo = A3(
+		mojidisp,
+		x0 + 5,
+		yichi + ((fsize / 2) | 0),
+		_Utils_ap(
+			model.plus ? '' : '-',
+			A2(elm$core$String$left, 4, model.y)));
 	var zahyojiku = _List_fromArray(
-		[xjiku, yjiku, xmoji, ymoji, ichix, ichiy, ichimx, ichimy]);
+		[xjiku, yjiku, xmoji, ymoji, xzahyo, yzahyo, xline, yline]);
 	var circleMsg = function (ci) {
 		return A2(
 			author$project$Nijo$ciCreate,
@@ -5093,21 +5182,31 @@ var author$project$Nijo$view = function (model) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								elm$html$Html$Events$onClick(author$project$Nijo$Increment)
-							]),
-						_List_fromArray(
-							[
-								elm$svg$Svg$text('プラス')
-							])),
-						A2(
-						elm$html$Html$button,
-						_List_fromArray(
-							[
 								elm$html$Html$Events$onClick(author$project$Nijo$Decrement)
 							]),
 						_List_fromArray(
 							[
 								elm$svg$Svg$text('マイナス')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Genten)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('原点')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Increment)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('プラス')
 							]))
 					])),
 				A2(
@@ -5116,7 +5215,7 @@ var author$project$Nijo$view = function (model) {
 				_List_fromArray(
 					[
 						elm$svg$Svg$text(
-						(model.plus ? 'y=x^2' : 'y=-x^2') + (':   ' + ('x=' + (model.x + ('  y=' + model.y)))))
+						model.plus ? 'y=x^2' : 'y=-x^2')
 					])),
 				A2(
 				elm$html$Html$div,
@@ -5168,6 +5267,32 @@ var author$project$Nijo$view = function (model) {
 						_List_fromArray(
 							[
 								elm$svg$Svg$text('きざみ０．０５')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Shukusho)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('縮小')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Nijo$Kakudai)
+							]),
+						_List_fromArray(
+							[
+								elm$svg$Svg$text('拡大')
 							]))
 					])),
 				A2(
@@ -5283,7 +5408,6 @@ var elm$core$Task$perform = F2(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
 var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
@@ -5299,10 +5423,6 @@ var elm$core$String$indexes = _String_indexes;
 var elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
-var elm$core$String$left = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
-	});
 var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
