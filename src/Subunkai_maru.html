@@ -4886,6 +4886,7 @@ var author$project$Subunkai_maru$init = function (_n0) {
 			imgdisp: true,
 			init: '4',
 			ldisp: {id: 0, iro: 'black', kazu: 0},
+			maruari: true,
 			marubatu: '　',
 			mon1: '1',
 			mon2: '2',
@@ -5514,7 +5515,7 @@ var author$project$Subunkai_maru$update = F2(
 							sentakusil: stkl
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Rht':
 				var wkm = msg.a;
 				var stkl = A2(
 					elm$core$List$map,
@@ -5535,6 +5536,18 @@ var author$project$Subunkai_maru$update = F2(
 							sentakusil: stkl
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Maruari':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{maruari: true}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{maruari: false}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Subunkai_maru$Btn = function (a) {
@@ -5546,6 +5559,8 @@ var author$project$Subunkai_maru$Change = function (a) {
 var author$project$Subunkai_maru$Lft = function (a) {
 	return {$: 'Lft', a: a};
 };
+var author$project$Subunkai_maru$Maruari = {$: 'Maruari'};
+var author$project$Subunkai_maru$Marunasi = {$: 'Marunasi'};
 var author$project$Subunkai_maru$Next = {$: 'Next'};
 var author$project$Subunkai_maru$Rht = function (a) {
 	return {$: 'Rht', a: a};
@@ -6021,11 +6036,13 @@ var author$project$Subunkai_maru$view = function (model) {
 							[
 								elm$html$Html$text(
 								_Utils_ap(
-									elm$core$String$fromInt(xx.kazu),
-									A2(
-										elm$core$String$repeat,
-										xx.kazu,
-										xx.hyoji ? '●' : '　')))
+									model.maruari ? '' : '　',
+									_Utils_ap(
+										elm$core$String$fromInt(xx.kazu),
+										A2(
+											elm$core$String$repeat,
+											xx.kazu,
+											xx.hyoji ? (model.maruari ? '●' : '') : '　'))))
 							]))
 					]));
 		},
@@ -6148,6 +6165,34 @@ var author$project$Subunkai_maru$view = function (model) {
 									])),
 								sujibutton
 							]))
+					])),
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Subunkai_maru$Maruari)
+							]))
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('まる有')
+					])),
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onClick(author$project$Subunkai_maru$Marunasi)
+							]))
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('まる無')
 					]))
 			]));
 };

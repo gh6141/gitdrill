@@ -49,17 +49,18 @@ type alias Model =
     ,ldisp:Wakumaru
     ,rdisp:Wakumaru
     ,sentakusil:List Sentakusi
+    ,maruari:Bool
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="4",marubatu="　",mon1="1",mon2="2",imgdisp=True,
-     ldisp={id=0,kazu=0,iro="black"},rdisp={id=0,kazu=0,iro="black"},sentakusil=[{id=0,kazu=1,hyoji=True},{id=1,kazu=2,hyoji=True},{id=2,kazu=3,hyoji=True}]}
+     ldisp={id=0,kazu=0,iro="black"},rdisp={id=0,kazu=0,iro="black"},sentakusil=[{id=0,kazu=1,hyoji=True},{id=1,kazu=2,hyoji=True},{id=2,kazu=3,hyoji=True}],maruari=True}
   , Cmd.none
   )
 
 type Msg
-    = Change String|  Next | Newface Int | Btn Int | Lft Wakumaru | Rht Wakumaru
+    = Change String|  Next | Newface Int | Btn Int | Lft Wakumaru | Rht Wakumaru |Maruari |Marunasi
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -158,7 +159,10 @@ update msg model =
        in
        ({model |rdisp={iro="#000000",kazu=0,id=model.rdisp.id}, marubatu=(mb model.init "0" (String.fromInt model.ldisp.kazu))
        , sentakusil=stkl  },Cmd.none)
-     
+   Maruari ->
+           ({model |maruari=True },Cmd.none)
+   Marunasi ->
+           ({model |maruari=False },Cmd.none)
 
 
 view : Model -> Html Msg
@@ -224,7 +228,7 @@ view model =
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
 
-        listmaru = List.map (\xx->tr [] [td [onClick (Btn xx.id),colspan xx.kazu,style "font-size" "40px" ] [text  ((String.fromInt xx.kazu)++String.repeat xx.kazu (if xx.hyoji then "●" else "　")  )]])   model.sentakusil
+        listmaru = List.map (\xx->tr [] [td [onClick (Btn xx.id),colspan xx.kazu,style "font-size" "40px" ] [text  ( (if model.maruari then "" else "　") ++(String.fromInt xx.kazu)++String.repeat xx.kazu (if xx.hyoji then (if model.maruari then "●" else "") else "　")  )]])   model.sentakusil
 
         sujibutton=
            table []  listmaru
@@ -249,8 +253,8 @@ view model =
          
      ]
     ]
-
-
+    ,Button.button [Button.attrs [onClick Maruari]][text "まる有"]
+    ,Button.button [Button.attrs [onClick Marunasi]][text "まる無"]
    ]
 
 subscriptions : Model -> Sub Msg
