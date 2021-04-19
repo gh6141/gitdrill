@@ -53,7 +53,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",marubatu="　",mon1="1",mon2="2",imgdisp=True,
+  ( {init="4",marubatu="　",mon1="1",mon2="2",imgdisp=True,
      ldisp={id=0,kazu=0,iro="black"},rdisp={id=0,kazu=0,iro="black"},sentakusil=[{id=0,kazu=1,hyoji=True},{id=1,kazu=2,hyoji=True},{id=2,kazu=3,hyoji=True}]}
   , Cmd.none
   )
@@ -83,11 +83,6 @@ update msg model =
      , Cmd.none
      )
 
-
-  
-
-
-  
   
    Next ->
       ( {model |  marubatu="　" ,ldisp={kazu=0,iro="black",id=0},rdisp={kazu=0,iro="black",id=0}
@@ -229,7 +224,7 @@ view model =
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
 
-        listmaru = List.map (\xx->tr [] [td [title (String.fromInt xx.kazu),onClick (Btn xx.id),colspan xx.kazu,style "font-size" "40px" ] [text  (String.repeat xx.kazu (if xx.hyoji then "●" else "　")  )]])   model.sentakusil
+        listmaru = List.map (\xx->tr [] [td [onClick (Btn xx.id),colspan xx.kazu,style "font-size" "40px" ] [text  ((String.fromInt xx.kazu)++String.repeat xx.kazu (if xx.hyoji then "●" else "　")  )]])   model.sentakusil
 
         sujibutton=
            table []  listmaru

@@ -4884,7 +4884,7 @@ var author$project$Subunkai_maru$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			imgdisp: true,
-			init: '4',
+			init: '3',
 			ldisp: {id: 0, iro: 'black', kazu: 0},
 			marubatu: '　',
 			mon1: '1',
@@ -6012,6 +6012,8 @@ var author$project$Subunkai_maru$view = function (model) {
 						elm$html$Html$td,
 						_List_fromArray(
 							[
+								elm$html$Html$Attributes$title(
+								elm$core$String$fromInt(xx.kazu)),
 								elm$html$Html$Events$onClick(
 								author$project$Subunkai_maru$Btn(xx.id)),
 								elm$html$Html$Attributes$colspan(xx.kazu),
@@ -6020,12 +6022,10 @@ var author$project$Subunkai_maru$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text(
-								_Utils_ap(
-									elm$core$String$fromInt(xx.kazu),
-									A2(
-										elm$core$String$repeat,
-										xx.kazu,
-										xx.hyoji ? '●' : '　')))
+								A2(
+									elm$core$String$repeat,
+									xx.kazu,
+									xx.hyoji ? '●' : '　'))
 							]))
 					]));
 		},
