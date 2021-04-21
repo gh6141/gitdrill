@@ -367,9 +367,9 @@ view model =
         --,div[style "position" "absolute", style "top" "170px", style "left" "400px"][button [ style "font-size" "12px",onClick (Seisu True)][text "整数"]]
         -- ,div[style "position" "absolute", style "top" "170px", style "left" "450px"][button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]]
         
-        ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "740px"][sujibutton]
-        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "24px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "position" "absolute", style "top" "470px", style "left" "750px"][button [ style "font-size" "20px",onClick Tasikame][text "たしかめ"]]
+        ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
+        ,div[style "position" "absolute", style "top" "350px", style "left" "750px"][button [ style "font-size" "24px",onClick (Change "")][text "つぎへ"]]
+        ,div[style "position" "absolute", style "top" "350px", style "left" "750px"][button [ style "font-size" "20px",onClick Tasikame][text "たしかめ"]]
 
         ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "font-size" (if (model.stage==6 && model.point>=model.plimit ) then "30px" else "120px"),style "color" "red",style "visibility" (if model.maru==True then "visible" else "hidden")][text (if model.stage==6 && model.point>=model.plimit then "合格！!すばらしい" else "〇")]
         --point
