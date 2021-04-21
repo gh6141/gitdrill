@@ -6216,20 +6216,6 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '2px'),
-						A2(elm$html$Html$Attributes$style, 'left', '400px'),
-						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						'ステージ：' + elm$core$String$fromInt(model.stage))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
 						A2(
 						elm$html$Html$Attributes$style,
 						'visibility',
@@ -6245,7 +6231,7 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '350px'),
+						A2(elm$html$Html$Attributes$style, 'top', '320px'),
 						A2(elm$html$Html$Attributes$style, 'left', '750px')
 					]),
 				_List_fromArray(
@@ -6254,13 +6240,12 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '24px'),
-								elm$html$Html$Events$onClick(
-								author$project$Main$Change(''))
+								A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+								elm$html$Html$Events$onClick(author$project$Main$Tasikame)
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('つぎへ')
+								elm$html$Html$text('たしかめ')
 							]))
 					])),
 				A2(
@@ -6268,7 +6253,7 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '350px'),
+						A2(elm$html$Html$Attributes$style, 'top', '370px'),
 						A2(elm$html$Html$Attributes$style, 'left', '750px')
 					]),
 				_List_fromArray(
@@ -6277,12 +6262,13 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-								elm$html$Html$Events$onClick(author$project$Main$Tasikame)
+								A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$Change(''))
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('たしかめ')
+								elm$html$Html$text('つぎへ')
 							]))
 					])),
 				A2(
