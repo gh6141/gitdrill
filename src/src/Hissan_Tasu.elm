@@ -361,7 +361,7 @@ view model =
         ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "160px"] [input [onClick (CTc "v"),   onInput CTv,size 3,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.v] [] ]
 
         --stage
-        ,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
+        --,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
 
 
         --,div[style "position" "absolute", style "top" "170px", style "left" "400px"][button [ style "font-size" "12px",onClick (Seisu True)][text "整数"]]
