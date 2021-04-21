@@ -191,23 +191,15 @@ update msg model =
          ilistx=lgetAt (stagex-1) ilst
       in
       ({ model | maru=False
-      ,stage=stagex
-      ,point=if flgp then 0 else model.point
-      ,ilist=ilistx
-      
-      --,cursor="lv"
+                ,stage=stagex
+                ,point=if flgp then 0 else model.point
+                ,ilist=ilistx      
+                --,cursor="lv"
       }, Random.generate NewAns ansGenerator)
-                                    --generate : (a -> msg) -> Generator a -> Cmd msg
+                 --generate : (a -> msg) -> Generator a -> Cmd msg
     NewAns lr ->
+      ( {model | maru=False    },Cmd.none )
 
-      ( {model | maru=False,lr=lr
-      ,dlr=(lrString lr model.stage)
-      ,cursor=sgetAt 0 model.ilist
-      ,cursori=0
-      --,dlr= lrHenko model.dlr "ri" (sgetAt 0 model.ilist) False
-      --,cursor="rv"
-      
-      },Cmd.none )
     Btn txt ->
      let
         ci = 
