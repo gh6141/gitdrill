@@ -347,7 +347,7 @@ view model =
         smoji: String->String -> String -> Html Msg
         smoji xx yy sutxt =  div [style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px"] [text sutxt] ]
 
-        stxt xx yy sutxt= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px"] [text sutxt] ]        
+        stxt xx yy sutxt= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px",style "color" (if sutxt=="?" then "red" else "black")] [text sutxt] ]        
   in
 
   div [style "position" "relative"]
@@ -356,8 +356,8 @@ view model =
         ,smoji "460" "10" "2"
         ,smoji "300" "140" "3"
         ,smoji "460" "140" "4"
-        ,stxt "300" "320"   "5"
-        ,stxt "460" "320"   "?"
+        ,stxt "300" "320" "5"
+        ,stxt "460" "320" "?"
       
         ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
         ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
