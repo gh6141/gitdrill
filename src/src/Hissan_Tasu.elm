@@ -348,8 +348,8 @@ view model =
 
   div [style "position" "relative"]
     [     Html.img [src "py/hissan_tasu.jpg"][]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "300px"] [input [ onClick (CTc "li"),  onInput CTli,size 3,placeholder (if model.cursor=="li" then "?" else ""), style "font-size" "72px",style "background-color" "lightblue",value  model.dlr.li] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "500px"] [input [  onClick (CTc "ri"), onInput CTri,size 3,placeholder (if model.cursor=="ri" then "?" else ""), style "font-size" "72px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "250px"] [input [ onClick (CTc "li"),  onInput CTli,size 3,placeholder (if model.cursor=="li" then "?" else ""), style "font-size" "70px",style "background-color" "lightblue",value  model.dlr.li] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "450px"] [input [  onClick (CTc "ri"), onInput CTri,size 3,placeholder (if model.cursor=="ri" then "?" else ""), style "font-size" "70px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
       
         ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
         ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
