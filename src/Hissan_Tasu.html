@@ -5674,15 +5674,6 @@ var author$project$Main$update = F2(
 var author$project$Main$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
-var author$project$Main$CTc = function (a) {
-	return {$: 'CTc', a: a};
-};
-var author$project$Main$CTli = function (a) {
-	return {$: 'CTli', a: a};
-};
-var author$project$Main$CTri = function (a) {
-	return {$: 'CTri', a: a};
-};
 var author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
@@ -5728,12 +5719,18 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$img = _VirtualDom_node('img');
-var elm$html$Html$input = _VirtualDom_node('input');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$html$Html$tr = _VirtualDom_node('tr');
+var elm$html$Html$Attributes$size = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'size',
+		elm$core$String$fromInt(n));
+};
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5742,13 +5739,6 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			elm$json$Json$Encode$string(string));
 	});
-var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
-var elm$html$Html$Attributes$size = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'size',
-		elm$core$String$fromInt(n));
-};
 var elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		elm$html$Html$Attributes$stringProperty,
@@ -5757,7 +5747,6 @@ var elm$html$Html$Attributes$src = function (url) {
 };
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5775,40 +5764,58 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$json$Json$Decode$string = _Json_decodeString;
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
-};
 var author$project$Main$view = function (model) {
+	var stxt = F3(
+		function (xx, yy, sutxt) {
+			return A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'background-color', 'lightblue'),
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', yy + 'px'),
+						A2(elm$html$Html$Attributes$style, 'left', xx + 'px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$size(1),
+								A2(elm$html$Html$Attributes$style, 'font-size', '120px')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(sutxt)
+							]))
+					]));
+		});
+	var smoji = F3(
+		function (xx, yy, sutxt) {
+			return A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', yy + 'px'),
+						A2(elm$html$Html$Attributes$style, 'left', xx + 'px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$size(1),
+								A2(elm$html$Html$Attributes$style, 'font-size', '120px')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(sutxt)
+							]))
+					]));
+		});
 	var sbutton = function (ii) {
 		return A2(
 			elm$html$Html$button,
@@ -5954,66 +5961,12 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$Attributes$src('py/hissan_tasu.jpg')
 					]),
 				_List_Nil),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$Attributes$style,
-						'visibility',
-						model.rmode ? 'visible' : 'hidden'),
-						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '320px'),
-						A2(elm$html$Html$Attributes$style, 'left', '250px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$input,
-						_List_fromArray(
-							[
-								elm$html$Html$Events$onClick(
-								author$project$Main$CTc('li')),
-								elm$html$Html$Events$onInput(author$project$Main$CTli),
-								elm$html$Html$Attributes$size(3),
-								elm$html$Html$Attributes$placeholder(
-								(model.cursor === 'li') ? '?' : ''),
-								A2(elm$html$Html$Attributes$style, 'font-size', '70px'),
-								A2(elm$html$Html$Attributes$style, 'background-color', 'lightblue'),
-								elm$html$Html$Attributes$value(model.dlr.li)
-							]),
-						_List_Nil)
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$Attributes$style,
-						'visibility',
-						model.rmode ? 'visible' : 'hidden'),
-						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '320px'),
-						A2(elm$html$Html$Attributes$style, 'left', '450px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$input,
-						_List_fromArray(
-							[
-								elm$html$Html$Events$onClick(
-								author$project$Main$CTc('ri')),
-								elm$html$Html$Events$onInput(author$project$Main$CTri),
-								elm$html$Html$Attributes$size(3),
-								elm$html$Html$Attributes$placeholder(
-								(model.cursor === 'ri') ? '?' : ''),
-								A2(elm$html$Html$Attributes$style, 'font-size', '70px'),
-								A2(elm$html$Html$Attributes$style, 'background-color', 'lightblue'),
-								elm$html$Html$Attributes$value(model.dlr.ri)
-							]),
-						_List_Nil)
-					])),
+				A3(smoji, '300', '10', '1'),
+				A3(smoji, '460', '10', '2'),
+				A3(smoji, '300', '140', '3'),
+				A3(smoji, '460', '140', '4'),
+				A3(stxt, '300', '320', '5'),
+				A3(stxt, '460', '320', '?'),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
