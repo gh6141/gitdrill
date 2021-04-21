@@ -138,7 +138,7 @@ view model =
                      ,style "width" isizex, style "height" isizey] []
           in
             if ii==6 then
-             span[][text "|",nakami]
+             span[style "font-size" "30px" ][text "|",nakami]
             else 
              nakami
          
@@ -228,10 +228,10 @@ view model =
      [ td [colspan 2]
        [ 
              div []
-              [Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Disp]] [ text "みる" ]
-              ,Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Hide]] [ text "かくす" ]
-              ,Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick HideL]] [ text "ひだり" ]
-             ,Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick HideR]] [ text "みぎ" ]
+              [Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick Disp]] [ text "みる" ]
+              ,Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick Hide]] [ text "かくす" ]
+              ,Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick HideL]] [ text "ひだり" ]
+             ,Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick HideR]] [ text "みぎ" ]
               ]]
      ]
 
