@@ -348,27 +348,11 @@ view model =
 
   div [style "position" "relative"]
     [     Html.img [src "py/hissan_tasu.jpg"][]
-        --left
-        --,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "85px"] [input [ onClick (CTc "lv"), onInput CTlv,size 3,placeholder (if model.cursor=="lv" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.lv] [] ]
-        --,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "85px"] [input [ onClick (CTc "lr"), onInput CTlr,size 3,placeholder (if model.cursor=="lr" then "?" else ""), style "font-size" "16px",style "background-color" "khaki",value  model.dlr.lr] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "350px"] [input [ onClick (CTc "li"),  onInput CTli,size 3,placeholder (if model.cursor=="li" then "?" else ""), style "font-size" "32px",style "background-color" "lightblue",value  model.dlr.li] [] ]
-        --right
-        --,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "5px", style "left" "218px"] [input [  onClick (CTc "rv"), onInput CTrv,size 3,placeholder (if model.cursor=="rv" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.rv] [] ]
-        --,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "35px", style "left" "218px"] [input [  onClick (CTc "rr"), onInput CTrr,size 3,placeholder (if model.cursor=="rr" then "?" else ""), style "font-size" "16px",style "background-color" "khaki",value  model.dlr.rr] [] ]
-        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "550px"] [input [  onClick (CTc "ri"), onInput CTri,size 3,placeholder (if model.cursor=="ri" then "?" else ""), style "font-size" "32px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
-        --all
-        --,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "38px"] [input [onClick (CTc "i"),   onInput CTi,size 3,placeholder (if model.cursor=="i" then "?" else ""), style "font-size" "16px",style "background-color" "lightblue",value model.dlr.i] [] ]
-        --,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "210px", style "left" "160px"] [input [onClick (CTc "v"),   onInput CTv,size 3,placeholder (if model.cursor=="v" then "?" else ""), style "font-size" "16px",style "background-color" "coral",value model.dlr.v] [] ]
-
-        --stage
-        --,div[style "position" "absolute", style "top" "2px", style "left" "400px",style "font-size" "20px"][text  ("ステージ："++(String.fromInt model.stage) )]
-
-
-        --,div[style "position" "absolute", style "top" "170px", style "left" "400px"][button [ style "font-size" "12px",onClick (Seisu True)][text "整数"]]
-        -- ,div[style "position" "absolute", style "top" "170px", style "left" "450px"][button [ style "font-size" "12px",onClick (Seisu False)][text "小数"]]
-        
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "300px"] [input [ onClick (CTc "li"),  onInput CTli,size 3,placeholder (if model.cursor=="li" then "?" else ""), style "font-size" "72px",style "background-color" "lightblue",value  model.dlr.li] [] ]
+        ,div [style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "320px", style "left" "500px"] [input [  onClick (CTc "ri"), onInput CTri,size 3,placeholder (if model.cursor=="ri" then "?" else ""), style "font-size" "72px",style "background-color" "lightblue",value  model.dlr.ri] [] ]
+      
         ,div[style "visibility" (if model.rmode==True then "visible" else "hidden"),style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
-        ,div[style "position" "absolute", style "top" "320px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
+        ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
         ,div[style "position" "absolute", style "top" "370px", style "left" "750px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
 
 
