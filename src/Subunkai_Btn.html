@@ -5465,6 +5465,7 @@ var elm$html$Html$img = _VirtualDom_node('img');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5824,7 +5825,7 @@ var author$project$Subunkai$view = function (model) {
 	var list1 = A2(
 		elm$core$List$map,
 		function (ii) {
-			return A2(
+			var nakami = A2(
 				elm$html$Html$img,
 				_List_fromArray(
 					[
@@ -5841,6 +5842,14 @@ var author$project$Subunkai$view = function (model) {
 						A2(elm$html$Html$Attributes$style, 'height', isizey)
 					]),
 				_List_Nil);
+			return (ii === 6) ? A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('|'),
+						nakami
+					])) : nakami;
 		},
 		A2(
 			elm$core$List$range,
