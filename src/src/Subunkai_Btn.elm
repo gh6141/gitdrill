@@ -128,13 +128,13 @@ view model =
         isizex="90px"
         isizey="60px"
         img1=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
-        img2=img [src ("https://rasp.cld9.work/py/car2.jpg") ,style "width" isizex, style "height" isizey] []
-        img3=img [src ("https://rasp.cld9.work/py/cari1.jpg"),style "width" isizex, style "height" isizey] []
-        img4=img [src ("https://rasp.cld9.work/py/cari2.jpg"),style "width" isizex, style "height" isizey] []
+        img2=img [src ("https://rasp.cld9.work/py/car3.jpg") ,style "width" isizex, style "height" isizey] []
+        img3=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
+        img4=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
         list1 = List.map  (\ii -> 
           let
             nakami=  img [onClick (Img ii),id (String.fromInt ii)
-                     ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/cari1.jpg" else "https://rasp.cld9.work/py/car1.jpg") 
+                     ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/car3.jpg" else "https://rasp.cld9.work/py/car3.jpg") 
                      ,style "width" isizex, style "height" isizey] []
           in
             if ii==6 then
