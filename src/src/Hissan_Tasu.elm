@@ -27,13 +27,16 @@ type alias Mondai =
  
 type alias Model =
   { maru : Bool
-  ,toi:Mondai
+   ,toi:Mondai
+   ,in10:String
+   ,in1:String
+   ,cur:Int
   }
 
  
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { maru=False,toi={sa="",sb=""} } , Cmd.none )
+  ( { maru=False,toi={sa="11",sb="11"},in10="",in1="?" ,cur=1} , Cmd.none )
 
 
 -- UPDATE
@@ -56,7 +59,7 @@ update msg model =
 
    ansGenerator : Random.Generator Mondai
    
-   ansGenerator = Random.map2  mhenkan (Random.int 10 99) (Random.int 10 99)
+   ansGenerator = Random.map2  mhenkan (Random.int 1 99) (Random.int 1 99)
 
 
   in
@@ -70,16 +73,29 @@ update msg model =
                                     --generate : (a -> msg) -> Generator a -> Cmd msg
     NewAns mnd ->
 
-      ( {model | maru=False,toi=mnd
+      ( {model | maru=False,toi=mnd ,cur =1,in1="?",in10=""
 
-      },Cmd.none )
+        },if ((toint mnd.sa) + (toint mnd.sb))>99 then (Random.generate NewAns ansGenerator) else  Cmd.none )
+       --  }, Cmd.none )
 
-    Btn si ->
+    Btn si -> 
+     let
+        next_cur=if (model.cur==1)&&(si==String.right 1 (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  ) ) then 2 else 1
 
-      (model ,Cmd.none)
+     in
+
+
+      ({model| in1=if model.cur==1 then si else model.in1 
+               ,in10=if (model.cur==1&&next_cur==2) then "?" else (if model.cur==2 then si else model.in10)
+               ,cur = next_cur
+              } ,Cmd.none)
     
     Tasikame ->
-     ( model,Cmd.none)
+     ( { model| maru=
+      ( ((toint model.toi.sa)+(toint model.toi.sb))
+       ==
+       ( (toint model.in10)*10 + (toint model.in1))
+        ) },Cmd.none)
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
@@ -87,8 +103,6 @@ toint st=  Maybe.withDefault 0 (String.toInt st)
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
-
-
 
 
 -- VIEW
@@ -132,32 +146,30 @@ view model =
 
         stxt xx yy sutxt= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px",style "color" (if sutxt=="?" then "red" else "black")] [text sutxt] ]        
   
-        a10=model.sa
-        a1=
-        b10=
-        b1=
+        a10=String.slice -2 -1 ("0"++model.toi.sa)
+        a10x=if a10=="0" then "" else a10
+        a1=String.right 1 ("0"++model.toi.sa)
+        b10=String.slice -2 -1 ("0"++model.toi.sb)
+        b10x=if b10 =="0" then "" else b10
+        b1=String.right 1 ("0"++model.toi.sb)
   
   in
 
   div [style "position" "relative"]
     [   Html.img [src "py/hissan_tasu.jpg"][]
-        ,smoji "300" "10" a10
+        ,smoji "300" "10" a10x
         ,smoji "460" "10" a1
-        ,smoji "300" "140" b10
+        ,smoji "300" "140" b10x
         ,smoji "460" "140" b1
 
-        ,stxt "300" "320" "5"
-        ,stxt "460" "320" "?"
+        ,stxt "300" "320" model.in10
+        ,stxt "460" "320" model.in1
       
         ,div[style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
         ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
         ,div[style "position" "absolute", style "top" "370px", style "left" "750px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
-
-
-        ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "color" "red"][text "〇"]
+        ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         --point
-
-
    
       
     ]

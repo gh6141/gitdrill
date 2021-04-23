@@ -4883,8 +4883,11 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
+			cur: 1,
+			in1: '?',
+			in10: '',
 			maru: false,
-			toi: {sa: '', sb: ''}
+			toi: {sa: '11', sb: '11'}
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -4896,6 +4899,35 @@ var author$project$Main$subscriptions = function (model) {
 var author$project$Main$NewAns = function (a) {
 	return {$: 'NewAns', a: a};
 };
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$core$String$toInt = _String_toInt;
+var author$project$Main$toint = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toInt(st));
+};
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$core$String$length = _String_length;
+var elm$core$String$slice = _String_slice;
+var elm$core$String$right = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(
+			elm$core$String$slice,
+			-n,
+			elm$core$String$length(string),
+			string);
+	});
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5009,9 +5041,6 @@ var elm$random$Random$generate = F2(
 			elm$random$Random$Generate(
 				A2(elm$random$Random$map, tagger, generator)));
 	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var elm$core$Bitwise$and = _Bitwise_and;
 var elm$core$Bitwise$xor = _Bitwise_xor;
 var elm$random$Random$peel = function (_n0) {
@@ -5080,8 +5109,8 @@ var author$project$Main$update = F2(
 		var ansGenerator = A3(
 			elm$random$Random$map2,
 			mhenkan,
-			A2(elm$random$Random$int, 2, 5),
-			A2(elm$random$Random$int, 2, 5));
+			A2(elm$random$Random$int, 1, 99),
+			A2(elm$random$Random$int, 1, 99));
 		switch (msg.$) {
 			case 'Change':
 				var newContent = msg.a;
@@ -5095,13 +5124,36 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{maru: false, toi: mnd}),
-					elm$core$Platform$Cmd$none);
+						{cur: 1, in1: '?', in10: '', maru: false, toi: mnd}),
+					((author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb)) > 99) ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				var next_cur = ((model.cur === 1) && _Utils_eq(
+					si,
+					A2(
+						elm$core$String$right,
+						1,
+						elm$core$String$fromInt(
+							author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb))))) ? 2 : 1;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							cur: next_cur,
+							in1: (model.cur === 1) ? si : model.in1,
+							in10: ((model.cur === 1) && (next_cur === 2)) ? '?' : ((model.cur === 2) ? si : model.in10)
+						}),
+					elm$core$Platform$Cmd$none);
 			default:
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							maru: _Utils_eq(
+								author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb),
+								(author$project$Main$toint(model.in10) * 10) + author$project$Main$toint(model.in1))
+						}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Main$Btn = function (a) {
@@ -5360,6 +5412,12 @@ var author$project$Main$view = function (model) {
 							]))
 					]))
 			]));
+	var b10 = A3(elm$core$String$slice, -2, -1, '0' + model.toi.sb);
+	var b10x = (b10 === '0') ? '' : b10;
+	var b1 = A2(elm$core$String$right, 1, '0' + model.toi.sb);
+	var a10 = A3(elm$core$String$slice, -2, -1, '0' + model.toi.sa);
+	var a10x = (a10 === '0') ? '' : a10;
+	var a1 = A2(elm$core$String$right, 1, '0' + model.toi.sa);
 	return A2(
 		elm$html$Html$div,
 		_List_fromArray(
@@ -5375,12 +5433,12 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$Attributes$src('py/hissan_tasu.jpg')
 					]),
 				_List_Nil),
-				A3(smoji, '300', '10', '1'),
-				A3(smoji, '460', '10', '2'),
-				A3(smoji, '300', '140', '3'),
-				A3(smoji, '460', '140', '4'),
-				A3(stxt, '300', '320', '5'),
-				A3(stxt, '460', '320', '?'),
+				A3(smoji, '300', '10', a10x),
+				A3(smoji, '460', '10', a1),
+				A3(smoji, '300', '140', b10x),
+				A3(smoji, '460', '140', b1),
+				A3(stxt, '300', '320', model.in10),
+				A3(stxt, '460', '320', model.in1),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -5443,11 +5501,13 @@ var author$project$Main$view = function (model) {
 						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
 						A2(elm$html$Html$Attributes$style, 'top', '180px'),
 						A2(elm$html$Html$Attributes$style, 'left', '250px'),
-						A2(elm$html$Html$Attributes$style, 'color', 'red')
+						A2(elm$html$Html$Attributes$style, 'color', 'red'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '100px')
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text('〇')
+						elm$html$Html$text(
+						model.maru ? '〇' : '')
 					]))
 			]));
 };
@@ -5614,8 +5674,6 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
-var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
@@ -5636,7 +5694,6 @@ var elm$core$String$left = F2(
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
 var elm$core$String$contains = _String_contains;
-var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
