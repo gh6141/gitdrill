@@ -80,14 +80,21 @@ update msg model =
 
     Btn si -> 
      let
-        next_cur=if (model.cur==1)&&(si==String.right 1 (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  ) ) then 2 else 1
-
+        kurai1=(si==String.right 1 (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  ))
+        next_cur=if kurai1 then 2 else ( if model.cur==2 then 2 else 1)
+        in1x=if model.cur==1 then si else model.in1 
+        in10x=if (model.cur==1&&next_cur==2) then "?" else (if model.cur==2 then si else model.in10)
+        
      in
 
 
-      ({model| in1=if model.cur==1 then si else model.in1 
-               ,in10=if (model.cur==1&&next_cur==2) then "?" else (if model.cur==2 then si else model.in10)
+      ({model| in1=in1x
+               ,in10=in10x
                ,cur = next_cur
+               ,maru=((toint model.toi.sa)+(toint model.toi.sb))
+                      ==
+                     ( (toint in10x)*10 + (toint in1x))
+                      
               } ,Cmd.none)
     
     Tasikame ->
@@ -166,7 +173,7 @@ view model =
         ,stxt "460" "320" model.in1
       
         ,div[style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
-        ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
+        --,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
         ,div[style "position" "absolute", style "top" "370px", style "left" "750px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
         ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         --point

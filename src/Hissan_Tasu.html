@@ -5128,20 +5128,26 @@ var author$project$Main$update = F2(
 					((author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb)) > 99) ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				var next_cur = ((model.cur === 1) && _Utils_eq(
+				var kurai1 = _Utils_eq(
 					si,
 					A2(
 						elm$core$String$right,
 						1,
 						elm$core$String$fromInt(
-							author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb))))) ? 2 : 1;
+							author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb))));
+				var next_cur = kurai1 ? 2 : ((model.cur === 2) ? 2 : 1);
+				var in1x = (model.cur === 1) ? si : model.in1;
+				var in10x = ((model.cur === 1) && (next_cur === 2)) ? '?' : ((model.cur === 2) ? si : model.in10);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							cur: next_cur,
-							in1: (model.cur === 1) ? si : model.in1,
-							in10: ((model.cur === 1) && (next_cur === 2)) ? '?' : ((model.cur === 2) ? si : model.in10)
+							in1: in1x,
+							in10: in10x,
+							maru: _Utils_eq(
+								author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb),
+								(author$project$Main$toint(in10x) * 10) + author$project$Main$toint(in1x))
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
@@ -5162,7 +5168,6 @@ var author$project$Main$Btn = function (a) {
 var author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
-var author$project$Main$Tasikame = {$: 'Tasikame'};
 var author$project$Main$btnLabel = function (xi) {
 	if (xi === 13) {
 		return 'C';
@@ -5449,28 +5454,6 @@ var author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[sujibutton])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '300px'),
-						A2(elm$html$Html$Attributes$style, 'left', '750px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$button,
-						_List_fromArray(
-							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-								elm$html$Html$Events$onClick(author$project$Main$Tasikame)
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('たしかめ')
-							]))
-					])),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
