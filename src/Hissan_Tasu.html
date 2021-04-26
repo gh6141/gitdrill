@@ -4888,6 +4888,7 @@ var author$project$Main$init = function (_n0) {
 			in10: '',
 			in10k: '',
 			maru: false,
+			s20: false,
 			toi: {sa: '11', sb: '11'}
 		},
 		elm$core$Platform$Cmd$none);
@@ -5110,8 +5111,14 @@ var author$project$Main$update = F2(
 		var ansGenerator = A3(
 			elm$random$Random$map2,
 			mhenkan,
-			A2(elm$random$Random$int, 1, 99),
-			A2(elm$random$Random$int, 1, 99));
+			A2(
+				elm$random$Random$int,
+				1,
+				model.s20 ? 19 : 99),
+			A2(
+				elm$random$Random$int,
+				1,
+				model.s20 ? 19 : 99));
 		switch (msg.$) {
 			case 'Change':
 				var newContent = msg.a;
@@ -5126,7 +5133,9 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{cur: 1, in1: '?', in10: '', maru: false, toi: mnd}),
-					((author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb)) > 99) ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
+					(_Utils_cmp(
+						author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb),
+						model.s20 ? 29 : 99) > 0) ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				var kuriagari = (author$project$Main$toint(
@@ -5156,7 +5165,7 @@ var author$project$Main$update = F2(
 								(author$project$Main$toint(in10x) * 10) + author$project$Main$toint(in1x))
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Tasikame':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5166,6 +5175,12 @@ var author$project$Main$update = F2(
 								(author$project$Main$toint(model.in10) * 10) + author$project$Main$toint(model.in1))
 						}),
 					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{s20: true}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Main$Btn = function (a) {
@@ -5174,6 +5189,7 @@ var author$project$Main$Btn = function (a) {
 var author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
+var author$project$Main$S20 = {$: 'S20'};
 var author$project$Main$btnLabel = function (xi) {
 	if (xi === 13) {
 		return 'C';
@@ -5466,7 +5482,7 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '370px'),
+						A2(elm$html$Html$Attributes$style, 'top', '300px'),
 						A2(elm$html$Html$Attributes$style, 'left', '750px')
 					]),
 				_List_fromArray(
@@ -5482,6 +5498,28 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$text('つぎへ')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '450px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(author$project$Main$S20)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('答<30')
 							]))
 					])),
 				A2(

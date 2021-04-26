@@ -32,20 +32,21 @@ type alias Model =
    ,in1:String
    ,in10k :String
    ,cur:Int
+   ,s20:Bool
    
   }
 
  
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { maru=False,toi={sa="11",sb="11"},in10="",in1="?" ,in10k="",cur=1} , Cmd.none )
+  ( { maru=False,toi={sa="11",sb="11"},in10="",in1="?" ,in10k="",cur=1,s20=False} , Cmd.none )
 
 
 -- UPDATE
 
 
 type Msg
-  = Change String | NewAns Mondai | Btn String | Tasikame
+  = Change String | NewAns Mondai | Btn String | Tasikame | S20
 
 btnLabel : Int -> String
 btnLabel xi = case xi of
@@ -60,7 +61,7 @@ update msg model =
    mhenkan i1 i2 = {sa=String.fromInt i1,sb=String.fromInt i2} 
 
    ansGenerator : Random.Generator Mondai   
-   ansGenerator = Random.map2  mhenkan (Random.int 1 99) (Random.int 1 99)
+   ansGenerator = Random.map2  mhenkan (Random.int 1 (if model.s20 then 19 else 99)) (Random.int 1 (if model.s20 then 19 else 99))
 
 
   in
@@ -76,7 +77,7 @@ update msg model =
 
       ( {model | maru=False,toi=mnd ,cur =1,in1="?",in10=""
 
-        },if ((toint mnd.sa) + (toint mnd.sb))>99 then (Random.generate NewAns ansGenerator) else  Cmd.none )
+        },if ((toint mnd.sa) + (toint mnd.sb))>(if model.s20 then 29 else 99) then (Random.generate NewAns ansGenerator) else  Cmd.none )
        --  }, Cmd.none )
 
     Btn si -> 
@@ -112,6 +113,9 @@ update msg model =
        ==
        ( (toint model.in10)*10 + (toint model.in1))
         ) },Cmd.none)
+
+    S20 ->
+      ( {model|s20=True   },Cmd.none)
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
@@ -184,7 +188,8 @@ view model =
       
         ,div[style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
         --,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
-        ,div[style "position" "absolute", style "top" "370px", style "left" "750px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
+        ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
+        ,div[style "position" "absolute", style "top" "450px", style "left" "750px"][button [ style "font-size" "20px",onClick S20][text "答<30"]]
         ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         --point
    
