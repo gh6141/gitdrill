@@ -4886,6 +4886,7 @@ var author$project$Main$init = function (_n0) {
 			cur: 1,
 			in1: '?',
 			in10: '',
+			in10k: '',
 			maru: false,
 			toi: {sa: '11', sb: '11'}
 		},
@@ -5128,6 +5129,9 @@ var author$project$Main$update = F2(
 					((author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb)) > 99) ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
+				var kuriagari = (author$project$Main$toint(
+					A2(elm$core$String$right, 1, model.toi.sa)) + author$project$Main$toint(
+					A2(elm$core$String$right, 1, model.toi.sb))) > 9;
 				var kurai1 = _Utils_eq(
 					si,
 					A2(
@@ -5138,6 +5142,7 @@ var author$project$Main$update = F2(
 				var next_cur = kurai1 ? 2 : ((model.cur === 2) ? 2 : 1);
 				var in1x = (model.cur === 1) ? si : model.in1;
 				var in10x = ((model.cur === 1) && (next_cur === 2)) ? '?' : ((model.cur === 2) ? si : model.in10);
+				var in10kx = (kurai1 && kuriagari) ? '1' : '';
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5145,6 +5150,7 @@ var author$project$Main$update = F2(
 							cur: next_cur,
 							in1: in1x,
 							in10: in10x,
+							in10k: in10kx,
 							maru: _Utils_eq(
 								author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb),
 								(author$project$Main$toint(in10x) * 10) + author$project$Main$toint(in1x))
@@ -5239,8 +5245,8 @@ var elm$html$Html$Events$onClick = function (msg) {
 		elm$json$Json$Decode$succeed(msg));
 };
 var author$project$Main$view = function (model) {
-	var stxt = F3(
-		function (xx, yy, sutxt) {
+	var stxt = F4(
+		function (xx, yy, sutxt, sizef) {
 			return A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -5257,7 +5263,7 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$Attributes$size(1),
-								A2(elm$html$Html$Attributes$style, 'font-size', '120px'),
+								A2(elm$html$Html$Attributes$style, 'font-size', sizef + 'px'),
 								A2(
 								elm$html$Html$Attributes$style,
 								'color',
@@ -5442,8 +5448,9 @@ var author$project$Main$view = function (model) {
 				A3(smoji, '460', '10', a1),
 				A3(smoji, '300', '140', b10x),
 				A3(smoji, '460', '140', b1),
-				A3(stxt, '300', '320', model.in10),
-				A3(stxt, '460', '320', model.in1),
+				A4(stxt, '300', '320', model.in10, '120'),
+				A4(stxt, '460', '320', model.in1, '120'),
+				A4(stxt, '370', '1', model.in10k, '50'),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(

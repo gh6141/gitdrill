@@ -30,13 +30,15 @@ type alias Model =
    ,toi:Mondai
    ,in10:String
    ,in1:String
+   ,in10k :String
    ,cur:Int
+   
   }
 
  
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { maru=False,toi={sa="11",sb="11"},in10="",in1="?" ,cur=1} , Cmd.none )
+  ( { maru=False,toi={sa="11",sb="11"},in10="",in1="?" ,in10k="",cur=1} , Cmd.none )
 
 
 -- UPDATE
@@ -57,8 +59,7 @@ update msg model =
    mhenkan :Int -> Int -> Mondai
    mhenkan i1 i2 = {sa=String.fromInt i1,sb=String.fromInt i2} 
 
-   ansGenerator : Random.Generator Mondai
-   
+   ansGenerator : Random.Generator Mondai   
    ansGenerator = Random.map2  mhenkan (Random.int 1 99) (Random.int 1 99)
 
 
@@ -80,16 +81,24 @@ update msg model =
 
     Btn si -> 
      let
-        kurai1=(si==String.right 1 (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  ))
-        next_cur=if kurai1 then 2 else ( if model.cur==2 then 2 else 1)
+        --１の位が正しいか判別
+        kurai1=(si==String.right 1 (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  ))   
+        --次の入力を促す位置     
+        next_cur=  if kurai1 then 2 else ( if model.cur==2 then 2 else 1)
         in1x=if model.cur==1 then si else model.in1 
         in10x=if (model.cur==1&&next_cur==2) then "?" else (if model.cur==2 then si else model.in10)
+        
+        kuriagari=  ((toint (String.right 1 model.toi.sa))+(toint (String.right 1 model.toi.sb))  ) >9
+
+        in10kx=if (kurai1 && kuriagari) then "1" else ""
+        
         
      in
 
 
       ({model| in1=in1x
                ,in10=in10x
+               ,in10k=in10kx
                ,cur = next_cur
                ,maru=((toint model.toi.sa)+(toint model.toi.sb))
                       ==
@@ -151,7 +160,7 @@ view model =
         smoji: String->String -> String -> Html Msg
         smoji xx yy sutxt =  div [style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px"] [text sutxt] ]
 
-        stxt xx yy sutxt= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px",style "color" (if sutxt=="?" then "red" else "black")] [text sutxt] ]        
+        stxt xx yy sutxt sizef= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" (sizef++"px"),style "color" (if sutxt=="?" then "red" else "black")] [text sutxt] ]        
   
         a10=String.slice -2 -1 ("0"++model.toi.sa)
         a10x=if a10=="0" then "" else a10
@@ -169,8 +178,9 @@ view model =
         ,smoji "300" "140" b10x
         ,smoji "460" "140" b1
 
-        ,stxt "300" "320" model.in10
-        ,stxt "460" "320" model.in1
+        ,stxt "300" "320" model.in10 "120"
+        ,stxt "460" "320" model.in1 "120"
+        ,stxt "370" "1" model.in10k "50"
       
         ,div[style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
         --,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "30px",onClick Tasikame][text "たしかめ"]]
