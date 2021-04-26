@@ -69,7 +69,7 @@ update msg model =
   case msg of
     Change newContent ->
 
-      ({ model | maru=False      
+      ({ model | maru=False ,in10k=""
 
       }, Random.generate NewAns ansGenerator)
                                     --generate : (a -> msg) -> Generator a -> Cmd msg
@@ -91,7 +91,7 @@ update msg model =
         
         kuriagari=  ((toint (String.right 1 model.toi.sa))+(toint (String.right 1 model.toi.sb))  ) >9
 
-        in10kx=if (kurai1 && kuriagari) then "1" else ""
+        in10kx=if (kurai1 && kuriagari ) then "1" else ""
         
         
      in
