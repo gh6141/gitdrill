@@ -179,7 +179,7 @@ view model =
 
         funKekka (sa,sb) = smojif (String.fromInt (10*(toint sa))) (String.fromInt (10*(toint sb))) (if model.s20<=9 then "〇" else "") "6"
 
-        rireki=div [style "position" "absolute", style "top" "280px", style "left" "250px",style "color" "green",style "font-size" "3px"]
+        rireki=div [style "position" "absolute", style "top" "80px", style "left" "750px",style "color" "green",style "font-size" "3px"]
                    (List.map funKekka model.kekkal)
   
   in
@@ -196,14 +196,14 @@ view model =
    
     
       
-        ,div[style "position" "absolute", style "top" "30px", style "left" "700px"][sujibutton]
+        ,div[style "position" "absolute", style "top" "200px", style "left" "100px"][sujibutton]
         ,div[style "position" "absolute", style "top" "240px", style "left" "550px"][button [ style "font-size" "30px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "position" "absolute", style "top" "400px", style "left" "750px"][button [ style "font-size" "20px",onClick S05][text "答<=5"]]
-        ,div[style "position" "absolute", style "top" "440px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答<=9"]]
-        ,div[style "position" "absolute", style "top" "480px", style "left" "750px"][button [ style "font-size" "20px",onClick S20][text "答<=20"]]
-        ,div[style "position" "absolute", style "top" "520px", style "left" "750px"][button [ style "font-size" "20px",onClick S99][text "答<=99"]]
+        ,div[style "position" "absolute", style "top" "300px", style "left" "750px"][button [ style "font-size" "20px",onClick S05][text "答<=5"]]
+        ,div[style "position" "absolute", style "top" "340px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答<=9"]]
+        ,div[style "position" "absolute", style "top" "380px", style "left" "750px"][button [ style "font-size" "20px",onClick S20][text "答<=20"]]
+        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S99][text "答<=99"]]
 
-        ,div[style "position" "absolute", style "top" "180px", style "left" "250px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
+        ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         ,rireki
         ,div[style "position" "absolute", style "top" "260px", style "left" "250px",style "color" "red",style "font-size" "40px"][text (if model.gokaku then "合格！！がんばりました" else "")]
       
