@@ -198,10 +198,10 @@ view model =
       
         ,div[style "position" "absolute", style "top" "200px", style "left" "100px"][sujibutton]
         ,div[style "position" "absolute", style "top" "240px", style "left" "550px"][button [ style "font-size" "50px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "position" "absolute", style "top" "340px", style "left" "750px"][button [ style "font-size" "20px",onClick S05][text "答<=5"]]
-        ,div[style "position" "absolute", style "top" "380px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答<=9"]]
-        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S20][text "答<=20"]]
-        ,div[style "position" "absolute", style "top" "460px", style "left" "750px"][button [ style "font-size" "20px",onClick S99][text "答<=99"]]
+        ,div[style "position" "absolute", style "top" "380px", style "left" "750px"][button [ style "font-size" "20px",onClick S05][text "答<=5"]]
+        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答<=9"]]
+        ,div[style "position" "absolute", style "top" "460px", style "left" "750px"][button [ style "font-size" "20px",onClick S20][text "答<=20"]]
+        ,div[style "position" "absolute", style "top" "500px", style "left" "750px"][button [ style "font-size" "20px",onClick S99][text "答<=99"]]
 
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         ,rireki
