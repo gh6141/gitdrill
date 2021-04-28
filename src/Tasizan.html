@@ -4883,10 +4883,11 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
+			gokaku: false,
 			inp: '?',
 			kekkal: _List_Nil,
 			maru: false,
-			s20: false,
+			s20: 9,
 			toi: {sa: '11', sb: '11'}
 		},
 		elm$core$Platform$Cmd$none);
@@ -4915,6 +4916,28 @@ var author$project$Main$toint = function (st) {
 		0,
 		elm$core$String$toInt(st));
 };
+var elm$core$Basics$not = _Basics_not;
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5109,14 +5132,8 @@ var author$project$Main$update = F2(
 		var ansGenerator = A3(
 			elm$random$Random$map2,
 			mhenkan,
-			A2(
-				elm$random$Random$int,
-				1,
-				model.s20 ? 19 : 99),
-			A2(
-				elm$random$Random$int,
-				1,
-				model.s20 ? 19 : 99));
+			A2(elm$random$Random$int, 1, model.s20),
+			A2(elm$random$Random$int, 1, model.s20));
 		switch (msg.$) {
 			case 'Change':
 				var newContent = msg.a;
@@ -5127,13 +5144,26 @@ var author$project$Main$update = F2(
 					A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator));
 			case 'NewAns':
 				var mnd = msg.a;
+				var gnflg2 = A2(
+					elm$core$List$any,
+					function (_n1) {
+						var sa = _n1.a;
+						var sb = _n1.b;
+						return _Utils_eq(mnd.sa, sa) && _Utils_eq(mnd.sb, sb);
+					},
+					model.kekkal);
+				var gnflg1 = _Utils_cmp(
+					author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb),
+					model.s20) > 0;
+				var endflg = !_Utils_eq(
+					elm$core$List$length(model.kekkal),
+					(((model.s20 - 1) * model.s20) / 2) | 0);
+				var gnflg = (gnflg1 || gnflg2) && endflg;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{inp: '?', maru: false, toi: mnd}),
-					(_Utils_cmp(
-						author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb),
-						model.s20 ? 10 : 99) > 0) ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
+						{gokaku: !endflg, inp: '?', maru: false, toi: mnd}),
+					gnflg ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				var seikai = _Utils_eq(
@@ -5161,11 +5191,29 @@ var author$project$Main$update = F2(
 							maru: marux
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'S05':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gokaku: false, s20: 5}),
+					elm$core$Platform$Cmd$none);
+			case 'S09':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gokaku: false, s20: 9}),
+					elm$core$Platform$Cmd$none);
+			case 'S20':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gokaku: false, s20: 20}),
+					elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{s20: true}),
+						{gokaku: false, s20: 99}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5175,7 +5223,10 @@ var author$project$Main$Btn = function (a) {
 var author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
+var author$project$Main$S05 = {$: 'S05'};
+var author$project$Main$S09 = {$: 'S09'};
 var author$project$Main$S20 = {$: 'S20'};
+var author$project$Main$S99 = {$: 'S99'};
 var author$project$Main$btnLabel = function (xi) {
 	if (xi === 13) {
 		return 'C';
@@ -5386,7 +5437,7 @@ var author$project$Main$view = function (model) {
 			elm$html$Html$button,
 			_List_fromArray(
 				[
-					A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+					A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
 					elm$html$Html$Events$onClick(
 					author$project$Main$Btn(
 						author$project$Main$btnLabel(ii)))
@@ -5513,7 +5564,7 @@ var author$project$Main$view = function (model) {
 				10 * author$project$Main$toint(sa)),
 			elm$core$String$fromInt(
 				10 * author$project$Main$toint(sb)),
-			'〇',
+			(model.s20 <= 9) ? '〇' : '',
 			'6');
 	};
 	var rireki = A2(
@@ -5563,8 +5614,8 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '280px'),
-						A2(elm$html$Html$Attributes$style, 'left', '750px')
+						A2(elm$html$Html$Attributes$style, 'top', '240px'),
+						A2(elm$html$Html$Attributes$style, 'left', '550px')
 					]),
 				_List_fromArray(
 					[
@@ -5596,11 +5647,77 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(author$project$Main$S05)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('答<=5')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '440px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(author$project$Main$S09)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('答<=9')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '480px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
 								elm$html$Html$Events$onClick(author$project$Main$S20)
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('答<=10')
+								elm$html$Html$text('答<=20')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '520px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(author$project$Main$S99)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('答<=99')
 							]))
 					])),
 				A2(
@@ -5618,7 +5735,22 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$text(
 						model.maru ? '〇' : '')
 					])),
-				rireki
+				rireki,
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '260px'),
+						A2(elm$html$Html$Attributes$style, 'left', '250px'),
+						A2(elm$html$Html$Attributes$style, 'color', 'red'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '40px')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						model.gokaku ? '合格！！がんばりました' : '')
+					]))
 			]));
 };
 var elm$browser$Browser$External = function (a) {
