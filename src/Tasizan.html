@@ -4887,6 +4887,7 @@ var author$project$Main$init = function (_n0) {
 			inp: '?',
 			kekkal: _List_Nil,
 			maru: false,
+			msg: false,
 			s20: 9,
 			toi: {sa: '11', sb: '11'}
 		},
@@ -4938,10 +4939,17 @@ var elm$core$List$any = F2(
 			}
 		}
 	});
+var elm$core$String$length = _String_length;
+var elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			elm$core$String$join,
+			after,
+			A2(elm$core$String$split, before, string));
+	});
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
-var elm$core$String$length = _String_length;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$right = F2(
 	function (n, string) {
@@ -5162,17 +5170,24 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{gokaku: !endflg, inp: '?', maru: false, toi: mnd}),
+						{gokaku: !endflg, inp: '?', maru: false, msg: false, toi: mnd}),
 					gnflg ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				var seikai = _Utils_eq(
-					_Utils_ap(model.inp, si),
-					elm$core$String$fromInt(
-						author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb)));
+				var seikais = elm$core$String$fromInt(
+					author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb));
 				var kuriagari = (author$project$Main$toint(
 					A2(elm$core$String$right, 1, model.toi.sa)) + author$project$Main$toint(
 					A2(elm$core$String$right, 1, model.toi.sb))) > 9;
+				var kotaes = A3(
+					elm$core$String$replace,
+					'?',
+					'',
+					_Utils_ap(model.inp, si));
+				var ketacheck = _Utils_eq(
+					elm$core$String$length(seikais),
+					elm$core$String$length(kotaes));
+				var machigai = (!_Utils_eq(kotaes, seikais)) && ketacheck;
 				var inpx = _Utils_ap(
 					(model.inp === '?') ? '' : model.inp,
 					si);
@@ -5184,11 +5199,12 @@ var author$project$Main$update = F2(
 						model,
 						{
 							inp: (si === 'C') ? '?' : inpx,
-							kekkal: A2(
+							kekkal: (machigai || model.msg) ? model.kekkal : A2(
 								elm$core$List$cons,
 								_Utils_Tuple2(model.toi.sa, model.toi.sb),
 								model.kekkal),
-							maru: marux
+							maru: marux,
+							msg: machigai
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'S05':
@@ -5750,6 +5766,22 @@ var author$project$Main$view = function (model) {
 					[
 						elm$html$Html$text(
 						model.gokaku ? '合格！！がんばりました' : '')
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '160px'),
+						A2(elm$html$Html$Attributes$style, 'left', '250px'),
+						A2(elm$html$Html$Attributes$style, 'color', 'green'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						model.msg ? ('答えは' + (elm$core$String$fromInt(
+							author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb)) + 'です')) : '')
 					]))
 			]));
 };

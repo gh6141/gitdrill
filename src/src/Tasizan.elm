@@ -32,12 +32,13 @@ type alias Model =
    ,s20:Int
    ,kekkal:List (String,String)
    ,gokaku:Bool
+   ,msg:Bool
   }
 
  
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { maru=False,toi={sa="11",sb="11"},inp="?",s20=9,kekkal=[],gokaku=False} , Cmd.none )
+  ( { maru=False,toi={sa="11",sb="11"},inp="?",s20=9,kekkal=[],gokaku=False,msg=False} , Cmd.none )
 
 
 -- UPDATE
@@ -85,14 +86,22 @@ update msg model =
 
 
       in
-      ( {model | maru=False,toi=mnd ,inp="?",gokaku=(not endflg)
+      ( {model | maru=False,toi=mnd ,inp="?",gokaku=(not endflg),msg=False
         },if gnflg then (Random.generate NewAns ansGenerator) else  Cmd.none )
        --  }, Cmd.none )
 
     Btn si -> 
      let
-        --正しいか判別
-        seikai=((model.inp++si)==(String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  ))   
+       
+        seikais=String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  
+        kotaes=String.replace "?" "" (model.inp++si)  --? 除外
+
+        --正解と答えの桁数が一致しているか　チェック ?除外
+        ketacheck=(String.length seikais) == (String.length kotaes)
+
+
+        --答えが一致せず　 桁数一致のとき　間違いと表示
+        machigai=  (not (kotaes==seikais)) && ketacheck
         
         kuriagari=  ((toint (String.right 1 model.toi.sa))+(toint (String.right 1 model.toi.sb))  ) >9
 
@@ -106,7 +115,12 @@ update msg model =
       ({model| 
                inp=if si=="C" then "?" else inpx            
                ,maru=marux
-               ,kekkal=(model.toi.sa,model.toi.sb) :: model.kekkal      
+               ,kekkal=
+                 if (machigai||model.msg) then
+                    model.kekkal
+                 else
+                   ( (model.toi.sa,model.toi.sb) :: model.kekkal  )
+               ,msg=machigai
               } ,Cmd.none)
     S05 ->
       ({model|s20=5,gokaku=False},Cmd.none    )
@@ -206,7 +220,7 @@ view model =
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         ,rireki
         ,div[style "position" "absolute", style "top" "260px", style "left" "250px",style "color" "red",style "font-size" "40px"][text (if model.gokaku then "合格！！がんばりました" else "")]
-      
+        ,div[style "position" "absolute", style "top" "160px", style "left" "250px",style "color" "green",style "font-size" "30px"][text (if model.msg then ("答えは"++String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  ) ++"です") else "")]
     ]
 
     --     ****************:
