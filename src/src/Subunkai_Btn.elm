@@ -127,13 +127,23 @@ view model =
 
         isizex="90px"
         isizey="60px"
-        img1=img [src ("https://rasp.cld9.work/py/car1.jpg"),style "width" isizex, style "height" isizey] []
-        img2=img [src ("https://rasp.cld9.work/py/car2.jpg") ,style "width" isizex, style "height" isizey] []
-        img3=img [src ("https://rasp.cld9.work/py/cari1.jpg"),style "width" isizex, style "height" isizey] []
-        img4=img [src ("https://rasp.cld9.work/py/cari2.jpg"),style "width" isizex, style "height" isizey] []
-        list1 = List.map  (\ii -> img [onClick (Img ii),id (String.fromInt ii)
-         ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/cari1.jpg" else "https://rasp.cld9.work/py/car1.jpg") 
-         ,style "width" isizex, style "height" isizey] [] )  (List.range 1 (toint model.init) )
+        img1=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
+        img2=img [src ("https://rasp.cld9.work/py/car3.jpg") ,style "width" isizex, style "height" isizey] []
+        img3=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
+        img4=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
+        list1 = List.map  (\ii -> 
+          let
+            nakami=  img [onClick (Img ii),id (String.fromInt ii)
+                     ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/car3.jpg" else "https://rasp.cld9.work/py/car3.jpg") 
+                     ,style "width" isizex, style "height" isizey] []
+          in
+            if ii==6 then
+             span[style "font-size" "30px" ][text "|",nakami]
+            else 
+             nakami
+         
+         
+          )  (List.range 1 (toint model.init) )
 
         --list1=List.repeat (toint model.init) (img3)
         --list2=List.repeat (toint model.mon2) (img3)
@@ -218,10 +228,10 @@ view model =
      [ td [colspan 2]
        [ 
              div []
-              [Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Disp]] [ text "みる" ]
-              ,Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Hide]] [ text "かくす" ]
-              ,Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick HideL]] [ text "ひだり" ]
-             ,Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick HideR]] [ text "みぎ" ]
+              [Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick Disp]] [ text "みる" ]
+              ,Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick Hide]] [ text "かくす" ]
+              ,Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick HideL]] [ text "ひだり" ]
+             ,Button.button [Button.large ,Button.primary ,Button.attrs [style "font-size" "20px" ,Spacing.m1  ,onClick HideR]] [ text "みぎ" ]
               ]]
      ]
 
