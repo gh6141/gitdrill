@@ -33,12 +33,13 @@ type alias Model =
    ,kekkal:List (String,String)
    ,gokaku:Bool
    ,msg:Bool
+   ,missl:List (Mondai,String)
   }
 
  
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { maru=False,toi={sa="11",sb="11"},inp="?",s20=9,kekkal=[],gokaku=False,msg=False} , Cmd.none )
+  ( { maru=False,toi={sa="4",sb="5"},inp="?",s20=9,kekkal=[],gokaku=False,msg=False,missl=[]} , Cmd.none )
 
 
 -- UPDATE
@@ -121,6 +122,11 @@ update msg model =
                  else
                    ( (model.toi.sa,model.toi.sb) :: model.kekkal  )
                ,msg=machigai
+               ,missl=
+                 if machigai then
+                   ( ( model.toi, inpx) :: model.missl)
+                 else
+                   model.missl
               } ,Cmd.none)
     S05 ->
       ({model|s20=5,gokaku=False},Cmd.none    )
@@ -219,7 +225,23 @@ view model =
 
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
         ,rireki
-        ,div[style "position" "absolute", style "top" "260px", style "left" "250px",style "color" "red",style "font-size" "40px"][text (if model.gokaku then "合格！！がんばりました" else "")]
+        ,div[style "position" "absolute", style "top" "260px", style "left" "250px",style "color" "red",style "font-size" "40px"]
+            [
+               text (
+                if model.gokaku then 
+                 if (List.length model.missl) == 0 then
+                  "ごうかく！！すばらしい"
+                 else
+                  let
+                    stadd (mondai,kotae) ac =  mondai.sa++"+"++mondai.sb++"(x"++kotae++")" ++ "  "++ac
+                  in
+                   "がんばりました！ "++  List.foldr stadd  "" (List.take 2 model.missl)
+               
+                else
+                 ""
+                )
+               
+            ]
         ,div[style "position" "absolute", style "top" "160px", style "left" "250px",style "color" "green",style "font-size" "30px"][text (if model.msg then ("答えは"++String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  ) ++"です") else "")]
     ]
 
