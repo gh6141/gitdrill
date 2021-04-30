@@ -5243,6 +5243,7 @@ var author$project$Main$btnLabel = function (xi) {
 			return elm$core$String$fromInt(xi);
 	}
 };
+var elm$core$Basics$ge = _Utils_ge;
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5697,7 +5698,7 @@ var author$project$Main$view = function (model) {
 							]))
 					]))
 			]));
-	var padd = (author$project$Main$toint(model.toi.sb) > 0) ? '+' : '';
+	var padd = (author$project$Main$toint(model.toi.sb) >= 0) ? '+' : '';
 	var funKekka = function (_n1) {
 		var sa = _n1.a;
 		var sb = _n1.b;

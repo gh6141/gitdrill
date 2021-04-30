@@ -196,7 +196,7 @@ view model =
         rireki=div [style "position" "absolute", style "top" "80px", style "left" "750px",style "color" "green",style "font-size" "3px"]
                    (List.map funKekka model.kekkal)
   
-        padd=if (toint model.toi.sb)>0 then "+" else ""
+        padd=if (toint model.toi.sb)>=0 then "+" else ""
 
   in
 
