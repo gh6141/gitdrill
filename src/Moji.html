@@ -4963,15 +4963,6 @@ var elm$core$String$replace = F3(
 			after,
 			A2(elm$core$String$split, before, string));
 	});
-var elm$core$String$slice = _String_slice;
-var elm$core$String$right = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(
-			elm$core$String$slice,
-			-n,
-			elm$core$String$length(string),
-			string);
-	});
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5165,6 +5156,7 @@ var author$project$Main$update = F2(
 					A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator));
 			case 'NewAns':
 				var mnd = msg.a;
+				var nn = model.s20;
 				var kotaei = author$project$Main$toint(mnd.sa) + author$project$Main$toint(mnd.sb);
 				var gnflg2 = A2(
 					elm$core$List$any,
@@ -5177,7 +5169,7 @@ var author$project$Main$update = F2(
 				var gnflg1 = (_Utils_cmp(kotaei, model.s20) > 0) || (_Utils_cmp(kotaei, (-1) * model.s20) < 0);
 				var endflg = !_Utils_eq(
 					elm$core$List$length(model.kekkal),
-					(((model.s20 - 1) * model.s20) / 2) | 0);
+					((((2 * nn) * nn) + (4 * nn)) + 1) + (nn * (nn - 1)));
 				var gnflg = (gnflg1 || gnflg2) && endflg;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5189,9 +5181,6 @@ var author$project$Main$update = F2(
 				var seikais = author$project$Main$mojihenkan(
 					elm$core$String$fromInt(
 						author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb)));
-				var kuriagari = (author$project$Main$toint(
-					A2(elm$core$String$right, 1, model.toi.sa)) + author$project$Main$toint(
-					A2(elm$core$String$right, 1, model.toi.sb))) > 9;
 				var kotaes = A3(
 					elm$core$String$replace,
 					'?',
@@ -5216,10 +5205,17 @@ var author$project$Main$update = F2(
 									return inpx;
 								}
 							}(),
-							kekkal: (machigai || model.msg) ? model.kekkal : A2(
+							kekkal: (machigai || model.msg) ? model.kekkal : (A2(
+								elm$core$List$any,
+								function (_n3) {
+									var sa = _n3.a;
+									var sb = _n3.b;
+									return _Utils_eq(model.toi.sa, sa) && _Utils_eq(model.toi.sb, sb);
+								},
+								model.kekkal) ? model.kekkal : A2(
 								elm$core$List$cons,
 								_Utils_Tuple2(model.toi.sa, model.toi.sb),
-								model.kekkal),
+								model.kekkal)),
 							maru: marux,
 							missl: machigai ? A2(
 								elm$core$List$cons,
@@ -5232,7 +5228,7 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{gokaku: false, s20: 5}),
+						{gokaku: false, s20: 4}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5729,7 +5725,7 @@ var author$project$Main$view = function (model) {
 				10 * author$project$Main$toint(sa)),
 			elm$core$String$fromInt(
 				10 * author$project$Main$toint(sb)),
-			(model.s20 <= 9) ? '〇' : '',
+			(model.s20 <= 5) ? '〇' : '',
 			'6');
 	};
 	var rireki = A2(
@@ -5811,7 +5807,7 @@ var author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('答の絶対値_係数<=5')
+								elm$html$Html$text('答の絶対値_係数<=4')
 							]))
 					])),
 				A2(
@@ -5978,6 +5974,7 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
+var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(

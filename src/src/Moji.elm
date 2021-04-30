@@ -5,6 +5,7 @@ import Html.Events exposing (..)
 import Random
 import Json.Decode as Json
 import Task
+import Debug
 
 -- MAIN
 
@@ -83,15 +84,19 @@ update msg model =
         --問題が重複しないようにする
         gnflg2=List.any (\(sa,sb) -> mnd.sa==sa && mnd.sb==sb ) model.kekkal
         --考えうる問題の組み合わせがまだあるか？
-        endflg=not ((List.length model.kekkal) == ((model.s20-1)*model.s20//2))
+        nn=model.s20
+        
+       -- aa=Debug.log "kekkal:" model.kekkal
+
+        endflg=not ((List.length model.kekkal) == (2*nn*nn+4*nn+1+nn*(nn-1)))
 
         gnflg=(gnflg1 || gnflg2 ) && endflg
         
 
 
       in
-      ( {model | maru=False,toi=mnd ,inp="?",gokaku=(not endflg),msg=False
-        },if gnflg then (Random.generate NewAns ansGenerator) else  Cmd.none )
+      ( {model | maru=False,toi=mnd ,inp="?",gokaku=(not endflg),msg=False}
+         ,if gnflg then (Random.generate NewAns ansGenerator) else  Cmd.none )
        --  }, Cmd.none )
 
     Btn si -> 
@@ -107,8 +112,6 @@ update msg model =
         --答えが一致せず　 桁数一致のとき　間違いと表示
         machigai=  (not (kotaes==seikais)) && ketacheck
         
-        kuriagari=  ((toint (String.right 1 model.toi.sa))+(toint (String.right 1 model.toi.sb))  ) >9
-
         inpx=((if model.inp=="?" then "" else model.inp )++si)
 
         marux=( seikais == inpx   )
@@ -122,7 +125,10 @@ update msg model =
                ,kekkal=
                  if (machigai||model.msg) then
                     model.kekkal
-                 else
+                 else  -- not machgai  && not model.msg
+                  if (List.any (\(sa,sb) -> model.toi.sa==sa && model.toi.sb==sb ) model.kekkal) then
+                    model.kekkal
+                  else
                    ( (model.toi.sa,model.toi.sb) :: model.kekkal  )
                ,msg=machigai
                ,missl=
@@ -133,7 +139,7 @@ update msg model =
               } ,Cmd.none)
 
     S09 ->
-      ({model|s20=5,gokaku=False},Cmd.none    )
+      ({model|s20=4,gokaku=False},Cmd.none    )
    
 
     
@@ -199,7 +205,7 @@ view model =
 
         stxt xx yy sutxt sizef= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" (sizef++"px"),style "color" (if sutxt=="?" then "red" else "black")] [text sutxt] ]        
   
-        funKekka (sa,sb) = smojif (String.fromInt (10*(toint sa))) (String.fromInt (10*(toint sb))) (if model.s20<=9 then "〇" else "") "6"
+        funKekka (sa,sb) = smojif (String.fromInt (10*(toint sa))) (String.fromInt (10*(toint sb))) (if model.s20<=5 then "〇" else "") "6"
 
         rireki=div [style "position" "absolute", style "top" "80px", style "left" "750px",style "color" "green",style "font-size" "3px"]
                    (List.map funKekka model.kekkal)
@@ -220,7 +226,7 @@ view model =
         ,div[style "position" "absolute", style "top" "200px", style "left" "100px"][sujibutton]
         ,div[style "position" "absolute", style "top" "240px", style "left" "550px"][button [ style "font-size" "50px",onClick (Change "")][text "つぎへ"]]
 
-        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答の絶対値_係数<=5"]]
+        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答の絶対値_係数<=4"]]
 
 
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
