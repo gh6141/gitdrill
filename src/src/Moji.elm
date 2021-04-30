@@ -52,6 +52,7 @@ btnLabel : Int -> String
 btnLabel xi = case xi of
                13 -> "C"
                11 -> "-"
+               12 -> "x"
                _  -> String.fromInt xi
 
 
@@ -62,7 +63,7 @@ update msg model =
    mhenkan i1 i2 = {sa=String.fromInt i1,sb=String.fromInt i2} 
 
    ansGenerator : Random.Generator Mondai   
-   ansGenerator = Random.map2  mhenkan (Random.int -10 model.s20) (Random.int -10 model.s20)
+   ansGenerator = Random.map2  mhenkan (Random.int (-1*model.s20) model.s20) (Random.int (-1*model.s20) model.s20)
 
 
   in
@@ -77,7 +78,8 @@ update msg model =
     NewAns mnd ->
       let
         --答えの最大数が指定した数を超えないように 9,99 etc
-        gnflg1=((toint mnd.sa) + (toint mnd.sb)) > model.s20
+        kotaei=(toint mnd.sa) + (toint mnd.sb)
+        gnflg1=(kotaei > model.s20 ) || (kotaei < (-1*model.s20))
         --問題が重複しないようにする
         gnflg2=List.any (\(sa,sb) -> mnd.sa==sa && mnd.sb==sb ) model.kekkal
         --考えうる問題の組み合わせがまだあるか？
@@ -95,7 +97,7 @@ update msg model =
     Btn si -> 
      let
        
-        seikais=String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  
+        seikais=mojihenkan (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  )
         kotaes=String.replace "?" "" (model.inp++si)  --? 除外
 
         --正解と答えの桁数が一致しているか　チェック ?除外
@@ -109,10 +111,7 @@ update msg model =
 
         inpx=((if model.inp=="?" then "" else model.inp )++si)
 
-        marux=((toint model.toi.sa)+(toint model.toi.sb))
-                      ==
-                     ( toint inpx)
-        
+        marux=( seikais == inpx   )
      in
       ({model| 
                inp= case si of
@@ -134,10 +133,18 @@ update msg model =
               } ,Cmd.none)
 
     S09 ->
-      ({model|s20=9,gokaku=False},Cmd.none    )
+      ({model|s20=5,gokaku=False},Cmd.none    )
    
 
     
+
+mojihenkan ss = 
+          case ss of
+            "1" -> "x"
+            "-1" -> "-x"
+            "0" -> "0" 
+            _ -> (ss++"x")
+
 
 
 
@@ -165,6 +172,7 @@ view model =
                td [] [sbutton 7]
                ,td [] [sbutton 8]
                ,td [] [sbutton 9]
+               ,td [] [sbutton 12]
              ]
              ,tr [] [
                td [] [sbutton 4]
@@ -186,7 +194,7 @@ view model =
             ]
 
         smoji: String->String -> String -> Html Msg
-        smoji xx yy sutxt =  div [style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "120px"] [text sutxt] ]
+        smoji xx yy sutxt =  div [style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" "100px"] [text sutxt] ]
         smojif xx yy sutxt ff =  div [style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" (ff++"px")] [text sutxt] ]
 
         stxt xx yy sutxt sizef= div [style "background-color" "lightblue",style "position" "absolute", style "top" (yy++"px") , style "left" (xx++"px")] [span [size 1, style "font-size" (sizef++"px"),style "color" (if sutxt=="?" then "red" else "black")] [text sutxt] ]        
@@ -198,17 +206,21 @@ view model =
   
         padd=if (toint model.toi.sb)>=0 then "+" else ""
 
+
+        mojia=mojihenkan model.toi.sa
+        mojib=mojihenkan model.toi.sb
+
   in
 
   div [style "position" "relative"]
     [   
-        smoji "20" "10" (model.toi.sa++padd++model.toi.sb++"=") 
-        ,stxt "510" "10" model.inp "120"  
+        smoji "20" "10" (mojia++padd++mojib++"=") 
+        ,stxt  (String.fromInt (20+70*(String.length (mojia++padd++mojib++"=")))) "10" model.inp "120"  
       
         ,div[style "position" "absolute", style "top" "200px", style "left" "100px"][sujibutton]
         ,div[style "position" "absolute", style "top" "240px", style "left" "550px"][button [ style "font-size" "50px",onClick (Change "")][text "つぎへ"]]
 
-        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答<=9"]]
+        ,div[style "position" "absolute", style "top" "420px", style "left" "750px"][button [ style "font-size" "20px",onClick S09][text "答の絶対値_係数<=5"]]
 
 
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
@@ -230,7 +242,7 @@ view model =
                 )
                
             ]
-        ,div[style "position" "absolute", style "top" "160px", style "left" "250px",style "color" "green",style "font-size" "30px"][text (if model.msg then ("答えは"++String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  ) ++"です") else "")]
+        ,div[style "position" "absolute", style "top" "160px", style "left" "250px",style "color" "green",style "font-size" "30px"][text (if model.msg then ("答えは"++(mojihenkan (String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  ))) ++"です") else "")]
     ]
 
     --     ****************:
