@@ -134,7 +134,7 @@ view model =
         list1 = List.map  (\ii -> 
           let
             nakami=  img [onClick (Img ii),id (String.fromInt ii)
-                     ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/car3.jpg" else "https://rasp.cld9.work/py/car3.jpg") 
+                     ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/car3.jpg" else "https://rasp.cld9.work/py/car1.jpg") 
                      ,style "width" isizex, style "height" isizey] []
           in
             if ii==6 then
