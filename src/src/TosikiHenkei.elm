@@ -1,71 +1,77 @@
-module Examples.Configs.Math exposing (main)
+module Main exposing (main)
 
-import Html as H exposing (Html)
-import Regex exposing (..)
-import Katex.Configs.Math as K
-    exposing
-        ( Latex
-        , human
-        )
+import KaTeX exposing (render, renderToString, renderWithOptions, defaultOptions)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onInput)
 
 
-type alias Config =
-    Bool
+type alias Model =
+    { expression : String
+    }
 
 
-type alias Data =
-    String
-
-
-selector : Data -> Config -> String
-selector string isVar =
-    let
-        phi =
-            string
-
-        varphi =
-            replace All (regex (escape "\\phi")) (always "\\varphi") string
-    in
-        if isVar then
-            varphi
-        else
-            phi
-
-
-inline : Data -> Latex Config
-inline =
-    K.inline << selector
-
-
-display : Data -> Latex Config
-display =
-    K.display << selector
-
-
-passage : List (Latex Config)
-passage =
-    [ human "We denote by "
-    , inline "\\phi"
-    , human " the formula for which "
-    , display "\\Gamma \\vDash \\phi"
-    ]
-
-
-view : Config -> Html a
-view isVar =
-    let
-        htmlGenerator _ _ stringLatex =
-            H.span [] [ H.text stringLatex ]
-    in
-        passage
-            |> List.map (K.generate htmlGenerator isVar)
-            |> H.div []
-
-
-main : Program Never Config msg
+main : Program Never Model Msg
 main =
-    H.beginnerProgram
-        { model = True
-        , update = flip always
+    Html.beginnerProgram
+        { model = model
         , view = view
+        , update = update
         }
+
+
+type Msg
+    = Change String
+
+
+model : Model
+model =
+    Model "\\pi"
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Change expression ->
+            { model | expression = expression }
+
+
+view : Model -> Html Msg
+view model =
+    div
+        [ style
+            [ ( "max-width", "600px" )
+            , ( "margin", "0 auto" )
+            , ( "margin-top", "50px" )
+            , ( "font-family", "sans-serif" )
+            ]
+        ]
+        [ h1 [] [ text "Render LaTeX in Elm using KaTeX" ]
+        , div []
+            [ a [ href "https://github.com/bsouthga/elm-katex/" ]
+                [ text "elm-katex" ]
+            , a
+                [ style
+                    [ ( "margin-left", "10px" )
+                    ]
+                , href "https://github.com/bsouthga/elm-katex/blob/master/examples/Example.elm"
+                ]
+                [ text "(Example Source)"
+                ]
+            ]
+        , hr [] []
+        , h2 [] [ text "Input expression" ]
+        , input [ type_ "text", placeholder "Expression", onInput Change ] []
+        , h2 [] [ text "Rendered Element" ]
+        , div []
+            [ (render model.expression)
+            ]
+        , h2 [] [ text "Display Mode" ]
+        , div []
+            [ (renderWithOptions { defaultOptions | displayMode = True } model.expression)
+            ]
+        , h2 [] [ text "Raw String" ]
+        , div []
+            [ text (renderToString model.expression)
+            ]
+        ]
