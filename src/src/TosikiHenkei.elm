@@ -1,5 +1,6 @@
 module Examples.Simple exposing (main)
 
+import Browser
 import Html as H exposing (Html)
 import Katex as K
     exposing
@@ -19,8 +20,8 @@ passage =
     ]
 
 
-view : Html a
-view =
+view : Model -> Html a
+view model =
     let
         htmlGenerator isDisplayMode stringLatex =
             case isDisplayMode of
@@ -33,12 +34,18 @@ view =
         passage
             |> List.map (K.generate htmlGenerator)
             |> H.div []
+type alias Model={}
 
+init:Model
+init={}
+
+
+
+update: msg-> model -> model
+update msg model =
+             case msg of
+               "A" -> {}
 
 main : Program Never () msg
 main =
-    H.beginnerProgram
-        { model = ()
-        , update = flip always
-        , view = always view
-        }
+     Browser.sandbox { init={},update=update, view = view }
