@@ -39,13 +39,14 @@ type alias Model={}
 init:Model
 init={}
 
+type Msg
+  =ABC
 
-
-update: msg-> model -> model
+update: Msg-> Model -> Model
 update msg model =
              case msg of
-               "A" -> {}
+               ABC -> {}
 
-main : Program Never () msg
+main : Program () {} Msg
 main =
      Browser.sandbox { init={},update=update, view = view }
