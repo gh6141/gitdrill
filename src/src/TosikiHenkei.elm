@@ -1,80 +1,44 @@
-module Main exposing (main)
+module Examples.Simple exposing (main)
 
-import KaTeX exposing (render, renderToString, renderWithOptions, defaultOptions)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
-
-
-
-type alias Model =
-    { expression : String
-    }
+import Html as H exposing (Html)
+import Katex as K
+    exposing
+        ( Latex
+        , human
+        , inline
+        , display
+        )
 
 
-main : Program Never Model Msg
+passage : List Latex
+passage =
+    [ human "We denote by "
+    , inline "\\phi"
+    , human " the formula for which "
+    , display "\\Gamma \\vDash \\phi"
+    ]
+
+
+view : Html a
+view =
+    let
+        htmlGenerator isDisplayMode stringLatex =
+            case isDisplayMode of
+                Just True ->
+                    H.div [] [ H.text stringLatex ]
+
+                _ ->
+                    H.span [] [ H.text stringLatex ]
+    in
+        passage
+            |> List.map (K.generate htmlGenerator)
+            |> H.div []
+
+
+main : Program Never () msg
 main =
-    Html.beginnerProgram
-        { model = model
-        , view = view
-        , update = update
+    H.beginnerProgram
+        { model = ()
+        , update = flip always
+        , view = always view
         }
-
-
-type Msg
-    = Change String
-
-
-model : Model
-model =
-    Model "\\pi"
-
-
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        Change expression ->
-            { model | expression = expression }
-
-
-view : Model -> Html Msg
-view model =
-    div
-        [ style
-            [ ( "max-width", "600px" )
-            , ( "margin", "0 auto" )
-            , ( "margin-top", "50px" )
-            , ( "font-family", "sans-serif" )
-            ]
-        ]
-        [ h1 [] [ text "Render LaTeX in Elm using KaTeX" ]
-        , div []
-            [ a [ href "https://github.com/bsouthga/elm-katex/" ]
-                [ text "elm-katex" ]
-            , a
-                [ style
-                    [ ( "margin-left", "10px" )
-                    ]
-                , href "https://github.com/bsouthga/elm-katex/blob/master/examples/Example.elm"
-                ]
-                [ text "(Example Source)"
-                ]
-            ]
-        , hr [] []
-        , h2 [] [ text "Input expression" ]
-        , input [ type_ "text", placeholder "Expression", onInput Change ] []
-        , h2 [] [ text "Rendered Element" ]
-        , div []
-            [ (render model.expression)
-            ]
-        , h2 [] [ text "Display Mode" ]
-        , div []
-            [ (renderWithOptions { defaultOptions | displayMode = True } model.expression)
-            ]
-        , h2 [] [ text "Raw String" ]
-        , div []
-            [ text (renderToString model.expression)
-            ]
-        ]

@@ -2,7 +2,13 @@
     "type": "application",
     "source-directories": [
         "src"
+
+    ]  ,
+
+    "exposed-modules": [
+        "Native.KaTeX"
     ],
+    "native-modules": true,
     "elm-version": "0.19.0",
     "dependencies": {
         "direct": {
@@ -20,6 +26,7 @@
             "elm/virtual-dom": "1.0.2",
             "mpizenberg/elm-pointer-events": "4.0.1"
         }
+   
     },
     "test-dependencies": {
         "direct": {},
