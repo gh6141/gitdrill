@@ -36,8 +36,8 @@ view model =
             |> H.div []
 type alias Model={}
 
-init:Model
-init={}
+init:flags ->  Model
+init flags ={}
 
 type Msg
   =ABC
