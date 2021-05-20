@@ -13,10 +13,10 @@ import Katex as K
 
 passage : List Latex
 passage =
-    [ human "We denote by "
+    [ human "Test "
     , inline "\\phi"
-    , human " the formula for which "
-    , display "\\Gamma \\vDash \\phi"
+    , human " Text "
+    , display "\\Gamma \\vDash \\phi "
     ]
 
 

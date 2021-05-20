@@ -4420,10 +4420,10 @@ var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs
 var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
 var author$project$Examples$Simple$passage = _List_fromArray(
 	[
-		yotamDvir$elm_katex$Katex$human('We denote by '),
+		yotamDvir$elm_katex$Katex$human('Test '),
 		yotamDvir$elm_katex$Katex$inline('\\phi'),
-		yotamDvir$elm_katex$Katex$human(' the formula for which '),
-		yotamDvir$elm_katex$Katex$display('\\Gamma \\vDash \\phi')
+		yotamDvir$elm_katex$Katex$human(' Text '),
+		yotamDvir$elm_katex$Katex$display('\\Gamma \\vDash \\phi ')
 	]);
 var elm$core$Basics$apR = F2(
 	function (x, f) {
