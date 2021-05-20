@@ -4420,10 +4420,10 @@ var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs
 var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
 var author$project$Examples$Simple$passage = _List_fromArray(
 	[
-		yotamDvir$elm_katex$Katex$human('Test '),
-		yotamDvir$elm_katex$Katex$inline('\\phi'),
-		yotamDvir$elm_katex$Katex$human(' Text '),
-		yotamDvir$elm_katex$Katex$display('\\Gamma \\vDash \\phi ')
+		yotamDvir$elm_katex$Katex$human('等式の変形 '),
+		yotamDvir$elm_katex$Katex$inline('s'),
+		yotamDvir$elm_katex$Katex$human(' = '),
+		yotamDvir$elm_katex$Katex$display('s=\\dfrac{a}{b}')
 	]);
 var elm$core$Basics$apR = F2(
 	function (x, f) {
@@ -4909,6 +4909,8 @@ var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$span = _VirtualDom_node('span');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var yotamDvir$elm_katex$Katex$Configs$generate = F4(
 	function (g, m, h, latex) {
 		var g_ = A2(g, m, h);
@@ -4944,7 +4946,10 @@ var author$project$Examples$Simple$view = function (model) {
 			if ((isDisplayMode.$ === 'Just') && isDisplayMode.a) {
 				return A2(
 					elm$html$Html$div,
-					_List_Nil,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'font-size', '40px')
+						]),
 					_List_fromArray(
 						[
 							elm$html$Html$text(stringLatex)
@@ -4952,7 +4957,10 @@ var author$project$Examples$Simple$view = function (model) {
 			} else {
 				return A2(
 					elm$html$Html$span,
-					_List_Nil,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'font-size', '40px')
+						]),
 					_List_fromArray(
 						[
 							elm$html$Html$text(stringLatex)

@@ -2,6 +2,7 @@ module Examples.Simple exposing (main)
 
 import Browser
 import Html as H exposing (Html)
+import Html.Attributes exposing (..)
 import Katex as K
     exposing
         ( Latex
@@ -13,10 +14,10 @@ import Katex as K
 
 passage : List Latex
 passage =
-    [ human "Test "
-    , inline "\\phi"
-    , human " Text "
-    , display "\\Gamma \\vDash \\phi "
+    [ human "等式の変形 "
+    , inline "s"
+    , human " = "
+    , display "s=\\dfrac{a}{b}"
     ]
 
 
@@ -26,10 +27,10 @@ view model =
         htmlGenerator isDisplayMode stringLatex =
             case isDisplayMode of
                 Just True ->
-                    H.div [] [ H.text stringLatex ]
+                    H.div [style "font-size" "40px"] [ H.text stringLatex ]
 
                 _ ->
-                    H.span [] [ H.text stringLatex ]
+                    H.span [style "font-size" "40px"] [ H.text stringLatex ]
     in
         passage
             |> List.map (K.generate htmlGenerator)
