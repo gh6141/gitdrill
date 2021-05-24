@@ -4421,9 +4421,10 @@ var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$el
 var author$project$Examples$Simple$passage = _List_fromArray(
 	[
 		yotamDvir$elm_katex$Katex$human('等式の変形 '),
-		yotamDvir$elm_katex$Katex$inline('s'),
-		yotamDvir$elm_katex$Katex$human(' = '),
-		yotamDvir$elm_katex$Katex$display('s=\\dfrac{a}{b}')
+		yotamDvir$elm_katex$Katex$inline('s=\\dfrac{a}{b}'),
+		yotamDvir$elm_katex$Katex$human(' *** '),
+		yotamDvir$elm_katex$Katex$display('s=\\dfrac{a}{b}'),
+		yotamDvir$elm_katex$Katex$display('s=a\\dfrac{a}{b}')
 	]);
 var elm$core$Basics$apR = F2(
 	function (x, f) {
