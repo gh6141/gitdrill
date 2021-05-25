@@ -4812,20 +4812,6 @@ var yotamDvir$elm_katex$Katex$Configs$Math = F2(
 	});
 var yotamDvir$elm_katex$Katex$Configs$display = yotamDvir$elm_katex$Katex$Configs$Math(true);
 var yotamDvir$elm_katex$Katex$display = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$display, elm$core$Basics$always);
-var yotamDvir$elm_katex$Katex$Configs$Human = function (a) {
-	return {$: 'Human', a: a};
-};
-var yotamDvir$elm_katex$Katex$Configs$human = yotamDvir$elm_katex$Katex$Configs$Human;
-var yotamDvir$elm_katex$Katex$human = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$human, elm$core$Basics$always);
-var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
-var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
-var author$project$Examples$Simple$opassage = _List_fromArray(
-	[
-		yotamDvir$elm_katex$Katex$human('等式の変形 '),
-		yotamDvir$elm_katex$Katex$inline('s=\\dfrac{a}{b}'),
-		yotamDvir$elm_katex$Katex$human(' *** '),
-		yotamDvir$elm_katex$Katex$display('s=\\dfrac{a}{b}')
-	]);
 var author$project$Examples$Simple$update = F2(
 	function (msg, model) {
 		if (msg.$ === 'ABC') {
@@ -4835,7 +4821,12 @@ var author$project$Examples$Simple$update = F2(
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
-					{passage: author$project$Examples$Simple$opassage}),
+					{
+						passage: A2(
+							elm$core$List$cons,
+							yotamDvir$elm_katex$Katex$display('s=\\dfrac{x}{y}'),
+							model.passage)
+					}),
 				elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5162,18 +5153,40 @@ var author$project$Examples$Simple$view = function (model) {
 			}
 		});
 	return A2(
-		elm$html$Html$div,
+		elm$html$Html$table,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$div,
+				elm$html$Html$tr,
 				_List_Nil,
-				A2(
-					elm$core$List$map,
-					yotamDvir$elm_katex$Katex$generate(htmlGenerator),
-					model.passage)),
-				sujibutton
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'vertical-align', 'top')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								A2(
+									elm$core$List$map,
+									yotamDvir$elm_katex$Katex$generate(htmlGenerator),
+									model.passage))
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'vertical-align', 'top')
+							]),
+						_List_fromArray(
+							[sujibutton]))
+					]))
 			]));
 };
 var elm$browser$Browser$External = function (a) {

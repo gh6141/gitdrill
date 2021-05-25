@@ -53,7 +53,7 @@ update msg model =
                ABC -> (model,Cmd.none)
 
                Btn si ->
-                 ({model |  passage=  opassage  } ,Cmd.none)
+                 ({model |  passage= (display "s=\\dfrac{x}{y}")  :: model.passage  } ,Cmd.none)
 
 
 view : Model -> Html Msg
@@ -100,11 +100,18 @@ view model =
             ]
 
     in
-       H.div []
-       [  model.passage 
+       H.table []
+       [ H.tr []
+         [         
+          H.td [ style "vertical-align" "top" ]  [
+            model.passage 
             |> List.map (K.generate htmlGenerator)
             |> H.div []
-          ,sujibutton
+          ]
+          , H.td [style "vertical-align" "top"]  [sujibutton]
+         ] 
+          
+     
        ]
 
                  
