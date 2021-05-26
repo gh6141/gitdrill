@@ -4796,20 +4796,21 @@ var elm$core$Basics$composeL = F3(
 		return g(
 			f(x));
 	});
-var yotamDvir$elm_katex$Katex$Configs$Human = function (a) {
-	return {$: 'Human', a: a};
-};
-var yotamDvir$elm_katex$Katex$Configs$human = yotamDvir$elm_katex$Katex$Configs$Human;
-var yotamDvir$elm_katex$Katex$human = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$human, elm$core$Basics$always);
+var yotamDvir$elm_katex$Katex$Configs$Math = F2(
+	function (a, b) {
+		return {$: 'Math', a: a, b: b};
+	});
+var yotamDvir$elm_katex$Katex$Configs$display = yotamDvir$elm_katex$Katex$Configs$Math(true);
+var yotamDvir$elm_katex$Katex$display = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$display, elm$core$Basics$always);
 var author$project$Examples$Simple$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			passage: _List_fromArray(
 				[
-					yotamDvir$elm_katex$Katex$human('等式の変形')
+					yotamDvir$elm_katex$Katex$display('s=b+aをbについて解こう')
 				]),
 			passage2: _List_fromArray(
-				['Test']),
+				['>']),
 			seikai: false,
 			siki: ''
 		},
@@ -4820,12 +4821,132 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Examples$Simple$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var yotamDvir$elm_katex$Katex$Configs$Math = F2(
-	function (a, b) {
-		return {$: 'Math', a: a, b: b};
+var elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2(elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
 	});
-var yotamDvir$elm_katex$Katex$Configs$display = yotamDvir$elm_katex$Katex$Configs$Math(true);
-var yotamDvir$elm_katex$Katex$display = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$display, elm$core$Basics$always);
+var elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return elm$core$List$reverse(
+			A3(elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _n0 = _Utils_Tuple2(n, list);
+			_n0$1:
+			while (true) {
+				_n0$5:
+				while (true) {
+					if (!_n0.b.b) {
+						return list;
+					} else {
+						if (_n0.b.b.b) {
+							switch (_n0.a) {
+								case 1:
+									break _n0$1;
+								case 2:
+									var _n2 = _n0.b;
+									var x = _n2.a;
+									var _n3 = _n2.b;
+									var y = _n3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_n0.b.b.b.b) {
+										var _n4 = _n0.b;
+										var x = _n4.a;
+										var _n5 = _n4.b;
+										var y = _n5.a;
+										var _n6 = _n5.b;
+										var z = _n6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _n0$5;
+									}
+								default:
+									if (_n0.b.b.b.b && _n0.b.b.b.b.b) {
+										var _n7 = _n0.b;
+										var x = _n7.a;
+										var _n8 = _n7.b;
+										var y = _n8.a;
+										var _n9 = _n8.b;
+										var z = _n9.a;
+										var _n10 = _n9.b;
+										var w = _n10.a;
+										var tl = _n10.b;
+										return (ctr > 1000) ? A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A2(elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A3(elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _n0$5;
+									}
+							}
+						} else {
+							if (_n0.a === 1) {
+								break _n0$1;
+							} else {
+								break _n0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _n1 = _n0.b;
+			var x = _n1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var elm$core$List$take = F2(
+	function (n, list) {
+		return A3(elm$core$List$takeFast, 0, n, list);
+	});
 var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
 var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
 var author$project$Examples$Simple$update = F2(
@@ -4840,22 +4961,49 @@ var author$project$Examples$Simple$update = F2(
 							_List_fromArray(
 								[
 									yotamDvir$elm_katex$Katex$display('')
-								]))
+								])),
+						passage2: _Utils_ap(
+							model.passage2,
+							_List_fromArray(
+								[',']))
 					}),
 				elm$core$Platform$Cmd$none);
 		} else {
 			var si = msg.a;
-			var tppsg = model.passage;
+			var tmpl = function () {
+				if (si === 'C') {
+					return A2(
+						elm$core$List$take,
+						elm$core$List$length(model.passage2) - 1,
+						model.passage2);
+				} else {
+					return _Utils_ap(
+						model.passage2,
+						_List_fromArray(
+							[si]));
+				}
+			}();
+			var lpassg = function () {
+				if (si === 'C') {
+					return A2(
+						elm$core$List$take,
+						elm$core$List$length(model.passage) - 1,
+						model.passage);
+				} else {
+					return _Utils_ap(
+						model.passage,
+						_List_fromArray(
+							[
+								yotamDvir$elm_katex$Katex$inline(si)
+							]));
+				}
+			}();
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
 					{
-						passage: _Utils_ap(
-							model.passage,
-							_List_fromArray(
-								[
-									yotamDvir$elm_katex$Katex$inline(si)
-								])),
+						passage: lpassg,
+						passage2: tmpl,
 						siki: _Utils_ap(model.siki, si)
 					}),
 				elm$core$Platform$Cmd$none);
@@ -4873,6 +5021,10 @@ var author$project$Examples$Simple$btnLabel = function (xi) {
 			return '-';
 		case 12:
 			return 'x';
+		case 14:
+			return '+';
+		case 15:
+			return '=';
 		default:
 			return elm$core$String$fromInt(xi);
 	}
@@ -5215,7 +5367,7 @@ var author$project$Examples$Simple$view = function (model) {
 			elm$html$Html$button,
 			_List_fromArray(
 				[
-					A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+					A2(elm$html$Html$Attributes$style, 'font-size', '35px'),
 					elm$html$Html$Events$onClick(
 					author$project$Examples$Simple$Btn(
 						author$project$Examples$Simple$btnLabel(ii)))
@@ -5317,6 +5469,13 @@ var author$project$Examples$Simple$view = function (model) {
 						_List_fromArray(
 							[
 								sbutton(3)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(15)
 							]))
 					])),
 				A2(
@@ -5344,6 +5503,13 @@ var author$project$Examples$Simple$view = function (model) {
 						_List_fromArray(
 							[
 								sbutton(11)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(14)
 							]))
 					]))
 			]));
@@ -5399,6 +5565,10 @@ var author$project$Examples$Simple$view = function (model) {
 									yotamDvir$elm_katex$Katex$generate(htmlGenerator),
 									model.passage))
 							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						A2(elm$core$List$map, elm$html$Html$text, model.passage2)),
 						A2(
 						elm$html$Html$td,
 						_List_fromArray(

@@ -33,13 +33,14 @@ type alias Model=
   ,passage2:List String
  ,seikai:Bool
  ,siki:String
+ ,mojil:List String
  }
 
 
 
 
 init:() -> (Model,Cmd Msg)
-init _ =({passage=[human "等式の変形"],passage2=["Test"],seikai=False,siki=""},Cmd.none)
+init _ =({passage=[display "a=s+t"],passage2=[">"],seikai=False,siki="",mojil=["a","s","t"]},Cmd.none)
 
 type Msg
   =Ret | Btn String
@@ -49,6 +50,8 @@ btnLabel xi = case xi of
                13 -> "C"
                11 -> "-"
                12 -> "x"
+               14 -> "+"
+               15 -> "="
 
                _  -> String.fromInt xi
 
@@ -57,15 +60,24 @@ update msg model =
              case msg of
                Ret -> 
                          
-                 ({model|passage=(model.passage++[display ""])},Cmd.none)
-
+                 ({model|passage=(model.passage++[display ""])
+                 ,passage2=model.passage2++[","]   },Cmd.none)
+              
                Btn si ->
-                let                       
-                  tppsg=model.passage
- 
-
+                let
+                  lpassg=case si of
+                    "C"  -> List.take ((List.length model.passage)-1) model.passage
+                    _  ->  (model.passage++[inline si])   
+                  tmpl=case si of
+                    "C" -> List.take ((List.length model.passage2)-1) model.passage2
+                    _ ->   model.passage2++[si]
+                  --a=Debug.log "**" tmpl
                 in
-                ({model |  passage=(model.passage++[inline si]) , siki = model.siki++si } ,Cmd.none)
+               
+                 ({model |  passage=lpassg , siki = model.siki++si 
+                  , passage2=tmpl
+
+                  } ,Cmd.none)
 
 
 view : Model -> Html Msg
@@ -84,7 +96,7 @@ view model =
 
 
         sbutton : Int -> Html Msg
-        sbutton ii = ( H.button [style "font-size" "50px"   ,onClick (Btn (btnLabel ii))] [ H.text (" "++(btnLabel ii)++" ")])
+        sbutton ii = ( H.button [style "font-size" "35px"   ,onClick (Btn (btnLabel ii))] [ H.text (" "++(btnLabel ii)++" ")])
 
         sujibutton=
            H.table []
@@ -104,12 +116,18 @@ view model =
                H.td [] [sbutton 1]
                ,H.td [] [sbutton 2]
                ,H.td [] [sbutton 3]
+               ,H.td [] [sbutton 15]
                
              ]
              ,H.tr [] [
                H.td [] [sbutton 0]
                 ,H.td [] [sbutton 13]
                 ,H.td [] [sbutton 11]
+                ,H.td [] [sbutton 14]
+             ]
+             ,H.tr [] [
+                List.map (\suji -> H.td [] [sbutton suji] )  [16,17,18,19]
+
              ]
             
             ]
@@ -123,9 +141,12 @@ view model =
            model.passage 
             |> List.map (K.generate htmlGenerator)
             |> H.div []
-         
-
+ 
           ]
+          , H.td [] (
+             model.passage2 
+              |> List.map H.text
+              )
           , H.td [style "vertical-align" "top"]  [sujibutton]
           ,  Button.button [Button.attrs [style "font-size" "30px"   ,onClick Ret]] [ H.text "Ret" ]
          ] 
