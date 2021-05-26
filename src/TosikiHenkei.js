@@ -4789,7 +4789,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Examples$Simple$init = function (_n0) {
 	return _Utils_Tuple2(
-		{passage: _List_Nil, seikai: false},
+		{passage: _List_Nil, seikai: false, siki: ''},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4818,14 +4818,12 @@ var author$project$Examples$Simple$update = F2(
 			return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		} else {
 			var si = msg.a;
+			var ctl = yotamDvir$elm_katex$Katex$display('s' + (si + '=\\dfrac{x}{y}'));
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
 					{
-						passage: A2(
-							elm$core$List$cons,
-							yotamDvir$elm_katex$Katex$display('s=\\dfrac{x}{y}'),
-							model.passage)
+						siki: _Utils_ap(model.siki, si)
 					}),
 				elm$core$Platform$Cmd$none);
 		}
@@ -4989,6 +4987,14 @@ var yotamDvir$elm_katex$Katex$generate = function (g) {
 		'');
 };
 var author$project$Examples$Simple$view = function (model) {
+	var tailadd = F2(
+		function (item, lst) {
+			return elm$core$List$reverse(
+				A2(
+					elm$core$List$cons,
+					item,
+					elm$core$List$reverse(lst)));
+		});
 	var sbutton = function (ii) {
 		return A2(
 			elm$html$Html$button,
@@ -5176,7 +5182,10 @@ var author$project$Examples$Simple$view = function (model) {
 								A2(
 									elm$core$List$map,
 									yotamDvir$elm_katex$Katex$generate(htmlGenerator),
-									model.passage))
+									A2(
+										tailadd,
+										yotamDvir$elm_katex$Katex$display(model.siki),
+										model.passage)))
 							])),
 						A2(
 						elm$html$Html$td,

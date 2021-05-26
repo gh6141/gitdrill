@@ -29,13 +29,14 @@ type alias Model=
  {
   passage:List Latex
  ,seikai:Bool
+ ,siki:String
  }
 
 
 
 
 init:() -> (Model,Cmd Msg)
-init _ =({passage=[],seikai=False},Cmd.none)
+init _ =({passage=[],seikai=False,siki=""},Cmd.none)
 
 type Msg
   =ABC | Btn String
@@ -53,7 +54,12 @@ update msg model =
                ABC -> (model,Cmd.none)
 
                Btn si ->
-                 ({model |  passage= (display "s=\\dfrac{x}{y}")  :: model.passage  } ,Cmd.none)
+                let
+                   ctl = (display ("s"++si++"=\\dfrac{x}{y}"))
+                in
+                 ({model |  
+                    siki = model.siki++si
+                  } ,Cmd.none)
 
 
 view : Model -> Html Msg
@@ -98,13 +104,16 @@ view model =
              ]
             
             ]
+    
+        tailadd item lst = List.reverse  (item :: (List.reverse lst))
+                
 
     in
        H.table []
        [ H.tr []
          [         
           H.td [ style "vertical-align" "top" ]  [
-            model.passage 
+           (tailadd (display model.siki) model.passage) 
             |> List.map (K.generate htmlGenerator)
             |> H.div []
           ]
