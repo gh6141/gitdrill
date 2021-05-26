@@ -1,5 +1,6 @@
 module Examples.Simple exposing (main)
 
+import Debug
 import Browser
 import Html as H exposing (Html)
 import Html.Attributes exposing (..)
@@ -11,6 +12,7 @@ import Katex as K
         , inline
         , display
         )
+import Bootstrap.Button as Button
 
 
 opassage : List Latex
@@ -28,6 +30,7 @@ opassage =
 type alias Model=
  {
   passage:List Latex
+  ,passage2:List String
  ,seikai:Bool
  ,siki:String
  }
@@ -36,30 +39,33 @@ type alias Model=
 
 
 init:() -> (Model,Cmd Msg)
-init _ =({passage=[],seikai=False,siki=""},Cmd.none)
+init _ =({passage=[human "等式の変形"],passage2=["Test"],seikai=False,siki=""},Cmd.none)
 
 type Msg
-  =ABC | Btn String
+  =Ret | Btn String
 
 btnLabel : Int -> String
 btnLabel xi = case xi of
                13 -> "C"
                11 -> "-"
                12 -> "x"
+
                _  -> String.fromInt xi
 
 update: Msg-> Model -> (Model,Cmd Msg)
 update msg model =
              case msg of
-               ABC -> (model,Cmd.none)
+               Ret -> 
+                         
+                 ({model|passage=(model.passage++[display ""])},Cmd.none)
 
                Btn si ->
-                let
-                   ctl = (display ("s"++si++"=\\dfrac{x}{y}"))
+                let                       
+                  tppsg=model.passage
+ 
+
                 in
-                 ({model |  
-                    siki = model.siki++si
-                  } ,Cmd.none)
+                ({model |  passage=(model.passage++[inline si]) , siki = model.siki++si } ,Cmd.none)
 
 
 view : Model -> Html Msg
@@ -72,6 +78,9 @@ view model =
 
                 _ ->
                     H.span [style "font-size" "40px"] [ H.text stringLatex ]
+
+        
+
 
 
         sbutton : Int -> Html Msg
@@ -104,20 +113,21 @@ view model =
              ]
             
             ]
-    
-        tailadd item lst = List.reverse  (item :: (List.reverse lst))
-                
+ 
 
     in
        H.table []
        [ H.tr []
          [         
           H.td [ style "vertical-align" "top" ]  [
-           (tailadd (display model.siki) model.passage) 
+           model.passage 
             |> List.map (K.generate htmlGenerator)
             |> H.div []
+         
+
           ]
           , H.td [style "vertical-align" "top"]  [sujibutton]
+          ,  Button.button [Button.attrs [style "font-size" "30px"   ,onClick Ret]] [ H.text "Ret" ]
          ] 
           
      

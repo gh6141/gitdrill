@@ -4787,16 +4787,6 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Examples$Simple$init = function (_n0) {
-	return _Utils_Tuple2(
-		{passage: _List_Nil, seikai: false, siki: ''},
-		elm$core$Platform$Cmd$none);
-};
-var elm$core$Platform$Sub$batch = _Platform_batch;
-var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$Examples$Simple$subscriptions = function (model) {
-	return elm$core$Platform$Sub$none;
-};
 var elm$core$Basics$always = F2(
 	function (a, _n0) {
 		return a;
@@ -4806,23 +4796,66 @@ var elm$core$Basics$composeL = F3(
 		return g(
 			f(x));
 	});
+var yotamDvir$elm_katex$Katex$Configs$Human = function (a) {
+	return {$: 'Human', a: a};
+};
+var yotamDvir$elm_katex$Katex$Configs$human = yotamDvir$elm_katex$Katex$Configs$Human;
+var yotamDvir$elm_katex$Katex$human = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$human, elm$core$Basics$always);
+var author$project$Examples$Simple$init = function (_n0) {
+	return _Utils_Tuple2(
+		{
+			passage: _List_fromArray(
+				[
+					yotamDvir$elm_katex$Katex$human('等式の変形')
+				]),
+			passage2: _List_fromArray(
+				['Test']),
+			seikai: false,
+			siki: ''
+		},
+		elm$core$Platform$Cmd$none);
+};
+var elm$core$Platform$Sub$batch = _Platform_batch;
+var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
+var author$project$Examples$Simple$subscriptions = function (model) {
+	return elm$core$Platform$Sub$none;
+};
 var yotamDvir$elm_katex$Katex$Configs$Math = F2(
 	function (a, b) {
 		return {$: 'Math', a: a, b: b};
 	});
 var yotamDvir$elm_katex$Katex$Configs$display = yotamDvir$elm_katex$Katex$Configs$Math(true);
 var yotamDvir$elm_katex$Katex$display = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$display, elm$core$Basics$always);
+var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
+var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
 var author$project$Examples$Simple$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'ABC') {
-			return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-		} else {
-			var si = msg.a;
-			var ctl = yotamDvir$elm_katex$Katex$display('s' + (si + '=\\dfrac{x}{y}'));
+		if (msg.$ === 'Ret') {
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
 					{
+						passage: _Utils_ap(
+							model.passage,
+							_List_fromArray(
+								[
+									yotamDvir$elm_katex$Katex$display('')
+								]))
+					}),
+				elm$core$Platform$Cmd$none);
+		} else {
+			var si = msg.a;
+			var tppsg = model.passage;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						passage: _Utils_ap(
+							model.passage,
+							_List_fromArray(
+								[
+									yotamDvir$elm_katex$Katex$inline(si)
+								])),
 						siki: _Utils_ap(model.siki, si)
 					}),
 				elm$core$Platform$Cmd$none);
@@ -4831,6 +4864,7 @@ var author$project$Examples$Simple$update = F2(
 var author$project$Examples$Simple$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
+var author$project$Examples$Simple$Ret = {$: 'Ret'};
 var author$project$Examples$Simple$btnLabel = function (xi) {
 	switch (xi) {
 		case 13:
@@ -4957,6 +4991,195 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
+	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
+};
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var elm$html$Html$Attributes$classList = function (classes) {
+	return elm$html$Html$Attributes$class(
+		A2(
+			elm$core$String$join,
+			' ',
+			A2(
+				elm$core$List$map,
+				elm$core$Tuple$first,
+				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
+};
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
+var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
+	switch (size.$) {
+		case 'XS':
+			return elm$core$Maybe$Nothing;
+		case 'SM':
+			return elm$core$Maybe$Just('sm');
+		case 'MD':
+			return elm$core$Maybe$Just('md');
+		case 'LG':
+			return elm$core$Maybe$Just('lg');
+		default:
+			return elm$core$Maybe$Just('xl');
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: elm$core$Maybe$Just(size)
+					});
+			case 'Coloring':
+				var coloring = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						coloring: elm$core$Maybe$Just(coloring)
+					});
+			case 'Block':
+				return _Utils_update(
+					options,
+					{block: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			default:
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+		}
+	});
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions = {attributes: _List_Nil, block: false, coloring: elm$core$Maybe$Nothing, disabled: false, size: elm$core$Maybe$Nothing};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass = function (role) {
+	switch (role.$) {
+		case 'Primary':
+			return 'primary';
+		case 'Secondary':
+			return 'secondary';
+		case 'Success':
+			return 'success';
+		case 'Info':
+			return 'info';
+		case 'Warning':
+			return 'warning';
+		case 'Danger':
+			return 'danger';
+		case 'Dark':
+			return 'dark';
+		case 'Light':
+			return 'light';
+		default:
+			return 'link';
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes = function (modifiers) {
+	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier, rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('btn', true),
+						_Utils_Tuple2('btn-block', options.block),
+						_Utils_Tuple2('disabled', options.disabled)
+					])),
+				elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			function () {
+				var _n0 = A2(elm$core$Maybe$andThen, rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption, options.size);
+				if (_n0.$ === 'Just') {
+					var s = _n0.a;
+					return _List_fromArray(
+						[
+							elm$html$Html$Attributes$class('btn-' + s)
+						]);
+				} else {
+					return _List_Nil;
+				}
+			}(),
+			_Utils_ap(
+				function () {
+					var _n1 = options.coloring;
+					if (_n1.$ === 'Just') {
+						if (_n1.a.$ === 'Roled') {
+							var role = _n1.a.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$class(
+									'btn-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						} else {
+							var role = _n1.a.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$class(
+									'btn-outline-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						}
+					} else {
+						return _List_Nil;
+					}
+				}(),
+				options.attributes)));
+};
+var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
+	function (options, children) {
+		return A2(
+			elm$html$Html$button,
+			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
+			children);
+	});
 var yotamDvir$elm_katex$Katex$Configs$generate = F4(
 	function (g, m, h, latex) {
 		var g_ = A2(g, m, h);
@@ -4987,14 +5210,6 @@ var yotamDvir$elm_katex$Katex$generate = function (g) {
 		'');
 };
 var author$project$Examples$Simple$view = function (model) {
-	var tailadd = F2(
-		function (item, lst) {
-			return elm$core$List$reverse(
-				A2(
-					elm$core$List$cons,
-					item,
-					elm$core$List$reverse(lst)));
-		});
 	var sbutton = function (ii) {
 		return A2(
 			elm$html$Html$button,
@@ -5182,10 +5397,7 @@ var author$project$Examples$Simple$view = function (model) {
 								A2(
 									elm$core$List$map,
 									yotamDvir$elm_katex$Katex$generate(htmlGenerator),
-									A2(
-										tailadd,
-										yotamDvir$elm_katex$Katex$display(model.siki),
-										model.passage)))
+									model.passage))
 							])),
 						A2(
 						elm$html$Html$td,
@@ -5194,7 +5406,22 @@ var author$project$Examples$Simple$view = function (model) {
 								A2(elm$html$Html$Attributes$style, 'vertical-align', 'top')
 							]),
 						_List_fromArray(
-							[sujibutton]))
+							[sujibutton])),
+						A2(
+						rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								rundis$elm_bootstrap$Bootstrap$Button$attrs(
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+										elm$html$Html$Events$onClick(author$project$Examples$Simple$Ret)
+									]))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('Ret')
+							]))
 					]))
 			]));
 };
