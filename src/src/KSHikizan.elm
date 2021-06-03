@@ -35,6 +35,8 @@ type alias Model =
       init:String
     ,mon1:String
     ,mon2:String
+    ,ans1:String
+    ,ans2:String
  
   }
 
@@ -42,7 +44,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="19",mon1="11",mon2="9"}
+  ( {init="19",mon1="11",mon2="9",ans1="",ans2=""}
   , Cmd.none
   )
 
@@ -76,13 +78,7 @@ update msg model =
       )
   
    Btn si ->
-    let
-      m1=String.fromInt si
-      m2=String.fromInt si
-
-    in
-     ( {model | mon1=m1  ,mon2=m2
-                 } ,Cmd.none)
+     ( {model |    ans1=(String.fromInt si)            } ,Cmd.none)
 
 
 
@@ -94,8 +90,10 @@ view model =
         img1=img [src "https://gh6141.github.io/gitdrill/src/py/ichigo.png",width 50, height 50] []
         img1o=img [src "https://gh6141.github.io/gitdrill/src/py/ichigo.png",width 50, height 50,style "opacity" "0.5"] []
        
-        list1 = (List.repeat (10-(toint model.mon2)) (img1))++(List.repeat (toint model.mon2) (img1o))
-        list2 =(List.repeat ((toint model.mon1)-10) (img1))
+        list1o = (List.repeat (10-(toint model.mon2)) (img1))++(List.repeat (toint model.mon2) (img1o))
+        list1 = (List.take 5 list1o) ++[text "　" ]++ (List.drop 5 list1o)
+        list2o =(List.repeat ((toint model.mon1)-10) (img1))
+        list2 = if (List.length list2o >5) then ( (List.take 5 list2o) ++[text "　" ]++ (List.drop 5 list2o) ) else list2o
      
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
@@ -135,6 +133,8 @@ view model =
       [
           tr [] [td [] ([text "10"]++list1)]
           ,tr [] [td []  ([text ("_"++(String.fromInt ((toint model.mon1)-10)))]++list2)]  
+          ,tr [] [td [style "font-size" "30px"] [text ("10から"++model.mon2++"をひくと"++model.ans1)]  ]
+          ,tr [] [td [style "font-size" "30px"] [text ("こたえは"++model.ans1++"と"++(String.fromInt ((toint model.mon1)-10))++"をたして")]  ]
       ]
 
 
