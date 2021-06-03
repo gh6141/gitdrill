@@ -34,7 +34,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",mon1="2",mon2="1"}
+  ( {init="9",mon1="4",mon2="5"}
   , Cmd.none
   )
 
@@ -73,33 +73,11 @@ view model =
  let
       
 
-      --  img1=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
-
-      --  list1 = List.map  (\ii -> 
-      --    let
-       --     nakami=  img [onClick (Img ii),id (String.fromInt ii)
-      --               ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/car3.jpg" else "https://rasp.cld9.work/py/car1.jpg") 
-      --               ,style "width" isizex, style "height" isizey] []
-     
-
-        --list1=List.repeat (toint model.init) (img3)
-        --list2=List.repeat (toint model.mon2) (img3)
+        img1=img [src "https://rasp.cld9.work/py/car3.jpg",width 50, height 50,style "opacity" "0.5"] []
+        
+        list1 = List.repeat (toint model.mon2) (img1)
   
-      --  contents=  div [style "font-size" "70px",style "margin" "10px"]
-       --   [     
-        --  div [align "center"]
-        --   [            
-        --   select [style "text-align-last" "center",style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","3","4","5","6","7","8","9","10"])
-        --   ,text "は"             
-        --    ]
-        --    ,
-         --  div [align "center"]
-         --   [    
-         --  input [style "background-color"  "green" ,style "text-align" "center",style "font-size" "50px", type_ "text",maxlength 1,size 1 ,value model.mon1] []
-          
-          --  ]
-          --]
-
+     
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
 
@@ -124,17 +102,21 @@ view model =
             ]
                   
  in
-
    table [align "center"]
    [
     tr []
-    [
-   
-     td []
+    [ 
+     td [style "font-size" "30px"  ] 
+     [text ("ありました。"++"たべると　いくつ　のこる？")]
+    ]
+    ,tr []
+    [ 
+
+     td [] list1  
+     ,td []
      [
-                Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-                   ,
-       sujibutton       
+       Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
+      ,sujibutton       
      ]
     ]
    ]
