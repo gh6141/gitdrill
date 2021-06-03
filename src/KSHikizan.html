@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Subunkai</title>
+  <title>KSHikizan</title>
 </head>
 
 <body>
@@ -4880,18 +4880,18 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Subunkai$init = function (_n0) {
+var author$project$KSHikizan$init = function (_n0) {
 	return _Utils_Tuple2(
-		{init: '9', mon1: '4', mon2: '5'},
+		{init: '19', mon1: '11', mon2: '9'},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$Subunkai$subscriptions = function (model) {
+var author$project$KSHikizan$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Subunkai$Newface = function (a) {
-	return {$: 'Newface', a: a};
+var author$project$KSHikizan$Newmon = function (a) {
+	return {$: 'Newmon', a: a};
 };
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -4903,7 +4903,7 @@ var elm$core$Maybe$withDefault = F2(
 		}
 	});
 var elm$core$String$toInt = _String_toInt;
-var author$project$Subunkai$toint = function (st) {
+var author$project$KSHikizan$toint = function (st) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		0,
@@ -5064,29 +5064,54 @@ var elm$random$Random$int = F2(
 				}
 			});
 	});
-var author$project$Subunkai$update = F2(
+var elm$random$Random$map2 = F3(
+	function (func, _n0, _n1) {
+		var genA = _n0.a;
+		var genB = _n1.a;
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n2 = genA(seed0);
+				var a = _n2.a;
+				var seed1 = _n2.b;
+				var _n3 = genB(seed1);
+				var b = _n3.a;
+				var seed2 = _n3.b;
+				return _Utils_Tuple2(
+					A2(func, a, b),
+					seed2);
+			});
+	});
+var author$project$KSHikizan$update = F2(
 	function (msg, model) {
+		var mhenkan = F2(
+			function (i1, i2) {
+				return {
+					sa: elm$core$String$fromInt(i1),
+					sb: elm$core$String$fromInt(i2)
+				};
+			});
+		var monGenerator = A3(
+			elm$random$Random$map2,
+			mhenkan,
+			A2(
+				elm$random$Random$int,
+				11,
+				author$project$KSHikizan$toint(model.init)),
+			A2(elm$random$Random$int, 2, 9));
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
 					model,
-					A2(
-						elm$random$Random$generate,
-						author$project$Subunkai$Newface,
-						A2(
-							elm$random$Random$int,
-							1,
-							author$project$Subunkai$toint(model.init) - 1)));
-			case 'Newface':
-				var su = msg.a;
+					A2(elm$random$Random$generate, author$project$KSHikizan$Newmon, monGenerator));
+			case 'Newmon':
+				var mnd = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							mon1: elm$core$String$fromInt(su),
-							mon2: elm$core$String$fromInt(su)
-						}),
-					elm$core$Platform$Cmd$none);
+						{mon1: mnd.sa, mon2: mnd.sb}),
+					(_Utils_cmp(
+						author$project$KSHikizan$toint(mnd.sa) - 10,
+						author$project$KSHikizan$toint(mnd.sb)) < 0) ? elm$core$Platform$Cmd$none : A2(elm$random$Random$generate, author$project$KSHikizan$Newmon, monGenerator));
 			default:
 				var si = msg.a;
 				var m2 = elm$core$String$fromInt(si);
@@ -5098,10 +5123,10 @@ var author$project$Subunkai$update = F2(
 					elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$Subunkai$Btn = function (a) {
+var author$project$KSHikizan$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
-var author$project$Subunkai$Next = {$: 'Next'};
+var author$project$KSHikizan$Next = {$: 'Next'};
 var elm$core$List$repeatHelp = F3(
 	function (result, n, value) {
 		repeatHelp:
@@ -5441,7 +5466,7 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
 	});
-var author$project$Subunkai$view = function (model) {
+var author$project$KSHikizan$view = function (model) {
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -5452,7 +5477,7 @@ var author$project$Subunkai$view = function (model) {
 						[
 							A2(elm$html$Html$Attributes$style, 'font-size', '60px'),
 							elm$html$Html$Events$onClick(
-							author$project$Subunkai$Btn(ii))
+							author$project$KSHikizan$Btn(ii))
 						]))
 				]),
 			_List_fromArray(
@@ -5548,19 +5573,37 @@ var author$project$Subunkai$view = function (model) {
 							]))
 					]))
 			]));
-	var img1 = A2(
+	var img1o = A2(
 		elm$html$Html$img,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$src('https://rasp.cld9.work/py/car3.jpg'),
+				elm$html$Html$Attributes$src('https://gh6141.github.io/gitdrill/src/py/ichigo.png'),
 				elm$html$Html$Attributes$width(50),
 				elm$html$Html$Attributes$height(50),
 				A2(elm$html$Html$Attributes$style, 'opacity', '0.5')
 			]),
 		_List_Nil);
-	var list1 = A2(
+	var img1 = A2(
+		elm$html$Html$img,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$src('https://gh6141.github.io/gitdrill/src/py/ichigo.png'),
+				elm$html$Html$Attributes$width(50),
+				elm$html$Html$Attributes$height(50)
+			]),
+		_List_Nil);
+	var list1 = _Utils_ap(
+		A2(
+			elm$core$List$repeat,
+			10 - author$project$KSHikizan$toint(model.mon2),
+			img1),
+		A2(
+			elm$core$List$repeat,
+			author$project$KSHikizan$toint(model.mon2),
+			img1o));
+	var list2 = A2(
 		elm$core$List$repeat,
-		author$project$Subunkai$toint(model.mon2),
+		author$project$KSHikizan$toint(model.mon1) - 10,
 		img1);
 	return A2(
 		elm$html$Html$table,
@@ -5583,7 +5626,7 @@ var author$project$Subunkai$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('ありました。' + 'たべると　いくつ　のこる？')
+								elm$html$Html$text(model.mon1 + ('ありました。' + (model.mon2 + 'たべると　いくつ　のこる？')))
 							]))
 					])),
 				A2(
@@ -5591,7 +5634,44 @@ var author$project$Subunkai$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$td, _List_Nil, list1),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_Utils_ap(
+											_List_fromArray(
+												[
+													elm$html$Html$text('10')
+												]),
+											list1))
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_Utils_ap(
+											_List_fromArray(
+												[
+													elm$html$Html$text(
+													'_' + elm$core$String$fromInt(
+														author$project$KSHikizan$toint(model.mon1) - 10))
+												]),
+											list2))
+									]))
+							])),
 						A2(
 						elm$html$Html$td,
 						_List_Nil,
@@ -5605,7 +5685,7 @@ var author$project$Subunkai$view = function (model) {
 										_List_fromArray(
 											[
 												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-												elm$html$Html$Events$onClick(author$project$Subunkai$Next)
+												elm$html$Html$Events$onClick(author$project$KSHikizan$Next)
 											]))
 									]),
 								_List_fromArray(
@@ -5840,12 +5920,12 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$Subunkai$main = elm$browser$Browser$element(
-	{init: author$project$Subunkai$init, subscriptions: author$project$Subunkai$subscriptions, update: author$project$Subunkai$update, view: author$project$Subunkai$view});
-_Platform_export({'Subunkai':{'init':author$project$Subunkai$main(
+var author$project$KSHikizan$main = elm$browser$Browser$element(
+	{init: author$project$KSHikizan$init, subscriptions: author$project$KSHikizan$subscriptions, update: author$project$KSHikizan$update, view: author$project$KSHikizan$view});
+_Platform_export({'KSHikizan':{'init':author$project$KSHikizan$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
 
-var app = Elm.Subunkai.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
+var app = Elm.KSHikizan.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
 if (document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49"))
 {
   document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49").innerText = 'This is a headless program, meaning there is nothing to show here.\n\nI started the program anyway though, and you can access it as `app` in the developer console.';

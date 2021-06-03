@@ -1,4 +1,4 @@
-module Subunkai exposing (..)
+module KSHikizan exposing (..)
 
 import Browser
 import Html exposing (..)
@@ -24,6 +24,12 @@ main =
     , subscriptions = subscriptions
     }
 
+type alias Mondai =
+ {
+     sa:String
+     ,sb:String
+ }
+
 type alias Model =
   { 
       init:String
@@ -32,30 +38,42 @@ type alias Model =
  
   }
 
+
+
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="9",mon1="4",mon2="5"}
+  ( {init="19",mon1="11",mon2="9"}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newface Int | Btn Int 
+    =  Next | Newmon Mondai | Btn Int 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
+  let
+       mhenkan :Int -> Int -> Mondai
+       mhenkan i1 i2 = {sa=String.fromInt i1,sb=String.fromInt i2} 
+
+       monGenerator : Random.Generator Mondai   
+       monGenerator = Random.map2  mhenkan (Random.int 11  (toint model.init) ) (Random.int 2  9 )
+
+  in
  
-  case msg of
-
-
-  
+  case msg of  
    Next ->
       ( model 
-       ,   Random.generate Newface (Random.int 1 ((toint model.init)-1))
+       ,   (Random.generate Newmon monGenerator  )
       )
   
-   Newface su ->
-   
-      ( {model |  mon1 =String.fromInt su ,mon2=String.fromInt  su}    ,Cmd.none)
+   Newmon mnd ->   
+      ( {model |  mon1 = mnd.sa ,mon2=mnd.sb}    ,
+      
+      (if ( ((toint mnd.sa)-10) < (toint mnd.sb)) then
+        Cmd.none
+      else 
+        (Random.generate Newmon monGenerator) )
+      )
   
    Btn si ->
     let
@@ -73,10 +91,11 @@ view model =
  let
       
 
-        img1=img [src "https://rasp.cld9.work/py/car3.jpg",width 50, height 50,style "opacity" "0.5"] []
-        
-        list1 = List.repeat (toint model.mon2) (img1)
-  
+        img1=img [src "https://gh6141.github.io/gitdrill/src/py/ichigo.png",width 50, height 50] []
+        img1o=img [src "https://gh6141.github.io/gitdrill/src/py/ichigo.png",width 50, height 50,style "opacity" "0.5"] []
+       
+        list1 = (List.repeat (10-(toint model.mon2)) (img1))++(List.repeat (toint model.mon2) (img1o))
+        list2 =(List.repeat ((toint model.mon1)-10) (img1))
      
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
@@ -107,12 +126,19 @@ view model =
     tr []
     [ 
      td [style "font-size" "30px"  ] 
-     [text ("ありました。"++"たべると　いくつ　のこる？")]
+     [text (model.mon1++"ありました。"++model.mon2++"たべると　いくつ　のこる？")]
     ]
     ,tr []
     [ 
 
-     td [] list1  
+     td [] 
+      [
+          tr [] [td [] ([text "10"]++list1)]
+          ,tr [] [td []  ([text ("_"++(String.fromInt ((toint model.mon1)-10)))]++list2)]  
+      ]
+
+
+
      ,td []
      [
        Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
