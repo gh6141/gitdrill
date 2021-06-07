@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$KSHikizan$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans1: '', ans2: '', init: '19', mon1: '11', mon2: '9'},
+		{ans1: '', ans2: '', init: '19', mon1: '11', mon2: '9', seikai1: false, seikai2: false},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5101,7 +5101,9 @@ var author$project$KSHikizan$update = F2(
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{ans1: '', ans2: '', seikai1: false, seikai2: false}),
 					A2(elm$random$Random$generate, author$project$KSHikizan$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
@@ -5114,11 +5116,21 @@ var author$project$KSHikizan$update = F2(
 						author$project$KSHikizan$toint(mnd.sb)) < 0) ? elm$core$Platform$Cmd$none : A2(elm$random$Random$generate, author$project$KSHikizan$Newmon, monGenerator));
 			default:
 				var si = msg.a;
-				return _Utils_Tuple2(
+				var kotae2 = author$project$KSHikizan$toint(model.mon1) - author$project$KSHikizan$toint(model.mon2);
+				var kotae1 = 10 - author$project$KSHikizan$toint(model.mon2);
+				return (!model.seikai1) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							ans1: elm$core$String$fromInt(si)
+							ans1: elm$core$String$fromInt(si),
+							seikai1: _Utils_eq(si, kotae1)
+						}),
+					elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							ans2: elm$core$String$fromInt(si),
+							seikai2: _Utils_eq(si, kotae2)
 						}),
 					elm$core$Platform$Cmd$none);
 		}
@@ -5311,6 +5323,8 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	}
 };
 var elm$html$Html$img = _VirtualDom_node('img');
+var elm$html$Html$input = _VirtualDom_node('input');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5331,6 +5345,13 @@ var elm$html$Html$Attributes$height = function (n) {
 		'height',
 		elm$core$String$fromInt(n));
 };
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$size = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'size',
+		elm$core$String$fromInt(n));
+};
 var elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		elm$html$Html$Attributes$stringProperty,
@@ -5339,6 +5360,7 @@ var elm$html$Html$Attributes$src = function (url) {
 };
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$html$Html$Attributes$width = function (n) {
 	return A2(
 		_VirtualDom_attribute,
@@ -5614,6 +5636,26 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			children);
 	});
 var author$project$KSHikizan$view = function (model) {
+	var tbox = F2(
+		function (str, color) {
+			return A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$input,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$size(3),
+								elm$html$Html$Attributes$placeholder('?'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '26px'),
+								A2(elm$html$Html$Attributes$style, 'background-color', color),
+								elm$html$Html$Attributes$value(str)
+							]),
+						_List_Nil)
+					]));
+		});
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -5847,7 +5889,8 @@ var author$project$KSHikizan$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text('10から' + (model.mon2 + ('をひくと' + model.ans1)))
+												elm$html$Html$text('10から' + (model.mon2 + 'をひくと')),
+												A2(tbox, model.ans1, 'white')
 											]))
 									])),
 								A2(
@@ -5863,9 +5906,27 @@ var author$project$KSHikizan$view = function (model) {
 											]),
 										_List_fromArray(
 											[
+												elm$html$Html$text('のこりは'),
+												A2(
+												tbox,
+												model.seikai1 ? model.ans1 : '',
+												'white'),
 												elm$html$Html$text(
-												'こたえは' + (model.ans1 + ('と' + (elm$core$String$fromInt(
-													author$project$KSHikizan$toint(model.mon1) - 10) + 'をたして'))))
+												'と' + (elm$core$String$fromInt(
+													author$project$KSHikizan$toint(model.mon1) - 10) + 'をたして')),
+												A2(tbox, model.ans2, 'coral'),
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '70px'),
+														A2(elm$html$Html$Attributes$style, 'color', 'red')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text(
+														model.seikai2 ? '〇' : '')
+													]))
 											]))
 									]))
 							])),

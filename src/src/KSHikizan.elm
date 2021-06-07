@@ -37,6 +37,8 @@ type alias Model =
     ,mon2:String
     ,ans1:String
     ,ans2:String
+    ,seikai1:Bool
+    ,seikai2:Bool
  
   }
 
@@ -44,7 +46,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="19",mon1="11",mon2="9",ans1="",ans2=""}
+  ( {init="19",mon1="11",mon2="9",ans1="",ans2="",seikai1=False,seikai2=False}
   , Cmd.none
   )
 
@@ -64,7 +66,7 @@ update msg model =
  
   case msg of  
    Next ->
-      ( model 
+      ( {model|ans1="",ans2="",seikai1=False,seikai2=False}
        ,   (Random.generate Newmon monGenerator  )
       )
   
@@ -78,8 +80,16 @@ update msg model =
       )
   
    Btn si ->
-     ( {model |    ans1=(String.fromInt si)            } ,Cmd.none)
+     let
+       kotae1=10-(toint model.mon2)
+       kotae2=(toint model.mon1)- (toint model.mon2)
+       
 
+     in
+      if model.seikai1==False then
+       ( {model |    ans1=(String.fromInt si)  ,seikai1=(si==kotae1)          } ,Cmd.none)
+      else 
+        ( {model |    ans2=(String.fromInt si)  ,seikai2=(si==kotae2)          } ,Cmd.none)
 
 
 view : Model -> Html Msg
@@ -117,6 +127,8 @@ view model =
                ,td [] [sbutton 3]
              ]            
             ]
+
+        tbox str color= span [] [input [  size 3,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
                   
  in
    table [align "center"]
@@ -133,8 +145,16 @@ view model =
       [
           tr [] [td [] ([text "10"]++list1)]
           ,tr [] [td []  ([text ("_"++(String.fromInt ((toint model.mon1)-10)))]++list2)]  
-          ,tr [] [td [style "font-size" "30px"] [text ("10から"++model.mon2++"をひくと"++model.ans1)]  ]
-          ,tr [] [td [style "font-size" "30px"] [text ("こたえは"++model.ans1++"と"++(String.fromInt ((toint model.mon1)-10))++"をたして")]  ]
+          ,tr [] [td [style "font-size" "30px"] [text ("10から"++model.mon2++"をひくと")
+          , tbox model.ans1 "white" ]  ]
+          ,tr [] [td [style "font-size" "30px"] 
+           [text "のこりは"
+           ,(tbox (if model.seikai1 then model.ans1 else "") "white")
+           ,text ("と"++(String.fromInt ((toint model.mon1)-10))++"をたして")
+           , tbox model.ans2 "coral" 
+           ,span [style "font-size" "70px",style "color" "red"] [text (if model.seikai2==True then "〇" else "")]
+           ]  
+          ]  
       ]
 
 
