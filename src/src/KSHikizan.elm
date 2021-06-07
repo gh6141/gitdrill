@@ -106,7 +106,7 @@ view model =
         list2 = if (List.length list2o >5) then ( (List.take 5 list2o) ++[text "　" ]++ (List.drop 5 list2o) ) else list2o
      
         sbutton : Int -> Html Msg
-        sbutton ii = (Button.button [Button.attrs [style "font-size" "60px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
+        sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
 
         sujibutton=
            table []
