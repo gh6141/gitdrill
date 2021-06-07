@@ -136,7 +136,7 @@ view model =
     tr []
     [ 
      td [style "font-size" "30px"  ] 
-     [text (model.mon1++"ありました。"++model.mon2++"たべると　いくつ　のこる？")]
+     [text (model.mon1++"こ　ありました。"++model.mon2++"こ　たべると　いくつ　のこる？")]
     ]
     ,tr []
     [ 
