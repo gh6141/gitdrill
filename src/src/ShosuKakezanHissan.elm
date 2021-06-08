@@ -61,7 +61,7 @@ init _ =
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int |ChangeS String String
+    =  Next | Newmon Mondai | Btn Int |ChangeS String String | Right | Left
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -115,6 +115,11 @@ update msg model =
              ,dispr=disprflg
              ,dispans=disprflg
              },Cmd.none)
+   Right -> 
+     (model,Cmd.none)
+
+   Left -> 
+     (model,Cmd.none)
 
 
 

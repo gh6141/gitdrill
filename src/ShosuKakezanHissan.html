@@ -5184,7 +5184,7 @@ var author$project$ShosuKakezanHissan$update = F2(
 						model,
 						{ans: anst}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'ChangeS':
 				var snum = msg.a;
 				var ichi = msg.b;
 				var br = (ichi === 'R') ? snum : model.bair;
@@ -5210,12 +5210,18 @@ var author$project$ShosuKakezanHissan$update = F2(
 							dispr: disprflg
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Right':
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$ShosuKakezanHissan$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
+var author$project$ShosuKakezanHissan$Left = {$: 'Left'};
 var author$project$ShosuKakezanHissan$Next = {$: 'Next'};
+var author$project$ShosuKakezanHissan$Right = {$: 'Right'};
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5585,120 +5591,6 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 					' ' + (author$project$ShosuKakezanHissan$buttoncaption(ii) + ' '))
 				]));
 	};
-	var sujibutton = A2(
-		elm$html$Html$table,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(7)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(8)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(9)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(4)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(5)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(6)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(1)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(2)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(3)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(0)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(10)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(11)
-							]))
-					]))
-			]));
 	var kotae = A2(
 		author$project$ShosuKakezanHissan$waru,
 		elm$core$String$fromInt(
@@ -5906,7 +5798,36 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 									[
 										elm$html$Html$text('つぎへ')
 									])),
-								sujibutton
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Button$button,
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+												elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Left)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('←')
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Button$button,
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+												elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Right)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('→')
+									]))
 							]))
 					]))
 			]));
