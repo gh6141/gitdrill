@@ -1,4 +1,4 @@
-module Subunkai exposing (..)
+module ShosuKakezanHissan exposing (..)
 
 import Browser
 import Html exposing (..)
@@ -61,7 +61,7 @@ init _ =
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx
+    =  Next | Newmon Mondai | Btn Int |ChangeS String String
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -115,8 +115,6 @@ update msg model =
              ,dispr=disprflg
              ,dispans=disprflg
              },Cmd.none)
-    Leftx ->  (model,Cmd.none)
-    Rightx ->  (model,Cmd.none)
 
 
 
@@ -127,7 +125,30 @@ view model =
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(buttoncaption ii)++" ")])
 
-        
+        sujibutton=
+           table []
+            [
+             tr [] [
+               td [] [sbutton 7]
+               ,td [] [sbutton 8]
+               ,td [] [sbutton 9]
+             ]
+             ,tr [] [
+               td [] [sbutton 4]
+               ,td [] [sbutton 5]
+               ,td [] [sbutton 6]
+             ]
+             ,tr [] [
+               td [] [sbutton 1]
+               ,td [] [sbutton 2]
+               ,td [] [sbutton 3]
+             ] 
+              ,tr [] [
+               td [] [sbutton 0]
+               ,td [] [sbutton 10]
+               ,td [] [sbutton 11]
+             ]                       
+            ]
                   
         cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100"]) 
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
@@ -136,8 +157,6 @@ view model =
         kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
 
         seikaiflg=(kotae==model.ans)
-
-        anso=String.fromInt ((toint model.mon1o)*(toint model.mon2o))
  in
 
    table [align "center"]
@@ -150,30 +169,36 @@ view model =
          td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if seikaiflg then "〇" else "　")]  ]
         ] 
         ,tr [] [
-          td [style "font-size" "30px"] [ text (model.mon1++"　×　"++model.mon2++"　=　")
-          ,if model.dispans then (tbox model.ans "coral") else (text "") 
-          
-             ]
+          td [style "font-size" "30px",style "text-align" "right"] [ text (model.mon1)]
         ]
         ,tr [] [
+          td [style "font-size" "30px",style "text-align" "right"] [ text ("×"++model.mon2) ]
+        ]
+        ,tr [] [ 
+            td [] [tbox model.ans "coral"  ]
+        ]
+
+
+        ,tr [] [
           td [style "font-size" "20px"] [
-             text "↓×",cbox model.bail handlerl,text " ↓×",cbox model.baim handlerm, text "　　÷",cbox2 model.bair handlerr,text "↑"
+         --    text "↓×",cbox model.bail handlerl,text " ↓×",cbox model.baim handlerm, text "　　÷",cbox2 model.bair handlerr,text "↑"
           ]
 
         ]      
         ,tr [] [
-            td [style "font-size" "30px"] [
-               text anso )
+            td [style "font-size" "30px",style "text-align" "right"] [
+               text ( String.fromInt ((toint model.mon1o)*(toint model.mon2o))  ) 
             ]
         ]
       ]
    
      ,td []
      [
-       Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-     -- ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Leftx]] [ text "←" ]
-     -- ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Rightx]] [ text "→" ]
+                Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
+                   ,
      --  sujibutton       
+                  Button.button [Button.attrs [style "font-size" "30px"   ,onClick Left]] [ text "←" ]
+                  ,       Button.button [Button.attrs [style "font-size" "30px"   ,onClick Right]] [ text "→" ]
      ]
     ]
    ]
