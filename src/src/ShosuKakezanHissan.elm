@@ -125,30 +125,7 @@ view model =
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(buttoncaption ii)++" ")])
 
-        sujibutton=
-           table []
-            [
-             tr [] [
-               td [] [sbutton 7]
-               ,td [] [sbutton 8]
-               ,td [] [sbutton 9]
-             ]
-             ,tr [] [
-               td [] [sbutton 4]
-               ,td [] [sbutton 5]
-               ,td [] [sbutton 6]
-             ]
-             ,tr [] [
-               td [] [sbutton 1]
-               ,td [] [sbutton 2]
-               ,td [] [sbutton 3]
-             ] 
-              ,tr [] [
-               td [] [sbutton 0]
-               ,td [] [sbutton 10]
-               ,td [] [sbutton 11]
-             ]                       
-            ]
+        
                   
         cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100"]) 
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
@@ -195,10 +172,8 @@ view model =
      ,td []
      [
                 Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-                   ,
-     --  sujibutton       
-                  Button.button [Button.attrs [style "font-size" "30px"   ,onClick Left]] [ text "←" ]
-                  ,       Button.button [Button.attrs [style "font-size" "30px"   ,onClick Right]] [ text "→" ]
+                ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Left]] [ text "←" ]
+                , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Right]] [ text "→" ]
      ]
     ]
    ]
