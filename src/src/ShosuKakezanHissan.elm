@@ -50,13 +50,14 @@ type alias Model =
     ,dispr:Bool
     ,ans:String
     ,dispans:Bool
+    ,pointlocation:Int
  
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",k1=1,k2=1,bail="",baim="",bair=""
-     ,displ=False,dispm=False,dispr=False,ans="",dispans=False}
+     ,displ=False,dispm=False,dispr=False,ans="",dispans=False,pointlocation=0}
   , Cmd.none
   )
 
@@ -88,7 +89,8 @@ update msg model =
       in
       ( {model |  mon1 =waru mnd.sa mnd.k1,mon2=waru mnd.sb mnd.k2
                 ,  mon1o=mnd.sa,mon2o=mnd.sb,k1=mnd.k1,k2=mnd.k2
-                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False}    ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
+                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False
+                ,pointlocation=0}    ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
   
    Btn si ->
     let
@@ -116,10 +118,14 @@ update msg model =
              ,dispans=disprflg
              },Cmd.none)
    Right -> 
-     (model,Cmd.none)
+     ({model|pointlocation=if model.pointlocation>0 then model.pointlocation-1 else model.pointlocation },Cmd.none)
 
    Left -> 
-     (model,Cmd.none)
+    let
+      kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
+
+    in
+     ({model|pointlocation=if model.pointlocation<((String.length kotae)-1) then model.pointlocation+1 else model.pointlocation},Cmd.none)
 
 
 
@@ -136,9 +142,17 @@ view model =
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
 
         tbox str color= span [] [input [  size 3,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
-        kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
+        
+        kotaeo=(String.fromInt ((toint model.mon1o)*(toint model.mon2o)))
+        kotae =  waru kotaeo   (model.k1+model.k2)  
 
-        seikaiflg=(kotae==model.ans)
+        kotaepoint=
+         if (String.length kotaeo)<=model.pointlocation then
+          "0"++(String.left ((String.length kotaeo)-model.pointlocation)  kotaeo)++"."++(String.right model.pointlocation kotaeo) 
+         else 
+          (String.left ((String.length kotaeo)-model.pointlocation)  kotaeo)++"."++(String.right model.pointlocation kotaeo)
+
+        seikaiflg=((tofloat kotae)==(tofloat kotaepoint))
  in
 
    table [align "center"]
@@ -169,7 +183,7 @@ view model =
         ]      
         ,tr [] [
             td [style "font-size" "30px",style "text-align" "right"] [
-               text ( String.fromInt ((toint model.mon1o)*(toint model.mon2o))  ) 
+               text kotaepoint 
             ]
         ]
       ]
