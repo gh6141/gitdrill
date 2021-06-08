@@ -35,7 +35,7 @@ type alias Mondai =
 
 type alias Model =
   { 
-      init:String
+    init:String
     ,mon1:String
     ,mon2:String
     ,mon1o:String
@@ -48,13 +48,15 @@ type alias Model =
     ,displ:Bool
     ,dispm:Bool
     ,dispr:Bool
+    ,ans:String
+    ,dispans:Bool
  
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",mon1="2.0",mon2="1.0",mon1o="2",mon2o="1",k1=0,k2=0,bail="",baim="",bair=""
-     ,displ=False,dispm=False,dispr=False}
+  ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",k1=1,k2=1,bail="",baim="",bair=""
+     ,displ=False,dispm=False,dispr=False,ans="",dispans=False}
   , Cmd.none
   )
 
@@ -69,40 +71,49 @@ update msg model =
 
        monGenerator : Random.Generator Mondai   
        monGenerator = Random.map4  mhenkan (Random.int 12 299 ) (Random.int 12  59 ) (Random.int 1 2) (Random.int 1 2)
-
-   
-   
+  
    in
  
   case msg of
-
-
-  
+ 
    Next ->
-      ( model 
+      ( {model |bail="",baim="",bair=""}
        ,   Random.generate Newmon monGenerator 
       )
   
    Newmon mnd ->
-   
+      let
+        recalflg=(String.right 1 mnd.sa)=="0" || (String.right 1 mnd.sb)=="0"
+
+      in
       ( {model |  mon1 =waru mnd.sa mnd.k1,mon2=waru mnd.sb mnd.k2
-                ,  mon1o=mnd.sa,mon2o=mnd.sb,k1=mnd.k1,k2=mnd.k2}    ,Cmd.none)
+                ,  mon1o=mnd.sa,mon2o=mnd.sb,k1=mnd.k1,k2=mnd.k2
+                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False}    ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
   
    Btn si ->
     let
-      m1=String.fromInt si
-      m2=String.fromInt si
+      bcap=buttoncaption si
+      anst=(if bcap=="C" then (String.dropRight 1 model.ans) else (model.ans++bcap))
 
     in
-     ( {model | mon1=m1  ,mon2=m2
+     ( {model | ans=anst
                  } ,Cmd.none)
    ChangeS snum ichi->
-      ({model|bail=if ichi=="L" then snum else ""
-             ,baim=if ichi=="M" then snum else ""
-             ,bair=if ichi=="R" then snum else ""
-             ,displ=10^model.k1==(toint model.bail)
-             ,dispm=10^model.k2==(toint model.baim)
-             ,dispr=10^(model.k1+model.k2)==(toint model.bair)
+       let
+        bl=if ichi=="L" then snum else model.bail
+        bm=if ichi=="M" then snum else model.baim
+        br=if ichi=="R" then snum else model.bair
+
+        disprflg=10^(model.k1+model.k2)==(toint br)
+
+       in
+      ({model|bail=bl
+             ,baim=bm
+             ,bair=br
+             ,displ=10^model.k1==(toint bl)
+             ,dispm=10^model.k2==(toint bm)
+             ,dispr=disprflg
+             ,dispans=disprflg
              },Cmd.none)
 
 
@@ -112,7 +123,7 @@ view model =
  let   
 
         sbutton : Int -> Html Msg
-        sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(String.fromInt ii)++" ")])
+        sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(buttoncaption ii)++" ")])
 
         sujibutton=
            table []
@@ -142,6 +153,10 @@ view model =
         cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100"]) 
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
 
+        tbox str color= span [] [input [  size 3,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
+        kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
+
+        seikaiflg=(kotae==model.ans)
  in
 
    table [align "center"]
@@ -151,12 +166,17 @@ view model =
       td [] 
       [
         tr [] [
-          td [style "font-size" "30px"] [ text (model.mon1++"　×　"++model.mon2++"　=　"++( waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  )  )
+         td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if seikaiflg then "〇" else "　")]  ]
+        ] 
+        ,tr [] [
+          td [style "font-size" "30px"] [ text (model.mon1++"　×　"++model.mon2++"　=　")
+          ,if model.dispans then (tbox model.ans "coral") else (text "") 
+          
              ]
         ]
         ,tr [] [
           td [style "font-size" "20px"] [
-             text "↓×",cbox "" handlerl,text " ↓×",cbox "" handlerm, text " ÷",cbox2 "" handlerr,text "↑"
+             text "↓×",cbox model.bail handlerl,text " ↓×",cbox model.baim handlerm, text "　　÷",cbox2 model.bair handlerr,text "↑"
           ]
 
         ]      
@@ -194,6 +214,12 @@ toint st=  Maybe.withDefault 0 (String.toInt st)
 tofloat st = Maybe.withDefault 0 (String.toFloat st) 
 
 waru st keta= String.fromFloat ((tofloat st)/(toFloat (10^keta)))
+
+buttoncaption ii = 
+  case ii of
+    10 -> "."
+    11 -> "C"
+    _  -> String.fromInt ii
 
 fst tuple =
     let

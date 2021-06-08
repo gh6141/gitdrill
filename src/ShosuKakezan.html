@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{bail: '', baim: '', bair: '', displ: false, dispm: false, dispr: false, init: '3', k1: 0, k2: 0, mon1: '2.0', mon1o: '2', mon2: '1.0', mon2o: '1'},
+		{ans: '', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispr: false, init: '3', k1: 1, k2: 1, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10'},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4892,6 +4892,16 @@ var author$project$Subunkai$subscriptions = function (model) {
 };
 var author$project$Subunkai$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
+};
+var author$project$Subunkai$buttoncaption = function (ii) {
+	switch (ii) {
+		case 10:
+			return '.';
+		case 11:
+			return 'C';
+		default:
+			return elm$core$String$fromInt(ii);
+	}
 };
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -4922,6 +4932,23 @@ var author$project$Subunkai$waru = F2(
 	function (st, keta) {
 		return elm$core$String$fromFloat(
 			author$project$Subunkai$tofloat(st) / A2(elm$core$Basics$pow, 10, keta));
+	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$core$String$slice = _String_slice;
+var elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
+	});
+var elm$core$String$length = _String_length;
+var elm$core$String$right = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(
+			elm$core$String$slice,
+			-n,
+			elm$core$String$length(string),
+			string);
 	});
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -5036,9 +5063,6 @@ var elm$random$Random$generate = F2(
 			elm$random$Random$Generate(
 				A2(elm$random$Random$map, tagger, generator)));
 	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var elm$core$Bitwise$and = _Bitwise_and;
 var elm$core$Bitwise$xor = _Bitwise_xor;
 var elm$random$Random$peel = function (_n0) {
@@ -5124,14 +5148,25 @@ var author$project$Subunkai$update = F2(
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{bail: '', baim: '', bair: ''}),
 					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
+				var recalflg = (A2(elm$core$String$right, 1, mnd.sa) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0');
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
+							ans: '',
+							bail: '',
+							baim: '',
+							bair: '',
+							dispans: false,
+							displ: false,
+							dispm: false,
+							dispr: false,
 							k1: mnd.k1,
 							k2: mnd.k2,
 							mon1: A2(author$project$Subunkai$waru, mnd.sa, mnd.k1),
@@ -5139,35 +5174,40 @@ var author$project$Subunkai$update = F2(
 							mon2: A2(author$project$Subunkai$waru, mnd.sb, mnd.k2),
 							mon2o: mnd.sb
 						}),
-					elm$core$Platform$Cmd$none);
+					recalflg ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				var m2 = elm$core$String$fromInt(si);
-				var m1 = elm$core$String$fromInt(si);
+				var bcap = author$project$Subunkai$buttoncaption(si);
+				var anst = (bcap === 'C') ? A2(elm$core$String$dropRight, 1, model.ans) : _Utils_ap(model.ans, bcap);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{mon1: m1, mon2: m2}),
+						{ans: anst}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var snum = msg.a;
 				var ichi = msg.b;
+				var br = (ichi === 'R') ? snum : model.bair;
+				var disprflg = _Utils_eq(
+					A2(elm$core$Basics$pow, 10, model.k1 + model.k2),
+					author$project$Subunkai$toint(br));
+				var bm = (ichi === 'M') ? snum : model.baim;
+				var bl = (ichi === 'L') ? snum : model.bail;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							bail: (ichi === 'L') ? snum : '',
-							baim: (ichi === 'M') ? snum : '',
-							bair: (ichi === 'R') ? snum : '',
+							bail: bl,
+							baim: bm,
+							bair: br,
+							dispans: disprflg,
 							displ: _Utils_eq(
 								A2(elm$core$Basics$pow, 10, model.k1),
-								author$project$Subunkai$toint(model.bail)),
+								author$project$Subunkai$toint(bl)),
 							dispm: _Utils_eq(
 								A2(elm$core$Basics$pow, 10, model.k2),
-								author$project$Subunkai$toint(model.baim)),
-							dispr: _Utils_eq(
-								A2(elm$core$Basics$pow, 10, model.k1 + model.k2),
-								author$project$Subunkai$toint(model.bair))
+								author$project$Subunkai$toint(bm)),
+							dispr: disprflg
 						}),
 					elm$core$Platform$Cmd$none);
 		}
@@ -5301,8 +5341,10 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5317,6 +5359,7 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
 var elm$json$Json$Encode$bool = _Json_wrap;
 var elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -5326,6 +5369,12 @@ var elm$html$Html$Attributes$boolProperty = F2(
 			elm$json$Json$Encode$bool(bool));
 	});
 var elm$html$Html$Attributes$selected = elm$html$Html$Attributes$boolProperty('selected');
+var elm$html$Html$Attributes$size = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'size',
+		elm$core$String$fromInt(n));
+};
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
@@ -5510,6 +5559,26 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			children);
 	});
 var author$project$Subunkai$view = function (model) {
+	var tbox = F2(
+		function (str, color) {
+			return A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$input,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$size(3),
+								elm$html$Html$Attributes$placeholder('?'),
+								A2(elm$html$Html$Attributes$style, 'font-size', '26px'),
+								A2(elm$html$Html$Attributes$style, 'background-color', color),
+								elm$html$Html$Attributes$value(str)
+							]),
+						_List_Nil)
+					]));
+		});
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -5526,7 +5595,7 @@ var author$project$Subunkai$view = function (model) {
 			_List_fromArray(
 				[
 					elm$html$Html$text(
-					' ' + (elm$core$String$fromInt(ii) + ' '))
+					' ' + (author$project$Subunkai$buttoncaption(ii) + ' '))
 				]));
 	};
 	var sujibutton = A2(
@@ -5643,6 +5712,12 @@ var author$project$Subunkai$view = function (model) {
 							]))
 					]))
 			]));
+	var kotae = A2(
+		author$project$Subunkai$waru,
+		elm$core$String$fromInt(
+			author$project$Subunkai$toint(model.mon1o) * author$project$Subunkai$toint(model.mon2o)),
+		model.k1 + model.k2);
+	var seikaiflg = _Utils_eq(kotae, model.ans);
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -5726,16 +5801,39 @@ var author$project$Subunkai$view = function (model) {
 										elm$html$Html$td,
 										_List_fromArray(
 											[
+												A2(elm$html$Html$Attributes$style, 'text-align', 'right')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+														A2(elm$html$Html$Attributes$style, 'color', 'red')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text(
+														seikaiflg ? '〇' : '　')
+													]))
+											]))
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_fromArray(
+											[
 												A2(elm$html$Html$Attributes$style, 'font-size', '30px')
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text(
-												model.mon1 + ('　×　' + (model.mon2 + ('　=　' + A2(
-													author$project$Subunkai$waru,
-													elm$core$String$fromInt(
-														author$project$Subunkai$toint(model.mon1o) * author$project$Subunkai$toint(model.mon2o)),
-													model.k1 + model.k2)))))
+												elm$html$Html$text(model.mon1 + ('　×　' + (model.mon2 + '　=　'))),
+												model.dispans ? A2(tbox, model.ans, 'coral') : elm$html$Html$text('')
 											]))
 									])),
 								A2(
@@ -5752,11 +5850,11 @@ var author$project$Subunkai$view = function (model) {
 										_List_fromArray(
 											[
 												elm$html$Html$text('↓×'),
-												A2(cbox, '', author$project$Subunkai$handlerl),
+												A2(cbox, model.bail, author$project$Subunkai$handlerl),
 												elm$html$Html$text(' ↓×'),
-												A2(cbox, '', author$project$Subunkai$handlerm),
-												elm$html$Html$text(' ÷'),
-												A2(cbox2, '', author$project$Subunkai$handlerr),
+												A2(cbox, model.baim, author$project$Subunkai$handlerm),
+												elm$html$Html$text('　　÷'),
+												A2(cbox2, model.bair, author$project$Subunkai$handlerr),
 												elm$html$Html$text('↑')
 											]))
 									])),
@@ -5898,8 +5996,6 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
-var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
