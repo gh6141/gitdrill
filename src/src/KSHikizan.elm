@@ -97,8 +97,8 @@ view model =
  let
       
 
-        img1=img [src "https://gh6141.github.io/gitdrill/src/py/ichigo.png",width 50, height 50] []
-        img1o=img [src "https://gh6141.github.io/gitdrill/src/py/ichigo.png",width 50, height 50,style "opacity" "0.5"] []
+        img1=img [src "https://gh6141.github.io/gitdrill/src/py/apple.png",width 50, height 50] []
+        img1o=img [src "https://gh6141.github.io/gitdrill/src/py/apple.png",width 50, height 50,style "opacity" "0.5"] []
        
         list1o = (List.repeat (10-(toint model.mon2)) (img1))++(List.repeat (toint model.mon2) (img1o))
         list1 = (List.take 5 list1o) ++[text "　" ]++ (List.drop 5 list1o)
