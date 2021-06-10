@@ -5184,7 +5184,7 @@ var author$project$Subunkai$update = F2(
 						model,
 						{ans: anst}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'ChangeS':
 				var snum = msg.a;
 				var ichi = msg.b;
 				var br = (ichi === 'R') ? snum : model.bair;
@@ -5210,6 +5210,10 @@ var author$project$Subunkai$update = F2(
 							dispr: disprflg
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Leftx':
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Subunkai$Btn = function (a) {
@@ -5570,7 +5574,7 @@ var author$project$Subunkai$view = function (model) {
 						elm$html$Html$input,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$size(3),
+								elm$html$Html$Attributes$size(7),
 								elm$html$Html$Attributes$placeholder('?'),
 								A2(elm$html$Html$Attributes$style, 'font-size', '26px'),
 								A2(elm$html$Html$Attributes$style, 'background-color', color),
@@ -5598,120 +5602,6 @@ var author$project$Subunkai$view = function (model) {
 					' ' + (author$project$Subunkai$buttoncaption(ii) + ' '))
 				]));
 	};
-	var sujibutton = A2(
-		elm$html$Html$table,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(7)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(8)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(9)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(4)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(5)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(6)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(1)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(2)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(3)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(0)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(10)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(11)
-							]))
-					]))
-			]));
 	var kotae = A2(
 		author$project$Subunkai$waru,
 		elm$core$String$fromInt(
@@ -5774,6 +5664,8 @@ var author$project$Subunkai$view = function (model) {
 					_List_fromArray(
 						['', '10', '100'])));
 		});
+	var anso = elm$core$String$fromInt(
+		author$project$Subunkai$toint(model.mon1o) * author$project$Subunkai$toint(model.mon2o));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -5871,9 +5763,7 @@ var author$project$Subunkai$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text(
-												(model.displ ? model.mon1o : '  ') + ('　×　' + ((model.dispm ? model.mon2o : '  ') + ('　=　' + ((model.displ && model.dispm) ? elm$core$String$fromInt(
-													author$project$Subunkai$toint(model.mon1o) * author$project$Subunkai$toint(model.mon2o)) : ' ')))))
+												elm$html$Html$text(anso)
 											]))
 									]))
 							])),
@@ -5896,8 +5786,7 @@ var author$project$Subunkai$view = function (model) {
 								_List_fromArray(
 									[
 										elm$html$Html$text('つぎへ')
-									])),
-								sujibutton
+									]))
 							]))
 					]))
 			]));

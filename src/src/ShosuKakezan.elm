@@ -115,8 +115,8 @@ update msg model =
              ,dispr=disprflg
              ,dispans=disprflg
              },Cmd.none)
-    Leftx ->  (model,Cmd.none)
-    Rightx ->  (model,Cmd.none)
+   Leftx ->  (model,Cmd.none)
+   Rightx ->  (model,Cmd.none)
 
 
 
@@ -163,7 +163,7 @@ view model =
         ]      
         ,tr [] [
             td [style "font-size" "30px"] [
-               text anso )
+               text anso 
             ]
         ]
       ]
