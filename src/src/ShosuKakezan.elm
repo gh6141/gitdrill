@@ -132,7 +132,7 @@ view model =
         cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100"]) 
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
 
-        tbox str color= span [] [input [  size 3,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
+        tbox str color= span [] [input [  size 7,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
         kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
 
         seikaiflg=(kotae==model.ans)

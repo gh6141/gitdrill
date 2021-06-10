@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$ShosuKakezanHissan$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispr: false, init: '3', k1: 1, k2: 1, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', pointlocation: 0},
+		{ans: '', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispmaru: false, dispr: false, init: '3', k1: 1, k2: 1, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', pointlocation: 0},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5166,6 +5166,7 @@ var author$project$ShosuKakezanHissan$update = F2(
 							dispans: false,
 							displ: false,
 							dispm: false,
+							dispmaru: false,
 							dispr: false,
 							k1: mnd.k1,
 							k2: mnd.k2,
@@ -5219,7 +5220,7 @@ var author$project$ShosuKakezanHissan$update = F2(
 							pointlocation: (model.pointlocation > 0) ? (model.pointlocation - 1) : model.pointlocation
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Left':
 				var kotae = A2(
 					author$project$ShosuKakezanHissan$waru,
 					elm$core$String$fromInt(
@@ -5234,6 +5235,12 @@ var author$project$ShosuKakezanHissan$update = F2(
 								elm$core$String$length(kotae) - 1) < 0) ? (model.pointlocation + 1) : model.pointlocation
 						}),
 					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{dispmaru: true}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$ShosuKakezanHissan$Btn = function (a) {
@@ -5242,6 +5249,7 @@ var author$project$ShosuKakezanHissan$Btn = function (a) {
 var author$project$ShosuKakezanHissan$Left = {$: 'Left'};
 var author$project$ShosuKakezanHissan$Next = {$: 'Next'};
 var author$project$ShosuKakezanHissan$Right = {$: 'Right'};
+var author$project$ShosuKakezanHissan$Tashikame = {$: 'Tashikame'};
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5357,6 +5365,19 @@ var elm$core$List$map = F2(
 var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
+var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3(elm$core$String$repeatHelp, n, chunk, '');
 	});
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
@@ -5630,6 +5651,7 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 	var seikaiflg = _Utils_eq(
 		author$project$ShosuKakezanHissan$tofloat(kotae),
 		author$project$ShosuKakezanHissan$tofloat(kotaepoint));
+	var kiseki = A2(elm$core$String$repeat, model.pointlocation, '←');
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -5727,7 +5749,7 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 												_List_fromArray(
 													[
 														elm$html$Html$text(
-														seikaiflg ? '〇' : '　')
+														(seikaiflg && model.dispmaru) ? '〇' : '　')
 													]))
 											]))
 									])),
@@ -5775,7 +5797,7 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 										_List_Nil,
 										_List_fromArray(
 											[
-												A2(tbox, model.ans, 'coral')
+												elm$html$Html$text('－－－－－－')
 											]))
 									])),
 								A2(
@@ -5807,6 +5829,23 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 											[
 												elm$html$Html$text(kotaepoint)
 											]))
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '18px'),
+												A2(elm$html$Html$Attributes$style, 'text-align', 'right')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text(kiseki)
+											]))
 									]))
 							])),
 						A2(
@@ -5815,49 +5854,100 @@ var author$project$ShosuKakezanHissan$view = function (model) {
 						_List_fromArray(
 							[
 								A2(
-								rundis$elm_bootstrap$Bootstrap$Button$button,
+								elm$html$Html$tr,
+								_List_Nil,
 								_List_fromArray(
 									[
-										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
 										_List_fromArray(
 											[
-												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-												elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Next)
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+																elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Next)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('つぎへ')
+													]))
 											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('つぎへ')
 									])),
 								A2(
-								rundis$elm_bootstrap$Bootstrap$Button$button,
+								elm$html$Html$tr,
+								_List_Nil,
 								_List_fromArray(
 									[
-										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
 										_List_fromArray(
 											[
-												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-												elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Left)
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+																elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Left)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('←')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+																elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Right)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('→')
+													]))
 											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('←')
 									])),
 								A2(
-								rundis$elm_bootstrap$Bootstrap$Button$button,
+								elm$html$Html$tr,
+								_List_Nil,
 								_List_fromArray(
 									[
-										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
 										_List_fromArray(
 											[
-												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-												elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Right)
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+																elm$html$Html$Events$onClick(author$project$ShosuKakezanHissan$Tashikame)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('たしかめ')
+													]))
 											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('→')
 									]))
 							]))
 					]))

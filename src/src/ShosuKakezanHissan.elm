@@ -51,18 +51,19 @@ type alias Model =
     ,ans:String
     ,dispans:Bool
     ,pointlocation:Int
+    ,dispmaru:Bool
  
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",k1=1,k2=1,bail="",baim="",bair=""
-     ,displ=False,dispm=False,dispr=False,ans="",dispans=False,pointlocation=0}
+     ,displ=False,dispm=False,dispr=False,ans="",dispans=False,pointlocation=0,dispmaru=False}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int |ChangeS String String | Right | Left
+    =  Next | Newmon Mondai | Btn Int |ChangeS String String | Right | Left |Tashikame
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -90,7 +91,7 @@ update msg model =
       ( {model |  mon1 =waru mnd.sa mnd.k1,mon2=waru mnd.sb mnd.k2
                 ,  mon1o=mnd.sa,mon2o=mnd.sb,k1=mnd.k1,k2=mnd.k2
                 ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False
-                ,pointlocation=0}    ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
+                ,pointlocation=0,dispmaru=False}    ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
   
    Btn si ->
     let
@@ -127,7 +128,8 @@ update msg model =
     in
      ({model|pointlocation=if model.pointlocation<((String.length kotae)-1) then model.pointlocation+1 else model.pointlocation},Cmd.none)
 
-
+   Tashikame ->
+     ({model|dispmaru=True},Cmd.none)
 
 view : Model -> Html Msg
 view model =
@@ -153,6 +155,8 @@ view model =
           (String.left ((String.length kotaeo)-model.pointlocation)  kotaeo)++"."++(String.right model.pointlocation kotaeo)
 
         seikaiflg=((tofloat kotae)==(tofloat kotaepoint))
+
+        kiseki = String.repeat model.pointlocation "←"
  in
 
    table [align "center"]
@@ -162,7 +166,7 @@ view model =
       td [] 
       [
         tr [] [
-         td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if seikaiflg then "〇" else "　")]  ]
+         td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if (seikaiflg&&model.dispmaru) then "〇" else "　")]  ]
         ] 
         ,tr [] [
           td [style "font-size" "30px",style "text-align" "right"] [ text (model.mon1)]
@@ -171,7 +175,8 @@ view model =
           td [style "font-size" "30px",style "text-align" "right"] [ text ("×"++model.mon2) ]
         ]
         ,tr [] [ 
-            td [] [tbox model.ans "coral"  ]
+         --   td [] [tbox model.ans "coral"  ]
+          td [] [text "－－－－－－"  ]
         ]
 
 
@@ -186,13 +191,26 @@ view model =
                text kotaepoint 
             ]
         ]
+        ,tr [] [
+            td [style "font-size" "18px",style "text-align" "right"] [
+               text kiseki 
+            ]
+        ]
       ]
    
      ,td []
      [
-                Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-                ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Left]] [ text "←" ]
-                , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Right]] [ text "→" ]
+       tr [] [
+         td [] [ Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]]
+       ]
+       ,tr [] [
+         td [] [Button.button [Button.attrs [style "font-size" "30px"   ,onClick Left]] [ text "←" ]
+                , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Right]] [ text "→" ]]
+       ]
+       ,tr [] [
+         td [] [Button.button [Button.attrs [style "font-size" "30px"   ,onClick Tashikame]] [ text "たしかめ" ]]
+       ]
+ 
      ]
     ]
    ]
