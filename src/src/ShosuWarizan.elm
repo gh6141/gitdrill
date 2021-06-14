@@ -164,7 +164,7 @@ view model =
 
         seikaiflg=(kotae==model.ans)
 
-        anso=String.fromInt ((toint model.mon1o)*(toint model.mon2o))
+        anso=String.fromInt ((toint model.mon1o)/(toint model.mon2o))
  in
 
    table [align "center"]
@@ -177,7 +177,7 @@ view model =
          td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if seikaiflg then "〇" else "　")]  ]
         ] 
         ,tr [] [
-          td [style "font-size" "30px"] [ text (model.mon1++"　×　"++model.mon2++"　=　")
+          td [style "font-size" "30px"] [ text (model.mon1++"　÷　"++model.mon2++"　=　")
           ,if model.dispans then (tbox model.ans "coral") else (text "") 
           
              ]
@@ -190,7 +190,7 @@ view model =
         ]      
         ,tr [] [
             td [style "font-size" "30px"] [
-               text ((if model.displ then model.mon1o else "")++"　×　"++(if model.dispm then model.mon2o else "")
+               text ((if model.displ then model.mon1o else "")++"　÷　"++(if model.dispm then model.mon2o else "")
                 ++"　=　"++(if (model.displ&&model.dispm) then anso else "") )
             ]
         ]
