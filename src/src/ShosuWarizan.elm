@@ -51,18 +51,21 @@ type alias Model =
     ,dispr:Bool
     ,ans:String
     ,dispans:Bool
+    , keisiki:Keisiki
  
   }
+
+type Keisiki= Hyojun |Junshosu |Junshosu100|HijosuSeisu
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",ans1o="2",k1=1,k2=1,bail="",baim="",bair=""
-     ,displ=False,dispm=False,dispr=False,ans="",dispans=False}
+     ,displ=False,dispm=False,dispr=False,ans="",dispans=False,keisiki=Hyojun}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx
+    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx | TypeK Keisiki
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -71,7 +74,7 @@ update msg model =
        mhenkan i1 i2 k1 k2= {sa=String.fromInt i1,sb=String.fromInt i2,k1=k1,k2=k2} 
 
        monGenerator : Random.Generator Mondai   
-       monGenerator = Random.map4  mhenkan (Random.int 12 299 ) (Random.int 12  59 ) (Random.int 1 2) (Random.int 1 2)
+       monGenerator = Random.map4  mhenkan (Random.int 2 75 ) (Random.int 2  60 ) (Random.int 1 3) (Random.int 1 3)
   
    in
  
@@ -84,8 +87,15 @@ update msg model =
   
    Newmon mnd ->
       let
-        recalflg=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
-
+       -- recalflg=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
+       -- recalflg=(String.right 1 mnd.sb)=="0"
+       
+       recalflg=
+        case model.keisiki of
+          Hyojun -> False
+          Junshosu ->not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          Junshosu100 -> not ( ((String.right 1 mnd.sb)/="0")&&(String.right 1 (mojikake mnd.sa mnd.sb)=="0")&&(mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          HijosuSeisu -> not ((mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
       in
       ( {model |  mon1 =waru (mojikake mnd.sa mnd.sb) mnd.k1,mon2=waru mnd.sb mnd.k2
                 ,  mon1o=waru (mojikake mnd.sa mnd.sb) (-mnd.k2+mnd.k1),mon2o=mnd.sb
@@ -122,6 +132,9 @@ update msg model =
    Leftx ->  (model,Cmd.none)
    Rightx ->  (model,Cmd.none)
 
+   TypeK keisik ->  ({model|keisiki=keisik},Cmd.none)
+                  
+  
 
 
 view : Model -> Html Msg
@@ -160,11 +173,11 @@ view model =
              ]                  
             ]        
                   
-        cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100"]) 
+        cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000"]) 
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
 
         tbox str color= span [] [input [  size 7,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
-       -- kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
+        -- kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
         anso=waru model.ans1o (-model.k2+model.k1)
         seikaiflg=(anso==model.ans)
 
@@ -202,10 +215,24 @@ view model =
    
      ,td []
      [
-       Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
+       tr [] [
+         td [] [
+                Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
      -- ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Leftx]] [ text "←" ]
      -- ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Rightx]] [ text "→" ]
       ,sujibutton       
+         ]
+
+       ]
+       ,tr [] [
+         td [] [
+           Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK Hyojun)]] [ text "標準" ]
+          ,Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK Junshosu)]] [ text "商が純小数" ]
+          ,Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK Junshosu100)]] [ text "商が1/100純小数" ]
+         ,Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK HijosuSeisu)]] [ text "被除数は整数" ]
+         ]
+       ]
+  
      ]
     ]
    ]
