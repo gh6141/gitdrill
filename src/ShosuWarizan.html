@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispr: false, init: '3', k1: 1, k2: 1, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10'},
+		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispr: false, init: '3', k1: 1, k2: 1, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10'},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4919,6 +4919,11 @@ var author$project$Subunkai$toint = function (st) {
 		0,
 		elm$core$String$toInt(st));
 };
+var author$project$Subunkai$mojikake = F2(
+	function (st1, st2) {
+		return elm$core$String$fromInt(
+			author$project$Subunkai$toint(st1) * author$project$Subunkai$toint(st2));
+	});
 var elm$core$String$toFloat = _String_toFloat;
 var author$project$Subunkai$tofloat = function (st) {
 	return A2(
@@ -5154,12 +5159,16 @@ var author$project$Subunkai$update = F2(
 					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
-				var recalflg = (A2(elm$core$String$right, 1, mnd.sa) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0');
+				var recalflg = (A2(
+					elm$core$String$right,
+					1,
+					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0');
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							ans: '',
+							ans1o: mnd.sa,
 							bail: '',
 							baim: '',
 							bair: '',
@@ -5169,8 +5178,14 @@ var author$project$Subunkai$update = F2(
 							dispr: false,
 							k1: mnd.k1,
 							k2: mnd.k2,
-							mon1: A2(author$project$Subunkai$waru, mnd.sa, mnd.k1),
-							mon1o: mnd.sa,
+							mon1: A2(
+								author$project$Subunkai$waru,
+								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+								mnd.k1),
+							mon1o: A2(
+								author$project$Subunkai$waru,
+								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+								(-mnd.k2) + mnd.k1),
 							mon2: A2(author$project$Subunkai$waru, mnd.sb, mnd.k2),
 							mon2o: mnd.sb
 						}),
@@ -5188,11 +5203,13 @@ var author$project$Subunkai$update = F2(
 				var snum = msg.a;
 				var ichi = msg.b;
 				var br = (ichi === 'R') ? snum : model.bair;
-				var disprflg = _Utils_eq(
-					A2(elm$core$Basics$pow, 10, model.k1 + model.k2),
-					author$project$Subunkai$toint(br));
 				var bm = (ichi === 'M') ? snum : model.baim;
 				var bl = (ichi === 'L') ? snum : model.bail;
+				var disprflg = (_Utils_eq(
+					A2(elm$core$Basics$pow, 10, model.k2),
+					author$project$Subunkai$toint(bl)) && model.dispm) || (_Utils_eq(
+					A2(elm$core$Basics$pow, 10, model.k2),
+					author$project$Subunkai$toint(bm)) && model.displ);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5202,7 +5219,7 @@ var author$project$Subunkai$update = F2(
 							bair: br,
 							dispans: disprflg,
 							displ: _Utils_eq(
-								A2(elm$core$Basics$pow, 10, model.k1),
+								A2(elm$core$Basics$pow, 10, model.k2),
 								author$project$Subunkai$toint(bl)),
 							dispm: _Utils_eq(
 								A2(elm$core$Basics$pow, 10, model.k2),
@@ -5229,9 +5246,6 @@ var author$project$Subunkai$handlerl = function (selectedText) {
 };
 var author$project$Subunkai$handlerm = function (selectedText) {
 	return A2(author$project$Subunkai$ChangeS, selectedText, 'M');
-};
-var author$project$Subunkai$handlerr = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'R');
 };
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -5716,12 +5730,6 @@ var author$project$Subunkai$view = function (model) {
 							]))
 					]))
 			]));
-	var kotae = A2(
-		author$project$Subunkai$waru,
-		elm$core$String$fromInt(
-			author$project$Subunkai$toint(model.mon1o) * author$project$Subunkai$toint(model.mon2o)),
-		model.k1 + model.k2);
-	var seikaiflg = _Utils_eq(kotae, model.ans);
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -5778,8 +5786,8 @@ var author$project$Subunkai$view = function (model) {
 					_List_fromArray(
 						['', '10', '100'])));
 		});
-	var anso = elm$core$String$fromInt(
-		author$project$Subunkai$toint(model.mon1o) * author$project$Subunkai$toint(model.mon2o));
+	var anso = A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1);
+	var seikaiflg = _Utils_eq(anso, model.ans);
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -5838,7 +5846,7 @@ var author$project$Subunkai$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text(model.mon1 + ('　×　' + (model.mon2 + '　=　'))),
+												elm$html$Html$text(model.mon1 + ('　÷　' + (model.mon2 + '　=　'))),
 												model.dispans ? A2(tbox, model.ans, 'coral') : elm$html$Html$text('')
 											]))
 									])),
@@ -5858,10 +5866,7 @@ var author$project$Subunkai$view = function (model) {
 												elm$html$Html$text('↓×'),
 												A2(cbox, model.bail, author$project$Subunkai$handlerl),
 												elm$html$Html$text(' ↓×'),
-												A2(cbox, model.baim, author$project$Subunkai$handlerm),
-												elm$html$Html$text('　　÷'),
-												A2(cbox2, model.bair, author$project$Subunkai$handlerr),
-												elm$html$Html$text('↑')
+												A2(cbox, model.baim, author$project$Subunkai$handlerm)
 											]))
 									])),
 								A2(
@@ -5878,7 +5883,7 @@ var author$project$Subunkai$view = function (model) {
 										_List_fromArray(
 											[
 												elm$html$Html$text(
-												(model.displ ? model.mon1o : '') + ('　×　' + ((model.dispm ? model.mon2o : '') + ('　=　' + ((model.displ && model.dispm) ? anso : '')))))
+												(model.displ ? model.mon1o : '') + ('　÷　' + ((model.dispm ? model.mon2o : '') + ('　=　' + ((model.displ && model.dispm) ? anso : '')))))
 											]))
 									]))
 							])),

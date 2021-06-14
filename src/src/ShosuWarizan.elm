@@ -40,6 +40,7 @@ type alias Model =
     ,mon2:String
     ,mon1o:String
     ,mon2o:String
+    ,ans1o:String
     ,k1:Int
     ,k2:Int
     ,bail:String
@@ -55,7 +56,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",k1=1,k2=1,bail="",baim="",bair=""
+  ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",ans1o="2",k1=1,k2=1,bail="",baim="",bair=""
      ,displ=False,dispm=False,dispr=False,ans="",dispans=False}
   , Cmd.none
   )
@@ -83,12 +84,15 @@ update msg model =
   
    Newmon mnd ->
       let
-        recalflg=(String.right 1 mnd.sa)=="0" || (String.right 1 mnd.sb)=="0"
+        recalflg=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
 
       in
-      ( {model |  mon1 =waru mnd.sa mnd.k1,mon2=waru mnd.sb mnd.k2
-                ,  mon1o=mnd.sa,mon2o=mnd.sb,k1=mnd.k1,k2=mnd.k2
-                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False}    ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
+      ( {model |  mon1 =waru (mojikake mnd.sa mnd.sb) mnd.k1,mon2=waru mnd.sb mnd.k2
+                ,  mon1o=waru (mojikake mnd.sa mnd.sb) (-mnd.k2+mnd.k1),mon2o=mnd.sb
+                ,ans1o=mnd.sa                
+                ,k1=mnd.k1,k2=mnd.k2
+                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False}    
+                ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
   
    Btn si ->
     let
@@ -104,13 +108,13 @@ update msg model =
         bm=if ichi=="M" then snum else model.baim
         br=if ichi=="R" then snum else model.bair
 
-        disprflg=10^(model.k1+model.k2)==(toint br)
+        disprflg=((10^model.k2==(toint bl)) && model.dispm)||((10^model.k2==(toint bm))&&model.displ)
 
        in
       ({model|bail=bl
              ,baim=bm
              ,bair=br
-             ,displ=10^model.k1==(toint bl)
+             ,displ=10^model.k2==(toint bl)
              ,dispm=10^model.k2==(toint bm)
              ,dispr=disprflg
              ,dispans=disprflg
@@ -160,11 +164,10 @@ view model =
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
 
         tbox str color= span [] [input [  size 7,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
-        kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
+       -- kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
+        anso=waru model.ans1o (-model.k2+model.k1)
+        seikaiflg=(anso==model.ans)
 
-        seikaiflg=(kotae==model.ans)
-
-        anso=String.fromInt ((toint model.mon1o)/(toint model.mon2o))
  in
 
    table [align "center"]
@@ -184,7 +187,8 @@ view model =
         ]
         ,tr [] [
           td [style "font-size" "20px"] [
-             text "↓×",cbox model.bail handlerl,text " ↓×",cbox model.baim handlerm, text "　　÷",cbox2 model.bair handlerr,text "↑"
+             text "↓×",cbox model.bail handlerl,text " ↓×",cbox model.baim handlerm
+             --, text "　　÷",cbox2 model.bair handlerr,text "↑"
           ]
 
         ]      
@@ -224,6 +228,7 @@ toint st=  Maybe.withDefault 0 (String.toInt st)
 tofloat st = Maybe.withDefault 0 (String.toFloat st) 
 
 waru st keta= String.fromFloat ((tofloat st)/(toFloat (10^keta)))
+mojikake st1 st2 = String.fromInt ((toint st1) * (toint st2))
 
 buttoncaption ii = 
   case ii of
