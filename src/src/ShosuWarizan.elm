@@ -54,10 +54,10 @@ type alias Model =
     , keisiki:Keisiki
     ,hdisp:Bool
     ,pointlocation:Int
-,picls:Int --point ichi  left
-,cicls:Int --kanma ichi  left
-,picrs:Int
-,cirrs:Int
+    ,picls:Int --point ichi  left
+    ,cicls:Int --kanma ichi  left
+    ,picrs:Int
+    ,cicrs:Int
  
   }
 
@@ -67,7 +67,7 @@ init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",ans1o="2",k1=1,k2=1,bail="",baim="",bair=""
      ,displ=False,dispm=False,dispr=False,ans="",dispans=False,keisiki=Hyojun,hdisp=False,pointlocation=0
-     ,picls=0,cicls=0,picrs=0,cicls=0}
+     ,picls=0,cicls=0,picrs=0,cicrs=0}
   , Cmd.none
   )
 
@@ -107,10 +107,10 @@ update msg model =
           HijosuSeisu -> not (((String.contains "." mon1x)==False)&&(mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
      
        
-        pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
-        cic st=Maybe.withDefault 0 (List.head (String.indexes "," st))
+       pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
+       cic st=Maybe.withDefault 0 (List.head (String.indexes "," st))
 
-        mon2x=waru mnd.sb mnd.k2
+       mon2x=waru mnd.sb mnd.k2
 
      
       in
@@ -148,7 +148,7 @@ update msg model =
              ,dispr=disprflg
              ,dispans=disprflg
              },Cmd.none)
-   Leftx ->  ({model|pointlocation=model.pointlocation-1 },Cmd.none)
+   Leftx ->  ({model|pointlocation=if model.pointlocation>0 then model.pointlocation-1 else 0},Cmd.none)
    Rightx ->  ({model|pointlocation=model.pointlocation+1 },Cmd.none)
 
    TypeK keisik ->  ({model|keisiki=keisik},Cmd.none)
@@ -208,13 +208,25 @@ view model =
         ls=model.mon2
         rs=model.mon1
 
-        lsx=if model.picls==0 then ls++"." else ls
-        rsx=if model.picrs==0 then rs++"." else rs
-
-        
+        pcls=if model.picls==0 then ((String.length ls)+1) else model.picls      
+        pcrs=if model.picrs==0 then ((String.length rs)+1) else model.picrs      
 
 
-        hissand2=lsx++")"++rsx
+    
+        ls00=String.replace "." "" ls
+        ls0=ls00++(String.repeat (pcls+model.pointlocation-(String.length ls00)) "0"   )
+
+        rs00=String.replace "." "" rs    
+        rs0=rs00++(String.repeat (pcrs+model.pointlocation-(String.length rs00)) "0"   )
+
+
+        lsx1= (String.left (pcls+model.pointlocation) ls0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcls+model.pointlocation) ls0)
+        rsx1= (String.left (pcrs+model.pointlocation) rs0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcrs+model.pointlocation) rs0)
+
+        lsx2= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcls) lsx1)
+        rsx2= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcrs) rsx1)
+
+        hissand2=lsx2++")"++rsx2
 
 
  in
@@ -251,12 +263,13 @@ view model =
         ,
          let
            tab=(String.repeat  ((String.length model.mon2)+2) "\u{00a0}")
+           tab1=(String.repeat  ((String.length model.mon1)+1) "\u{00a0}")
          in
         
          tr [] [
           td [style "font-size" "30px"] [            
-              div [style "line-height" "1em"] [ text (if model.hdisp then (tab++hissand1) else "")]            
-            ,div [style "line-height" "0.5em"] [ text (if model.hdisp then (tab++ "------") else "")]            
+              div [style "line-height" "1em"] [ text (if model.hdisp then (tab++tab1++hissand1) else "")]            
+            ,div [style "line-height" "0.5em"] [ text (if model.hdisp then (tab++ "----------") else "")]            
             ,div [style "line-height" "1em"] [ text (if model.hdisp then hissand2 else "")] 
                        
             ]
