@@ -4883,7 +4883,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispr: false, init: '3', k1: 1, k2: 1, keisiki: author$project$Subunkai$Hyojun, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10'},
+		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', dispans: false, displ: false, dispm: false, dispr: false, hdisp: false, init: '3', k1: 1, k2: 1, keisiki: author$project$Subunkai$Hyojun, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', pointlocation: 0},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4944,6 +4944,7 @@ var elm$core$Basics$negate = function (n) {
 };
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Basics$not = _Basics_not;
+var elm$core$String$contains = _String_contains;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropRight = F2(
 	function (n, string) {
@@ -5162,6 +5163,10 @@ var author$project$Subunkai$update = F2(
 					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
+				var mon1x = A2(
+					author$project$Subunkai$waru,
+					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+					mnd.k1);
 				var recalflg = function () {
 					var _n1 = model.keisiki;
 					switch (_n1.$) {
@@ -5175,7 +5180,7 @@ var author$project$Subunkai$update = F2(
 								1,
 								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
 						default:
-							return !(((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)));
+							return !((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))));
 					}
 				}();
 				return _Utils_Tuple2(
@@ -5193,10 +5198,7 @@ var author$project$Subunkai$update = F2(
 							dispr: false,
 							k1: mnd.k1,
 							k2: mnd.k2,
-							mon1: A2(
-								author$project$Subunkai$waru,
-								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
-								mnd.k1),
+							mon1: mon1x,
 							mon1o: A2(
 								author$project$Subunkai$waru,
 								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
@@ -5243,15 +5245,29 @@ var author$project$Subunkai$update = F2(
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Leftx':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{pointlocation: model.pointlocation - 1}),
+					elm$core$Platform$Cmd$none);
 			case 'Rightx':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{pointlocation: model.pointlocation + 1}),
+					elm$core$Platform$Cmd$none);
+			case 'TypeK':
 				var keisik = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{keisiki: keisik}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hdisp: true}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5259,9 +5275,12 @@ var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
 var author$project$Subunkai$HijosuSeisu = {$: 'HijosuSeisu'};
+var author$project$Subunkai$Hissan = {$: 'Hissan'};
 var author$project$Subunkai$Junshosu = {$: 'Junshosu'};
 var author$project$Subunkai$Junshosu100 = {$: 'Junshosu100'};
+var author$project$Subunkai$Leftx = {$: 'Leftx'};
 var author$project$Subunkai$Next = {$: 'Next'};
+var author$project$Subunkai$Rightx = {$: 'Rightx'};
 var author$project$Subunkai$TypeK = function (a) {
 	return {$: 'TypeK', a: a};
 };
@@ -5373,6 +5392,15 @@ var author$project$Subunkai$onChange = function (handler) {
 		'change',
 		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
 };
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5387,6 +5415,21 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$core$String$indexes = _String_indexes;
+var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3(elm$core$String$repeatHelp, n, chunk, '');
+	});
+var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
@@ -5758,6 +5801,26 @@ var author$project$Subunkai$view = function (model) {
 							]))
 					]))
 			]));
+	var rs = model.mon1;
+	var pic = function (st) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$List$head(
+				A2(elm$core$String$indexes, '.', st)));
+	};
+	var rsx = (!pic(rs)) ? (rs + '.') : rs;
+	var ls = model.mon2;
+	var lsx = (!pic(ls)) ? (ls + '.') : ls;
+	var hissand2 = lsx + (')' + rsx);
+	var hissand1 = model.ans;
+	var cic = function (st) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			0,
+			elm$core$List$head(
+				A2(elm$core$String$indexes, ',', st)));
+	};
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -5820,18 +5883,25 @@ var author$project$Subunkai$view = function (model) {
 		elm$html$Html$table,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$align('center')
+				elm$html$Html$Attributes$align('center'),
+				A2(elm$html$Html$Attributes$style, 'width', '80%')
 			]),
 		_List_fromArray(
 			[
 				A2(
 				elm$html$Html$tr,
-				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$align('left')
+					]),
 				_List_fromArray(
 					[
 						A2(
 						elm$html$Html$td,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'width', '50%')
+							]),
 						_List_fromArray(
 							[
 								A2(
@@ -5913,7 +5983,77 @@ var author$project$Subunkai$view = function (model) {
 												elm$html$Html$text(
 												(model.displ ? model.mon1o : '') + ('　÷　' + ((model.dispm ? model.mon2o : '') + ('　=　' + ((model.displ && model.dispm) ? anso : '')))))
 											]))
-									]))
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('\u00a0')
+											]))
+									])),
+								function () {
+								var tab = A2(
+									elm$core$String$repeat,
+									elm$core$String$length(model.mon2) + 2,
+									'\u00a0');
+								return A2(
+									elm$html$Html$tr,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$td,
+											_List_fromArray(
+												[
+													A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'line-height', '1em')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															model.hdisp ? _Utils_ap(tab, hissand1) : '')
+														])),
+													A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'line-height', '0.5em')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															model.hdisp ? (tab + '------') : '')
+														])),
+													A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'line-height', '1em')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															model.hdisp ? hissand2 : '')
+														]))
+												]))
+										]));
+							}()
 							])),
 						A2(
 						elm$html$Html$td,
@@ -6021,6 +6161,63 @@ var author$project$Subunkai$view = function (model) {
 												_List_fromArray(
 													[
 														elm$html$Html$text('被除数は整数')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Hissan)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('筆算表示')
+													]))
+											]))
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Leftx)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('←')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Rightx)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('→')
 													]))
 											]))
 									]))
@@ -6133,7 +6330,6 @@ var elm$core$String$dropLeft = F2(
 var elm$core$String$startsWith = _String_startsWith;
 var elm$url$Url$Http = {$: 'Http'};
 var elm$url$Url$Https = {$: 'Https'};
-var elm$core$String$indexes = _String_indexes;
 var elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
@@ -6141,7 +6337,6 @@ var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
-var elm$core$String$contains = _String_contains;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};

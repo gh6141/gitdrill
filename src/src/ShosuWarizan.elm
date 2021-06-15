@@ -52,20 +52,27 @@ type alias Model =
     ,ans:String
     ,dispans:Bool
     , keisiki:Keisiki
+    ,hdisp:Bool
+    ,pointlocation:Int
+,picls:Int --point ichi  left
+,cicls:Int --kanma ichi  left
+,picrs:Int
+,cirrs:Int
  
   }
 
-type Keisiki= Hyojun |Junshosu |Junshosu100|HijosuSeisu
+type Keisiki= Hyojun |Junshosu |Junshosu100|HijosuSeisu 
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",ans1o="2",k1=1,k2=1,bail="",baim="",bair=""
-     ,displ=False,dispm=False,dispr=False,ans="",dispans=False,keisiki=Hyojun}
+     ,displ=False,dispm=False,dispr=False,ans="",dispans=False,keisiki=Hyojun,hdisp=False,pointlocation=0
+     ,picls=0,cicls=0,picrs=0,cicls=0}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx | TypeK Keisiki
+    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx | TypeK Keisiki |Hissan
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -90,18 +97,30 @@ update msg model =
        -- recalflg=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
        -- recalflg=(String.right 1 mnd.sb)=="0"
        
+       mon1x=waru (mojikake mnd.sa mnd.sb) mnd.k1
+
        recalflg=
         case model.keisiki of
           Hyojun -> False
           Junshosu ->not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
           Junshosu100 -> not ( ((String.right 1 mnd.sb)/="0")&&(String.right 1 (mojikake mnd.sa mnd.sb)=="0")&&(mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-          HijosuSeisu -> not ((mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          HijosuSeisu -> not (((String.contains "." mon1x)==False)&&(mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+     
+       
+        pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
+        cic st=Maybe.withDefault 0 (List.head (String.indexes "," st))
+
+        mon2x=waru mnd.sb mnd.k2
+
+     
       in
-      ( {model |  mon1 =waru (mojikake mnd.sa mnd.sb) mnd.k1,mon2=waru mnd.sb mnd.k2
+      ( {model |  mon1 =mon1x,mon2=mon2x
                 ,  mon1o=waru (mojikake mnd.sa mnd.sb) (-mnd.k2+mnd.k1),mon2o=mnd.sb
                 ,ans1o=mnd.sa                
                 ,k1=mnd.k1,k2=mnd.k2
-                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False}    
+                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False
+                ,picls=pic mon2x,cicls=cic mon2x,picrs=pic mon1x,cicrs=cic mon1x
+                }    
                 ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
   
    Btn si ->
@@ -129,10 +148,12 @@ update msg model =
              ,dispr=disprflg
              ,dispans=disprflg
              },Cmd.none)
-   Leftx ->  (model,Cmd.none)
-   Rightx ->  (model,Cmd.none)
+   Leftx ->  ({model|pointlocation=model.pointlocation-1 },Cmd.none)
+   Rightx ->  ({model|pointlocation=model.pointlocation+1 },Cmd.none)
 
    TypeK keisik ->  ({model|keisiki=keisik},Cmd.none)
+
+   Hissan ->  ({model|hdisp=True},Cmd.none)
                   
   
 
@@ -180,14 +201,29 @@ view model =
         -- kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
         anso=waru model.ans1o (-model.k2+model.k1)
         seikaiflg=(anso==model.ans)
+        
+        hissand1=model.ans
+
+ 
+        ls=model.mon2
+        rs=model.mon1
+
+        lsx=if model.picls==0 then ls++"." else ls
+        rsx=if model.picrs==0 then rs++"." else rs
+
+        
+
+
+        hissand2=lsx++")"++rsx
+
 
  in
 
-   table [align "center"]
+   table [align "center" ,style "width" "80%"]
    [
-    tr []
+    tr [align "left"]
     [
-      td [] 
+      td [style "width" "50%"] 
       [
         tr [] [
          td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if seikaiflg then "〇" else "　")]  ]
@@ -211,6 +247,21 @@ view model =
                 ++"　=　"++(if (model.displ&&model.dispm) then anso else "") )
             ]
         ]
+        ,tr [][td [style "font-size" "30px"] [text "\u{00a0}"]]
+        ,
+         let
+           tab=(String.repeat  ((String.length model.mon2)+2) "\u{00a0}")
+         in
+        
+         tr [] [
+          td [style "font-size" "30px"] [            
+              div [style "line-height" "1em"] [ text (if model.hdisp then (tab++hissand1) else "")]            
+            ,div [style "line-height" "0.5em"] [ text (if model.hdisp then (tab++ "------") else "")]            
+            ,div [style "line-height" "1em"] [ text (if model.hdisp then hissand2 else "")] 
+                       
+            ]
+        ]
+
       ]
    
      ,td []
@@ -218,8 +269,7 @@ view model =
        tr [] [
          td [] [
                 Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-     -- ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Leftx]] [ text "←" ]
-     -- ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Rightx]] [ text "→" ]
+
       ,sujibutton       
          ]
 
@@ -230,6 +280,13 @@ view model =
           ,Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK Junshosu)]] [ text "商が純小数" ]
           ,Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK Junshosu100)]] [ text "商が1/100純小数" ]
          ,Button.button [Button.attrs [style "font-size" "10px"   ,onClick (TypeK HijosuSeisu)]] [ text "被除数は整数" ]
+         ,Button.button [Button.attrs [style "font-size" "20px"   ,onClick Hissan]] [ text "筆算表示" ]
+         ]
+       ]
+       ,tr [] [
+         td [] [
+          Button.button [Button.attrs [style "font-size" "20px"   ,onClick Leftx]] [ text "←" ]
+         ,Button.button [Button.attrs [style "font-size" "20px"   ,onClick Rightx]] [ text "→" ]
          ]
        ]
   
