@@ -5452,6 +5452,10 @@ var elm$core$String$dropLeft = F2(
 			elm$core$String$length(string),
 			string);
 	});
+var elm$core$String$cons = _String_cons;
+var elm$core$String$fromChar = function (_char) {
+	return A2(elm$core$String$cons, _char, '');
+};
 var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
@@ -5476,6 +5480,10 @@ var elm$core$String$replace = F3(
 			after,
 			A2(elm$core$String$split, before, string));
 	});
+var elm$core$String$foldr = _String_foldr;
+var elm$core$String$toList = function (string) {
+	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
+};
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
@@ -5715,52 +5723,6 @@ var author$project$Subunkai$view = function (model) {
 						_List_Nil)
 					]));
 		});
-	var sikitr = A2(
-		ccapndave$elm_flat_map$List$FlatMap$flatMap,
-		function (_n0) {
-			var hikareru = _n0.a;
-			var hiku = _n0.b;
-			return _List_fromArray(
-				[
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							model.hdisp ? hikareru : '')
-						])),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text('----------------------')
-						])),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							model.hdisp ? hiku : '')
-						]))
-				]);
-		},
-		_List_fromArray(
-			[
-				_Utils_Tuple2('123', '456'),
-				_Utils_Tuple2('123', '456')
-			]));
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -5936,6 +5898,45 @@ var author$project$Subunkai$view = function (model) {
 	var lsx2 = A3(elm$core$String$replace, ',.', '.', lsx2o);
 	var hissand2 = lsx2 + (')' + rsx2);
 	var hissand1 = model.ans;
+	var divx = function (st) {
+		return A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'line-height', '1em')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text(
+					model.hdisp ? st : '')
+				]));
+	};
+	var charToTuple = function (st) {
+		return _Utils_Tuple2(
+			elm$core$String$fromInt(
+				author$project$Subunkai$toint(
+					elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o)),
+			'**');
+	};
+	var sikitr = A2(
+		ccapndave$elm_flat_map$List$FlatMap$flatMap,
+		function (_n0) {
+			var hikareru = _n0.a;
+			var hiku = _n0.b;
+			return _List_fromArray(
+				[
+					divx(hikareru),
+					divx('----------------------'),
+					divx(hiku)
+				]);
+		},
+		A2(
+			elm$core$List$map,
+			function (st) {
+				return charToTuple(st);
+			},
+			elm$core$String$toList(
+				A3(elm$core$String$replace, '.', '', model.ans))));
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(

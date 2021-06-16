@@ -228,12 +228,17 @@ view model =
         rsx2=String.replace ",." "." rsx2o
 
         hissand2=lsx2++")"++rsx2
+        divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
+
+        charToTuple st =
+         ( String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))  , "**")
 
         sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
-         [ div [style "line-height" "1em"] [ text (if model.hdisp then (hikareru) else "")]  
-          , div [style "line-height" "1em"] [ text  "----------------------"]  
-          , div [style "line-height" "1em"] [ text (if model.hdisp then (hiku) else "")]  ]
-          ))  [("123","456"),("123","456")]
+         [  divx hikareru
+          , divx "----------------------"
+          , divx hiku ]
+            )) (List.map (\st->charToTuple st)  (String.toList (String.replace "." "" model.ans)) )
+         --   )) [("xx","yy")]
  
   in
 
