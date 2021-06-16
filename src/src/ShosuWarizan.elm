@@ -14,6 +14,7 @@ import Bootstrap.CDN as CDN
 import Bootstrap.Utilities.Spacing as Spacing
 
 import Random
+import List.FlatMap
 
 
 main =
@@ -161,10 +162,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
- let   
-
-
-
+  let   
 
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(buttoncaption ii)++" ")])
@@ -231,8 +229,13 @@ view model =
 
         hissand2=lsx2++")"++rsx2
 
-
- in
+        sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
+         [ div [style "line-height" "1em"] [ text (if model.hdisp then (hikareru) else "")]  
+          , div [style "line-height" "1em"] [ text  "----------------------"]  
+          , div [style "line-height" "1em"] [ text (if model.hdisp then (hiku) else "")]  ]
+          ))  [("123","456"),("123","456")]
+ 
+  in
 
    table [align "center" ,style "width" "80%"]
    [
@@ -270,12 +273,12 @@ view model =
          in
         
          tr [] [
-          td [style "font-size" "30px"] [            
+          td [style "font-size" "30px"] ([            
               div [style "line-height" "1em"] [ text (if model.hdisp then (tab++tab1++hissand1) else "")]            
             ,div [style "line-height" "0.5em"] [ text (if model.hdisp then (tab++ "----------") else "")]            
             ,div [style "line-height" "1em"] [ text (if model.hdisp then hissand2 else "")] 
                        
-            ]
+            ]++sikitr)
           ]
 
       ]
