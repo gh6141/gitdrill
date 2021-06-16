@@ -104,7 +104,7 @@ update msg model =
           Hyojun -> False
           Junshosu ->not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
           Junshosu100 -> not ( ((String.right 1 mnd.sb)/="0")&&(String.right 1 (mojikake mnd.sa mnd.sb)=="0")&&(mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-          HijosuSeisu -> not (((String.contains "." mon1x)==False)&&(mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          HijosuSeisu -> not (((String.contains "." model.mon2)==True)&&((String.contains "." mon1x)==False)&&(mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
      
        
        pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
@@ -120,6 +120,7 @@ update msg model =
                 ,k1=mnd.k1,k2=mnd.k2
                 ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False
                 ,picls=pic mon2x,cicls=cic mon2x,picrs=pic mon1x,cicrs=cic mon1x
+                ,pointlocation=0
                 }    
                 ,if recalflg then (Random.generate Newmon monGenerator)  else Cmd.none)
   
@@ -214,17 +215,19 @@ view model =
 
     
         ls00=String.replace "." "" ls
-        ls0=ls00++(String.repeat (pcls+model.pointlocation-(String.length ls00)) "0"   )
+        ls0=ls00++(String.repeat (pcls+model.pointlocation-(String.length ls00)-(if (String.contains "." ls) then 0  else 1)) "0"   )
 
         rs00=String.replace "." "" rs    
-        rs0=rs00++(String.repeat (pcrs+model.pointlocation-(String.length rs00)) "0"   )
+        rs0=rs00++(String.repeat (pcrs+model.pointlocation-(String.length rs00)-(if (String.contains "." rs) then 0  else 1)) "0"   )
 
 
         lsx1= (String.left (pcls+model.pointlocation) ls0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcls+model.pointlocation) ls0)
         rsx1= (String.left (pcrs+model.pointlocation) rs0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcrs+model.pointlocation) rs0)
 
-        lsx2= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcls) lsx1)
-        rsx2= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcrs) rsx1)
+        lsx2o= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcls) lsx1)
+        rsx2o= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcrs) rsx1)
+        lsx2=String.replace ",." "." lsx2o
+        rsx2=String.replace ",." "." rsx2o
 
         hissand2=lsx2++")"++rsx2
 
@@ -263,7 +266,7 @@ view model =
         ,
          let
            tab=(String.repeat  ((String.length model.mon2)+2) "\u{00a0}")
-           tab1=(String.repeat  ((String.length model.mon1)+1) "\u{00a0}")
+           tab1=(String.repeat  ((String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)) "\u{00a0}")
          in
         
          tr [] [
@@ -273,7 +276,7 @@ view model =
             ,div [style "line-height" "1em"] [ text (if model.hdisp then hissand2 else "")] 
                        
             ]
-        ]
+          ]
 
       ]
    

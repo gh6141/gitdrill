@@ -5198,7 +5198,7 @@ var author$project$Subunkai$update = F2(
 								1,
 								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
 						default:
-							return !((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))));
+							return !(A2(elm$core$String$contains, '.', model.mon2) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
 					}
 				}();
 				var cic = function (st) {
@@ -5233,7 +5233,8 @@ var author$project$Subunkai$update = F2(
 							mon2: mon2x,
 							mon2o: mnd.sb,
 							picls: pic(mon2x),
-							picrs: pic(mon1x)
+							picrs: pic(mon1x),
+							pointlocation: 0
 						}),
 					recalflg ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
@@ -5848,18 +5849,19 @@ var author$project$Subunkai$view = function (model) {
 		rs00,
 		A2(
 			elm$core$String$repeat,
-			(pcrs + model.pointlocation) - elm$core$String$length(rs00),
+			((pcrs + model.pointlocation) - elm$core$String$length(rs00)) - (A2(elm$core$String$contains, '.', rs) ? 0 : 1),
 			'0'));
 	var rsx1 = _Utils_ap(
 		A2(elm$core$String$left, pcrs + model.pointlocation, rs0),
 		_Utils_ap(
 			(!model.pointlocation) ? '' : '.',
 			A2(elm$core$String$dropLeft, pcrs + model.pointlocation, rs0)));
-	var rsx2 = _Utils_ap(
+	var rsx2o = _Utils_ap(
 		A2(elm$core$String$left, pcrs, rsx1),
 		_Utils_ap(
 			(!model.pointlocation) ? '.' : ',',
 			A2(elm$core$String$dropLeft, pcrs, rsx1)));
+	var rsx2 = A3(elm$core$String$replace, ',.', '.', rsx2o);
 	var ls = model.mon2;
 	var ls00 = A3(elm$core$String$replace, '.', '', ls);
 	var pcls = (!model.picls) ? (elm$core$String$length(ls) + 1) : model.picls;
@@ -5867,18 +5869,19 @@ var author$project$Subunkai$view = function (model) {
 		ls00,
 		A2(
 			elm$core$String$repeat,
-			(pcls + model.pointlocation) - elm$core$String$length(ls00),
+			((pcls + model.pointlocation) - elm$core$String$length(ls00)) - (A2(elm$core$String$contains, '.', ls) ? 0 : 1),
 			'0'));
 	var lsx1 = _Utils_ap(
 		A2(elm$core$String$left, pcls + model.pointlocation, ls0),
 		_Utils_ap(
 			(!model.pointlocation) ? '' : '.',
 			A2(elm$core$String$dropLeft, pcls + model.pointlocation, ls0)));
-	var lsx2 = _Utils_ap(
+	var lsx2o = _Utils_ap(
 		A2(elm$core$String$left, pcls, lsx1),
 		_Utils_ap(
 			(!model.pointlocation) ? '.' : ',',
 			A2(elm$core$String$dropLeft, pcls, lsx1)));
+	var lsx2 = A3(elm$core$String$replace, ',.', '.', lsx2o);
 	var hissand2 = lsx2 + (')' + rsx2);
 	var hissand1 = model.ans;
 	var cbox2 = F2(
@@ -6063,7 +6066,7 @@ var author$project$Subunkai$view = function (model) {
 								function () {
 								var tab1 = A2(
 									elm$core$String$repeat,
-									elm$core$String$length(model.mon1) + 1,
+									(elm$core$String$length(model.mon1) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0),
 									'\u00a0');
 								var tab = A2(
 									elm$core$String$repeat,
