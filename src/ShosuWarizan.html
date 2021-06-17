@@ -5904,6 +5904,11 @@ var author$project$Subunkai$view = function (model) {
 			(!model.pointlocation) ? '.' : ',',
 			A2(elm$core$String$dropLeft, pcls, lsx1)));
 	var lsx2 = A3(elm$core$String$replace, ',.', '.', lsx2o);
+	var kaketa = function (st) {
+		return elm$core$String$fromInt(
+			author$project$Subunkai$toint(
+				elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o));
+	};
 	var hissand2 = lsx2 + (')' + rsx2);
 	var hissand1 = model.ans;
 	var divx = function (st) {
@@ -5921,30 +5926,9 @@ var author$project$Subunkai$view = function (model) {
 	};
 	var charToTuple = function (st) {
 		return _Utils_Tuple2(
-			elm$core$String$fromInt(
-				author$project$Subunkai$toint(
-					elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o)),
+			kaketa(st),
 			'**');
 	};
-	var sikitr = A2(
-		ccapndave$elm_flat_map$List$FlatMap$flatMap,
-		function (_n0) {
-			var hikareru = _n0.a;
-			var hiku = _n0.b;
-			return _List_fromArray(
-				[
-					divx(hikareru),
-					divx(tab + '---------------'),
-					divx(hiku)
-				]);
-		},
-		A2(
-			elm$core$List$map,
-			function (st) {
-				return charToTuple(st);
-			},
-			elm$core$String$toList(
-				A3(elm$core$String$replace, '.', '', model.ans))));
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -6001,6 +5985,29 @@ var author$project$Subunkai$view = function (model) {
 					_List_fromArray(
 						['', '10', '100', '1000'])));
 		});
+	var canslist = function (sans) {
+		return elm$core$String$toList(
+			A3(elm$core$String$replace, '.', '', sans));
+	};
+	var manslst = canslist(model.ans);
+	var sikitr = A2(
+		ccapndave$elm_flat_map$List$FlatMap$flatMap,
+		function (_n0) {
+			var hikareru = _n0.a;
+			var hiku = _n0.b;
+			return _List_fromArray(
+				[
+					divx(hikareru),
+					divx(tab + '---------------'),
+					divx(hiku)
+				]);
+		},
+		A2(
+			elm$core$List$map,
+			function (st) {
+				return charToTuple(st);
+			},
+			manslst));
 	var anso = A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1);
 	var seikaiflg = _Utils_eq(anso, model.ans);
 	return A2(

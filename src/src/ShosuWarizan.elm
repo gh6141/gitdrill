@@ -239,13 +239,18 @@ view model =
 
         canslist sans=String.toList (String.replace "." "" sans)
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
-        charToTuple st = (kaketa st,    )
+        manslst=List.map (\ch->kaketa ch) (canslist model.ans)
+
+        hikulst=List.indexedMap (\(idx,st)-> (List.foldl (        ) 0 (List.take idx manslst) ) )  manslst
+
+        pmanslst=
+      
 
         sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
          [  divx hikareru
           , divx (tab++"---------------")
           , divx hiku ]
-            )) (List.map (\st->charToTuple st)  (canslist model.ans) )
+            ))  pmanslst 
   
  
   in
