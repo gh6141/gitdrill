@@ -228,6 +228,12 @@ view model =
         rsx2=String.replace ",." "." rsx2o
 
         hissand2=lsx2++")"++rsx2
+
+        tab=(String.repeat  ((String.length model.mon2)+2) "\u{00a0}")
+        tab1=(String.repeat  ((String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)) "\u{00a0}")
+
+
+
         divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
 
         charToTuple st =
@@ -235,7 +241,7 @@ view model =
 
         sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
          [  divx hikareru
-          , divx "----------------------"
+          , divx (tab++"---------------")
           , divx hiku ]
             )) (List.map (\st->charToTuple st)  (String.toList (String.replace "." "" model.ans)) )
          --   )) [("xx","yy")]
@@ -272,10 +278,7 @@ view model =
         ]
         ,tr [][td [style "font-size" "30px"] [text "\u{00a0}"]]
         ,
-         let
-           tab=(String.repeat  ((String.length model.mon2)+2) "\u{00a0}")
-           tab1=(String.repeat  ((String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)) "\u{00a0}")
-         in
+         
         
          tr [] [
           td [style "font-size" "30px"] ([            

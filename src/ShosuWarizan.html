@@ -5723,6 +5723,14 @@ var author$project$Subunkai$view = function (model) {
 						_List_Nil)
 					]));
 		});
+	var tab1 = A2(
+		elm$core$String$repeat,
+		(elm$core$String$length(model.mon1) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0),
+		'\u00a0');
+	var tab = A2(
+		elm$core$String$repeat,
+		elm$core$String$length(model.mon2) + 2,
+		'\u00a0');
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -5926,7 +5934,7 @@ var author$project$Subunkai$view = function (model) {
 			return _List_fromArray(
 				[
 					divx(hikareru),
-					divx('----------------------'),
+					divx(tab + '---------------'),
 					divx(hiku)
 				]);
 		},
@@ -6116,68 +6124,58 @@ var author$project$Subunkai$view = function (model) {
 												elm$html$Html$text('\u00a0')
 											]))
 									])),
-								function () {
-								var tab1 = A2(
-									elm$core$String$repeat,
-									(elm$core$String$length(model.mon1) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0),
-									'\u00a0');
-								var tab = A2(
-									elm$core$String$repeat,
-									elm$core$String$length(model.mon2) + 2,
-									'\u00a0');
-								return A2(
-									elm$html$Html$tr,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											elm$html$Html$td,
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+											]),
+										_Utils_ap(
 											_List_fromArray(
 												[
-													A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+													A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'line-height', '1em')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															model.hdisp ? _Utils_ap(
+																tab,
+																_Utils_ap(tab1, hissand1)) : '')
+														])),
+													A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'line-height', '0.5em')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															model.hdisp ? (tab + '----------') : '')
+														])),
+													A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'line-height', '1em')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															model.hdisp ? hissand2 : '')
+														]))
 												]),
-											_Utils_ap(
-												_List_fromArray(
-													[
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text(
-																model.hdisp ? _Utils_ap(
-																	tab,
-																	_Utils_ap(tab1, hissand1)) : '')
-															])),
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																A2(elm$html$Html$Attributes$style, 'line-height', '0.5em')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text(
-																model.hdisp ? (tab + '----------') : '')
-															])),
-														A2(
-														elm$html$Html$div,
-														_List_fromArray(
-															[
-																A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-															]),
-														_List_fromArray(
-															[
-																elm$html$Html$text(
-																model.hdisp ? hissand2 : '')
-															]))
-													]),
-												sikitr))
-										]));
-							}()
+											sikitr))
+									]))
 							])),
 						A2(
 						elm$html$Html$td,
