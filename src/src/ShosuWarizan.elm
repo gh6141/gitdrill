@@ -241,9 +241,14 @@ view model =
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
         manslst=List.map (\ch->kaketa ch) (canslist model.ans)
 
-        hikulst=List.indexedMap (\(idx,st)-> (List.foldl (        ) 0 (List.take idx manslst) ) )  manslst
 
-        pmanslst=
+        hikuac  st ac = ac- (toint st)
+
+        hikufunc idx st = List.foldl hikuac (toint model.mon1o) (List.take idx manslst)
+
+        hikulst=List.indexedMap hikufunc  manslst
+
+        pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )
       
 
         sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
