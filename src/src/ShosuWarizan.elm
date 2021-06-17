@@ -236,15 +236,17 @@ view model =
 
         divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
 
-        charToTuple st =
-         ( String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))  , "**")
+
+        canslist sans=String.toList (String.replace "." "" sans)
+        kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
+        charToTuple st = (kaketa st,    )
 
         sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
          [  divx hikareru
           , divx (tab++"---------------")
           , divx hiku ]
-            )) (List.map (\st->charToTuple st)  (String.toList (String.replace "." "" model.ans)) )
-         --   )) [("xx","yy")]
+            )) (List.map (\st->charToTuple st)  (canslist model.ans) )
+  
  
   in
 
