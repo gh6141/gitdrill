@@ -83,7 +83,7 @@ update msg model =
        mhenkan i1 i2 k1 k2= {sa=String.fromInt i1,sb=String.fromInt i2,k1=k1,k2=k2} 
 
        monGenerator : Random.Generator Mondai   
-       monGenerator = Random.map4  mhenkan (Random.int 2 75 ) (Random.int 2  60 ) (Random.int 1 2) (Random.int 1 2)
+       monGenerator = Random.map4  mhenkan (Random.int 2 75 ) (Random.int 2  60 ) (Random.int 1 3) (Random.int 1 3)
   
    in
  
@@ -237,12 +237,12 @@ view model =
         
         divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
 
-
-        canslist sans=String.toList (String.replace "0" "" (String.replace "." "" sans))
+        zkcut ss=String.replace "0" "" (String.replace "." "" ss)
+        canslist sans=String.toList (zkcut sans)
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
 
         func idx ch = (kaketa ch,idx)
-        manslst=List.indexedMap func (canslist model.ans)    --(かけた結果,商の何文字目か)リスト
+        manslst=List.indexedMap func (canslist (zkcut model.ans))    --(かけた結果,商の何文字目か)リスト
         
         hikuac  st ac = ac- (toint (Tuple.first st))*10^(floor (logBase 10 ((toFloat ac)/(tofloat (Tuple.first st))) ) ) --マイナスならないMaxで引く
 

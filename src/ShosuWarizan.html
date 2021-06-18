@@ -5162,8 +5162,8 @@ var author$project$Subunkai$update = F2(
 			mhenkan,
 			A2(elm$random$Random$int, 2, 75),
 			A2(elm$random$Random$int, 2, 60),
-			A2(elm$random$Random$int, 1, 2),
-			A2(elm$random$Random$int, 1, 2));
+			A2(elm$random$Random$int, 1, 3),
+			A2(elm$random$Random$int, 1, 3));
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
@@ -5833,6 +5833,13 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			children);
 	});
 var author$project$Subunkai$view = function (model) {
+	var zkcut = function (ss) {
+		return A3(
+			elm$core$String$replace,
+			'0',
+			'',
+			A3(elm$core$String$replace, '.', '', ss));
+	};
 	var tbox = F2(
 		function (str, color) {
 			return A2(
@@ -6128,16 +6135,13 @@ var author$project$Subunkai$view = function (model) {
 		});
 	var canslist = function (sans) {
 		return elm$core$String$toList(
-			A3(
-				elm$core$String$replace,
-				'0',
-				'',
-				A3(elm$core$String$replace, '.', '', sans)));
+			zkcut(sans));
 	};
 	var manslst = A2(
 		elm$core$List$indexedMap,
 		func,
-		canslist(model.ans));
+		canslist(
+			zkcut(model.ans)));
 	var hikufunc = F2(
 		function (idx, st) {
 			return A3(
