@@ -82,7 +82,7 @@ update msg model =
        mhenkan i1 i2 k1 k2= {sa=String.fromInt i1,sb=String.fromInt i2,k1=k1,k2=k2} 
 
        monGenerator : Random.Generator Mondai   
-       monGenerator = Random.map4  mhenkan (Random.int 2 75 ) (Random.int 2  60 ) (Random.int 1 3) (Random.int 1 3)
+       monGenerator = Random.map4  mhenkan (Random.int 2 75 ) (Random.int 2  60 ) (Random.int 1 2) (Random.int 1 2)
   
    in
  
@@ -246,6 +246,7 @@ view model =
 
         hikufunc idx st = List.foldl hikuac (toint model.mon1o) (List.take idx manslst)
 
+        --hikulst=Maybe.withDefault [] (List.tail (List.indexedMap hikufunc  manslst))
         hikulst=List.indexedMap hikufunc  manslst
 
         pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )
