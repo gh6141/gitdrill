@@ -228,34 +228,35 @@ view model =
         rsx2=String.replace ",." "." rsx2o
 
         hissand2=lsx2++")"++rsx2
-
-        tab=(String.repeat  ((String.length model.mon2)+2) "\u{00a0}")
-        tab1=(String.repeat  ((String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)) "\u{00a0}")
-
-
-
+        
+        t1=(String.length model.mon2)+2
+        tab=String.repeat  t1 "\u{00a0}"
+        t2= (String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)
+        tab1=String.repeat  t2 "\u{00a0}"
+        
         divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
 
 
-        canslist sans=String.toList (String.replace "." "" sans)
+        canslist sans=String.toList (String.replace "0" "" (String.replace "." "" sans))
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
         manslst=List.map (\ch->kaketa ch) (canslist model.ans)
 
+        
+        hikuac  st ac = ac- (toint st)*10^(floor (logBase 10 ((toFloat ac)/(tofloat st)) ) ) --マイナスならないMaxで引く
 
-        hikuac  st ac = ac- (toint st)
 
-        hikufunc idx st = List.foldl hikuac (toint model.mon1o) (List.take idx manslst)
+        hikufunc idx st = List.foldl hikuac (toint model.mon1o) (List.take (idx+1) manslst)
 
-        --hikulst=Maybe.withDefault [] (List.tail (List.indexedMap hikufunc  manslst))
         hikulst=List.indexedMap hikufunc  manslst
 
         pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )
       
+        tabx ni=String.repeat  ni "\u{00a0}"
 
         sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
-         [  divx hikareru
+         [  divx ((tabx (t1+t2-(String.length hikareru)))++hikareru)
           , divx (tab++"---------------")
-          , divx hiku ]
+          , divx ((tabx (t1+t2-(String.length hiku)))++hiku) ]
             ))  pmanslst 
   
  

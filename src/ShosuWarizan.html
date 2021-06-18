@@ -5853,14 +5853,13 @@ var author$project$Subunkai$view = function (model) {
 						_List_Nil)
 					]));
 		});
-	var tab1 = A2(
-		elm$core$String$repeat,
-		(elm$core$String$length(model.mon1) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0),
-		'\u00a0');
-	var tab = A2(
-		elm$core$String$repeat,
-		elm$core$String$length(model.mon2) + 2,
-		'\u00a0');
+	var tabx = function (ni) {
+		return A2(elm$core$String$repeat, ni, '\u00a0');
+	};
+	var t2 = (elm$core$String$length(model.mon1) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0);
+	var tab1 = A2(elm$core$String$repeat, t2, '\u00a0');
+	var t1 = elm$core$String$length(model.mon2) + 2;
+	var tab = A2(elm$core$String$repeat, t1, '\u00a0');
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6043,7 +6042,14 @@ var author$project$Subunkai$view = function (model) {
 	var hissand1 = model.ans;
 	var hikuac = F2(
 		function (st, ac) {
-			return ac - author$project$Subunkai$toint(st);
+			return ac - (author$project$Subunkai$toint(st) * A2(
+				elm$core$Basics$pow,
+				10,
+				elm$core$Basics$floor(
+					A2(
+						elm$core$Basics$logBase,
+						10,
+						ac / author$project$Subunkai$tofloat(st)))));
 		});
 	var divx = function (st) {
 		return A2(
@@ -6116,7 +6122,11 @@ var author$project$Subunkai$view = function (model) {
 		});
 	var canslist = function (sans) {
 		return elm$core$String$toList(
-			A3(elm$core$String$replace, '.', '', sans));
+			A3(
+				elm$core$String$replace,
+				'0',
+				'',
+				A3(elm$core$String$replace, '.', '', sans)));
 	};
 	var manslst = A2(
 		elm$core$List$map,
@@ -6130,7 +6140,7 @@ var author$project$Subunkai$view = function (model) {
 				elm$core$List$foldl,
 				hikuac,
 				author$project$Subunkai$toint(model.mon1o),
-				A2(elm$core$List$take, idx, manslst));
+				A2(elm$core$List$take, idx + 1, manslst));
 		});
 	var hikulst = A2(elm$core$List$indexedMap, hikufunc, manslst);
 	var pmanslst = A3(
@@ -6150,9 +6160,17 @@ var author$project$Subunkai$view = function (model) {
 			var hiku = _n0.b;
 			return _List_fromArray(
 				[
-					divx(hikareru),
+					divx(
+					_Utils_ap(
+						tabx(
+							(t1 + t2) - elm$core$String$length(hikareru)),
+						hikareru)),
 					divx(tab + '---------------'),
-					divx(hiku)
+					divx(
+					_Utils_ap(
+						tabx(
+							(t1 + t2) - elm$core$String$length(hiku)),
+						hiku))
 				]);
 		},
 		pmanslst);
