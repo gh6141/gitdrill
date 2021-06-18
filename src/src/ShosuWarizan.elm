@@ -15,6 +15,7 @@ import Bootstrap.Utilities.Spacing as Spacing
 
 import Random
 import List.FlatMap
+import Tuple
 
 
 main =
@@ -239,24 +240,24 @@ view model =
 
         canslist sans=String.toList (String.replace "0" "" (String.replace "." "" sans))
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
-        manslst=List.map (\ch->kaketa ch) (canslist model.ans)
 
+        func idx ch = (kaketa ch,idx)
+        manslst=List.indexedMap func (canslist model.ans)    --(かけた結果,商の何文字目か)リスト
         
-        hikuac  st ac = ac- (toint st)*10^(floor (logBase 10 ((toFloat ac)/(tofloat st)) ) ) --マイナスならないMaxで引く
-
+        hikuac  st ac = ac- (toint (Tuple.first st))*10^(floor (logBase 10 ((toFloat ac)/(tofloat (Tuple.first st))) ) ) --マイナスならないMaxで引く
 
         hikufunc idx st = List.foldl hikuac (toint model.mon1o) (List.take (idx+1) manslst)
 
         hikulst=List.indexedMap hikufunc  manslst
 
-        pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )
+        pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )  --引いた結果リスト
       
         tabx ni=String.repeat  ni "\u{00a0}"
 
-        sikitr=List.FlatMap.flatMap (\(hikareru,hiku) ->  ( 
-         [  divx ((tabx (t1+t2-(String.length hikareru)))++hikareru)
+        sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
+         [  divx ((tabx (t1+t2-(String.length hikareru)+idx))++hikareru)
           , divx (tab++"---------------")
-          , divx ((tabx (t1+t2-(String.length hiku)))++hiku) ]
+          , divx ((tabx (t1+t2-(String.length hiku)+idx))++hiku) ]
             ))  pmanslst 
   
  

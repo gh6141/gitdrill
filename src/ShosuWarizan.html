@@ -6042,14 +6042,20 @@ var author$project$Subunkai$view = function (model) {
 	var hissand1 = model.ans;
 	var hikuac = F2(
 		function (st, ac) {
-			return ac - (author$project$Subunkai$toint(st) * A2(
+			return ac - (author$project$Subunkai$toint(st.a) * A2(
 				elm$core$Basics$pow,
 				10,
 				elm$core$Basics$floor(
 					A2(
 						elm$core$Basics$logBase,
 						10,
-						ac / author$project$Subunkai$tofloat(st)))));
+						ac / author$project$Subunkai$tofloat(st.a)))));
+		});
+	var func = F2(
+		function (idx, ch) {
+			return _Utils_Tuple2(
+				kaketa(ch),
+				idx);
 		});
 	var divx = function (st) {
 		return A2(
@@ -6129,10 +6135,8 @@ var author$project$Subunkai$view = function (model) {
 				A3(elm$core$String$replace, '.', '', sans)));
 	};
 	var manslst = A2(
-		elm$core$List$map,
-		function (ch) {
-			return kaketa(ch);
-		},
+		elm$core$List$indexedMap,
+		func,
 		canslist(model.ans));
 	var hikufunc = F2(
 		function (idx, st) {
@@ -6156,20 +6160,22 @@ var author$project$Subunkai$view = function (model) {
 	var sikitr = A2(
 		ccapndave$elm_flat_map$List$FlatMap$flatMap,
 		function (_n0) {
-			var hikareru = _n0.a;
+			var _n1 = _n0.a;
+			var hikareru = _n1.a;
+			var idx = _n1.b;
 			var hiku = _n0.b;
 			return _List_fromArray(
 				[
 					divx(
 					_Utils_ap(
 						tabx(
-							(t1 + t2) - elm$core$String$length(hikareru)),
+							((t1 + t2) - elm$core$String$length(hikareru)) + idx),
 						hikareru)),
 					divx(tab + '---------------'),
 					divx(
 					_Utils_ap(
 						tabx(
-							(t1 + t2) - elm$core$String$length(hiku)),
+							((t1 + t2) - elm$core$String$length(hiku)) + idx),
 						hiku))
 				]);
 		},
