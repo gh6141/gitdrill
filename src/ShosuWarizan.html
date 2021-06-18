@@ -6040,6 +6040,13 @@ var author$project$Subunkai$view = function (model) {
 			(!model.pointlocation) ? '.' : ',',
 			A2(elm$core$String$dropLeft, pcls, lsx1)));
 	var lsx2 = A3(elm$core$String$replace, ',.', '.', lsx2o);
+	var kichi = A2(elm$core$String$contains, '.', model.mon1o) ? elm$core$String$length(
+		A2(
+			elm$core$Maybe$withDefault,
+			'',
+			elm$core$List$head(
+				elm$core$List$reverse(
+					A2(elm$core$String$split, '.', model.mon1o))))) : 0;
 	var kaketa = function (st) {
 		return elm$core$String$fromInt(
 			author$project$Subunkai$toint(
@@ -6147,7 +6154,8 @@ var author$project$Subunkai$view = function (model) {
 			return A3(
 				elm$core$List$foldl,
 				hikuac,
-				author$project$Subunkai$toint(model.mon1o),
+				author$project$Subunkai$toint(
+					zkcut(model.mon1o)),
 				A2(elm$core$List$take, idx + 1, manslst));
 		});
 	var hikulst = A2(elm$core$List$indexedMap, hikufunc, manslst);
@@ -6173,13 +6181,13 @@ var author$project$Subunkai$view = function (model) {
 					divx(
 					_Utils_ap(
 						tabx(
-							((t1 + t2) - elm$core$String$length(hikareru)) + idx),
+							((((t1 + t2) - elm$core$String$length(hikareru)) + idx) - 1) + kichi),
 						hikareru)),
 					divx(tab + '---------------'),
 					divx(
 					_Utils_ap(
 						tabx(
-							((t1 + t2) - elm$core$String$length(hiku)) + idx),
+							((((t1 + t2) - elm$core$String$length(hiku)) + idx) - 1) + kichi),
 						hiku))
 				]);
 		},

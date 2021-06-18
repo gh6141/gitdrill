@@ -246,7 +246,14 @@ view model =
         
         hikuac  st ac = ac- (toint (Tuple.first st))*10^(floor (logBase 10 ((toFloat ac)/(tofloat (Tuple.first st))) ) ) --マイナスならないMaxで引く
 
-        hikufunc idx st = List.foldl hikuac (toint model.mon1o) (List.take (idx+1) manslst)
+        kichi= 
+         if (String.contains "." model.mon1o) then
+          (String.length (Maybe.withDefault "" (List.head (List.reverse (String.split "." model.mon1o)))))
+         else
+          0
+          
+        
+        hikufunc idx st = List.foldl hikuac (toint (zkcut model.mon1o)) (List.take (idx+1) manslst)
 
         hikulst=List.indexedMap hikufunc  manslst
 
@@ -255,9 +262,9 @@ view model =
         tabx ni=String.repeat  ni "\u{00a0}"
 
         sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
-         [  divx ((tabx (t1+t2-(String.length hikareru)+idx))++hikareru)
+         [  divx ((tabx (t1+t2-(String.length hikareru)+idx-1+kichi))++hikareru)
           , divx (tab++"---------------")
-          , divx ((tabx (t1+t2-(String.length hiku)+idx))++hiku) ]
+          , divx ((tabx (t1+t2-(String.length hiku)+idx-1+kichi))++hiku) ]
             ))  pmanslst 
   
  
