@@ -96,17 +96,17 @@ update msg model =
   
    Newmon mnd ->
       let
-       -- recalflg=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
+       recalflgo=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
        -- recalflg=(String.right 1 mnd.sb)=="0"
        
        mon1x=waru (mojikake mnd.sa mnd.sb) mnd.k1
 
        recalflg=
         case model.keisiki of
-          Hyojun -> False
-          Junshosu ->not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-          Junshosu100 -> not ( ((String.right 1 mnd.sb)/="0")&&(String.right 1 (mojikake mnd.sa mnd.sb)=="0")&&(mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-          HijosuSeisu -> not (((String.contains "." model.mon2)==True)&&((String.contains "." mon1x)==False)&&(mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          Hyojun -> recalflgo
+          Junshosu ->recalflgo ||not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          Junshosu100 ->recalflgo || not ( ((String.right 1 mnd.sb)/="0")&&(String.right 1 (mojikake mnd.sa mnd.sb)=="0")&&(mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          HijosuSeisu ->recalflgo|| not (((String.contains "." model.mon2)==True)&&((String.contains "." mon1x)==False)&&(mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
      
        
        pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
@@ -223,21 +223,22 @@ view model =
         lsx1= (String.left (pcls+model.pointlocation) ls0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcls+model.pointlocation) ls0)
         rsx1= (String.left (pcrs+model.pointlocation) rs0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcrs+model.pointlocation) rs0)
 
-        lsx2o= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcls) lsx1)
-        rsx2o= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcrs) rsx1)
-        lsx2=String.replace ",." "." lsx2o
-        rsx2=String.replace ",." "." rsx2o
+        --lsx2o= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcls) lsx1)
+        --rsx2o= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcrs) rsx1)
+        --lsx2=String.replace ",." "." lsx2o
+        --rsx2=String.replace ",." "." rsx2o
+        lsx2= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else "")++(String.dropLeft (pcls) lsx1)
+        rsx2= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else "")++(String.dropLeft (pcrs) rsx1)
+       
 
         hissand2=lsx2++")"++rsx2
         
-        t1=(String.length model.mon2)+2
-        tab=String.repeat  t1 "\u{00a0}"
-        t2= (String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)
-        tab1=String.repeat  t2 "\u{00a0}"
+
         
         divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
 
         zkcut ss=String.replace "0" "" (String.replace "." "" ss)
+      
         canslist sans=String.toList (zkcut sans)
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
 
@@ -251,6 +252,18 @@ view model =
           (String.length (Maybe.withDefault "" (List.head (List.reverse (String.split "." model.mon1o)))))
          else
           0
+
+        zeroansichi=
+         if (String.contains "0." model.ans) then
+          1
+         else
+          0
+
+        t1=(String.length model.mon2)+1
+        tab=String.repeat  t1 "\u{00a0}"
+        t2= (String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)
+        tab1=String.repeat  (t2-zeroansichi) "\u{00a0}"
+         
           
         
         hikufunc idx st = List.foldl hikuac (toint (zkcut model.mon1o)) (List.take (idx+1) manslst)
@@ -259,12 +272,14 @@ view model =
 
         pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )  --引いた結果リスト
       
-        tabx ni=String.repeat  ni "\u{00a0}"
+        tabx ni=String.repeat  (ceiling(1.0*(toFloat ni))) "\u{00a0}"
+
+
 
         sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
          [  divx ((tabx (t1+t2-(String.length hikareru)+idx-1+kichi))++hikareru)
           , divx (tab++"---------------")
-          , divx ((tabx (t1+t2-(String.length hiku)+idx-1+kichi))++hiku) ]
+          , divx ((tabx (t1+t2-(String.length hiku)+idx+kichi))++hiku) ]
             ))  pmanslst 
   
  
