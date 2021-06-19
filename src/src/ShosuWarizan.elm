@@ -17,6 +17,8 @@ import Random
 import List.FlatMap
 import Tuple
 
+import Debug
+
 
 main =
   Browser.element
@@ -96,7 +98,15 @@ update msg model =
   
    Newmon mnd ->
       let
-       recalflgo=(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
+
+       kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
+       func idx ch = (kaketa ch,idx)
+       manslst=List.indexedMap func (canslist (zkcut (waru model.ans1o (-model.k2+model.k1))))    --(かけた結果,商の何文字目か)リスト
+       amarikeisan = List.foldl hikuac (toint (zkcut model.mon1o)) manslst
+       --x=Debug.log "amari=" amarikeisan
+       --amarikeisan=0
+
+       recalflgo=amarikeisan/=0||(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
        -- recalflg=(String.right 1 mnd.sb)=="0"
        
        mon1x=waru (mojikake mnd.sa mnd.sb) mnd.k1
@@ -106,8 +116,8 @@ update msg model =
         case model.keisiki of
           Hyojun -> recalflgo
           Junshosu ->recalflgo || not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-          Junshosu100 ->not ( ((String.right 1 mnd.sb)/="0")  && (String.right 1 (mojikake mnd.sa mnd.sb)=="0") && (mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-          HijosuSeisu ->not (((String.contains "." mon2x)==True) && ((String.contains "." mon1x)==False) && (mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          Junshosu100 ->amarikeisan/=0||not ( ((String.right 1 mnd.sb)/="0")  && (String.right 1 (mojikake mnd.sa mnd.sb)=="0") && (mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
+          HijosuSeisu ->amarikeisan/=0||not (((String.contains "." mon2x)==True) && ((String.contains "." mon1x)==False) && (mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
      
        
        pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
@@ -202,8 +212,6 @@ view model =
         -- kotae =  waru  (String.fromInt ((toint model.mon1o)*(toint model.mon2o)))  (model.k1+model.k2)  
         anso=waru model.ans1o (-model.k2+model.k1)
         seikaiflg=(anso==model.ans)
-        
-        hissand1=model.ans
 
  
         ls=model.mon2
@@ -211,8 +219,6 @@ view model =
 
         pcls=if model.picls==0 then ((String.length ls)+1) else model.picls      
         pcrs=if model.picrs==0 then ((String.length rs)+1) else model.picrs      
-
-
     
         ls00=String.replace "." "" ls
         ls0=ls00++(String.repeat (pcls+model.pointlocation-(String.length ls00)-(if (String.contains "." ls) then 0  else 1)) "0"   )
@@ -224,29 +230,21 @@ view model =
         lsx1= (String.left (pcls+model.pointlocation) ls0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcls+model.pointlocation) ls0)
         rsx1= (String.left (pcrs+model.pointlocation) rs0)++(if (model.pointlocation==0) then "" else ".")++(String.dropLeft (pcrs+model.pointlocation) rs0)
 
-        --lsx2o= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcls) lsx1)
-        --rsx2o= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else ",")++(String.dropLeft (pcrs) rsx1)
-        --lsx2=String.replace ",." "." lsx2o
-        --rsx2=String.replace ",." "." rsx2o
+
         lsx2= (String.left (pcls) lsx1)++(if (model.pointlocation==0) then "." else "")++(String.dropLeft (pcls) lsx1)
         rsx2= (String.left (pcrs) rsx1)++(if (model.pointlocation==0) then "." else "")++(String.dropLeft (pcrs) rsx1)
-       
-
-        hissand2=lsx2++")"++"\u{00a0}"++rsx2
-        
-
+   
         
         divx st= div [style "line-height" "1em"] [ text (if model.hdisp then st else "")]
 
-        zkcut ss=String.replace "0" "" (String.replace "." "" ss)
       
-        canslist sans=String.toList (zkcut sans)
+      
+      
         kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
-
         func idx ch = (kaketa ch,idx)
         manslst=List.indexedMap func (canslist (zkcut model.ans))    --(かけた結果,商の何文字目か)リスト
         
-        hikuac  st ac = ac- (toint (Tuple.first st))*10^(round (logBase 10 ((toFloat ac)/(tofloat (Tuple.first st))) ) ) --マイナスならないMaxで引く
+
 
         kichi= 
          if (String.contains "." model.mon1o) then
@@ -260,29 +258,29 @@ view model =
          else
           0
 
-        --t1=(String.length model.mon2)+1
-        t1=(String.length lsx2)+1  --実際の文字数に合わせる
-        tab=String.repeat  t1 "\u{00a0}"
-        --t2= (String.length model.mon1)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)
-        t2= (String.length rsx2)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)
-        tab1=String.repeat  (t2-zeroansichi) "\u{00a0}"
+      
+        t1=(String.length lsx2)+1  --実際の文字数に合わせる   
+        t2= (String.length rsx2)+model.pointlocation+(if model.keisiki==HijosuSeisu then 1 else 0)      
          
           
         
         hikufunc idx st = List.foldl hikuac (toint (zkcut model.mon1o)) (List.take (idx+1) manslst)
+        
 
         hikulst=List.indexedMap hikufunc  manslst
 
         pmanslst=List.map2 Tuple.pair manslst (List.map (\su->String.fromInt su) hikulst )  --引いた結果リスト
       
-        tabx ni=String.repeat  (ceiling(1.0*(toFloat ni))) "\u{00a0}"
+        --tabx ni=String.repeat  (ceiling(1.0*(toFloat ni))) "\u{00a0}"
+        tabx ni=String.repeat  ni "\u{00a0}"
+        tabxh ni=String.repeat  ni "\u{202f}"
 
 
 
         sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
-         [  divx ((tabx (t1+t2-(String.length hikareru)+idx+kichi))++hikareru)
-          , divx (tab++"---------------")
-          , divx ((tabx (t1+t2-(String.length hiku)+idx+kichi-1))++hiku) ]
+         [  divx ((tabxh 1)++(tabx (t1+t2-(String.length hikareru)+idx+kichi-1))++hikareru)
+          , divx ((tabx t1)++"---------------")
+          , divx ((tabx (t1+t2-(String.length hiku)+idx+kichi+1))++hiku) ]
             ))  pmanslst 
   
  
@@ -322,9 +320,9 @@ view model =
         
          tr [] [
           td [style "font-size" "30px"] ([            
-              div [style "line-height" "1em"] [ text (if model.hdisp then (tab++tab1++hissand1) else "")]            
-            ,div [style "line-height" "0.5em"] [ text (if model.hdisp then (tab++ "----------") else "")]            
-            ,div [style "line-height" "1em"] [ text (if model.hdisp then hissand2 else "")] 
+              div [style "line-height" "1em"] [ text (if model.hdisp then ((tabx (t1+t2))++model.ans) else "")]            
+            ,div [style "line-height" "0.5em"] [ text (if model.hdisp then ((tabx t1)++ "----------") else "")]            
+            ,div [style "line-height" "1em"] [ text (if model.hdisp then (lsx2++")"++"\u{00a0}"++rsx2) else "")] 
                        
             ]++sikitr)
           ]
@@ -398,3 +396,9 @@ snd tuple =
         (_, value2) = tuple
     in
     value2
+
+zkcut ss=String.replace "0" "" (String.replace "." "" ss)
+
+hikuac  st ac = ac- (toint (Tuple.first st))*10^(round (logBase 10 ((toFloat ac)/(tofloat (Tuple.first st))) ) ) --マイナスならないMaxで引く
+
+canslist sans=String.toList (zkcut sans)

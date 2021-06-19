@@ -4904,6 +4904,28 @@ var author$project$Subunkai$buttoncaption = function (ii) {
 			return elm$core$String$fromInt(ii);
 	}
 };
+var elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			elm$core$String$join,
+			after,
+			A2(elm$core$String$split, before, string));
+	});
+var author$project$Subunkai$zkcut = function (ss) {
+	return A3(
+		elm$core$String$replace,
+		'0',
+		'',
+		A3(elm$core$String$replace, '.', '', ss));
+};
+var elm$core$String$foldr = _String_foldr;
+var elm$core$String$toList = function (string) {
+	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
+};
+var author$project$Subunkai$canslist = function (sans) {
+	return elm$core$String$toList(
+		author$project$Subunkai$zkcut(sans));
+};
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -4913,18 +4935,6 @@ var elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var elm$core$String$toInt = _String_toInt;
-var author$project$Subunkai$toint = function (st) {
-	return A2(
-		elm$core$Maybe$withDefault,
-		0,
-		elm$core$String$toInt(st));
-};
-var author$project$Subunkai$mojikake = F2(
-	function (st1, st2) {
-		return elm$core$String$fromInt(
-			author$project$Subunkai$toint(st1) * author$project$Subunkai$toint(st2));
-	});
 var elm$core$String$toFloat = _String_toFloat;
 var author$project$Subunkai$tofloat = function (st) {
 	return A2(
@@ -4932,7 +4942,31 @@ var author$project$Subunkai$tofloat = function (st) {
 		0,
 		elm$core$String$toFloat(st));
 };
+var elm$core$String$toInt = _String_toInt;
+var author$project$Subunkai$toint = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toInt(st));
+};
 var elm$core$Basics$pow = _Basics_pow;
+var elm$core$Basics$round = _Basics_round;
+var author$project$Subunkai$hikuac = F2(
+	function (st, ac) {
+		return ac - (author$project$Subunkai$toint(st.a) * A2(
+			elm$core$Basics$pow,
+			10,
+			elm$core$Basics$round(
+				A2(
+					elm$core$Basics$logBase,
+					10,
+					ac / author$project$Subunkai$tofloat(st.a)))));
+	});
+var author$project$Subunkai$mojikake = F2(
+	function (st1, st2) {
+		return elm$core$String$fromInt(
+			author$project$Subunkai$toint(st1) * author$project$Subunkai$toint(st2));
+	});
 var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$Subunkai$waru = F2(
 	function (st, keta) {
@@ -4959,6 +4993,10 @@ var elm$core$String$dropRight = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
 	});
+var elm$core$String$cons = _String_cons;
+var elm$core$String$fromChar = function (_char) {
+	return A2(elm$core$String$cons, _char, '');
+};
 var elm$core$String$indexes = _String_indexes;
 var elm$core$String$length = _String_length;
 var elm$core$String$right = F2(
@@ -5173,10 +5211,6 @@ var author$project$Subunkai$update = F2(
 					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
-				var recalflgo = (A2(
-					elm$core$String$right,
-					1,
-					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0');
 				var pic = function (st) {
 					return A2(
 						elm$core$Maybe$withDefault,
@@ -5189,6 +5223,40 @@ var author$project$Subunkai$update = F2(
 					author$project$Subunkai$waru,
 					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
 					mnd.k1);
+				var kaketa = function (st) {
+					return elm$core$String$fromInt(
+						author$project$Subunkai$toint(
+							elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o));
+				};
+				var func = F2(
+					function (idx, ch) {
+						return _Utils_Tuple2(
+							kaketa(ch),
+							idx);
+					});
+				var manslst = A2(
+					elm$core$List$indexedMap,
+					func,
+					author$project$Subunkai$canslist(
+						author$project$Subunkai$zkcut(
+							A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1))));
+				var cic = function (st) {
+					return A2(
+						elm$core$Maybe$withDefault,
+						0,
+						elm$core$List$head(
+							A2(elm$core$String$indexes, ',', st)));
+				};
+				var amarikeisan = A3(
+					elm$core$List$foldl,
+					author$project$Subunkai$hikuac,
+					author$project$Subunkai$toint(
+						author$project$Subunkai$zkcut(model.mon1o)),
+					manslst);
+				var recalflgo = amarikeisan || ((A2(
+					elm$core$String$right,
+					1,
+					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0'));
 				var recalflg = function () {
 					var _n1 = model.keisiki;
 					switch (_n1.$) {
@@ -5197,21 +5265,14 @@ var author$project$Subunkai$update = F2(
 						case 'Junshosu':
 							return recalflgo || (!(((mnd.k1 === 2) && (elm$core$String$length(mnd.sa) === 1)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))));
 						case 'Junshosu100':
-							return !((A2(elm$core$String$right, 1, mnd.sb) !== '0') && ((A2(
+							return amarikeisan || (!((A2(elm$core$String$right, 1, mnd.sb) !== '0') && ((A2(
 								elm$core$String$right,
 								1,
-								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
+								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
 						default:
-							return !(A2(elm$core$String$contains, '.', mon2x) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
+							return amarikeisan || (!(A2(elm$core$String$contains, '.', mon2x) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
 					}
 				}();
-				var cic = function (st) {
-					return A2(
-						elm$core$Maybe$withDefault,
-						0,
-						elm$core$List$head(
-							A2(elm$core$String$indexes, ',', st)));
-				};
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5448,7 +5509,6 @@ var ccapndave$elm_flat_map$List$FlatMap$flatMap = F2(
 		return ccapndave$elm_flat_map$List$FlatMap$join(
 			A2(elm$core$List$map, f, list));
 	});
-var elm$core$Basics$round = _Basics_round;
 var elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
 		takeReverse:
@@ -5583,10 +5643,6 @@ var elm$core$String$dropLeft = F2(
 			elm$core$String$length(string),
 			string);
 	});
-var elm$core$String$cons = _String_cons;
-var elm$core$String$fromChar = function (_char) {
-	return A2(elm$core$String$cons, _char, '');
-};
 var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
@@ -5604,17 +5660,6 @@ var elm$core$String$repeat = F2(
 	function (n, chunk) {
 		return A3(elm$core$String$repeatHelp, n, chunk, '');
 	});
-var elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			elm$core$String$join,
-			after,
-			A2(elm$core$String$split, before, string));
-	});
-var elm$core$String$foldr = _String_foldr;
-var elm$core$String$toList = function (string) {
-	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
-};
 var elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
@@ -5838,13 +5883,6 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			children);
 	});
 var author$project$Subunkai$view = function (model) {
-	var zkcut = function (ss) {
-		return A3(
-			elm$core$String$replace,
-			'0',
-			'',
-			A3(elm$core$String$replace, '.', '', ss));
-	};
 	var zeroansichi = A2(elm$core$String$contains, '0.', model.ans) ? 1 : 0;
 	var tbox = F2(
 		function (str, color) {
@@ -5866,11 +5904,11 @@ var author$project$Subunkai$view = function (model) {
 						_List_Nil)
 					]));
 		});
+	var tabxh = function (ni) {
+		return A2(elm$core$String$repeat, ni, '\u202f');
+	};
 	var tabx = function (ni) {
-		return A2(
-			elm$core$String$repeat,
-			elm$core$Basics$ceiling(1.0 * ni),
-			'\u00a0');
+		return A2(elm$core$String$repeat, ni, '\u00a0');
 	};
 	var sbutton = function (ii) {
 		return A2(
@@ -6025,7 +6063,6 @@ var author$project$Subunkai$view = function (model) {
 			(!model.pointlocation) ? '.' : '',
 			A2(elm$core$String$dropLeft, pcrs, rsx1)));
 	var t2 = (elm$core$String$length(rsx2) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0);
-	var tab1 = A2(elm$core$String$repeat, t2 - zeroansichi, '\u00a0');
 	var ls = model.mon2;
 	var ls00 = A3(elm$core$String$replace, '.', '', ls);
 	var pcls = (!model.picls) ? (elm$core$String$length(ls) + 1) : model.picls;
@@ -6046,7 +6083,6 @@ var author$project$Subunkai$view = function (model) {
 			(!model.pointlocation) ? '.' : '',
 			A2(elm$core$String$dropLeft, pcls, lsx1)));
 	var t1 = elm$core$String$length(lsx2) + 1;
-	var tab = A2(elm$core$String$repeat, t1, '\u00a0');
 	var kichi = A2(elm$core$String$contains, '.', model.mon1o) ? elm$core$String$length(
 		A2(
 			elm$core$Maybe$withDefault,
@@ -6059,25 +6095,37 @@ var author$project$Subunkai$view = function (model) {
 			author$project$Subunkai$toint(
 				elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o));
 	};
-	var hissand2 = lsx2 + (')' + ('\u00a0' + rsx2));
-	var hissand1 = model.ans;
-	var hikuac = F2(
-		function (st, ac) {
-			return ac - (author$project$Subunkai$toint(st.a) * A2(
-				elm$core$Basics$pow,
-				10,
-				elm$core$Basics$round(
-					A2(
-						elm$core$Basics$logBase,
-						10,
-						ac / author$project$Subunkai$tofloat(st.a)))));
-		});
 	var func = F2(
 		function (idx, ch) {
 			return _Utils_Tuple2(
 				kaketa(ch),
 				idx);
 		});
+	var manslst = A2(
+		elm$core$List$indexedMap,
+		func,
+		author$project$Subunkai$canslist(
+			author$project$Subunkai$zkcut(model.ans)));
+	var hikufunc = F2(
+		function (idx, st) {
+			return A3(
+				elm$core$List$foldl,
+				author$project$Subunkai$hikuac,
+				author$project$Subunkai$toint(
+					author$project$Subunkai$zkcut(model.mon1o)),
+				A2(elm$core$List$take, idx + 1, manslst));
+		});
+	var hikulst = A2(elm$core$List$indexedMap, hikufunc, manslst);
+	var pmanslst = A3(
+		elm$core$List$map2,
+		elm$core$Tuple$pair,
+		manslst,
+		A2(
+			elm$core$List$map,
+			function (su) {
+				return elm$core$String$fromInt(su);
+			},
+			hikulst));
 	var divx = function (st) {
 		return A2(
 			elm$html$Html$div,
@@ -6091,6 +6139,32 @@ var author$project$Subunkai$view = function (model) {
 					model.hdisp ? st : '')
 				]));
 	};
+	var sikitr = A2(
+		ccapndave$elm_flat_map$List$FlatMap$flatMap,
+		function (_n0) {
+			var _n1 = _n0.a;
+			var hikareru = _n1.a;
+			var idx = _n1.b;
+			var hiku = _n0.b;
+			return _List_fromArray(
+				[
+					divx(
+					_Utils_ap(
+						tabxh(1),
+						_Utils_ap(
+							tabx(
+								((((t1 + t2) - elm$core$String$length(hikareru)) + idx) + kichi) - 1),
+							hikareru))),
+					divx(
+					tabx(t1) + '---------------'),
+					divx(
+					_Utils_ap(
+						tabx(
+							((((t1 + t2) - elm$core$String$length(hiku)) + idx) + kichi) + 1),
+						hiku))
+				]);
+		},
+		pmanslst);
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -6147,58 +6221,6 @@ var author$project$Subunkai$view = function (model) {
 					_List_fromArray(
 						['', '10', '100', '1000'])));
 		});
-	var canslist = function (sans) {
-		return elm$core$String$toList(
-			zkcut(sans));
-	};
-	var manslst = A2(
-		elm$core$List$indexedMap,
-		func,
-		canslist(
-			zkcut(model.ans)));
-	var hikufunc = F2(
-		function (idx, st) {
-			return A3(
-				elm$core$List$foldl,
-				hikuac,
-				author$project$Subunkai$toint(
-					zkcut(model.mon1o)),
-				A2(elm$core$List$take, idx + 1, manslst));
-		});
-	var hikulst = A2(elm$core$List$indexedMap, hikufunc, manslst);
-	var pmanslst = A3(
-		elm$core$List$map2,
-		elm$core$Tuple$pair,
-		manslst,
-		A2(
-			elm$core$List$map,
-			function (su) {
-				return elm$core$String$fromInt(su);
-			},
-			hikulst));
-	var sikitr = A2(
-		ccapndave$elm_flat_map$List$FlatMap$flatMap,
-		function (_n0) {
-			var _n1 = _n0.a;
-			var hikareru = _n1.a;
-			var idx = _n1.b;
-			var hiku = _n0.b;
-			return _List_fromArray(
-				[
-					divx(
-					_Utils_ap(
-						tabx(
-							(((t1 + t2) - elm$core$String$length(hikareru)) + idx) + kichi),
-						hikareru)),
-					divx(tab + '---------------'),
-					divx(
-					_Utils_ap(
-						tabx(
-							((((t1 + t2) - elm$core$String$length(hiku)) + idx) + kichi) - 1),
-						hiku))
-				]);
-		},
-		pmanslst);
 	var anso = A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1);
 	var seikaiflg = _Utils_eq(anso, model.ans);
 	return A2(
@@ -6346,8 +6368,8 @@ var author$project$Subunkai$view = function (model) {
 														[
 															elm$html$Html$text(
 															model.hdisp ? _Utils_ap(
-																tab,
-																_Utils_ap(tab1, hissand1)) : '')
+																tabx(t1 + t2),
+																model.ans) : '')
 														])),
 													A2(
 													elm$html$Html$div,
@@ -6358,7 +6380,7 @@ var author$project$Subunkai$view = function (model) {
 													_List_fromArray(
 														[
 															elm$html$Html$text(
-															model.hdisp ? (tab + '----------') : '')
+															model.hdisp ? (tabx(t1) + '----------') : '')
 														])),
 													A2(
 													elm$html$Html$div,
@@ -6369,7 +6391,7 @@ var author$project$Subunkai$view = function (model) {
 													_List_fromArray(
 														[
 															elm$html$Html$text(
-															model.hdisp ? hissand2 : '')
+															model.hdisp ? (lsx2 + (')' + ('\u00a0' + rsx2))) : '')
 														]))
 												]),
 											sikitr))
