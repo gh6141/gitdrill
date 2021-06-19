@@ -5197,12 +5197,12 @@ var author$project$Subunkai$update = F2(
 						case 'Junshosu':
 							return recalflgo || (!(((mnd.k1 === 2) && (elm$core$String$length(mnd.sa) === 1)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))));
 						case 'Junshosu100':
-							return recalflgo || (!((A2(elm$core$String$right, 1, mnd.sb) !== '0') && ((A2(
+							return !((A2(elm$core$String$right, 1, mnd.sb) !== '0') && ((A2(
 								elm$core$String$right,
 								1,
-								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
+								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
 						default:
-							return recalflgo || (!(A2(elm$core$String$contains, '.', model.mon2) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
+							return !(A2(elm$core$String$contains, '.', mon2x) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2)))));
 					}
 				}();
 				var cic = function (st) {
@@ -5448,6 +5448,7 @@ var ccapndave$elm_flat_map$List$FlatMap$flatMap = F2(
 		return ccapndave$elm_flat_map$List$FlatMap$join(
 			A2(elm$core$List$map, f, list));
 	});
+var elm$core$Basics$round = _Basics_round;
 var elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
 		takeReverse:
@@ -5871,10 +5872,6 @@ var author$project$Subunkai$view = function (model) {
 			elm$core$Basics$ceiling(1.0 * ni),
 			'\u00a0');
 	};
-	var t2 = (elm$core$String$length(model.mon1) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0);
-	var tab1 = A2(elm$core$String$repeat, t2 - zeroansichi, '\u00a0');
-	var t1 = elm$core$String$length(model.mon2) + 1;
-	var tab = A2(elm$core$String$repeat, t1, '\u00a0');
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6027,6 +6024,8 @@ var author$project$Subunkai$view = function (model) {
 		_Utils_ap(
 			(!model.pointlocation) ? '.' : '',
 			A2(elm$core$String$dropLeft, pcrs, rsx1)));
+	var t2 = (elm$core$String$length(rsx2) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0);
+	var tab1 = A2(elm$core$String$repeat, t2 - zeroansichi, '\u00a0');
 	var ls = model.mon2;
 	var ls00 = A3(elm$core$String$replace, '.', '', ls);
 	var pcls = (!model.picls) ? (elm$core$String$length(ls) + 1) : model.picls;
@@ -6046,6 +6045,8 @@ var author$project$Subunkai$view = function (model) {
 		_Utils_ap(
 			(!model.pointlocation) ? '.' : '',
 			A2(elm$core$String$dropLeft, pcls, lsx1)));
+	var t1 = elm$core$String$length(lsx2) + 1;
+	var tab = A2(elm$core$String$repeat, t1, '\u00a0');
 	var kichi = A2(elm$core$String$contains, '.', model.mon1o) ? elm$core$String$length(
 		A2(
 			elm$core$Maybe$withDefault,
@@ -6058,14 +6059,14 @@ var author$project$Subunkai$view = function (model) {
 			author$project$Subunkai$toint(
 				elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o));
 	};
-	var hissand2 = lsx2 + (')' + rsx2);
+	var hissand2 = lsx2 + (')' + ('\u00a0' + rsx2));
 	var hissand1 = model.ans;
 	var hikuac = F2(
 		function (st, ac) {
 			return ac - (author$project$Subunkai$toint(st.a) * A2(
 				elm$core$Basics$pow,
 				10,
-				elm$core$Basics$floor(
+				elm$core$Basics$round(
 					A2(
 						elm$core$Basics$logBase,
 						10,
@@ -6187,13 +6188,13 @@ var author$project$Subunkai$view = function (model) {
 					divx(
 					_Utils_ap(
 						tabx(
-							((((t1 + t2) - elm$core$String$length(hikareru)) + idx) - 1) + kichi),
+							(((t1 + t2) - elm$core$String$length(hikareru)) + idx) + kichi),
 						hikareru)),
 					divx(tab + '---------------'),
 					divx(
 					_Utils_ap(
 						tabx(
-							(((t1 + t2) - elm$core$String$length(hiku)) + idx) + kichi),
+							((((t1 + t2) - elm$core$String$length(hiku)) + idx) + kichi) - 1),
 						hiku))
 				]);
 		},
