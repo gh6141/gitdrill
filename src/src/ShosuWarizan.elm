@@ -99,10 +99,21 @@ update msg model =
    Newmon mnd ->
       let
 
-       kaketa st =String.fromInt ((toint (String.fromChar st))*(toint model.mon2o))
+       --mmon2o=model.mon2o
+       mmon2o=mnd.sb
+       --mk1=model.k1
+       mk1=mnd.k1
+       --mmon1o=model.mon1o
+       mmon1o=waru (mojikake mnd.sa mnd.sb) (-mnd.k2+mnd.k1)
+       mk2=model.k2
+
+       mans1o=mnd.sa
+
+       kaketa st =String.fromInt ((toint (String.fromChar st))*(toint mmon2o))
        func idx ch = (kaketa ch,idx)
-       manslst=List.indexedMap func (canslist (zkcut (waru model.ans1o (-model.k2+model.k1))))    --(かけた結果,商の何文字目か)リスト
-       amarikeisan = List.foldl hikuac (toint (zkcut model.mon1o)) manslst
+       --manslst=List.indexedMap func (canslist (zkcut (waru model.ans1o (-mk2+mk1))))    --(かけた結果,商の何文字目か)リスト
+       manslst=List.indexedMap func (canslist (zkcut (waru mans1o (-mk2+mk1))))    --(かけた結果,商の何文字目か)リスト
+       amarikeisan = List.foldl hikuac (toint (zkcut mmon1o)) manslst
        --x=Debug.log "amari=" amarikeisan
        --amarikeisan=0
 
@@ -175,6 +186,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
   let   
+        
 
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(buttoncaption ii)++" ")])
@@ -274,7 +286,6 @@ view model =
         --tabx ni=String.repeat  (ceiling(1.0*(toFloat ni))) "\u{00a0}"
         tabx ni=String.repeat  ni "\u{00a0}"
         tabxh ni=String.repeat  ni "\u{202f}"
-
 
 
         sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 

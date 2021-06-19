@@ -4978,6 +4978,7 @@ var elm$core$Basics$negate = function (n) {
 };
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Basics$not = _Basics_not;
+var elm$core$Debug$log = _Debug_log;
 var elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5223,10 +5224,18 @@ var author$project$Subunkai$update = F2(
 					author$project$Subunkai$waru,
 					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
 					mnd.k1);
+				var mmon2o = mnd.sb;
+				var mmon1o = A2(
+					author$project$Subunkai$waru,
+					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+					(-mnd.k2) + mnd.k1);
+				var mk2 = model.k2;
+				var mk1 = mnd.k1;
+				var mans1o = mnd.sa;
 				var kaketa = function (st) {
 					return elm$core$String$fromInt(
 						author$project$Subunkai$toint(
-							elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o));
+							elm$core$String$fromChar(st)) * author$project$Subunkai$toint(mmon2o));
 				};
 				var func = F2(
 					function (idx, ch) {
@@ -5239,7 +5248,7 @@ var author$project$Subunkai$update = F2(
 					func,
 					author$project$Subunkai$canslist(
 						author$project$Subunkai$zkcut(
-							A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1))));
+							A2(author$project$Subunkai$waru, mans1o, (-mk2) + mk1))));
 				var cic = function (st) {
 					return A2(
 						elm$core$Maybe$withDefault,
@@ -5251,7 +5260,7 @@ var author$project$Subunkai$update = F2(
 					elm$core$List$foldl,
 					author$project$Subunkai$hikuac,
 					author$project$Subunkai$toint(
-						author$project$Subunkai$zkcut(model.mon1o)),
+						author$project$Subunkai$zkcut(mmon1o)),
 					manslst);
 				var recalflgo = amarikeisan || ((A2(
 					elm$core$String$right,
@@ -5273,6 +5282,7 @@ var author$project$Subunkai$update = F2(
 							return amarikeisan || (!(A2(elm$core$String$contains, '.', mon2x) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
 					}
 				}();
+				var x = A2(elm$core$Debug$log, 'amari=', amarikeisan);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
