@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Subunkai</title>
+  <title>ShosuWarizanH</title>
 </head>
 
 <body>
@@ -4403,7 +4403,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Subunkai$Hyojun = {$: 'Hyojun'};
+var author$project$ShosuWarizanH$Hyojun = {$: 'Hyojun'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4881,20 +4881,20 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Subunkai$init = function (_n0) {
+var author$project$ShosuWarizanH$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', cicls: 0, cicrs: 0, dispans: false, displ: false, dispm: false, dispr: false, hdisp: true, init: '3', k1: 1, k2: 1, keisiki: author$project$Subunkai$Hyojun, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', picls: 0, picrs: 0, pointlocation: 0},
+		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', cicls: 0, cicrs: 0, dispans: false, displ: false, dispm: false, dispr: false, hdisp: true, init: '3', k1: 1, k2: 1, keisiki: author$project$ShosuWarizanH$Hyojun, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', picls: 0, picrs: 0, pointlocation: 0},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$Subunkai$subscriptions = function (model) {
+var author$project$ShosuWarizanH$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Subunkai$Newmon = function (a) {
+var author$project$ShosuWarizanH$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
-var author$project$Subunkai$buttoncaption = function (ii) {
+var author$project$ShosuWarizanH$buttoncaption = function (ii) {
 	switch (ii) {
 		case 10:
 			return '.';
@@ -4911,7 +4911,7 @@ var elm$core$String$replace = F3(
 			after,
 			A2(elm$core$String$split, before, string));
 	});
-var author$project$Subunkai$zkcut = function (ss) {
+var author$project$ShosuWarizanH$zkcut = function (ss) {
 	return A3(
 		elm$core$String$replace,
 		'0',
@@ -4922,9 +4922,9 @@ var elm$core$String$foldr = _String_foldr;
 var elm$core$String$toList = function (string) {
 	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
 };
-var author$project$Subunkai$canslist = function (sans) {
+var author$project$ShosuWarizanH$canslist = function (sans) {
 	return elm$core$String$toList(
-		author$project$Subunkai$zkcut(sans));
+		author$project$ShosuWarizanH$zkcut(sans));
 };
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -4936,14 +4936,14 @@ var elm$core$Maybe$withDefault = F2(
 		}
 	});
 var elm$core$String$toFloat = _String_toFloat;
-var author$project$Subunkai$tofloat = function (st) {
+var author$project$ShosuWarizanH$tofloat = function (st) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		0,
 		elm$core$String$toFloat(st));
 };
 var elm$core$String$toInt = _String_toInt;
-var author$project$Subunkai$toint = function (st) {
+var author$project$ShosuWarizanH$toint = function (st) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		0,
@@ -4951,27 +4951,27 @@ var author$project$Subunkai$toint = function (st) {
 };
 var elm$core$Basics$pow = _Basics_pow;
 var elm$core$Basics$round = _Basics_round;
-var author$project$Subunkai$hikuac = F2(
+var author$project$ShosuWarizanH$hikuac = F2(
 	function (st, ac) {
-		return ac - (author$project$Subunkai$toint(st.a) * A2(
+		return ac - (author$project$ShosuWarizanH$toint(st.a) * A2(
 			elm$core$Basics$pow,
 			10,
 			elm$core$Basics$round(
 				A2(
 					elm$core$Basics$logBase,
 					10,
-					ac / author$project$Subunkai$tofloat(st.a)))));
+					ac / author$project$ShosuWarizanH$tofloat(st.a)))));
 	});
-var author$project$Subunkai$mojikake = F2(
+var author$project$ShosuWarizanH$mojikake = F2(
 	function (st1, st2) {
 		return elm$core$String$fromInt(
-			author$project$Subunkai$toint(st1) * author$project$Subunkai$toint(st2));
+			author$project$ShosuWarizanH$toint(st1) * author$project$ShosuWarizanH$toint(st2));
 	});
 var elm$core$String$fromFloat = _String_fromNumber;
-var author$project$Subunkai$waru = F2(
+var author$project$ShosuWarizanH$waru = F2(
 	function (st, keta) {
 		return elm$core$String$fromFloat(
-			author$project$Subunkai$tofloat(st) / A2(elm$core$Basics$pow, 10, keta));
+			author$project$ShosuWarizanH$tofloat(st) / A2(elm$core$Basics$pow, 10, keta));
 	});
 var elm$core$Basics$negate = function (n) {
 	return -n;
@@ -5184,7 +5184,7 @@ var elm$random$Random$map4 = F5(
 					seed4);
 			});
 	});
-var author$project$Subunkai$update = F2(
+var author$project$ShosuWarizanH$update = F2(
 	function (msg, model) {
 		var mhenkan = F4(
 			function (i1, i2, k1, k2) {
@@ -5208,7 +5208,7 @@ var author$project$Subunkai$update = F2(
 					_Utils_update(
 						model,
 						{bail: '', baim: '', bair: ''}),
-					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
+					A2(elm$random$Random$generate, author$project$ShosuWarizanH$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
 				var pic = function (st) {
@@ -5218,23 +5218,23 @@ var author$project$Subunkai$update = F2(
 						elm$core$List$head(
 							A2(elm$core$String$indexes, '.', st)));
 				};
-				var mon2x = A2(author$project$Subunkai$waru, mnd.sb, mnd.k2);
+				var mon2x = A2(author$project$ShosuWarizanH$waru, mnd.sb, mnd.k2);
 				var mon1x = A2(
-					author$project$Subunkai$waru,
-					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+					author$project$ShosuWarizanH$waru,
+					A2(author$project$ShosuWarizanH$mojikake, mnd.sa, mnd.sb),
 					mnd.k1);
 				var mmon2o = mnd.sb;
 				var mmon1o = A2(
-					author$project$Subunkai$waru,
-					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+					author$project$ShosuWarizanH$waru,
+					A2(author$project$ShosuWarizanH$mojikake, mnd.sa, mnd.sb),
 					(-mnd.k2) + mnd.k1);
 				var mk2 = model.k2;
 				var mk1 = mnd.k1;
 				var mans1o = mnd.sa;
 				var kaketa = function (st) {
 					return elm$core$String$fromInt(
-						author$project$Subunkai$toint(
-							elm$core$String$fromChar(st)) * author$project$Subunkai$toint(mmon2o));
+						author$project$ShosuWarizanH$toint(
+							elm$core$String$fromChar(st)) * author$project$ShosuWarizanH$toint(mmon2o));
 				};
 				var func = F2(
 					function (idx, ch) {
@@ -5245,9 +5245,9 @@ var author$project$Subunkai$update = F2(
 				var manslst = A2(
 					elm$core$List$indexedMap,
 					func,
-					author$project$Subunkai$canslist(
-						author$project$Subunkai$zkcut(
-							A2(author$project$Subunkai$waru, mans1o, (-mk2) + mk1))));
+					author$project$ShosuWarizanH$canslist(
+						author$project$ShosuWarizanH$zkcut(
+							A2(author$project$ShosuWarizanH$waru, mans1o, (-mk2) + mk1))));
 				var cic = function (st) {
 					return A2(
 						elm$core$Maybe$withDefault,
@@ -5257,14 +5257,14 @@ var author$project$Subunkai$update = F2(
 				};
 				var amarikeisan = A3(
 					elm$core$List$foldl,
-					author$project$Subunkai$hikuac,
-					author$project$Subunkai$toint(
-						author$project$Subunkai$zkcut(mmon1o)),
+					author$project$ShosuWarizanH$hikuac,
+					author$project$ShosuWarizanH$toint(
+						author$project$ShosuWarizanH$zkcut(mmon1o)),
 					manslst);
 				var recalflgo = amarikeisan || ((A2(
 					elm$core$String$right,
 					1,
-					A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0'));
+					A2(author$project$ShosuWarizanH$mojikake, mnd.sa, mnd.sb)) === '0') || (A2(elm$core$String$right, 1, mnd.sb) === '0'));
 				var recalflg = function () {
 					var _n1 = model.keisiki;
 					switch (_n1.$) {
@@ -5276,7 +5276,7 @@ var author$project$Subunkai$update = F2(
 							return amarikeisan || (!((A2(elm$core$String$right, 1, mnd.sb) !== '0') && ((A2(
 								elm$core$String$right,
 								1,
-								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
+								A2(author$project$ShosuWarizanH$mojikake, mnd.sa, mnd.sb)) === '0') && (((mnd.k1 === 3) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
 						default:
 							return amarikeisan || (!(A2(elm$core$String$contains, '.', mon2x) && ((!A2(elm$core$String$contains, '.', mon1x)) && (((mnd.k1 === 1) && (elm$core$String$length(mnd.sa) === 2)) && ((mnd.k2 === 1) && (elm$core$String$length(mnd.sb) === 2))))));
 					}
@@ -5300,8 +5300,8 @@ var author$project$Subunkai$update = F2(
 							k2: mnd.k2,
 							mon1: mon1x,
 							mon1o: A2(
-								author$project$Subunkai$waru,
-								A2(author$project$Subunkai$mojikake, mnd.sa, mnd.sb),
+								author$project$ShosuWarizanH$waru,
+								A2(author$project$ShosuWarizanH$mojikake, mnd.sa, mnd.sb),
 								(-mnd.k2) + mnd.k1),
 							mon2: mon2x,
 							mon2o: mnd.sb,
@@ -5309,10 +5309,10 @@ var author$project$Subunkai$update = F2(
 							picrs: pic(mon1x),
 							pointlocation: 0
 						}),
-					recalflg ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
+					recalflg ? A2(elm$random$Random$generate, author$project$ShosuWarizanH$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				var bcap = author$project$Subunkai$buttoncaption(si);
+				var bcap = author$project$ShosuWarizanH$buttoncaption(si);
 				var anst = (bcap === 'C') ? A2(elm$core$String$dropRight, 1, model.ans) : _Utils_ap(model.ans, bcap);
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5327,9 +5327,9 @@ var author$project$Subunkai$update = F2(
 				var bl = (ichi === 'L') ? snum : model.bail;
 				var disprflg = (_Utils_eq(
 					A2(elm$core$Basics$pow, 10, model.k2),
-					author$project$Subunkai$toint(bl)) && model.dispm) || (_Utils_eq(
+					author$project$ShosuWarizanH$toint(bl)) && model.dispm) || (_Utils_eq(
 					A2(elm$core$Basics$pow, 10, model.k2),
-					author$project$Subunkai$toint(bm)) && model.displ);
+					author$project$ShosuWarizanH$toint(bm)) && model.displ);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5340,10 +5340,10 @@ var author$project$Subunkai$update = F2(
 							dispans: disprflg,
 							displ: _Utils_eq(
 								A2(elm$core$Basics$pow, 10, model.k2),
-								author$project$Subunkai$toint(bl)),
+								author$project$ShosuWarizanH$toint(bl)),
 							dispm: _Utils_eq(
 								A2(elm$core$Basics$pow, 10, model.k2),
-								author$project$Subunkai$toint(bm)),
+								author$project$ShosuWarizanH$toint(bm)),
 							dispr: disprflg
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5376,28 +5376,28 @@ var author$project$Subunkai$update = F2(
 					elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$Subunkai$Btn = function (a) {
+var author$project$ShosuWarizanH$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
-var author$project$Subunkai$HijosuSeisu = {$: 'HijosuSeisu'};
-var author$project$Subunkai$Hissan = {$: 'Hissan'};
-var author$project$Subunkai$Junshosu = {$: 'Junshosu'};
-var author$project$Subunkai$Junshosu100 = {$: 'Junshosu100'};
-var author$project$Subunkai$Leftx = {$: 'Leftx'};
-var author$project$Subunkai$Next = {$: 'Next'};
-var author$project$Subunkai$Rightx = {$: 'Rightx'};
-var author$project$Subunkai$TypeK = function (a) {
+var author$project$ShosuWarizanH$HijosuSeisu = {$: 'HijosuSeisu'};
+var author$project$ShosuWarizanH$Hissan = {$: 'Hissan'};
+var author$project$ShosuWarizanH$Junshosu = {$: 'Junshosu'};
+var author$project$ShosuWarizanH$Junshosu100 = {$: 'Junshosu100'};
+var author$project$ShosuWarizanH$Leftx = {$: 'Leftx'};
+var author$project$ShosuWarizanH$Next = {$: 'Next'};
+var author$project$ShosuWarizanH$Rightx = {$: 'Rightx'};
+var author$project$ShosuWarizanH$TypeK = function (a) {
 	return {$: 'TypeK', a: a};
 };
-var author$project$Subunkai$ChangeS = F2(
+var author$project$ShosuWarizanH$ChangeS = F2(
 	function (a, b) {
 		return {$: 'ChangeS', a: a, b: b};
 	});
-var author$project$Subunkai$handlerl = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'L');
+var author$project$ShosuWarizanH$handlerl = function (selectedText) {
+	return A2(author$project$ShosuWarizanH$ChangeS, selectedText, 'L');
 };
-var author$project$Subunkai$handlerm = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'M');
+var author$project$ShosuWarizanH$handlerm = function (selectedText) {
+	return A2(author$project$ShosuWarizanH$ChangeS, selectedText, 'M');
 };
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -5491,7 +5491,7 @@ var elm$html$Html$Events$targetValue = A2(
 	_List_fromArray(
 		['target', 'value']),
 	elm$json$Json$Decode$string);
-var author$project$Subunkai$onChange = function (handler) {
+var author$project$ShosuWarizanH$onChange = function (handler) {
 	return A2(
 		elm$html$Html$Events$on,
 		'change',
@@ -5890,7 +5890,7 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
 	});
-var author$project$Subunkai$view = function (model) {
+var author$project$ShosuWarizanH$view = function (model) {
 	var tbox = F2(
 		function (str, color) {
 			return A2(
@@ -5927,13 +5927,13 @@ var author$project$Subunkai$view = function (model) {
 						[
 							A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
 							elm$html$Html$Events$onClick(
-							author$project$Subunkai$Btn(ii))
+							author$project$ShosuWarizanH$Btn(ii))
 						]))
 				]),
 			_List_fromArray(
 				[
 					elm$html$Html$text(
-					' ' + (author$project$Subunkai$buttoncaption(ii) + ' '))
+					' ' + (author$project$ShosuWarizanH$buttoncaption(ii) + ' '))
 				]));
 	};
 	var sujibutton = A2(
@@ -6069,7 +6069,7 @@ var author$project$Subunkai$view = function (model) {
 		_Utils_ap(
 			(!model.pointlocation) ? '.' : '',
 			A2(elm$core$String$dropLeft, pcrs, rsx1)));
-	var t2 = (elm$core$String$length(rsx2) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? 1 : 0);
+	var t2 = (elm$core$String$length(rsx2) + model.pointlocation) + (_Utils_eq(model.keisiki, author$project$ShosuWarizanH$HijosuSeisu) ? 1 : 0);
 	var ls = model.mon2;
 	var ls00 = A3(elm$core$String$replace, '.', '', ls);
 	var pcls = (!model.picls) ? (elm$core$String$length(ls) + 1) : model.picls;
@@ -6099,8 +6099,8 @@ var author$project$Subunkai$view = function (model) {
 					A2(elm$core$String$split, '.', model.mon1o))))) : 0;
 	var kaketa = function (st) {
 		return elm$core$String$fromInt(
-			author$project$Subunkai$toint(
-				elm$core$String$fromChar(st)) * author$project$Subunkai$toint(model.mon2o));
+			author$project$ShosuWarizanH$toint(
+				elm$core$String$fromChar(st)) * author$project$ShosuWarizanH$toint(model.mon2o));
 	};
 	var func = F2(
 		function (idx, ch) {
@@ -6111,15 +6111,15 @@ var author$project$Subunkai$view = function (model) {
 	var manslst = A2(
 		elm$core$List$indexedMap,
 		func,
-		author$project$Subunkai$canslist(
-			author$project$Subunkai$zkcut(model.ans)));
+		author$project$ShosuWarizanH$canslist(
+			author$project$ShosuWarizanH$zkcut(model.ans)));
 	var hikufunc = F2(
 		function (idx, st) {
 			return A3(
 				elm$core$List$foldl,
-				author$project$Subunkai$hikuac,
-				author$project$Subunkai$toint(
-					author$project$Subunkai$zkcut(model.mon1o)),
+				author$project$ShosuWarizanH$hikuac,
+				author$project$ShosuWarizanH$toint(
+					author$project$ShosuWarizanH$zkcut(model.mon1o)),
 				A2(elm$core$List$take, idx + 1, manslst));
 		});
 	var hikulst = A2(elm$core$List$indexedMap, hikufunc, manslst);
@@ -6153,7 +6153,7 @@ var author$project$Subunkai$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-						author$project$Subunkai$onChange(hdl)
+						author$project$ShosuWarizanH$onChange(hdl)
 					]),
 				A2(
 					elm$core$List$map,
@@ -6181,7 +6181,7 @@ var author$project$Subunkai$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-						author$project$Subunkai$onChange(hdl)
+						author$project$ShosuWarizanH$onChange(hdl)
 					]),
 				A2(
 					elm$core$List$map,
@@ -6202,7 +6202,7 @@ var author$project$Subunkai$view = function (model) {
 					_List_fromArray(
 						['', '10', '100', '1000', '10000'])));
 		});
-	var anso = A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1);
+	var anso = A2(author$project$ShosuWarizanH$waru, model.ans1o, (-model.k2) + model.k1);
 	var seikaiflg = _Utils_eq(anso, model.ans);
 	var zeroansichi = A2(elm$core$String$contains, '0.', anso) ? 1 : 0;
 	return A2(
@@ -6288,9 +6288,9 @@ var author$project$Subunkai$view = function (model) {
 										_List_fromArray(
 											[
 												elm$html$Html$text('↓×'),
-												A2(cbox, model.bail, author$project$Subunkai$handlerl),
+												A2(cbox, model.bail, author$project$ShosuWarizanH$handlerl),
 												elm$html$Html$text(' ↓×'),
-												A2(cbox, model.baim, author$project$Subunkai$handlerm)
+												A2(cbox, model.baim, author$project$ShosuWarizanH$handlerm)
 											]))
 									])),
 								A2(
@@ -6370,7 +6370,7 @@ var author$project$Subunkai$view = function (model) {
 														A2(elm$core$String$split, '.', st))) : st);
 										};
 										var m1oketa = seisuketa(rsx2);
-										var hchosei = _Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? (-1) : 0;
+										var hchosei = _Utils_eq(model.keisiki, author$project$ShosuWarizanH$HijosuSeisu) ? (-1) : 0;
 										var aspan = function (txt) {
 											var pichi = A2(elm$core$String$contains, '.', txt) ? elm$core$String$length(
 												A2(
@@ -6505,7 +6505,7 @@ var author$project$Subunkai$view = function (model) {
 														_List_fromArray(
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-																elm$html$Html$Events$onClick(author$project$Subunkai$Next)
+																elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Next)
 															]))
 													]),
 												_List_fromArray(
@@ -6534,7 +6534,7 @@ var author$project$Subunkai$view = function (model) {
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '10px'),
 																elm$html$Html$Events$onClick(
-																author$project$Subunkai$TypeK(author$project$Subunkai$Hyojun))
+																author$project$ShosuWarizanH$TypeK(author$project$ShosuWarizanH$Hyojun))
 															]))
 													]),
 												_List_fromArray(
@@ -6550,7 +6550,7 @@ var author$project$Subunkai$view = function (model) {
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '10px'),
 																elm$html$Html$Events$onClick(
-																author$project$Subunkai$TypeK(author$project$Subunkai$Junshosu))
+																author$project$ShosuWarizanH$TypeK(author$project$ShosuWarizanH$Junshosu))
 															]))
 													]),
 												_List_fromArray(
@@ -6566,7 +6566,7 @@ var author$project$Subunkai$view = function (model) {
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '10px'),
 																elm$html$Html$Events$onClick(
-																author$project$Subunkai$TypeK(author$project$Subunkai$Junshosu100))
+																author$project$ShosuWarizanH$TypeK(author$project$ShosuWarizanH$Junshosu100))
 															]))
 													]),
 												_List_fromArray(
@@ -6582,7 +6582,7 @@ var author$project$Subunkai$view = function (model) {
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '10px'),
 																elm$html$Html$Events$onClick(
-																author$project$Subunkai$TypeK(author$project$Subunkai$HijosuSeisu))
+																author$project$ShosuWarizanH$TypeK(author$project$ShosuWarizanH$HijosuSeisu))
 															]))
 													]),
 												_List_fromArray(
@@ -6597,7 +6597,7 @@ var author$project$Subunkai$view = function (model) {
 														_List_fromArray(
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-																elm$html$Html$Events$onClick(author$project$Subunkai$Hissan)
+																elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Hissan)
 															]))
 													]),
 												_List_fromArray(
@@ -6624,7 +6624,7 @@ var author$project$Subunkai$view = function (model) {
 														_List_fromArray(
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-																elm$html$Html$Events$onClick(author$project$Subunkai$Leftx)
+																elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Leftx)
 															]))
 													]),
 												_List_fromArray(
@@ -6639,7 +6639,7 @@ var author$project$Subunkai$view = function (model) {
 														_List_fromArray(
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-																elm$html$Html$Events$onClick(author$project$Subunkai$Rightx)
+																elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Rightx)
 															]))
 													]),
 												_List_fromArray(
@@ -6859,12 +6859,12 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$Subunkai$main = elm$browser$Browser$element(
-	{init: author$project$Subunkai$init, subscriptions: author$project$Subunkai$subscriptions, update: author$project$Subunkai$update, view: author$project$Subunkai$view});
-_Platform_export({'Subunkai':{'init':author$project$Subunkai$main(
+var author$project$ShosuWarizanH$main = elm$browser$Browser$element(
+	{init: author$project$ShosuWarizanH$init, subscriptions: author$project$ShosuWarizanH$subscriptions, update: author$project$ShosuWarizanH$update, view: author$project$ShosuWarizanH$view});
+_Platform_export({'ShosuWarizanH':{'init':author$project$ShosuWarizanH$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
 
-var app = Elm.Subunkai.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
+var app = Elm.ShosuWarizanH.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
 if (document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49"))
 {
   document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49").innerText = 'This is a headless program, meaning there is nothing to show here.\n\nI started the program anyway though, and you can access it as `app` in the developer console.';
