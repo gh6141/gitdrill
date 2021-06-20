@@ -288,11 +288,10 @@ view model =
         tabxh ni=String.repeat  ni "\u{202f}"
 
 
-        sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
-         [  divx ((tabxh 1)++(tabx (t1+t2-(String.length hikareru)+idx+kichi-1))++hikareru)
-          , divx ((tabx t1)++"---------------")
-          , divx ((tabx (t1+t2-(String.length hiku)+idx+kichi+1))++hiku) ]
-            ))  pmanslst 
+
+
+   
+
   
  
   in
@@ -326,15 +325,58 @@ view model =
             ]
         ]
         ,tr [][td [style "font-size" "30px"] [text "\u{00a0}"]]
-        ,
-         
+        ,        
         
-         tr [] [
-          td [style "font-size" "30px"] ([            
-              div [style "line-height" "1em"] [ text (if model.hdisp then ((tabx (t1+t2))++model.ans) else "")]            
-            ,div [style "line-height" "0.5em"] [ text (if model.hdisp then ((tabx t1)++ "----------") else "")]            
-            ,div [style "line-height" "1em"] [ text (if model.hdisp then (lsx2++")"++"\u{00a0}"++rsx2) else "")] 
-                       
+         tr [] 
+          [  
+           let
+
+             yoko=25
+             tate=25
+             adiv xi yi txt updown =div [style "position" "absolute", style "top" ((String.fromInt (tate*yi+updown))++"px"), style "left" ((String.fromInt (yoko*xi))++"px")] 
+                     --     [text (if model.hdisp then txt else "")]
+                     (aspan txt)
+
+             spancreate idxch =span  [style "position" "absolute", style "top" "0px", style "left" ((String.fromInt (yoko*(Tuple.first idxch)) )++"px")] 
+                               [text (String.fromChar (Tuple.second idxch))]
+
+             aspan txt= 
+                  let
+                    olst=List.map spancreate (List.indexedMap Tuple.pair (String.toList (String.replace "." "" txt)))
+                    pichi= if (String.contains "." txt) then
+                            String.length (Maybe.withDefault "" (List.head (String.split "." txt))) 
+                           else
+                            0
+                                                       
+                     
+                    --x=Debug.log "pi=" (yoko*pichi)
+                    pl=[ if (pichi==0) then
+                            span [] [text ""]
+                        else
+                            span [style "font-size" "40px",style "color" "red",style "position" "absolute", style "top" "-5px", style "left" ((String.fromInt (yoko*pichi-9) )++"px")]  [text "."]
+                       ]
+                  in
+                   olst++pl
+
+
+             sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
+                    [ 
+
+                     adiv (8-(String.length hikareru)+idx) ((idx+2)*3-2) hikareru 5
+                    ,adiv 8 ((idx+2)*3-1) "--------------" 0
+                    ,adiv (8-(String.length hiku)+idx) ((idx+2)*3)  hiku -5
+                     
+                      ]
+                   ))  pmanslst 
+
+
+           in
+            td [style "position" "relative",style "font-size" "30px"] ([            
+             adiv 8 1  model.ans  5         
+            ,adiv 7 2   "----------"  0
+            ,adiv 7 3 ")"    -5
+            ,adiv 2 3   lsx2 -5
+            ,adiv 8 3  rsx2 -5
             ]++sikitr)
           ]
 

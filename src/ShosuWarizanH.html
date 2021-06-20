@@ -5672,6 +5672,10 @@ var elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
 	});
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$option = _VirtualDom_node('option');
@@ -5744,10 +5748,6 @@ var elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
 var elm$html$Html$Attributes$classList = function (classes) {
 	return elm$html$Html$Attributes$class(
 		A2(
@@ -6147,32 +6147,6 @@ var author$project$Subunkai$view = function (model) {
 					model.hdisp ? st : '')
 				]));
 	};
-	var sikitr = A2(
-		ccapndave$elm_flat_map$List$FlatMap$flatMap,
-		function (_n0) {
-			var _n1 = _n0.a;
-			var hikareru = _n1.a;
-			var idx = _n1.b;
-			var hiku = _n0.b;
-			return _List_fromArray(
-				[
-					divx(
-					_Utils_ap(
-						tabxh(1),
-						_Utils_ap(
-							tabx(
-								((((t1 + t2) - elm$core$String$length(hikareru)) + idx) + kichi) - 1),
-							hikareru))),
-					divx(
-					tabx(t1) + '---------------'),
-					divx(
-					_Utils_ap(
-						tabx(
-							((((t1 + t2) - elm$core$String$length(hiku)) + idx) + kichi) + 1),
-						hiku))
-				]);
-		},
-		pmanslst);
 	var cbox2 = F2(
 		function (val, hdl) {
 			return A2(
@@ -6357,52 +6331,131 @@ var author$project$Subunkai$view = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(
-										elm$html$Html$td,
-										_List_fromArray(
-											[
-												A2(elm$html$Html$Attributes$style, 'font-size', '30px')
-											]),
-										_Utils_ap(
+										function () {
+										var yoko = 25;
+										var tate = 25;
+										var spancreate = function (idxch) {
+											return A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+														A2(elm$html$Html$Attributes$style, 'top', '0px'),
+														A2(
+														elm$html$Html$Attributes$style,
+														'left',
+														elm$core$String$fromInt(yoko * idxch.a) + 'px')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text(
+														elm$core$String$fromChar(idxch.b))
+													]));
+										};
+										var aspan = function (txt) {
+											var pichi = A2(elm$core$String$contains, '.', txt) ? elm$core$String$length(
+												A2(
+													elm$core$Maybe$withDefault,
+													'',
+													elm$core$List$head(
+														A2(elm$core$String$split, '.', txt)))) : 0;
+											var pl = _List_fromArray(
+												[
+													(!pichi) ? A2(
+													elm$html$Html$span,
+													_List_Nil,
+													_List_fromArray(
+														[
+															elm$html$Html$text('')
+														])) : A2(
+													elm$html$Html$span,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'font-size', '40px'),
+															A2(elm$html$Html$Attributes$style, 'color', 'red'),
+															A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+															A2(elm$html$Html$Attributes$style, 'top', '-5px'),
+															A2(
+															elm$html$Html$Attributes$style,
+															'left',
+															elm$core$String$fromInt((yoko * pichi) - 9) + 'px')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text('.')
+														]))
+												]);
+											var olst = A2(
+												elm$core$List$map,
+												spancreate,
+												A2(
+													elm$core$List$indexedMap,
+													elm$core$Tuple$pair,
+													elm$core$String$toList(
+														A3(elm$core$String$replace, '.', '', txt))));
+											return _Utils_ap(olst, pl);
+										};
+										var adiv = F4(
+											function (xi, yi, txt, updown) {
+												return A2(
+													elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+															A2(
+															elm$html$Html$Attributes$style,
+															'top',
+															elm$core$String$fromInt((tate * yi) + updown) + 'px'),
+															A2(
+															elm$html$Html$Attributes$style,
+															'left',
+															elm$core$String$fromInt(yoko * xi) + 'px')
+														]),
+													aspan(txt));
+											});
+										var sikitr = A2(
+											ccapndave$elm_flat_map$List$FlatMap$flatMap,
+											function (_n0) {
+												var _n1 = _n0.a;
+												var hikareru = _n1.a;
+												var idx = _n1.b;
+												var hiku = _n0.b;
+												return _List_fromArray(
+													[
+														A4(
+														adiv,
+														(8 - elm$core$String$length(hikareru)) + idx,
+														((idx + 2) * 3) - 2,
+														hikareru,
+														5),
+														A4(adiv, 8, ((idx + 2) * 3) - 1, '--------------', 0),
+														A4(
+														adiv,
+														(8 - elm$core$String$length(hiku)) + idx,
+														(idx + 2) * 3,
+														hiku,
+														-5)
+													]);
+											},
+											pmanslst);
+										return A2(
+											elm$html$Html$td,
 											_List_fromArray(
 												[
-													A2(
-													elm$html$Html$div,
-													_List_fromArray(
-														[
-															A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-														]),
-													_List_fromArray(
-														[
-															elm$html$Html$text(
-															model.hdisp ? _Utils_ap(
-																tabx(t1 + t2),
-																model.ans) : '')
-														])),
-													A2(
-													elm$html$Html$div,
-													_List_fromArray(
-														[
-															A2(elm$html$Html$Attributes$style, 'line-height', '0.5em')
-														]),
-													_List_fromArray(
-														[
-															elm$html$Html$text(
-															model.hdisp ? (tabx(t1) + '----------') : '')
-														])),
-													A2(
-													elm$html$Html$div,
-													_List_fromArray(
-														[
-															A2(elm$html$Html$Attributes$style, 'line-height', '1em')
-														]),
-													_List_fromArray(
-														[
-															elm$html$Html$text(
-															model.hdisp ? (lsx2 + (')' + ('\u00a0' + rsx2))) : '')
-														]))
+													A2(elm$html$Html$Attributes$style, 'position', 'relative'),
+													A2(elm$html$Html$Attributes$style, 'font-size', '30px')
 												]),
-											sikitr))
+											_Utils_ap(
+												_List_fromArray(
+													[
+														A4(adiv, 8, 1, model.ans, 5),
+														A4(adiv, 7, 2, '----------', 0),
+														A4(adiv, 7, 3, ')', -5),
+														A4(adiv, 2, 3, lsx2, -5),
+														A4(adiv, 8, 3, rsx2, -5)
+													]),
+												sikitr));
+									}()
 									]))
 							])),
 						A2(
