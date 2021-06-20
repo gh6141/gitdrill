@@ -370,9 +370,23 @@ view model =
                    ))  pmanslst 
 
 
+             seisuketa st= String.length 
+              ( if (String.contains "." st) then
+                ( Maybe.withDefault "" (List.head (String.split "." st)) )
+              else
+                st )
+
+             --割られる数mon1oの１の位以上の桁数 0.も１けたとする　１２．３は２けた  整数も１３は２けた
+             m1oketa= seisuketa model.mon1o
+             --答えのansoの整数部桁数
+             aoketa= seisuketa anso
+
+
+
+
            in
             td [style "position" "relative",style "font-size" "30px"] ([            
-             adiv 8 1  model.ans  5         
+             adiv 8-(m1oketa-aoketa) 1  model.ans  5         
             ,adiv 7 2   "----------"  0
             ,adiv 7 3 ")"    -5
             ,adiv 2 3   lsx2 -5

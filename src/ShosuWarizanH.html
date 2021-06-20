@@ -6352,6 +6352,15 @@ var author$project$Subunkai$view = function (model) {
 														elm$core$String$fromChar(idxch.b))
 													]));
 										};
+										var seisuketa = function (st) {
+											return elm$core$String$length(
+												A2(elm$core$String$contains, '.', st) ? A2(
+													elm$core$Maybe$withDefault,
+													'',
+													elm$core$List$head(
+														A2(elm$core$String$split, '.', st))) : st);
+										};
+										var m1oketa = seisuketa(model.mon1o);
 										var aspan = function (txt) {
 											var pichi = A2(elm$core$String$contains, '.', txt) ? elm$core$String$length(
 												A2(
@@ -6395,6 +6404,7 @@ var author$project$Subunkai$view = function (model) {
 														A3(elm$core$String$replace, '.', '', txt))));
 											return _Utils_ap(olst, pl);
 										};
+										var aoketa = seisuketa(anso);
 										var adiv = F4(
 											function (xi, yi, txt, updown) {
 												return A2(
