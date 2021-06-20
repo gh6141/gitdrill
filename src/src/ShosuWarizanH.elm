@@ -1,4 +1,4 @@
-module Subunkai exposing (..)
+module ShosuWarizanH exposing (..)
 
 import Browser
 import Html exposing (..)
