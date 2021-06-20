@@ -217,7 +217,7 @@ view model =
              ]                  
             ]        
                   
-        cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000"]) 
+        cbox val hdl=select [style "font-size" "30px",onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
         cbox2 val hdl=select [style "font-size" "30px" ,onChange hdl ] (List.map (\s -> Html.option [selected (s==val),value s][text s]) ["","10","100","1000","10000"]) 
 
         tbox str color= span [] [input [  size 7,placeholder "?", style "font-size" "26px",style "background-color" color,value str] [] ] 
@@ -265,7 +265,7 @@ view model =
           0
 
         zeroansichi=
-         if (String.contains "0." model.ans) then
+         if (String.contains "0." anso) then
           1
          else
           0
@@ -288,11 +288,6 @@ view model =
         tabxh ni=String.repeat  ni "\u{202f}"
 
 
-
-
-   
-
-  
  
   in
 
@@ -359,12 +354,23 @@ view model =
                    olst++pl
 
 
-             sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  ( 
-                    [ 
+             --割られる数mon1oの１の位以上の桁数 0.も１けたとする　１２．３は２けた  整数も１３は２けた
+             --m1oketa= seisuketa model.mon1o
+             m1oketa= seisuketa rsx2
+             --答えのansoの整数部桁数
+             aoketa= seisuketa anso
+             --答えの小数部桁数
+             aosketa= shosuketa anso
 
-                     adiv (8-(String.length hikareru)+idx) ((idx+2)*3-2) hikareru 5
+             hchosei=if model.keisiki==HijosuSeisu then -1 else 0
+
+
+             sikitr=List.FlatMap.flatMap (\((hikareru,idx),hiku) ->  (                        
+                    [ 
+                     adiv (8+m1oketa-aoketa-(String.length hikareru)+idx+1+zeroansichi) ((idx+2)*3-2) hikareru 5
                     ,adiv 8 ((idx+2)*3-1) "--------------" 0
-                    ,adiv (8-(String.length hiku)+idx) ((idx+2)*3)  hiku -5
+                    ,adiv (8+m1oketa-aoketa-(String.length hiku)+idx+2+(if (hiku=="0"&&hchosei==0) then (zeroansichi-1) else 0)+hchosei) ((idx+2)*3)  hiku -5
+                   
                      
                       ]
                    ))  pmanslst 
@@ -375,18 +381,20 @@ view model =
                 ( Maybe.withDefault "" (List.head (String.split "." st)) )
               else
                 st )
+             shosuketa st= String.length 
+              ( if (String.contains "." st) then
+                ( Maybe.withDefault "" (List.head (List.reverse (String.split "." st))) )
+              else
+                "" )
 
-             --割られる数mon1oの１の位以上の桁数 0.も１けたとする　１２．３は２けた  整数も１３は２けた
-             m1oketa= seisuketa model.mon1o
-             --答えのansoの整数部桁数
-             aoketa= seisuketa anso
+
 
 
 
 
            in
             td [style "position" "relative",style "font-size" "30px"] ([            
-             adiv 8-(m1oketa-aoketa) 1  model.ans  5         
+             adiv (8+(m1oketa-aoketa)) 1  model.ans  5         
             ,adiv 7 2   "----------"  0
             ,adiv 7 3 ")"    -5
             ,adiv 2 3   lsx2 -5

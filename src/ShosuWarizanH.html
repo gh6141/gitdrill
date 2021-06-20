@@ -5891,7 +5891,6 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			children);
 	});
 var author$project$Subunkai$view = function (model) {
-	var zeroansichi = A2(elm$core$String$contains, '0.', model.ans) ? 1 : 0;
 	var tbox = F2(
 		function (str, color) {
 			return A2(
@@ -6201,10 +6200,11 @@ var author$project$Subunkai$view = function (model) {
 								]));
 					},
 					_List_fromArray(
-						['', '10', '100', '1000'])));
+						['', '10', '100', '1000', '10000'])));
 		});
 	var anso = A2(author$project$Subunkai$waru, model.ans1o, (-model.k2) + model.k1);
 	var seikaiflg = _Utils_eq(anso, model.ans);
+	var zeroansichi = A2(elm$core$String$contains, '0.', anso) ? 1 : 0;
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -6352,6 +6352,15 @@ var author$project$Subunkai$view = function (model) {
 														elm$core$String$fromChar(idxch.b))
 													]));
 										};
+										var shosuketa = function (st) {
+											return elm$core$String$length(
+												A2(elm$core$String$contains, '.', st) ? A2(
+													elm$core$Maybe$withDefault,
+													'',
+													elm$core$List$head(
+														elm$core$List$reverse(
+															A2(elm$core$String$split, '.', st)))) : '');
+										};
 										var seisuketa = function (st) {
 											return elm$core$String$length(
 												A2(elm$core$String$contains, '.', st) ? A2(
@@ -6360,7 +6369,8 @@ var author$project$Subunkai$view = function (model) {
 													elm$core$List$head(
 														A2(elm$core$String$split, '.', st))) : st);
 										};
-										var m1oketa = seisuketa(model.mon1o);
+										var m1oketa = seisuketa(rsx2);
+										var hchosei = _Utils_eq(model.keisiki, author$project$Subunkai$HijosuSeisu) ? (-1) : 0;
 										var aspan = function (txt) {
 											var pichi = A2(elm$core$String$contains, '.', txt) ? elm$core$String$length(
 												A2(
@@ -6404,6 +6414,7 @@ var author$project$Subunkai$view = function (model) {
 														A3(elm$core$String$replace, '.', '', txt))));
 											return _Utils_ap(olst, pl);
 										};
+										var aosketa = shosuketa(anso);
 										var aoketa = seisuketa(anso);
 										var adiv = F4(
 											function (xi, yi, txt, updown) {
@@ -6434,14 +6445,14 @@ var author$project$Subunkai$view = function (model) {
 													[
 														A4(
 														adiv,
-														(8 - elm$core$String$length(hikareru)) + idx,
+														(((((8 + m1oketa) - aoketa) - elm$core$String$length(hikareru)) + idx) + 1) + zeroansichi,
 														((idx + 2) * 3) - 2,
 														hikareru,
 														5),
 														A4(adiv, 8, ((idx + 2) * 3) - 1, '--------------', 0),
 														A4(
 														adiv,
-														(8 - elm$core$String$length(hiku)) + idx,
+														((((((8 + m1oketa) - aoketa) - elm$core$String$length(hiku)) + idx) + 2) + (((hiku === '0') && (!hchosei)) ? (zeroansichi - 1) : 0)) + hchosei,
 														(idx + 2) * 3,
 														hiku,
 														-5)
@@ -6458,7 +6469,7 @@ var author$project$Subunkai$view = function (model) {
 											_Utils_ap(
 												_List_fromArray(
 													[
-														A4(adiv, 8, 1, model.ans, 5),
+														A4(adiv, 8 + (m1oketa - aoketa), 1, model.ans, 5),
 														A4(adiv, 7, 2, '----------', 0),
 														A4(adiv, 7, 3, ')', -5),
 														A4(adiv, 2, 3, lsx2, -5),
