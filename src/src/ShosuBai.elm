@@ -18,6 +18,9 @@ import Random
 import Svg
 import Svg.Attributes
 
+import FormatNumber exposing (format)
+import FormatNumber.Locales exposing (Decimals(..), Locale, usLocale)
+
 
 main =
   Browser.element
@@ -27,25 +30,44 @@ main =
     , subscriptions = subscriptions
     }
 
+type alias Mondai =
+ {
+     sa:Int
+     ,sb:Int
+     ,pattern:Int
+
+
+ }
+
 type alias Model =
   { 
       init:String
-    ,mon1:String
-    ,mon2:String
+
+    ,mondai:Mondai
+    ,ans:String
  
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",mon1="2",mon2="1"}
+  ( {init="3",mondai={sa=10,sb=2,pattern=1},ans=""}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newface Int | Btn Int 
+    =  Next | Newmon Mondai | Btn Int |ChangeS String String
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
+ let
+       mhenkan :Int -> Int -> Int -> Mondai
+       mhenkan i1 i2 k1 = {sa=i1,sb= i2,pattern=k1} 
+
+       monGenerator : Random.Generator Mondai   
+       monGenerator = Random.map3  mhenkan (Random.int 11 199 ) (Random.int 2  99 ) (Random.int 1 3) 
+  
+
+ in
  
   case msg of
 
@@ -53,32 +75,56 @@ update msg model =
   
    Next ->
       ( model 
-       ,   Random.generate Newface (Random.int 1 ((toint model.init)-1))
+       ,   Random.generate Newmon monGenerator
+       
       )
   
-   Newface su ->
+   Newmon mnd ->
    
-      ( {model |  mon1 =String.fromInt su ,mon2=String.fromInt  su}    ,Cmd.none)
+      ( {model|mondai=mnd}    ,Cmd.none)
   
    Btn si ->
-    let
-      m1=String.fromInt si
-      m2=String.fromInt si
 
-    in
-     ( {model | mon1=m1  ,mon2=m2
+      ( {model | ans=String.fromInt si
                  } ,Cmd.none)
+  
+   ChangeS snum lmr->
+      let
+        sikip l m r s= case lmr of
+          "L" -> s++m++r
+
+          _ -> ""
+
+      in
+       ( model, Cmd.none)
+ 
 
 
+handlerl selectedText = ChangeS selectedText "L"
 
 view : Model -> Html Msg
 view model =
  let
-      
+        sList = case  model.mondai.pattern of
+          1 -> ["","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
+          2 -> ["","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
+          3 -> ["","1",tenmjo model.mondai.sa,tenmjo model.mondai.sb]
+          _ -> ["","",""]
 
-  
+ 
+      
+        cboxlu =select [style "font-size" "20px" ,onChange handlerl ] (List.map (\s -> Html.option [selected (s=="atode"),value s][text ("　"++s++"　")]) sList)  
+        dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
+        dvx=30
+        dvy=30
+        cblu=dcbx (100+dvx) (110+dvy) cboxlu
+        cbru=dcbx (300+dvx) (110+dvy) cboxlu
+        cbld=dcbx (100+dvx) (170+dvy) cboxlu
+        cbrd=dcbx (300+dvx) (170+dvy) cboxlu
+         
+
         sbutton : Int -> Html Msg
-        sbutton ii = (Button.button [Button.attrs [Html.Attributes.style "font-size" "60px"   ,onClick (Btn ii)]] [ Html.text (" "++(String.fromInt ii)++" ")])
+        sbutton ii = (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px"   ,onClick (Btn ii)]] [ text (" "++(buttoncaption ii)++" ")])
 
         sujibutton=
            table []
@@ -97,12 +143,17 @@ view model =
                td [] [sbutton 1]
                ,td [] [sbutton 2]
                ,td [] [sbutton 3]
-             ]            
-            ]
+             ]     
+             ,tr [] [
+               td [] [sbutton 0]
+               ,td [] [sbutton 10]
+               ,td [] [sbutton 11]
+             ]                  
+            ]  
 
         linex =Svg.svg 
          [ Svg.Attributes.viewBox "0 0 400 400"
-         , Svg.Attributes.width "400"
+         , Svg.Attributes.width "480"
          , Svg.Attributes.height "400"
          ]
           [
@@ -117,9 +168,11 @@ view model =
               ,sline 20 115 20 155 1 
               ,stext 15 110 "0"
               ,stext 15 170 "0"
+              ,stext 400 110 "(km)"
+              ,stext 400 170 "(L)"
 
-              ,stext 100 110 "lu" ,stext 300 110 "ru"
-              ,stext 100 170 "ld" ,stext 300 170 "rd"
+
+
           ]
          
         stext xx yy moji = Svg.text_
@@ -144,11 +197,21 @@ view model =
 
    table [align "center"]
    [
-    tr []
-    [
-     td [Html.Attributes.style "padding" "3em"] [
-       linex
+    tr [] [
+      td [] [text (
+       case model.mondai.pattern of
+         1 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"km走るためには何L使いますか?"
+         2 -> (tenmjo model.mondai.sa)++"Lのガソリンで"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"km走る自動車があります。1Lのガソリンで何km走りますか?"
+         3 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo model.mondai.sb) ++"Lでは何km走れますか?"
+         _ -> ""
+      )]
+    ]
 
+    ,tr []
+    [
+     td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
+       linex
+       ,cblu,cbru,cbld,cbrd
       ]   
      ,td [] [
        Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ]
@@ -179,3 +242,21 @@ snd tuple =
         (_, value2) = tuple
     in
     value2
+
+tenmjo ii=format sharesLocale ((toFloat ii)*0.1)
+
+
+tenmjo2 ii jj = format sharesLocale  ( (toFloat ii)*0.1*(toFloat jj)*0.1 )
+
+sharesLocale : Locale
+sharesLocale =
+    { usLocale
+        | decimals = Max 4
+     
+    }
+
+buttoncaption ii = 
+  case ii of
+    10 -> "."
+    11 -> "C"
+    _  -> String.fromInt ii

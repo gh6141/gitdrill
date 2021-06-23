@@ -4882,7 +4882,11 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{init: '3', mon1: '2', mon2: '1'},
+		{
+			ans: '',
+			init: '3',
+			mondai: {pattern: 1, sa: 10, sb: 2}
+		},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4890,24 +4894,8 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Subunkai$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Subunkai$Newface = function (a) {
-	return {$: 'Newface', a: a};
-};
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var elm$core$String$toInt = _String_toInt;
-var author$project$Subunkai$toint = function (st) {
-	return A2(
-		elm$core$Maybe$withDefault,
-		0,
-		elm$core$String$toInt(st));
+var author$project$Subunkai$Newmon = function (a) {
+	return {$: 'Newmon', a: a};
 };
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -5064,44 +5052,100 @@ var elm$random$Random$int = F2(
 				}
 			});
 	});
+var elm$random$Random$map3 = F4(
+	function (func, _n0, _n1, _n2) {
+		var genA = _n0.a;
+		var genB = _n1.a;
+		var genC = _n2.a;
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n3 = genA(seed0);
+				var a = _n3.a;
+				var seed1 = _n3.b;
+				var _n4 = genB(seed1);
+				var b = _n4.a;
+				var seed2 = _n4.b;
+				var _n5 = genC(seed2);
+				var c = _n5.a;
+				var seed3 = _n5.b;
+				return _Utils_Tuple2(
+					A3(func, a, b, c),
+					seed3);
+			});
+	});
 var author$project$Subunkai$update = F2(
 	function (msg, model) {
+		var mhenkan = F3(
+			function (i1, i2, k1) {
+				return {pattern: k1, sa: i1, sb: i2};
+			});
+		var monGenerator = A4(
+			elm$random$Random$map3,
+			mhenkan,
+			A2(elm$random$Random$int, 11, 199),
+			A2(elm$random$Random$int, 2, 99),
+			A2(elm$random$Random$int, 1, 3));
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
 					model,
-					A2(
-						elm$random$Random$generate,
-						author$project$Subunkai$Newface,
-						A2(
-							elm$random$Random$int,
-							1,
-							author$project$Subunkai$toint(model.init) - 1)));
-			case 'Newface':
-				var su = msg.a;
+					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
+			case 'Newmon':
+				var mnd = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{mondai: mnd}),
+					elm$core$Platform$Cmd$none);
+			case 'Btn':
+				var si = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							mon1: elm$core$String$fromInt(su),
-							mon2: elm$core$String$fromInt(su)
+							ans: elm$core$String$fromInt(si)
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
-				var si = msg.a;
-				var m2 = elm$core$String$fromInt(si);
-				var m1 = elm$core$String$fromInt(si);
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{mon1: m1, mon2: m2}),
-					elm$core$Platform$Cmd$none);
+				var snum = msg.a;
+				var lmr = msg.b;
+				var sikip = F4(
+					function (l, m, r, s) {
+						if (lmr === 'L') {
+							return _Utils_ap(
+								s,
+								_Utils_ap(m, r));
+						} else {
+							return '';
+						}
+					});
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
 var author$project$Subunkai$Next = {$: 'Next'};
+var author$project$Subunkai$buttoncaption = function (ii) {
+	switch (ii) {
+		case 10:
+			return '.';
+		case 11:
+			return 'C';
+		default:
+			return elm$core$String$fromInt(ii);
+	}
+};
+var author$project$Subunkai$ChangeS = F2(
+	function (a, b) {
+		return {$: 'ChangeS', a: a, b: b};
+	});
+var author$project$Subunkai$handlerl = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'L');
+};
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -5117,25 +5161,6 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$table = _VirtualDom_node('table');
-var elm$html$Html$td = _VirtualDom_node('td');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$html$Html$tr = _VirtualDom_node('tr');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
 var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var elm$html$Html$Events$on = F2(
 	function (event, decoder) {
@@ -5144,47 +5169,6 @@ var elm$html$Html$Events$on = F2(
 			event,
 			elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
-var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
-	return {$: 'Attrs', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
-	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
-};
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5240,16 +5224,541 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$json$Json$Decode$string = _Json_decodeString;
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var author$project$Subunkai$onChange = function (handler) {
+	return A2(
+		elm$html$Html$Events$on,
+		'change',
+		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
+};
+var cuducos$elm_format_number$FormatNumber$Locales$Max = function (a) {
+	return {$: 'Max', a: a};
+};
+var cuducos$elm_format_number$FormatNumber$Locales$Exact = function (a) {
+	return {$: 'Exact', a: a};
+};
+var cuducos$elm_format_number$FormatNumber$Locales$Min = function (a) {
+	return {$: 'Min', a: a};
+};
+var cuducos$elm_format_number$FormatNumber$Locales$base = {
+	decimalSeparator: '.',
+	decimals: cuducos$elm_format_number$FormatNumber$Locales$Min(0),
+	negativePrefix: '−',
+	negativeSuffix: '',
+	positivePrefix: '',
+	positiveSuffix: '',
+	thousandSeparator: '',
+	zeroPrefix: '',
+	zeroSuffix: ''
+};
+var cuducos$elm_format_number$FormatNumber$Locales$usLocale = _Utils_update(
+	cuducos$elm_format_number$FormatNumber$Locales$base,
+	{
+		decimals: cuducos$elm_format_number$FormatNumber$Locales$Exact(2),
+		thousandSeparator: ','
+	});
+var author$project$Subunkai$sharesLocale = _Utils_update(
+	cuducos$elm_format_number$FormatNumber$Locales$usLocale,
+	{
+		decimals: cuducos$elm_format_number$FormatNumber$Locales$Max(4)
+	});
+var cuducos$elm_format_number$FormatNumber$Parser$FormattedNumber = F5(
+	function (original, integers, decimals, prefix, suffix) {
+		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
+	});
+var cuducos$elm_format_number$FormatNumber$Parser$Negative = {$: 'Negative'};
+var cuducos$elm_format_number$FormatNumber$Parser$Positive = {$: 'Positive'};
+var cuducos$elm_format_number$FormatNumber$Parser$Zero = {$: 'Zero'};
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var elm$core$String$concat = function (strings) {
+	return A2(elm$core$String$join, '', strings);
+};
+var cuducos$elm_format_number$FormatNumber$Parser$classify = function (formatted) {
+	var onlyZeros = A2(
+		elm$core$String$all,
+		function (_char) {
+			return _Utils_eq(
+				_char,
+				_Utils_chr('0'));
+		},
+		elm$core$String$concat(
+			A2(
+				elm$core$List$append,
+				formatted.integers,
+				elm$core$List$singleton(formatted.decimals))));
+	return onlyZeros ? cuducos$elm_format_number$FormatNumber$Parser$Zero : ((formatted.original < 0) ? cuducos$elm_format_number$FormatNumber$Parser$Negative : cuducos$elm_format_number$FormatNumber$Parser$Positive);
+};
+var elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var elm$core$String$length = _String_length;
+var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3(elm$core$String$repeatHelp, n, chunk, '');
+	});
+var cuducos$elm_format_number$FormatNumber$Parser$addZerosToFit = F2(
+	function (desiredLength, value) {
+		var length = elm$core$String$length(value);
+		var missing = (_Utils_cmp(length, desiredLength) < 0) ? elm$core$Basics$abs(desiredLength - length) : 0;
+		return _Utils_ap(
+			value,
+			A2(elm$core$String$repeat, missing, '0'));
+	});
+var elm$core$Basics$neq = _Utils_notEqual;
+var elm$core$String$slice = _String_slice;
+var elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
+	});
+var elm$core$String$right = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(
+			elm$core$String$slice,
+			-n,
+			elm$core$String$length(string),
+			string);
+	});
+var cuducos$elm_format_number$FormatNumber$Parser$removeZeros = function (decimals) {
+	return (A2(elm$core$String$right, 1, decimals) !== '0') ? decimals : cuducos$elm_format_number$FormatNumber$Parser$removeZeros(
+		A2(elm$core$String$dropRight, 1, decimals));
+};
+var cuducos$elm_format_number$FormatNumber$Parser$getDecimals = F2(
+	function (locale, digits) {
+		var _n0 = locale.decimals;
+		switch (_n0.$) {
+			case 'Max':
+				return cuducos$elm_format_number$FormatNumber$Parser$removeZeros(digits);
+			case 'Exact':
+				return digits;
+			default:
+				var min = _n0.a;
+				return A2(cuducos$elm_format_number$FormatNumber$Parser$addZerosToFit, min, digits);
+		}
+	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(xs);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$core$String$fromFloat = _String_fromNumber;
+var elm$core$Basics$ge = _Utils_ge;
+var elm$core$Basics$not = _Basics_not;
+var elm$core$Basics$isInfinite = _Basics_isInfinite;
+var elm$core$Basics$isNaN = _Basics_isNaN;
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$String$cons = _String_cons;
+var elm$core$String$fromChar = function (_char) {
+	return A2(elm$core$String$cons, _char, '');
+};
+var elm$core$String$padRight = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			string,
+			A2(
+				elm$core$String$repeat,
+				n - elm$core$String$length(string),
+				elm$core$String$fromChar(_char)));
+	});
+var elm$core$String$reverse = _String_reverse;
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var elm$core$String$foldr = _String_foldr;
+var elm$core$String$toList = function (string) {
+	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
+};
+var myrho$elm_round$Round$addSign = F2(
+	function (signed, str) {
+		var isNotZero = A2(
+			elm$core$List$any,
+			function (c) {
+				return (!_Utils_eq(
+					c,
+					_Utils_chr('0'))) && (!_Utils_eq(
+					c,
+					_Utils_chr('.')));
+			},
+			elm$core$String$toList(str));
+		return _Utils_ap(
+			(signed && isNotZero) ? '-' : '',
+			str);
+	});
+var elm$core$Char$fromCode = _Char_fromCode;
+var myrho$elm_round$Round$increaseNum = function (_n0) {
+	var head = _n0.a;
+	var tail = _n0.b;
+	if (_Utils_eq(
+		head,
+		_Utils_chr('9'))) {
+		var _n1 = elm$core$String$uncons(tail);
+		if (_n1.$ === 'Nothing') {
+			return '01';
+		} else {
+			var headtail = _n1.a;
+			return A2(
+				elm$core$String$cons,
+				_Utils_chr('0'),
+				myrho$elm_round$Round$increaseNum(headtail));
+		}
+	} else {
+		var c = elm$core$Char$toCode(head);
+		return ((c >= 48) && (c < 57)) ? A2(
+			elm$core$String$cons,
+			elm$core$Char$fromCode(c + 1),
+			tail) : '0';
+	}
+};
+var myrho$elm_round$Round$splitComma = function (str) {
+	var _n0 = A2(elm$core$String$split, '.', str);
+	if (_n0.b) {
+		if (_n0.b.b) {
+			var before = _n0.a;
+			var _n1 = _n0.b;
+			var after = _n1.a;
+			return _Utils_Tuple2(before, after);
+		} else {
+			var before = _n0.a;
+			return _Utils_Tuple2(before, '0');
+		}
+	} else {
+		return _Utils_Tuple2('0', '0');
+	}
+};
+var elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			elm$core$String$slice,
+			n,
+			elm$core$String$length(string),
+			string);
+	});
+var elm$core$String$startsWith = _String_startsWith;
+var elm$core$String$toInt = _String_toInt;
+var elm$core$Tuple$mapFirst = F2(
+	function (func, _n0) {
+		var x = _n0.a;
+		var y = _n0.b;
+		return _Utils_Tuple2(
+			func(x),
+			y);
+	});
+var myrho$elm_round$Round$toDecimal = function (fl) {
+	var _n0 = A2(
+		elm$core$String$split,
+		'e',
+		elm$core$String$fromFloat(
+			elm$core$Basics$abs(fl)));
+	if (_n0.b) {
+		if (_n0.b.b) {
+			var num = _n0.a;
+			var _n1 = _n0.b;
+			var exp = _n1.a;
+			var e = A2(
+				elm$core$Maybe$withDefault,
+				0,
+				elm$core$String$toInt(
+					A2(elm$core$String$startsWith, '+', exp) ? A2(elm$core$String$dropLeft, 1, exp) : exp));
+			var _n2 = myrho$elm_round$Round$splitComma(num);
+			var before = _n2.a;
+			var after = _n2.b;
+			var total = _Utils_ap(before, after);
+			var zeroed = (e < 0) ? A2(
+				elm$core$Maybe$withDefault,
+				'0',
+				A2(
+					elm$core$Maybe$map,
+					function (_n3) {
+						var a = _n3.a;
+						var b = _n3.b;
+						return a + ('.' + b);
+					},
+					A2(
+						elm$core$Maybe$map,
+						elm$core$Tuple$mapFirst(elm$core$String$fromChar),
+						elm$core$String$uncons(
+							_Utils_ap(
+								A2(
+									elm$core$String$repeat,
+									elm$core$Basics$abs(e),
+									'0'),
+								total))))) : A3(
+				elm$core$String$padRight,
+				e + 1,
+				_Utils_chr('0'),
+				total);
+			return _Utils_ap(
+				(fl < 0) ? '-' : '',
+				zeroed);
+		} else {
+			var num = _n0.a;
+			return _Utils_ap(
+				(fl < 0) ? '-' : '',
+				num);
+		}
+	} else {
+		return '';
+	}
+};
+var myrho$elm_round$Round$roundFun = F3(
+	function (functor, s, fl) {
+		if (elm$core$Basics$isInfinite(fl) || elm$core$Basics$isNaN(fl)) {
+			return elm$core$String$fromFloat(fl);
+		} else {
+			var signed = fl < 0;
+			var _n0 = myrho$elm_round$Round$splitComma(
+				myrho$elm_round$Round$toDecimal(
+					elm$core$Basics$abs(fl)));
+			var before = _n0.a;
+			var after = _n0.b;
+			var r = elm$core$String$length(before) + s;
+			var normalized = _Utils_ap(
+				A2(elm$core$String$repeat, (-r) + 1, '0'),
+				A3(
+					elm$core$String$padRight,
+					r,
+					_Utils_chr('0'),
+					_Utils_ap(before, after)));
+			var totalLen = elm$core$String$length(normalized);
+			var roundDigitIndex = A2(elm$core$Basics$max, 1, r);
+			var increase = A2(
+				functor,
+				signed,
+				A3(elm$core$String$slice, roundDigitIndex, totalLen, normalized));
+			var remains = A3(elm$core$String$slice, 0, roundDigitIndex, normalized);
+			var num = increase ? elm$core$String$reverse(
+				A2(
+					elm$core$Maybe$withDefault,
+					'1',
+					A2(
+						elm$core$Maybe$map,
+						myrho$elm_round$Round$increaseNum,
+						elm$core$String$uncons(
+							elm$core$String$reverse(remains))))) : remains;
+			var numLen = elm$core$String$length(num);
+			var numZeroed = (num === '0') ? num : ((s <= 0) ? _Utils_ap(
+				num,
+				A2(
+					elm$core$String$repeat,
+					elm$core$Basics$abs(s),
+					'0')) : ((_Utils_cmp(
+				s,
+				elm$core$String$length(after)) < 0) ? (A3(elm$core$String$slice, 0, numLen - s, num) + ('.' + A3(elm$core$String$slice, numLen - s, numLen, num))) : _Utils_ap(
+				before + '.',
+				A3(
+					elm$core$String$padRight,
+					s,
+					_Utils_chr('0'),
+					after))));
+			return A2(myrho$elm_round$Round$addSign, signed, numZeroed);
+		}
+	});
+var myrho$elm_round$Round$round = myrho$elm_round$Round$roundFun(
+	F2(
+		function (signed, str) {
+			var _n0 = elm$core$String$uncons(str);
+			if (_n0.$ === 'Nothing') {
+				return false;
+			} else {
+				if ('5' === _n0.a.a.valueOf()) {
+					if (_n0.a.b === '') {
+						var _n1 = _n0.a;
+						return !signed;
+					} else {
+						var _n2 = _n0.a;
+						return true;
+					}
+				} else {
+					var _n3 = _n0.a;
+					var _int = _n3.a;
+					return function (i) {
+						return ((i > 53) && signed) || ((i >= 53) && (!signed));
+					}(
+						elm$core$Char$toCode(_int));
+				}
+			}
+		}));
+var cuducos$elm_format_number$FormatNumber$Parser$splitInParts = F2(
+	function (locale, value) {
+		var toString = function () {
+			var _n1 = locale.decimals;
+			switch (_n1.$) {
+				case 'Max':
+					var max = _n1.a;
+					return myrho$elm_round$Round$round(max);
+				case 'Min':
+					return elm$core$String$fromFloat;
+				default:
+					var exact = _n1.a;
+					return myrho$elm_round$Round$round(exact);
+			}
+		}();
+		var asList = A2(
+			elm$core$String$split,
+			'.',
+			toString(value));
+		var decimals = function () {
+			var _n0 = elm$core$List$tail(asList);
+			if (_n0.$ === 'Just') {
+				var values = _n0.a;
+				return A2(
+					elm$core$Maybe$withDefault,
+					'',
+					elm$core$List$head(values));
+			} else {
+				return '';
+			}
+		}();
+		var integers = A2(
+			elm$core$Maybe$withDefault,
+			'',
+			elm$core$List$head(asList));
+		return _Utils_Tuple2(integers, decimals);
+	});
+var cuducos$elm_format_number$FormatNumber$Parser$splitThousands = function (integers) {
+	var reversedSplitThousands = function (value) {
+		return (elm$core$String$length(value) > 3) ? A2(
+			elm$core$List$cons,
+			A2(elm$core$String$right, 3, value),
+			reversedSplitThousands(
+				A2(elm$core$String$dropRight, 3, value))) : _List_fromArray(
+			[value]);
+	};
+	return elm$core$List$reverse(
+		reversedSplitThousands(integers));
+};
+var elm$core$String$filter = _String_filter;
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var cuducos$elm_format_number$FormatNumber$Parser$parse = F2(
+	function (locale, original) {
+		var parts = A2(cuducos$elm_format_number$FormatNumber$Parser$splitInParts, locale, original);
+		var integers = cuducos$elm_format_number$FormatNumber$Parser$splitThousands(
+			A2(elm$core$String$filter, elm$core$Char$isDigit, parts.a));
+		var decimals = A2(cuducos$elm_format_number$FormatNumber$Parser$getDecimals, locale, parts.b);
+		var partial = A5(cuducos$elm_format_number$FormatNumber$Parser$FormattedNumber, original, integers, decimals, '', '');
+		var _n0 = cuducos$elm_format_number$FormatNumber$Parser$classify(partial);
+		switch (_n0.$) {
+			case 'Negative':
+				return _Utils_update(
+					partial,
+					{prefix: locale.negativePrefix, suffix: locale.negativeSuffix});
+			case 'Positive':
+				return _Utils_update(
+					partial,
+					{prefix: locale.positivePrefix, suffix: locale.positiveSuffix});
+			default:
+				return _Utils_update(
+					partial,
+					{prefix: locale.zeroPrefix, suffix: locale.zeroSuffix});
+		}
+	});
+var cuducos$elm_format_number$FormatNumber$Stringfy$formatDecimals = F2(
+	function (locale, decimals) {
+		return (decimals === '') ? '' : _Utils_ap(locale.decimalSeparator, decimals);
+	});
+var cuducos$elm_format_number$FormatNumber$Stringfy$stringfy = F2(
+	function (locale, formatted) {
+		var stringfyDecimals = cuducos$elm_format_number$FormatNumber$Stringfy$formatDecimals(locale);
+		var integers = A2(elm$core$String$join, locale.thousandSeparator, formatted.integers);
+		var decimals = stringfyDecimals(formatted.decimals);
+		return elm$core$String$concat(
+			_List_fromArray(
+				[formatted.prefix, integers, decimals, formatted.suffix]));
+	});
+var cuducos$elm_format_number$FormatNumber$format = F2(
+	function (locale, number_) {
+		return A2(
+			cuducos$elm_format_number$FormatNumber$Stringfy$stringfy,
+			locale,
+			A2(cuducos$elm_format_number$FormatNumber$Parser$parse, locale, number_));
+	});
+var author$project$Subunkai$tenmjo = function (ii) {
+	return A2(cuducos$elm_format_number$FormatNumber$format, author$project$Subunkai$sharesLocale, ii * 0.1);
+};
+var author$project$Subunkai$tenmjo2 = F2(
+	function (ii, jj) {
+		return A2(cuducos$elm_format_number$FormatNumber$format, author$project$Subunkai$sharesLocale, ((ii * 0.1) * jj) * 0.1);
 	});
 var elm$core$List$map = F2(
 	function (f, xs) {
@@ -5265,10 +5774,87 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$option = _VirtualDom_node('option');
+var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$table = _VirtualDom_node('table');
+var elm$html$Html$td = _VirtualDom_node('td');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$html$Html$tr = _VirtualDom_node('tr');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$selected = elm$html$Html$Attributes$boolProperty('selected');
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
 };
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
+var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
+	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
+};
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var elm$html$Html$Attributes$classList = function (classes) {
 	return elm$html$Html$Attributes$class(
 		A2(
@@ -5279,14 +5865,6 @@ var elm$html$Html$Attributes$classList = function (classes) {
 				elm$core$Tuple$first,
 				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
 };
-var elm$json$Json$Encode$bool = _Json_wrap;
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
-	});
 var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
 var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
 	switch (size.$) {
@@ -5466,7 +6044,7 @@ var author$project$Subunkai$view = function (model) {
 					rundis$elm_bootstrap$Bootstrap$Button$attrs(
 					_List_fromArray(
 						[
-							A2(elm$html$Html$Attributes$style, 'font-size', '60px'),
+							A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
 							elm$html$Html$Events$onClick(
 							author$project$Subunkai$Btn(ii))
 						]))
@@ -5474,7 +6052,7 @@ var author$project$Subunkai$view = function (model) {
 			_List_fromArray(
 				[
 					elm$html$Html$text(
-					' ' + (elm$core$String$fromInt(ii) + ' '))
+					' ' + (author$project$Subunkai$buttoncaption(ii) + ' '))
 				]));
 	};
 	var sujibutton = A2(
@@ -5562,14 +6140,73 @@ var author$project$Subunkai$view = function (model) {
 							[
 								sbutton(3)
 							]))
+					])),
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(0)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(10)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(11)
+							]))
 					]))
 			]));
+	var sList = function () {
+		var _n1 = model.mondai.pattern;
+		switch (_n1) {
+			case 1:
+				return _List_fromArray(
+					[
+						'',
+						'1',
+						author$project$Subunkai$tenmjo(model.mondai.sa),
+						A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)
+					]);
+			case 2:
+				return _List_fromArray(
+					[
+						'',
+						'1',
+						author$project$Subunkai$tenmjo(model.mondai.sa),
+						A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)
+					]);
+			case 3:
+				return _List_fromArray(
+					[
+						'',
+						'1',
+						author$project$Subunkai$tenmjo(model.mondai.sa),
+						author$project$Subunkai$tenmjo(model.mondai.sb)
+					]);
+			default:
+				return _List_fromArray(
+					['', '', '']);
+		}
+	}();
 	var linex = A2(
 		elm$svg$Svg$svg,
 		_List_fromArray(
 			[
 				elm$svg$Svg$Attributes$viewBox('0 0 400 400'),
-				elm$svg$Svg$Attributes$width('400'),
+				elm$svg$Svg$Attributes$width('480'),
 				elm$svg$Svg$Attributes$height('400')
 			]),
 		_List_fromArray(
@@ -5583,11 +6220,57 @@ var author$project$Subunkai$view = function (model) {
 				A5(sline, 20, 115, 20, 155, 1),
 				A3(stext, 15, 110, '0'),
 				A3(stext, 15, 170, '0'),
-				A3(stext, 100, 110, 'lu'),
-				A3(stext, 300, 110, 'ru'),
-				A3(stext, 100, 170, 'ld'),
-				A3(stext, 300, 170, 'rd')
+				A3(stext, 400, 110, '(km)'),
+				A3(stext, 400, 170, '(L)')
 			]));
+	var dvy = 30;
+	var dvx = 30;
+	var dcbx = F3(
+		function (xx, yy, cbx) {
+			return A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(
+						elm$html$Html$Attributes$style,
+						'top',
+						elm$core$String$fromInt(yy) + 'px'),
+						A2(
+						elm$html$Html$Attributes$style,
+						'left',
+						elm$core$String$fromInt(xx) + 'px')
+					]),
+				_List_fromArray(
+					[cbx]));
+		});
+	var cboxlu = A2(
+		elm$html$Html$select,
+		_List_fromArray(
+			[
+				A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+				author$project$Subunkai$onChange(author$project$Subunkai$handlerl)
+			]),
+		A2(
+			elm$core$List$map,
+			function (s) {
+				return A2(
+					elm$html$Html$option,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$selected(s === 'atode'),
+							elm$html$Html$Attributes$value(s)
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('　' + (s + '　'))
+						]));
+			},
+			sList));
+	var cbrd = A3(dcbx, 300 + dvx, 170 + dvy, cboxlu);
+	var cbru = A3(dcbx, 300 + dvx, 110 + dvy, cboxlu);
+	var cblu = A3(dcbx, 100 + dvx, 110 + dvy, cboxlu);
+	var cbld = A3(dcbx, 100 + dvx, 170 + dvy, cboxlu);
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -5603,12 +6286,39 @@ var author$project$Subunkai$view = function (model) {
 					[
 						A2(
 						elm$html$Html$td,
+						_List_Nil,
 						_List_fromArray(
 							[
+								elm$html$Html$text(
+								function () {
+									var _n0 = model.mondai.pattern;
+									switch (_n0) {
+										case 1:
+											return '1Lのガソリンで' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('km走る自動車があります。' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走るためには何L使いますか?')));
+										case 2:
+											return author$project$Subunkai$tenmjo(model.mondai.sa) + ('Lのガソリンで' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走る自動車があります。1Lのガソリンで何km走りますか?'));
+										case 3:
+											return '1Lのガソリンで' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('km走る自動車があります。' + (author$project$Subunkai$tenmjo(model.mondai.sb) + 'Lでは何km走れますか?')));
+										default:
+											return '';
+									}
+								}())
+							]))
+					])),
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'position', 'relative'),
 								A2(elm$html$Html$Attributes$style, 'padding', '3em')
 							]),
 						_List_fromArray(
-							[linex])),
+							[linex, cblu, cbru, cbld, cbrd])),
 						A2(
 						elm$html$Html$td,
 						_List_Nil,
@@ -5728,17 +6438,6 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
-var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
-var elm$core$String$dropLeft = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(
-			elm$core$String$slice,
-			n,
-			elm$core$String$length(string),
-			string);
-	});
-var elm$core$String$startsWith = _String_startsWith;
 var elm$url$Url$Http = {$: 'Http'};
 var elm$url$Url$Https = {$: 'Https'};
 var elm$core$String$indexes = _String_indexes;
