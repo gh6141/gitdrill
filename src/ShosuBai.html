@@ -4884,6 +4884,14 @@ var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			ans: '',
+			ansLD: '',
+			ansLU: '',
+			ansRD: '',
+			ansRU: '',
+			inLD: '',
+			inLU: '',
+			inRD: '',
+			inRU: '',
 			init: '3',
 			mondai: {pattern: 1, sa: 10, sb: 2}
 		},
@@ -5095,7 +5103,7 @@ var author$project$Subunkai$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{mondai: mnd}),
+						{inLD: '', inLU: '', inRD: '', inRU: '', mondai: mnd}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
@@ -5109,17 +5117,25 @@ var author$project$Subunkai$update = F2(
 			default:
 				var snum = msg.a;
 				var lmr = msg.b;
-				var sikip = F4(
-					function (l, m, r, s) {
-						if (lmr === 'L') {
-							return _Utils_ap(
-								s,
-								_Utils_ap(m, r));
-						} else {
-							return '';
-						}
-					});
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				var lrud = function () {
+					switch (lmr) {
+						case 'LU':
+							return {ld: model.inLD, lu: snum, rd: model.inRD, ru: model.inRU};
+						case 'RU':
+							return {ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: snum};
+						case 'LD':
+							return {ld: snum, lu: model.inLU, rd: model.inRD, ru: model.inRU};
+						case 'RD':
+							return {ld: model.inLD, lu: model.inLU, rd: snum, ru: model.inRU};
+						default:
+							return {ld: '', lu: '', rd: '', ru: ''};
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Subunkai$Btn = function (a) {
@@ -5140,8 +5156,17 @@ var author$project$Subunkai$ChangeS = F2(
 	function (a, b) {
 		return {$: 'ChangeS', a: a, b: b};
 	});
-var author$project$Subunkai$handlerl = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'L');
+var author$project$Subunkai$handlerLD = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'LD');
+};
+var author$project$Subunkai$handlerLU = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'LU');
+};
+var author$project$Subunkai$handlerRD = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'RD');
+};
+var author$project$Subunkai$handlerRU = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'RU');
 };
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -6244,33 +6269,53 @@ var author$project$Subunkai$view = function (model) {
 				_List_fromArray(
 					[cbx]));
 		});
-	var cboxlu = A2(
-		elm$html$Html$select,
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-				author$project$Subunkai$onChange(author$project$Subunkai$handlerl)
-			]),
-		A2(
-			elm$core$List$map,
-			function (s) {
-				return A2(
-					elm$html$Html$option,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$selected(s === 'atode'),
-							elm$html$Html$Attributes$value(s)
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(s)
-						]));
-			},
-			sList));
-	var cbrd = A3(dcbx, 300 + dvx, 180 + dvy, cboxlu);
-	var cbru = A3(dcbx, 300 + dvx, 100 + dvy, cboxlu);
-	var cblu = A3(dcbx, 100 + dvx, 100 + dvy, cboxlu);
-	var cbld = A3(dcbx, 100 + dvx, 180 + dvy, cboxlu);
+	var cboxlu = F2(
+		function (inLRUD, handler) {
+			return A2(
+				elm$html$Html$select,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+						author$project$Subunkai$onChange(handler)
+					]),
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$option,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$selected(
+									_Utils_eq(s, inLRUD)),
+									elm$html$Html$Attributes$value(s)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(s)
+								]));
+					},
+					sList));
+		});
+	var cbrd = A3(
+		dcbx,
+		300 + dvx,
+		180 + dvy,
+		A2(cboxlu, model.inRD, author$project$Subunkai$handlerRD));
+	var cbru = A3(
+		dcbx,
+		300 + dvx,
+		100 + dvy,
+		A2(cboxlu, model.inRU, author$project$Subunkai$handlerRU));
+	var cblu = A3(
+		dcbx,
+		100 + dvx,
+		100 + dvy,
+		A2(cboxlu, model.inLU, author$project$Subunkai$handlerLU));
+	var cbld = A3(
+		dcbx,
+		100 + dvx,
+		180 + dvy,
+		A2(cboxlu, model.inLD, author$project$Subunkai$handlerLD));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(

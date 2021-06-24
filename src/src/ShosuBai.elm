@@ -96,14 +96,17 @@ update msg model =
   
    ChangeS snum lmr->
       let
-        sikip l m r s= case lmr of
-          "LU" -> s++m++r
-          "RU" -> s++m++r
-          "LD" -> s++m++r
-          "RD" -> s++m++r
-          _ -> ""
+        lrud = case lmr of
+          "LU" -> {lu=snum,ru=model.inRU,ld=model.inLD,rd=model.inRD}
+          "RU" -> {lu=model.inLU,ru=snum,ld=model.inLD,rd=model.inRD}
+          "LD" -> {lu=model.inLU,ru=model.inRU,ld=snum,rd=model.inRD}
+          "RD" -> {lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=snum}
+          _ -> {lu="",ru="",ld="",rd=""}
+      
+
+
       in
-       ( model, Cmd.none)
+       ( {model|inLU=lrud.lu,inLD=lrud.ld ,inRU=lrud.ru ,inRD=lrud.rd}, Cmd.none)
  
 
 
