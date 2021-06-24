@@ -50,13 +50,14 @@ type alias Model =
     ,inRU:String
     ,inLD:String
     ,inRD:String
+    ,dispSiki:Bool
      
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mondai={sa=10,sb=2,pattern=1},ans="",ansLU="",ansRU="",ansLD="",ansRD=""
-    ,inLU="",inRU="",inLD="",inRD=""}
+    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False}
   , Cmd.none
   )
 
@@ -127,6 +128,7 @@ view model =
  
       
         cboxlu inLRUD handler=select [style "font-size" "20px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) sList)  
+        cboxez inLRUD handler=select [style "font-size" "20px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) ["×","÷"])  
         dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
         dvx=30
         dvy=30
@@ -134,6 +136,11 @@ view model =
         cbru=dcbx (300+dvx) (100+dvy) (cboxlu model.inRU handlerRU)
         cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD handlerLD)
         cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD handlerRD)
+
+        cba=dcbx ()  ()  (cboxlu model.inA handlerA)
+        cbz=dcbx ()  ()  (cboxez model.inEz handlerEz)
+        cbb=dcbx ()  ()  (cboxlu model.inB handlerB)
+
          
 
         sbutton : Int -> Html Msg
@@ -184,8 +191,6 @@ view model =
               ,stext 400 110 "(km)"
               ,stext 400 170 "(L)"
 
-
-
           ]
          
         stext xx yy moji = Svg.text_
@@ -225,6 +230,7 @@ view model =
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
        linex
        ,cblu,cbru,cbld,cbrd
+       ,div [] []
       ]   
      ,td [] [
        Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ]
