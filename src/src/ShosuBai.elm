@@ -35,22 +35,28 @@ type alias Mondai =
      sa:Int
      ,sb:Int
      ,pattern:Int
-
-
  }
 
 type alias Model =
   { 
-      init:String
-
+    init:String
     ,mondai:Mondai
     ,ans:String
- 
+    ,ansLU:String
+    ,ansRU:String
+    ,ansLD:String
+    ,ansRD:String
+    ,inLU:String
+    ,inRU:String
+    ,inLD:String
+    ,inRD:String
+     
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",mondai={sa=10,sb=2,pattern=1},ans=""}
+  ( {init="3",mondai={sa=10,sb=2,pattern=1},ans="",ansLU="",ansRU="",ansLD="",ansRD=""
+    ,inLU="",inRU="",inLD="",inRD=""}
   , Cmd.none
   )
 
@@ -81,7 +87,7 @@ update msg model =
   
    Newmon mnd ->
    
-      ( {model|mondai=mnd}    ,Cmd.none)
+      ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU=""}    ,Cmd.none)
   
    Btn si ->
 
@@ -91,36 +97,40 @@ update msg model =
    ChangeS snum lmr->
       let
         sikip l m r s= case lmr of
-          "L" -> s++m++r
-
+          "LU" -> s++m++r
+          "RU" -> s++m++r
+          "LD" -> s++m++r
+          "RD" -> s++m++r
           _ -> ""
-
       in
        ( model, Cmd.none)
  
 
 
-handlerl selectedText = ChangeS selectedText "L"
+handlerLU selectedText = ChangeS selectedText "LU"
+handlerLD selectedText = ChangeS selectedText "LD"
+handlerRU selectedText = ChangeS selectedText "RU"
+handlerRD selectedText = ChangeS selectedText "RD"
 
 view : Model -> Html Msg
 view model =
  let
         sList = case  model.mondai.pattern of
-          1 -> ["","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
-          2 -> ["","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
-          3 -> ["","1",tenmjo model.mondai.sa,tenmjo model.mondai.sb]
-          _ -> ["","",""]
+          1 -> ["?","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
+          2 -> ["?","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
+          3 -> ["?","1",tenmjo model.mondai.sa,tenmjo model.mondai.sb]
+          _ -> ["?","",""]
 
  
       
-        cboxlu =select [style "font-size" "20px" ,onChange handlerl ] (List.map (\s -> Html.option [selected (s=="atode"),value s][text ("　"++s++"　")]) sList)  
+        cboxlu inLRUD handler=select [style "font-size" "20px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) sList)  
         dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
         dvx=30
         dvy=30
-        cblu=dcbx (100+dvx) (110+dvy) cboxlu
-        cbru=dcbx (300+dvx) (110+dvy) cboxlu
-        cbld=dcbx (100+dvx) (170+dvy) cboxlu
-        cbrd=dcbx (300+dvx) (170+dvy) cboxlu
+        cblu=dcbx (100+dvx) (100+dvy) (cboxlu model.inLU handlerLU)
+        cbru=dcbx (300+dvx) (100+dvy) (cboxlu model.inRU handlerRU)
+        cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD handlerLD)
+        cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD handlerRD)
          
 
         sbutton : Int -> Html Msg
@@ -198,7 +208,7 @@ view model =
    table [align "center"]
    [
     tr [] [
-      td [] [text (
+      td [style "font-size" "20px" ] [text (
        case model.mondai.pattern of
          1 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"km走るためには何L使いますか?"
          2 -> (tenmjo model.mondai.sa)++"Lのガソリンで"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"km走る自動車があります。1Lのガソリンで何km走りますか?"

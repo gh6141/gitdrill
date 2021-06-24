@@ -6175,7 +6175,7 @@ var author$project$Subunkai$view = function (model) {
 			case 1:
 				return _List_fromArray(
 					[
-						'',
+						'?',
 						'1',
 						author$project$Subunkai$tenmjo(model.mondai.sa),
 						A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)
@@ -6183,7 +6183,7 @@ var author$project$Subunkai$view = function (model) {
 			case 2:
 				return _List_fromArray(
 					[
-						'',
+						'?',
 						'1',
 						author$project$Subunkai$tenmjo(model.mondai.sa),
 						A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)
@@ -6191,14 +6191,14 @@ var author$project$Subunkai$view = function (model) {
 			case 3:
 				return _List_fromArray(
 					[
-						'',
+						'?',
 						'1',
 						author$project$Subunkai$tenmjo(model.mondai.sa),
 						author$project$Subunkai$tenmjo(model.mondai.sb)
 					]);
 			default:
 				return _List_fromArray(
-					['', '', '']);
+					['?', '', '']);
 		}
 	}();
 	var linex = A2(
@@ -6263,14 +6263,14 @@ var author$project$Subunkai$view = function (model) {
 						]),
 					_List_fromArray(
 						[
-							elm$html$Html$text('　' + (s + '　'))
+							elm$html$Html$text(s)
 						]));
 			},
 			sList));
-	var cbrd = A3(dcbx, 300 + dvx, 170 + dvy, cboxlu);
-	var cbru = A3(dcbx, 300 + dvx, 110 + dvy, cboxlu);
-	var cblu = A3(dcbx, 100 + dvx, 110 + dvy, cboxlu);
-	var cbld = A3(dcbx, 100 + dvx, 170 + dvy, cboxlu);
+	var cbrd = A3(dcbx, 300 + dvx, 180 + dvy, cboxlu);
+	var cbru = A3(dcbx, 300 + dvx, 100 + dvy, cboxlu);
+	var cblu = A3(dcbx, 100 + dvx, 100 + dvy, cboxlu);
+	var cbld = A3(dcbx, 100 + dvx, 180 + dvy, cboxlu);
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -6286,7 +6286,10 @@ var author$project$Subunkai$view = function (model) {
 					[
 						A2(
 						elm$html$Html$td,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text(
