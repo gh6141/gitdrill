@@ -4892,6 +4892,7 @@ var author$project$Subunkai$init = function (_n0) {
 			ansRU: '2.42',
 			dispAns: false,
 			dispSiki: false,
+			ichiikaflg: true,
 			inA: '',
 			inB: '',
 			inEz: '',
@@ -5780,7 +5781,7 @@ var author$project$Subunkai$update = F2(
 							ludIchi: elm$core$Basics$round(300.0 * lichi),
 							mondai: mnd
 						}),
-					((lt > 0.5) && (lt < 2.0)) ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
+					(((lt > 0.5) && (lt < 2.0)) || (model.ichiikaflg && (_Utils_cmp(km1, km) > 0))) ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				return _Utils_Tuple2(
@@ -5790,7 +5791,7 @@ var author$project$Subunkai$update = F2(
 							ans: elm$core$String$fromInt(si)
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'ChangeS':
 				var snum = msg.a;
 				var lmr = msg.b;
 				var _n3 = function () {
@@ -5865,11 +5866,18 @@ var author$project$Subunkai$update = F2(
 						model,
 						{dispAns: dpAns, inA: abez.aa, inB: abez.bb, inEz: abez.ez, inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
 					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ichiikaflg: false}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
+var author$project$Subunkai$IchiIka = {$: 'IchiIka'};
 var author$project$Subunkai$Next = {$: 'Next'};
 var author$project$Subunkai$buttoncaption = function (ii) {
 	switch (ii) {
@@ -6737,19 +6745,72 @@ var author$project$Subunkai$view = function (model) {
 						_List_fromArray(
 							[
 								A2(
-								rundis$elm_bootstrap$Bootstrap$Button$button,
+								elm$html$Html$tr,
+								_List_Nil,
 								_List_fromArray(
 									[
-										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
 										_List_fromArray(
 											[
-												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-												elm$html$Html$Events$onClick(author$project$Subunkai$Next)
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Next)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('つぎへ')
+													]))
 											]))
-									]),
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
 								_List_fromArray(
 									[
-										elm$html$Html$text('つぎへ')
+										A2(elm$html$Html$td, _List_Nil, _List_Nil)
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$td, _List_Nil, _List_Nil)
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$IchiIka)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('1以下の倍率あり')
+													]))
+											]))
 									]))
 							]))
 					]))
