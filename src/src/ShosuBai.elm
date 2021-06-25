@@ -116,6 +116,10 @@ handlerLD selectedText = ChangeS selectedText "LD"
 handlerRU selectedText = ChangeS selectedText "RU"
 handlerRD selectedText = ChangeS selectedText "RD"
 
+handlerA selectedText = ChangeS selectedText "A"
+handlerEz selectedText = ChangeS selectedText "Ez"
+handlerB selectedText = ChangeS selectedText "B"
+
 view : Model -> Html Msg
 view model =
  let
