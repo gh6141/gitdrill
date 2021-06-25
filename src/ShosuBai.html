@@ -5748,7 +5748,7 @@ var author$project$Subunkai$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{ans: ansx, ansLD: ansm.ld, ansLU: ansm.lu, ansRD: ansm.rd, ansRU: ansm.ru, dispAns: false, inLD: '', inLU: '', inRD: '', inRU: '', mondai: mnd}),
+						{ans: ansx, ansLD: ansm.ld, ansLU: ansm.lu, ansRD: ansm.rd, ansRU: ansm.ru, dispAns: false, inA: '', inB: '', inEz: '', inLD: '', inLU: '', inRD: '', inRU: '', mondai: mnd}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
@@ -5762,24 +5762,77 @@ var author$project$Subunkai$update = F2(
 			default:
 				var snum = msg.a;
 				var lmr = msg.b;
-				var lrud = function () {
+				var _n3 = function () {
 					switch (lmr) {
 						case 'LU':
-							return {ld: model.inLD, lu: snum, rd: model.inRD, ru: model.inRU};
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: snum, rd: model.inRD, ru: model.inRU},
+								{aa: model.inA, bb: model.inB, ez: model.inEz});
 						case 'RU':
-							return {ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: snum};
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: snum},
+								{aa: model.inA, bb: model.inB, ez: model.inEz});
 						case 'LD':
-							return {ld: snum, lu: model.inLU, rd: model.inRD, ru: model.inRU};
+							return _Utils_Tuple2(
+								{ld: snum, lu: model.inLU, rd: model.inRD, ru: model.inRU},
+								{aa: model.inA, bb: model.inB, ez: model.inEz});
 						case 'RD':
-							return {ld: model.inLD, lu: model.inLU, rd: snum, ru: model.inRU};
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: model.inLU, rd: snum, ru: model.inRU},
+								{aa: model.inA, bb: model.inB, ez: model.inEz});
+						case 'A':
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: model.inRU},
+								{aa: snum, bb: model.inB, ez: model.inEz});
+						case 'Ez':
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: model.inRU},
+								{aa: model.inA, bb: model.inB, ez: snum});
+						case 'B':
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: model.inRU},
+								{aa: model.inA, bb: snum, ez: model.inEz});
 						default:
-							return {ld: '', lu: '', rd: '', ru: ''};
+							return _Utils_Tuple2(
+								{ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: model.inRU},
+								{aa: model.inA, bb: model.inB, ez: model.inEz});
+					}
+				}();
+				var lrud = _n3.a;
+				var abez = _n3.b;
+				var dpAns = function () {
+					var _n5 = model.mondai.pattern;
+					switch (_n5) {
+						case 1:
+							return (abez.ez === '÷') && (_Utils_eq(
+								abez.aa,
+								A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)) && _Utils_eq(
+								abez.bb,
+								author$project$Subunkai$tenmjo(model.mondai.sa)));
+						case 2:
+							return (abez.ez === '÷') && (_Utils_eq(
+								abez.aa,
+								A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)) && _Utils_eq(
+								abez.bb,
+								author$project$Subunkai$tenmjo(model.mondai.sb)));
+						case 3:
+							return ((abez.ez === '×') && (_Utils_eq(
+								abez.aa,
+								author$project$Subunkai$tenmjo(model.mondai.sa)) && _Utils_eq(
+								abez.bb,
+								author$project$Subunkai$tenmjo(model.mondai.sb)))) || (_Utils_eq(
+								abez.aa,
+								author$project$Subunkai$tenmjo(model.mondai.sb)) && _Utils_eq(
+								abez.bb,
+								author$project$Subunkai$tenmjo(model.mondai.sa)));
+						default:
+							return false;
 					}
 				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
+						{dispAns: dpAns, inA: abez.aa, inB: abez.bb, inEz: abez.ez, inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5897,6 +5950,12 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
+var elm$html$Html$Attributes$colspan = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'colspan',
+		elm$core$String$fromInt(n));
+};
 var elm$json$Json$Encode$bool = _Json_wrap;
 var elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -6291,7 +6350,7 @@ var author$project$Subunkai$view = function (model) {
 					[
 						'?',
 						'1',
-						author$project$Subunkai$tenmjo(model.mondai.sa),
+						author$project$Subunkai$tenmjo(model.mondai.sb),
 						A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb)
 					]);
 			case 3:
@@ -6458,7 +6517,8 @@ var author$project$Subunkai$view = function (model) {
 		elm$html$Html$table,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$align('center')
+				elm$html$Html$Attributes$align('center'),
+				A2(elm$html$Html$Attributes$style, 'width', '80%')
 			]),
 		_List_fromArray(
 			[
@@ -6471,7 +6531,8 @@ var author$project$Subunkai$view = function (model) {
 						elm$html$Html$td,
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+								elm$html$Html$Attributes$colspan(2),
+								A2(elm$html$Html$Attributes$style, 'font-size', '30px')
 							]),
 						_List_fromArray(
 							[
@@ -6514,7 +6575,18 @@ var author$project$Subunkai$view = function (model) {
 								elm$html$Html$div,
 								_List_Nil,
 								_List_fromArray(
-									[cba, cbz, cbb, eans]))
+									[
+										cba,
+										cbz,
+										cbb,
+										model.dispAns ? eans : A2(
+										elm$html$Html$span,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('')
+											]))
+									]))
 							])),
 						A2(
 						elm$html$Html$td,

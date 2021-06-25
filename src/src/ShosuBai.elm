@@ -122,7 +122,7 @@ update msg model =
 
      in
    
-      ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU=""
+      ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU="",inA="",inB="",inEz=""
       ,ansLU=ansm.lu  ,ansRU=ansm.ru   ,ansLD=ansm.ld   ,ansRD=ansm.rd
       ,dispAns=False ,ans=ansx
       }    ,Cmd.none)
@@ -134,17 +134,29 @@ update msg model =
   
    ChangeS snum lmr->
       let
-        lrud = case lmr of
-          "LU" -> {lu=snum,ru=model.inRU,ld=model.inLD,rd=model.inRD}
-          "RU" -> {lu=model.inLU,ru=snum,ld=model.inLD,rd=model.inRD}
-          "LD" -> {lu=model.inLU,ru=model.inRU,ld=snum,rd=model.inRD}
-          "RD" -> {lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=snum}
-          _ -> {lu="",ru="",ld="",rd=""}
+        (lrud ,abez)= case lmr of
+          "LU" -> ({lu=snum,ru=model.inRU,ld=model.inLD,rd=model.inRD},{aa=model.inA,bb=model.inB,ez=model.inEz})
+          "RU" -> ({lu=model.inLU,ru=snum,ld=model.inLD,rd=model.inRD},{aa=model.inA,bb=model.inB,ez=model.inEz})
+          "LD" -> ({lu=model.inLU,ru=model.inRU,ld=snum,rd=model.inRD},{aa=model.inA,bb=model.inB,ez=model.inEz})
+          "RD" -> ({lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=snum},{aa=model.inA,bb=model.inB,ez=model.inEz})
+          "A" -> ({lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=model.inRD},{aa=snum,bb=model.inB,ez=model.inEz})
+          "Ez" -> ({lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=model.inRD},{aa=model.inA,bb=model.inB,ez=snum})
+          "B" -> ({lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=model.inRD},{aa=model.inA,bb=snum,ez=model.inEz})
+          _ ->  ({lu=model.inLU,ru=model.inRU,ld=model.inLD,rd=model.inRD},{aa=model.inA,bb=model.inB,ez=model.inEz})
+     
+        dpAns=
+          case model.mondai.pattern of
+           1 -> (abez.ez=="÷") && (abez.aa==(tenmjo2 model.mondai.sa model.mondai.sb )) && (abez.bb==(tenmjo model.mondai.sa))
+           2 -> (abez.ez=="÷") && (abez.aa==(tenmjo2 model.mondai.sa model.mondai.sb )) && (abez.bb==(tenmjo model.mondai.sb))
+           3 -> (abez.ez=="×") && ( (abez.aa==(tenmjo model.mondai.sa)) && (abez.bb==(tenmjo model.mondai.sb)) )|| ( (abez.aa==(tenmjo model.mondai.sb)) && (abez.bb==(tenmjo model.mondai.sa)) )
+           _ -> False
+      
+      
       
 
 
       in
-       ( {model|inLU=lrud.lu,inLD=lrud.ld ,inRU=lrud.ru ,inRD=lrud.rd}, Cmd.none)
+       ( {model|inLU=lrud.lu,inLD=lrud.ld ,inRU=lrud.ru ,inRD=lrud.rd,inA=abez.aa,inB=abez.bb,inEz=abez.ez,dispAns=dpAns}, Cmd.none)
  
 
 
@@ -162,7 +174,7 @@ view model =
  let
         sList = case  model.mondai.pattern of
           1 -> ["?","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
-          2 -> ["?","1",tenmjo model.mondai.sa,tenmjo2 model.mondai.sa model.mondai.sb]
+          2 -> ["?","1",tenmjo model.mondai.sb,tenmjo2 model.mondai.sa model.mondai.sb]
           3 -> ["?","1",tenmjo model.mondai.sa,tenmjo model.mondai.sb]
           _ -> ["?","",""]
 
@@ -255,10 +267,10 @@ view model =
                   
  in
 
-   table [align "center"]
+   table [align "center",style "width" "80%"]
    [
     tr [] [
-      td [style "font-size" "20px" ] [text (
+      td [colspan 2,style "font-size" "30px" ] [text (
        case model.mondai.pattern of
          1 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"km走るためには何L使いますか?"
          2 -> (tenmjo model.mondai.sb)++"Lのガソリンで"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"km走る自動車があります。1Lのガソリンで何km走りますか?"
@@ -272,7 +284,7 @@ view model =
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
        linex
        ,cblu,cbru,cbld,cbrd
-       ,div [] [cba,cbz,cbb,eans]
+       ,div [] [cba,cbz,cbb,if model.dispAns then eans else (span [] [text ""])]
       ]   
      ,td [] [
        Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ]
