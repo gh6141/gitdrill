@@ -51,13 +51,17 @@ type alias Model =
     ,inLD:String
     ,inRD:String
     ,dispSiki:Bool
+    ,inA:String
+    ,inEz:String
+    ,inB:String
+    ,dispAns:Bool
      
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mondai={sa=10,sb=2,pattern=1},ans="",ansLU="",ansRU="",ansLD="",ansRD=""
-    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False}
+    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False}
   , Cmd.none
   )
 
@@ -87,8 +91,41 @@ update msg model =
       )
   
    Newmon mnd ->
+     let
+
+           km1=tofloat (tenmjo mnd.sa)
+           km=tofloat (tenmjo2 mnd.sa mnd.sb )
+           lt=tofloat (tenmjo mnd.sb)
+
+           (ansm,ansx)=
+            case mnd.pattern of
+             1 -> (if km1<km then
+                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt)}
+                  else
+                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1"}
+                 , String.fromFloat lt)
+
+             2 -> (if 1.0<lt then
+                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt)}
+                  else
+                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1"}
+                   , String.fromFloat km1)
+             3 -> (if 1.0<lt then
+                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt)}
+                   else
+                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1"}
+                   , String.fromFloat km )
+             _ -> ( {lu="",ru="",ld="",rd="1"}, "")
+
    
-      ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU=""}    ,Cmd.none)
+
+
+     in
+   
+      ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU=""
+      ,ansLU=ansm.lu  ,ansRU=ansm.ru   ,ansLD=ansm.ld   ,ansRD=ansm.rd
+      ,dispAns=False ,ans=ansx
+      }    ,Cmd.none)
   
    Btn si ->
 
@@ -131,8 +168,8 @@ view model =
 
  
       
-        cboxlu inLRUD handler=select [style "font-size" "20px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) sList)  
-        cboxez inLRUD handler=select [style "font-size" "20px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) ["×","÷"])  
+        cboxlu inLRUD handler=select [style "font-size" "30px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) sList)  
+        cboxez inLRUD handler=select [style "font-size" "30px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) ["?","×","÷"])  
         dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
         dvx=30
         dvy=30
@@ -141,9 +178,10 @@ view model =
         cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD handlerLD)
         cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD handlerRD)
 
-        cba=dcbx ()  ()  (cboxlu model.inA handlerA)
-        cbz=dcbx ()  ()  (cboxez model.inEz handlerEz)
-        cbb=dcbx ()  ()  (cboxlu model.inB handlerB)
+        cba=dcbx (90)  (300)  (cboxlu model.inA handlerA)
+        cbz=dcbx (200)  (300)  (cboxez model.inEz handlerEz)
+        cbb=dcbx (250)  (300)  (cboxlu model.inB handlerB)
+        eans=dcbx 350 300 (span [Html.Attributes.style "font-size" "30px"] [text ("="++model.ans)])
 
          
 
@@ -223,7 +261,7 @@ view model =
       td [style "font-size" "20px" ] [text (
        case model.mondai.pattern of
          1 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"km走るためには何L使いますか?"
-         2 -> (tenmjo model.mondai.sa)++"Lのガソリンで"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"km走る自動車があります。1Lのガソリンで何km走りますか?"
+         2 -> (tenmjo model.mondai.sb)++"Lのガソリンで"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"km走る自動車があります。1Lのガソリンで何km走りますか?"
          3 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo model.mondai.sb) ++"Lでは何km走れますか?"
          _ -> ""
       )]
@@ -234,11 +272,11 @@ view model =
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
        linex
        ,cblu,cbru,cbld,cbrd
-       ,div [] []
+       ,div [] [cba,cbz,cbb,eans]
       ]   
      ,td [] [
        Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ]
-      ,sujibutton       
+     -- ,sujibutton       
       ]
     ]
    ]
@@ -254,6 +292,10 @@ onChange handler =
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+tofloat st=  Maybe.withDefault 0 (String.toFloat st) 
+
+
+
 fst tuple =
     let
         (value1, _) = tuple

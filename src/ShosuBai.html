@@ -4888,6 +4888,11 @@ var author$project$Subunkai$init = function (_n0) {
 			ansLU: '',
 			ansRD: '',
 			ansRU: '',
+			dispAns: false,
+			dispSiki: false,
+			inA: '',
+			inB: '',
+			inEz: '',
 			inLD: '',
 			inLU: '',
 			inRD: '',
@@ -4905,295 +4910,44 @@ var author$project$Subunkai$subscriptions = function (model) {
 var author$project$Subunkai$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
-var elm$core$Basics$identity = function (x) {
-	return x;
+var cuducos$elm_format_number$FormatNumber$Locales$Max = function (a) {
+	return {$: 'Max', a: a};
 };
-var elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
+var cuducos$elm_format_number$FormatNumber$Locales$Exact = function (a) {
+	return {$: 'Exact', a: a};
 };
-var elm$core$Task$andThen = _Scheduler_andThen;
-var elm$core$Task$succeed = _Scheduler_succeed;
-var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
+var cuducos$elm_format_number$FormatNumber$Locales$Min = function (a) {
+	return {$: 'Min', a: a};
+};
+var cuducos$elm_format_number$FormatNumber$Locales$base = {
+	decimalSeparator: '.',
+	decimals: cuducos$elm_format_number$FormatNumber$Locales$Min(0),
+	negativePrefix: '−',
+	negativeSuffix: '',
+	positivePrefix: '',
+	positiveSuffix: '',
+	thousandSeparator: '',
+	zeroPrefix: '',
+	zeroSuffix: ''
+};
+var cuducos$elm_format_number$FormatNumber$Locales$usLocale = _Utils_update(
+	cuducos$elm_format_number$FormatNumber$Locales$base,
+	{
+		decimals: cuducos$elm_format_number$FormatNumber$Locales$Exact(2),
+		thousandSeparator: ','
 	});
-var elm$random$Random$next = function (_n0) {
-	var state0 = _n0.a;
-	var incr = _n0.b;
-	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var elm$random$Random$initialSeed = function (x) {
-	var _n0 = elm$random$Random$next(
-		A2(elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _n0.a;
-	var incr = _n0.b;
-	var state2 = (state1 + x) >>> 0;
-	return elm$random$Random$next(
-		A2(elm$random$Random$Seed, state2, incr));
-};
-var elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
+var author$project$Subunkai$sharesLocale = _Utils_update(
+	cuducos$elm_format_number$FormatNumber$Locales$usLocale,
+	{
+		decimals: cuducos$elm_format_number$FormatNumber$Locales$Max(4)
 	});
-var elm$time$Time$customZone = elm$time$Time$Zone;
-var elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var elm$time$Time$millisToPosix = elm$time$Time$Posix;
-var elm$time$Time$now = _Time_now(elm$time$Time$millisToPosix);
-var elm$time$Time$posixToMillis = function (_n0) {
-	var millis = _n0.a;
-	return millis;
-};
-var elm$random$Random$init = A2(
-	elm$core$Task$andThen,
-	function (time) {
-		return elm$core$Task$succeed(
-			elm$random$Random$initialSeed(
-				elm$time$Time$posixToMillis(time)));
-	},
-	elm$time$Time$now);
-var elm$core$Platform$sendToApp = _Platform_sendToApp;
-var elm$random$Random$step = F2(
-	function (_n0, seed) {
-		var generator = _n0.a;
-		return generator(seed);
+var cuducos$elm_format_number$FormatNumber$Parser$FormattedNumber = F5(
+	function (original, integers, decimals, prefix, suffix) {
+		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
 	});
-var elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _n1 = A2(elm$random$Random$step, generator, seed);
-			var value = _n1.a;
-			var newSeed = _n1.b;
-			return A2(
-				elm$core$Task$andThen,
-				function (_n2) {
-					return A3(elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2(elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var elm$random$Random$onSelfMsg = F3(
-	function (_n0, _n1, seed) {
-		return elm$core$Task$succeed(seed);
-	});
-var elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var elm$random$Random$map = F2(
-	function (func, _n0) {
-		var genA = _n0.a;
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n1 = genA(seed0);
-				var a = _n1.a;
-				var seed1 = _n1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var elm$random$Random$cmdMap = F2(
-	function (func, _n0) {
-		var generator = _n0.a;
-		return elm$random$Random$Generate(
-			A2(elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager(elm$random$Random$init, elm$random$Random$onEffects, elm$random$Random$onSelfMsg, elm$random$Random$cmdMap);
-var elm$random$Random$command = _Platform_leaf('Random');
-var elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return elm$random$Random$command(
-			elm$random$Random$Generate(
-				A2(elm$random$Random$map, tagger, generator)));
-	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var elm$core$Bitwise$and = _Bitwise_and;
-var elm$core$Bitwise$xor = _Bitwise_xor;
-var elm$random$Random$peel = function (_n0) {
-	var state = _n0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var elm$random$Random$int = F2(
-	function (a, b) {
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-				var lo = _n0.a;
-				var hi = _n0.b;
-				var range = (hi - lo) + 1;
-				if (!((range - 1) & range)) {
-					return _Utils_Tuple2(
-						(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
-						elm$random$Random$next(seed0));
-				} else {
-					var threshhold = (((-range) >>> 0) % range) >>> 0;
-					var accountForBias = function (seed) {
-						accountForBias:
-						while (true) {
-							var x = elm$random$Random$peel(seed);
-							var seedN = elm$random$Random$next(seed);
-							if (_Utils_cmp(x, threshhold) < 0) {
-								var $temp$seed = seedN;
-								seed = $temp$seed;
-								continue accountForBias;
-							} else {
-								return _Utils_Tuple2((x % range) + lo, seedN);
-							}
-						}
-					};
-					return accountForBias(seed0);
-				}
-			});
-	});
-var elm$random$Random$map3 = F4(
-	function (func, _n0, _n1, _n2) {
-		var genA = _n0.a;
-		var genB = _n1.a;
-		var genC = _n2.a;
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n3 = genA(seed0);
-				var a = _n3.a;
-				var seed1 = _n3.b;
-				var _n4 = genB(seed1);
-				var b = _n4.a;
-				var seed2 = _n4.b;
-				var _n5 = genC(seed2);
-				var c = _n5.a;
-				var seed3 = _n5.b;
-				return _Utils_Tuple2(
-					A3(func, a, b, c),
-					seed3);
-			});
-	});
-var author$project$Subunkai$update = F2(
-	function (msg, model) {
-		var mhenkan = F3(
-			function (i1, i2, k1) {
-				return {pattern: k1, sa: i1, sb: i2};
-			});
-		var monGenerator = A4(
-			elm$random$Random$map3,
-			mhenkan,
-			A2(elm$random$Random$int, 11, 199),
-			A2(elm$random$Random$int, 2, 99),
-			A2(elm$random$Random$int, 1, 3));
-		switch (msg.$) {
-			case 'Next':
-				return _Utils_Tuple2(
-					model,
-					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
-			case 'Newmon':
-				var mnd = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{inLD: '', inLU: '', inRD: '', inRU: '', mondai: mnd}),
-					elm$core$Platform$Cmd$none);
-			case 'Btn':
-				var si = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							ans: elm$core$String$fromInt(si)
-						}),
-					elm$core$Platform$Cmd$none);
-			default:
-				var snum = msg.a;
-				var lmr = msg.b;
-				var lrud = function () {
-					switch (lmr) {
-						case 'LU':
-							return {ld: model.inLD, lu: snum, rd: model.inRD, ru: model.inRU};
-						case 'RU':
-							return {ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: snum};
-						case 'LD':
-							return {ld: snum, lu: model.inLU, rd: model.inRD, ru: model.inRU};
-						case 'RD':
-							return {ld: model.inLD, lu: model.inLU, rd: snum, ru: model.inRU};
-						default:
-							return {ld: '', lu: '', rd: '', ru: ''};
-					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
-					elm$core$Platform$Cmd$none);
-		}
-	});
-var author$project$Subunkai$Btn = function (a) {
-	return {$: 'Btn', a: a};
-};
-var author$project$Subunkai$Next = {$: 'Next'};
-var author$project$Subunkai$buttoncaption = function (ii) {
-	switch (ii) {
-		case 10:
-			return '.';
-		case 11:
-			return 'C';
-		default:
-			return elm$core$String$fromInt(ii);
-	}
-};
-var author$project$Subunkai$ChangeS = F2(
-	function (a, b) {
-		return {$: 'ChangeS', a: a, b: b};
-	});
-var author$project$Subunkai$handlerLD = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'LD');
-};
-var author$project$Subunkai$handlerLU = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'LU');
-};
-var author$project$Subunkai$handlerRD = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'RD');
-};
-var author$project$Subunkai$handlerRU = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'RU');
-};
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$json$Json$Decode$map2 = _Json_map2;
-var elm$json$Json$Decode$succeed = _Json_succeed;
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
+var cuducos$elm_format_number$FormatNumber$Parser$Negative = {$: 'Negative'};
+var cuducos$elm_format_number$FormatNumber$Parser$Positive = {$: 'Positive'};
+var cuducos$elm_format_number$FormatNumber$Parser$Zero = {$: 'Zero'};
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5249,61 +5003,6 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$json$Json$Decode$string = _Json_decodeString;
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var author$project$Subunkai$onChange = function (handler) {
-	return A2(
-		elm$html$Html$Events$on,
-		'change',
-		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
-};
-var cuducos$elm_format_number$FormatNumber$Locales$Max = function (a) {
-	return {$: 'Max', a: a};
-};
-var cuducos$elm_format_number$FormatNumber$Locales$Exact = function (a) {
-	return {$: 'Exact', a: a};
-};
-var cuducos$elm_format_number$FormatNumber$Locales$Min = function (a) {
-	return {$: 'Min', a: a};
-};
-var cuducos$elm_format_number$FormatNumber$Locales$base = {
-	decimalSeparator: '.',
-	decimals: cuducos$elm_format_number$FormatNumber$Locales$Min(0),
-	negativePrefix: '−',
-	negativeSuffix: '',
-	positivePrefix: '',
-	positiveSuffix: '',
-	thousandSeparator: '',
-	zeroPrefix: '',
-	zeroSuffix: ''
-};
-var cuducos$elm_format_number$FormatNumber$Locales$usLocale = _Utils_update(
-	cuducos$elm_format_number$FormatNumber$Locales$base,
-	{
-		decimals: cuducos$elm_format_number$FormatNumber$Locales$Exact(2),
-		thousandSeparator: ','
-	});
-var author$project$Subunkai$sharesLocale = _Utils_update(
-	cuducos$elm_format_number$FormatNumber$Locales$usLocale,
-	{
-		decimals: cuducos$elm_format_number$FormatNumber$Locales$Max(4)
-	});
-var cuducos$elm_format_number$FormatNumber$Parser$FormattedNumber = F5(
-	function (original, integers, decimals, prefix, suffix) {
-		return {decimals: decimals, integers: integers, original: original, prefix: prefix, suffix: suffix};
-	});
-var cuducos$elm_format_number$FormatNumber$Parser$Negative = {$: 'Negative'};
-var cuducos$elm_format_number$FormatNumber$Parser$Positive = {$: 'Positive'};
-var cuducos$elm_format_number$FormatNumber$Parser$Zero = {$: 'Zero'};
 var elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -5334,10 +5033,14 @@ var cuducos$elm_format_number$FormatNumber$Parser$classify = function (formatted
 				elm$core$List$singleton(formatted.decimals))));
 	return onlyZeros ? cuducos$elm_format_number$FormatNumber$Parser$Zero : ((formatted.original < 0) ? cuducos$elm_format_number$FormatNumber$Parser$Negative : cuducos$elm_format_number$FormatNumber$Parser$Positive);
 };
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var elm$core$Basics$abs = function (n) {
 	return (n < 0) ? (-n) : n;
 };
 var elm$core$String$length = _String_length;
+var elm$core$Bitwise$and = _Bitwise_and;
 var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
 var elm$core$String$repeatHelp = F3(
 	function (n, chunk, result) {
@@ -5785,6 +5488,383 @@ var author$project$Subunkai$tenmjo2 = F2(
 	function (ii, jj) {
 		return A2(cuducos$elm_format_number$FormatNumber$format, author$project$Subunkai$sharesLocale, ((ii * 0.1) * jj) * 0.1);
 	});
+var elm$core$String$toFloat = _String_toFloat;
+var author$project$Subunkai$tofloat = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toFloat(st));
+};
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var elm$core$Task$andThen = _Scheduler_andThen;
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var elm$random$Random$next = function (_n0) {
+	var state0 = _n0.a;
+	var incr = _n0.b;
+	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var elm$random$Random$initialSeed = function (x) {
+	var _n0 = elm$random$Random$next(
+		A2(elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _n0.a;
+	var incr = _n0.b;
+	var state2 = (state1 + x) >>> 0;
+	return elm$random$Random$next(
+		A2(elm$random$Random$Seed, state2, incr));
+};
+var elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var elm$time$Time$customZone = elm$time$Time$Zone;
+var elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var elm$time$Time$millisToPosix = elm$time$Time$Posix;
+var elm$time$Time$now = _Time_now(elm$time$Time$millisToPosix);
+var elm$time$Time$posixToMillis = function (_n0) {
+	var millis = _n0.a;
+	return millis;
+};
+var elm$random$Random$init = A2(
+	elm$core$Task$andThen,
+	function (time) {
+		return elm$core$Task$succeed(
+			elm$random$Random$initialSeed(
+				elm$time$Time$posixToMillis(time)));
+	},
+	elm$time$Time$now);
+var elm$core$Platform$sendToApp = _Platform_sendToApp;
+var elm$random$Random$step = F2(
+	function (_n0, seed) {
+		var generator = _n0.a;
+		return generator(seed);
+	});
+var elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _n1 = A2(elm$random$Random$step, generator, seed);
+			var value = _n1.a;
+			var newSeed = _n1.b;
+			return A2(
+				elm$core$Task$andThen,
+				function (_n2) {
+					return A3(elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2(elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var elm$random$Random$onSelfMsg = F3(
+	function (_n0, _n1, seed) {
+		return elm$core$Task$succeed(seed);
+	});
+var elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var elm$random$Random$map = F2(
+	function (func, _n0) {
+		var genA = _n0.a;
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n1 = genA(seed0);
+				var a = _n1.a;
+				var seed1 = _n1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var elm$random$Random$cmdMap = F2(
+	function (func, _n0) {
+		var generator = _n0.a;
+		return elm$random$Random$Generate(
+			A2(elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager(elm$random$Random$init, elm$random$Random$onEffects, elm$random$Random$onSelfMsg, elm$random$Random$cmdMap);
+var elm$random$Random$command = _Platform_leaf('Random');
+var elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return elm$random$Random$command(
+			elm$random$Random$Generate(
+				A2(elm$random$Random$map, tagger, generator)));
+	});
+var elm$core$Bitwise$xor = _Bitwise_xor;
+var elm$random$Random$peel = function (_n0) {
+	var state = _n0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var elm$random$Random$int = F2(
+	function (a, b) {
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _n0.a;
+				var hi = _n0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
+						elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = elm$random$Random$peel(seed);
+							var seedN = elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
+	});
+var elm$random$Random$map3 = F4(
+	function (func, _n0, _n1, _n2) {
+		var genA = _n0.a;
+		var genB = _n1.a;
+		var genC = _n2.a;
+		return elm$random$Random$Generator(
+			function (seed0) {
+				var _n3 = genA(seed0);
+				var a = _n3.a;
+				var seed1 = _n3.b;
+				var _n4 = genB(seed1);
+				var b = _n4.a;
+				var seed2 = _n4.b;
+				var _n5 = genC(seed2);
+				var c = _n5.a;
+				var seed3 = _n5.b;
+				return _Utils_Tuple2(
+					A3(func, a, b, c),
+					seed3);
+			});
+	});
+var author$project$Subunkai$update = F2(
+	function (msg, model) {
+		var mhenkan = F3(
+			function (i1, i2, k1) {
+				return {pattern: k1, sa: i1, sb: i2};
+			});
+		var monGenerator = A4(
+			elm$random$Random$map3,
+			mhenkan,
+			A2(elm$random$Random$int, 11, 199),
+			A2(elm$random$Random$int, 2, 99),
+			A2(elm$random$Random$int, 1, 3));
+		switch (msg.$) {
+			case 'Next':
+				return _Utils_Tuple2(
+					model,
+					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
+			case 'Newmon':
+				var mnd = msg.a;
+				var lt = author$project$Subunkai$tofloat(
+					author$project$Subunkai$tenmjo(mnd.sb));
+				var km1 = author$project$Subunkai$tofloat(
+					author$project$Subunkai$tenmjo(mnd.sa));
+				var km = author$project$Subunkai$tofloat(
+					A2(author$project$Subunkai$tenmjo2, mnd.sa, mnd.sb));
+				var _n1 = function () {
+					var _n2 = mnd.pattern;
+					switch (_n2) {
+						case 1:
+							return _Utils_Tuple2(
+								(_Utils_cmp(km1, km) < 0) ? {
+									ld: '1',
+									lu: elm$core$String$fromFloat(km1),
+									rd: elm$core$String$fromFloat(lt),
+									ru: elm$core$String$fromFloat(km)
+								} : {
+									ld: elm$core$String$fromFloat(lt),
+									lu: elm$core$String$fromFloat(km),
+									rd: '1',
+									ru: elm$core$String$fromFloat(km1)
+								},
+								elm$core$String$fromFloat(lt));
+						case 2:
+							return _Utils_Tuple2(
+								(1.0 < lt) ? {
+									ld: '1',
+									lu: elm$core$String$fromFloat(km1),
+									rd: elm$core$String$fromFloat(lt),
+									ru: elm$core$String$fromFloat(km)
+								} : {
+									ld: elm$core$String$fromFloat(lt),
+									lu: elm$core$String$fromFloat(km),
+									rd: '1',
+									ru: elm$core$String$fromFloat(km1)
+								},
+								elm$core$String$fromFloat(km1));
+						case 3:
+							return _Utils_Tuple2(
+								(1.0 < lt) ? {
+									ld: '1',
+									lu: elm$core$String$fromFloat(km1),
+									rd: elm$core$String$fromFloat(lt),
+									ru: elm$core$String$fromFloat(km)
+								} : {
+									ld: elm$core$String$fromFloat(lt),
+									lu: elm$core$String$fromFloat(km),
+									rd: '1',
+									ru: elm$core$String$fromFloat(km1)
+								},
+								elm$core$String$fromFloat(km));
+						default:
+							return _Utils_Tuple2(
+								{ld: '', lu: '', rd: '1', ru: ''},
+								'');
+					}
+				}();
+				var ansm = _n1.a;
+				var ansx = _n1.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ans: ansx, ansLD: ansm.ld, ansLU: ansm.lu, ansRD: ansm.rd, ansRU: ansm.ru, dispAns: false, inLD: '', inLU: '', inRD: '', inRU: '', mondai: mnd}),
+					elm$core$Platform$Cmd$none);
+			case 'Btn':
+				var si = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							ans: elm$core$String$fromInt(si)
+						}),
+					elm$core$Platform$Cmd$none);
+			default:
+				var snum = msg.a;
+				var lmr = msg.b;
+				var lrud = function () {
+					switch (lmr) {
+						case 'LU':
+							return {ld: model.inLD, lu: snum, rd: model.inRD, ru: model.inRU};
+						case 'RU':
+							return {ld: model.inLD, lu: model.inLU, rd: model.inRD, ru: snum};
+						case 'LD':
+							return {ld: snum, lu: model.inLU, rd: model.inRD, ru: model.inRU};
+						case 'RD':
+							return {ld: model.inLD, lu: model.inLU, rd: snum, ru: model.inRU};
+						default:
+							return {ld: '', lu: '', rd: '', ru: ''};
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
+					elm$core$Platform$Cmd$none);
+		}
+	});
+var author$project$Subunkai$Btn = function (a) {
+	return {$: 'Btn', a: a};
+};
+var author$project$Subunkai$Next = {$: 'Next'};
+var author$project$Subunkai$buttoncaption = function (ii) {
+	switch (ii) {
+		case 10:
+			return '.';
+		case 11:
+			return 'C';
+		default:
+			return elm$core$String$fromInt(ii);
+	}
+};
+var author$project$Subunkai$ChangeS = F2(
+	function (a, b) {
+		return {$: 'ChangeS', a: a, b: b};
+	});
+var author$project$Subunkai$handlerA = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'A');
+};
+var author$project$Subunkai$handlerB = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'B');
+};
+var author$project$Subunkai$handlerEz = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'Ez');
+};
+var author$project$Subunkai$handlerLD = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'LD');
+};
+var author$project$Subunkai$handlerLU = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'LU');
+};
+var author$project$Subunkai$handlerRD = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'RD');
+};
+var author$project$Subunkai$handlerRU = function (selectedText) {
+	return A2(author$project$Subunkai$ChangeS, selectedText, 'RU');
+};
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$map2 = _Json_map2;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$json$Json$Decode$string = _Json_decodeString;
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var author$project$Subunkai$onChange = function (handler) {
+	return A2(
+		elm$html$Html$Events$on,
+		'change',
+		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
+};
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5802,6 +5882,7 @@ var elm$core$List$map = F2(
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -6269,13 +6350,27 @@ var author$project$Subunkai$view = function (model) {
 				_List_fromArray(
 					[cbx]));
 		});
+	var eans = A3(
+		dcbx,
+		350,
+		300,
+		A2(
+			elm$html$Html$span,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('=' + model.ans)
+				])));
 	var cboxlu = F2(
 		function (inLRUD, handler) {
 			return A2(
 				elm$html$Html$select,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
 						author$project$Subunkai$onChange(handler)
 					]),
 				A2(
@@ -6306,6 +6401,39 @@ var author$project$Subunkai$view = function (model) {
 		300 + dvx,
 		100 + dvy,
 		A2(cboxlu, model.inRU, author$project$Subunkai$handlerRU));
+	var cboxez = F2(
+		function (inLRUD, handler) {
+			return A2(
+				elm$html$Html$select,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+						author$project$Subunkai$onChange(handler)
+					]),
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$option,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$selected(
+									_Utils_eq(s, inLRUD)),
+									elm$html$Html$Attributes$value(s)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(s)
+								]));
+					},
+					_List_fromArray(
+						['?', '×', '÷'])));
+		});
+	var cbz = A3(
+		dcbx,
+		200,
+		300,
+		A2(cboxez, model.inEz, author$project$Subunkai$handlerEz));
 	var cblu = A3(
 		dcbx,
 		100 + dvx,
@@ -6316,6 +6444,16 @@ var author$project$Subunkai$view = function (model) {
 		100 + dvx,
 		180 + dvy,
 		A2(cboxlu, model.inLD, author$project$Subunkai$handlerLD));
+	var cbb = A3(
+		dcbx,
+		250,
+		300,
+		A2(cboxlu, model.inB, author$project$Subunkai$handlerB));
+	var cba = A3(
+		dcbx,
+		90,
+		300,
+		A2(cboxlu, model.inA, author$project$Subunkai$handlerA));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -6344,7 +6482,7 @@ var author$project$Subunkai$view = function (model) {
 										case 1:
 											return '1Lのガソリンで' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('km走る自動車があります。' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走るためには何L使いますか?')));
 										case 2:
-											return author$project$Subunkai$tenmjo(model.mondai.sa) + ('Lのガソリンで' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走る自動車があります。1Lのガソリンで何km走りますか?'));
+											return author$project$Subunkai$tenmjo(model.mondai.sb) + ('Lのガソリンで' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走る自動車があります。1Lのガソリンで何km走りますか?'));
 										case 3:
 											return '1Lのガソリンで' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('km走る自動車があります。' + (author$project$Subunkai$tenmjo(model.mondai.sb) + 'Lでは何km走れますか?')));
 										default:
@@ -6366,7 +6504,18 @@ var author$project$Subunkai$view = function (model) {
 								A2(elm$html$Html$Attributes$style, 'padding', '3em')
 							]),
 						_List_fromArray(
-							[linex, cblu, cbru, cbld, cbrd])),
+							[
+								linex,
+								cblu,
+								cbru,
+								cbld,
+								cbrd,
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[cba, cbz, cbb, eans]))
+							])),
 						A2(
 						elm$html$Html$td,
 						_List_Nil,
@@ -6386,8 +6535,7 @@ var author$project$Subunkai$view = function (model) {
 								_List_fromArray(
 									[
 										elm$html$Html$text('つぎへ')
-									])),
-								sujibutton
+									]))
 							]))
 					]))
 			]));
