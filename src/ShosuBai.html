@@ -4403,6 +4403,7 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$Subunkai$Rd = {$: 'Rd'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4883,11 +4884,12 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
-			ans: '',
-			ansLD: '',
-			ansLU: '',
-			ansRD: '',
-			ansRU: '',
+			ans: '2.2',
+			ansLD: '1',
+			ansLRUD: author$project$Subunkai$Rd,
+			ansLU: '1.1',
+			ansRD: '2.0',
+			ansRU: '2.42',
 			dispAns: false,
 			dispSiki: false,
 			inA: '',
@@ -4898,7 +4900,8 @@ var author$project$Subunkai$init = function (_n0) {
 			inRD: '',
 			inRU: '',
 			init: '3',
-			mondai: {pattern: 1, sa: 10, sb: 2}
+			ludIchi: 150,
+			mondai: {pattern: 1, sa: 11, sb: 22}
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -4907,9 +4910,12 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Subunkai$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var author$project$Subunkai$Ld = {$: 'Ld'};
+var author$project$Subunkai$Lu = {$: 'Lu'};
 var author$project$Subunkai$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
+var author$project$Subunkai$Ru = {$: 'Ru'};
 var cuducos$elm_format_number$FormatNumber$Locales$Max = function (a) {
 	return {$: 'Max', a: a};
 };
@@ -5495,6 +5501,7 @@ var author$project$Subunkai$tofloat = function (st) {
 		0,
 		elm$core$String$toFloat(st));
 };
+var elm$core$Basics$round = _Basics_round;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5692,6 +5699,7 @@ var author$project$Subunkai$update = F2(
 					author$project$Subunkai$tenmjo(mnd.sa));
 				var km = author$project$Subunkai$tofloat(
 					A2(author$project$Subunkai$tenmjo2, mnd.sa, mnd.sb));
+				var lichi = (_Utils_cmp(km1, km) < 0) ? (1 / lt) : lt;
 				var _n1 = function () {
 					var _n2 = mnd.pattern;
 					switch (_n2) {
@@ -5699,11 +5707,13 @@ var author$project$Subunkai$update = F2(
 							return _Utils_Tuple2(
 								(_Utils_cmp(km1, km) < 0) ? {
 									ld: '1',
+									lrud: author$project$Subunkai$Rd,
 									lu: elm$core$String$fromFloat(km1),
 									rd: elm$core$String$fromFloat(lt),
 									ru: elm$core$String$fromFloat(km)
 								} : {
 									ld: elm$core$String$fromFloat(lt),
+									lrud: author$project$Subunkai$Ld,
 									lu: elm$core$String$fromFloat(km),
 									rd: '1',
 									ru: elm$core$String$fromFloat(km1)
@@ -5713,11 +5723,13 @@ var author$project$Subunkai$update = F2(
 							return _Utils_Tuple2(
 								(1.0 < lt) ? {
 									ld: '1',
+									lrud: author$project$Subunkai$Lu,
 									lu: elm$core$String$fromFloat(km1),
 									rd: elm$core$String$fromFloat(lt),
 									ru: elm$core$String$fromFloat(km)
 								} : {
 									ld: elm$core$String$fromFloat(lt),
+									lrud: author$project$Subunkai$Ru,
 									lu: elm$core$String$fromFloat(km),
 									rd: '1',
 									ru: elm$core$String$fromFloat(km1)
@@ -5727,11 +5739,13 @@ var author$project$Subunkai$update = F2(
 							return _Utils_Tuple2(
 								(1.0 < lt) ? {
 									ld: '1',
+									lrud: author$project$Subunkai$Ru,
 									lu: elm$core$String$fromFloat(km1),
 									rd: elm$core$String$fromFloat(lt),
 									ru: elm$core$String$fromFloat(km)
 								} : {
 									ld: elm$core$String$fromFloat(lt),
+									lrud: author$project$Subunkai$Lu,
 									lu: elm$core$String$fromFloat(km),
 									rd: '1',
 									ru: elm$core$String$fromFloat(km1)
@@ -5739,7 +5753,7 @@ var author$project$Subunkai$update = F2(
 								elm$core$String$fromFloat(km));
 						default:
 							return _Utils_Tuple2(
-								{ld: '', lu: '', rd: '1', ru: ''},
+								{ld: '', lrud: author$project$Subunkai$Lu, lu: '', rd: '1', ru: ''},
 								'');
 					}
 				}();
@@ -5748,8 +5762,25 @@ var author$project$Subunkai$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{ans: ansx, ansLD: ansm.ld, ansLU: ansm.lu, ansRD: ansm.rd, ansRU: ansm.ru, dispAns: false, inA: '', inB: '', inEz: '', inLD: '', inLU: '', inRD: '', inRU: '', mondai: mnd}),
-					elm$core$Platform$Cmd$none);
+						{
+							ans: ansx,
+							ansLD: ansm.ld,
+							ansLRUD: ansm.lrud,
+							ansLU: ansm.lu,
+							ansRD: ansm.rd,
+							ansRU: ansm.ru,
+							dispAns: false,
+							inA: '',
+							inB: '',
+							inEz: '',
+							inLD: '',
+							inLU: '',
+							inRD: '',
+							inRU: '',
+							ludIchi: elm$core$Basics$round(300.0 * lichi),
+							mondai: mnd
+						}),
+					((lt > 0.5) && (lt < 2.0)) ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				return _Utils_Tuple2(
@@ -6335,8 +6366,8 @@ var author$project$Subunkai$view = function (model) {
 					]))
 			]));
 	var sList = function () {
-		var _n1 = model.mondai.pattern;
-		switch (_n1) {
+		var _n2 = model.mondai.pattern;
+		switch (_n2) {
 			case 1:
 				return _List_fromArray(
 					[
@@ -6366,6 +6397,17 @@ var author$project$Subunkai$view = function (model) {
 					['?', '', '']);
 		}
 	}();
+	var maruspan = A2(
+		elm$html$Html$span,
+		_List_fromArray(
+			[
+				A2(elm$html$Html$Attributes$style, 'color', 'red'),
+				A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+			]),
+		_List_fromArray(
+			[
+				elm$html$Html$text('〇')
+			]));
 	var linex = A2(
 		elm$svg$Svg$svg,
 		_List_fromArray(
@@ -6378,15 +6420,26 @@ var author$project$Subunkai$view = function (model) {
 			[
 				A5(sline, 20, 120, 400, 120, 3),
 				A5(sline, 20, 150, 400, 150, 3),
-				A5(sline, 100, 115, 100, 125, 2),
+				A5(sline, model.ludIchi, 115, model.ludIchi, 125, 2),
 				A5(sline, 300, 115, 300, 125, 2),
-				A5(sline, 100, 145, 100, 155, 2),
+				A5(sline, model.ludIchi, 145, model.ludIchi, 155, 2),
 				A5(sline, 300, 145, 300, 155, 2),
 				A5(sline, 20, 115, 20, 155, 1),
 				A3(stext, 15, 110, '0'),
 				A3(stext, 15, 170, '0'),
 				A3(stext, 400, 110, '(km)'),
 				A3(stext, 400, 170, '(L)')
+			]));
+	var greenans = A2(
+		elm$html$Html$span,
+		_List_fromArray(
+			[
+				A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+				A2(elm$html$Html$Attributes$style, 'color', 'green')
+			]),
+		_List_fromArray(
+			[
+				elm$html$Html$text(model.ans)
 			]));
 	var dvy = 30;
 	var dvx = 30;
@@ -6411,7 +6464,7 @@ var author$project$Subunkai$view = function (model) {
 		});
 	var eans = A3(
 		dcbx,
-		350,
+		380,
 		300,
 		A2(
 			elm$html$Html$span,
@@ -6421,8 +6474,37 @@ var author$project$Subunkai$view = function (model) {
 				]),
 			_List_fromArray(
 				[
-					elm$html$Html$text('=' + model.ans)
+					elm$html$Html$text('='),
+					A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'color', 'green')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(model.ans)
+						]))
 				])));
+	var maru = A3(
+		dcbx,
+		350,
+		300,
+		A2(
+			elm$html$Html$span,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'color', 'red'),
+					A2(elm$html$Html$Attributes$style, 'font-size', '100px')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('〇')
+				])));
+	var maruld = _Utils_eq(model.inLD, model.ansLD) ? A3(dcbx, 100 + dvx, 170 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var marulu = _Utils_eq(model.inLU, model.ansLU) ? A3(dcbx, 100 + dvx, 90 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var marurd = _Utils_eq(model.inRD, model.ansRD) ? A3(dcbx, 300 + dvx, 170 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var maruru = _Utils_eq(model.inRU, model.ansRU) ? A3(dcbx, 300 + dvx, 90 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
 	var cboxlu = F2(
 		function (inLRUD, handler) {
 			return A2(
@@ -6458,7 +6540,7 @@ var author$project$Subunkai$view = function (model) {
 	var cbru = A3(
 		dcbx,
 		300 + dvx,
-		100 + dvy,
+		90 + dvy,
 		A2(cboxlu, model.inRU, author$project$Subunkai$handlerRU));
 	var cboxez = F2(
 		function (inLRUD, handler) {
@@ -6496,7 +6578,7 @@ var author$project$Subunkai$view = function (model) {
 	var cblu = A3(
 		dcbx,
 		100 + dvx,
-		100 + dvy,
+		90 + dvy,
 		A2(cboxlu, model.inLU, author$project$Subunkai$handlerLU));
 	var cbld = A3(
 		dcbx,
@@ -6505,7 +6587,7 @@ var author$project$Subunkai$view = function (model) {
 		A2(cboxlu, model.inLD, author$project$Subunkai$handlerLD));
 	var cbb = A3(
 		dcbx,
-		250,
+		270,
 		300,
 		A2(cboxlu, model.inB, author$project$Subunkai$handlerB));
 	var cba = A3(
@@ -6513,6 +6595,19 @@ var author$project$Subunkai$view = function (model) {
 		90,
 		300,
 		A2(cboxlu, model.inA, author$project$Subunkai$handlerA));
+	var cans = function () {
+		var _n1 = model.ansLRUD;
+		switch (_n1.$) {
+			case 'Lu':
+				return A3(dcbx, 100 + dvx, 90 + dvy, greenans);
+			case 'Ru':
+				return A3(dcbx, 300 + dvx, 90 + dvy, greenans);
+			case 'Ld':
+				return A3(dcbx, 100 + dvx, 180 + dvy, greenans);
+			default:
+				return A3(dcbx, 300 + dvx, 180 + dvy, greenans);
+		}
+	}();
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -6567,10 +6662,45 @@ var author$project$Subunkai$view = function (model) {
 						_List_fromArray(
 							[
 								linex,
-								cblu,
-								cbru,
-								cbld,
-								cbrd,
+								(model.dispAns && _Utils_eq(model.ansLRUD, author$project$Subunkai$Lu)) ? A2(
+								elm$html$Html$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('')
+									])) : cblu,
+								(model.dispAns && _Utils_eq(model.ansLRUD, author$project$Subunkai$Ru)) ? A2(
+								elm$html$Html$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('')
+									])) : cbru,
+								(model.dispAns && _Utils_eq(model.ansLRUD, author$project$Subunkai$Ld)) ? A2(
+								elm$html$Html$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('')
+									])) : cbld,
+								(model.dispAns && _Utils_eq(model.ansLRUD, author$project$Subunkai$Rd)) ? A2(
+								elm$html$Html$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('')
+									])) : cbrd,
+								model.dispAns ? cans : A2(
+								elm$html$Html$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('')
+									])),
+								marulu,
+								maruru,
+								maruld,
+								marurd,
 								A2(
 								elm$html$Html$div,
 								_List_Nil,
@@ -6580,6 +6710,19 @@ var author$project$Subunkai$view = function (model) {
 										cbz,
 										cbb,
 										model.dispAns ? eans : A2(
+										elm$html$Html$span,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('')
+											]))
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										model.dispAns ? maru : A2(
 										elm$html$Html$span,
 										_List_Nil,
 										_List_fromArray(

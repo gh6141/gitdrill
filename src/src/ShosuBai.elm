@@ -37,6 +37,8 @@ type alias Mondai =
      ,pattern:Int
  }
 
+type Lrud = Lu | Ru | Ld | Rd
+
 type alias Model =
   { 
     init:String
@@ -55,13 +57,15 @@ type alias Model =
     ,inEz:String
     ,inB:String
     ,dispAns:Bool
+    ,ansLRUD:Lrud
+    ,ludIchi:Int
      
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {init="3",mondai={sa=10,sb=2,pattern=1},ans="",ansLU="",ansRU="",ansLD="",ansRD=""
-    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False}
+  ( {init="3",mondai={sa=11,sb=22,pattern=1},ans="2.2",ansLU="1.1",ansRU="2.42",ansLD="1",ansRD="2.0"
+    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False,ansLRUD=Rd,ludIchi=150}
   , Cmd.none
   )
 
@@ -100,32 +104,36 @@ update msg model =
            (ansm,ansx)=
             case mnd.pattern of
              1 -> (if km1<km then
-                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt)}
+                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt),lrud=Rd}
                   else
-                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1"}
+                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1",lrud=Ld}
                  , String.fromFloat lt)
 
              2 -> (if 1.0<lt then
-                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt)}
+                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt),lrud=Lu}
                   else
-                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1"}
+                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1",lrud=Ru}
                    , String.fromFloat km1)
              3 -> (if 1.0<lt then
-                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt)}
+                   {lu=(String.fromFloat km1),ru=(String.fromFloat km),ld="1",rd=(String.fromFloat lt),lrud=Ru}
                    else
-                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1"}
+                   {lu=(String.fromFloat km),ru=(String.fromFloat km1),ld=(String.fromFloat lt),rd="1",lrud=Lu}
                    , String.fromFloat km )
-             _ -> ( {lu="",ru="",ld="",rd="1"}, "")
+             _ -> ( {lu="",ru="",ld="",rd="1",lrud=Lu}, "")
 
-   
+           lichi= if km1<km then 1/lt  else lt
 
 
      in
    
       ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU="",inA="",inB="",inEz=""
       ,ansLU=ansm.lu  ,ansRU=ansm.ru   ,ansLD=ansm.ld   ,ansRD=ansm.rd
-      ,dispAns=False ,ans=ansx
-      }    ,Cmd.none)
+      ,dispAns=False ,ans=ansx ,ansLRUD=ansm.lrud,ludIchi=(round (300.0*lichi))
+      }    ,
+       if lt>0.5 && lt<2.0 then --LRUDの位置が近づきすぎないように
+         Random.generate Newmon monGenerator
+       else
+         Cmd.none)
   
    Btn si ->
 
@@ -185,16 +193,30 @@ view model =
         dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
         dvx=30
         dvy=30
-        cblu=dcbx (100+dvx) (100+dvy) (cboxlu model.inLU handlerLU)
-        cbru=dcbx (300+dvx) (100+dvy) (cboxlu model.inRU handlerRU)
+        maruspan=(span [style "color" "red",style "font-size" "30px"] [text "〇"])
+        cblu=dcbx (100+dvx) (90+dvy) (cboxlu model.inLU handlerLU)
+        marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (90+dvy) maruspan) else (span [] [])
+        cbru=dcbx (300+dvx) (90+dvy) (cboxlu model.inRU handlerRU)
+        maruru=if model.inRU==model.ansRU then (dcbx (300+dvx) (90+dvy) maruspan) else (span [] [])
         cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD handlerLD)
+        maruld=if model.inLD==model.ansLD then (dcbx (100+dvx) (170+dvy) maruspan) else (span [] [])
         cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD handlerRD)
+        marurd=if model.inRD==model.ansRD then (dcbx (300+dvx) (170+dvy) maruspan) else (span [] [])
+
+        greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
+
+        cans=case model.ansLRUD of
+         Lu -> dcbx (100+dvx) (90+dvy) greenans
+         Ru -> dcbx (300+dvx) (90+dvy) greenans
+         Ld -> dcbx (100+dvx) (180+dvy) greenans
+         Rd -> dcbx (300+dvx) (180+dvy) greenans
+
 
         cba=dcbx (90)  (300)  (cboxlu model.inA handlerA)
         cbz=dcbx (200)  (300)  (cboxez model.inEz handlerEz)
-        cbb=dcbx (250)  (300)  (cboxlu model.inB handlerB)
-        eans=dcbx 350 300 (span [Html.Attributes.style "font-size" "30px"] [text ("="++model.ans)])
-
+        cbb=dcbx (270)  (300)  (cboxlu model.inB handlerB)
+        eans=dcbx 380 300 (span [Html.Attributes.style "font-size" "30px"] [text "=",span [style "color" "green"] [text model.ans]])
+        maru=dcbx 350 300 (span [style "color" "red",style "font-size" "100px"] [text "〇"])
          
 
         sbutton : Int -> Html Msg
@@ -234,9 +256,9 @@ view model =
               sline 20 120 400 120 3 
               ,sline 20 150 400 150 3 
 
-              ,sline 100 115 100 125 2 
+              ,sline model.ludIchi 115 model.ludIchi 125 2 
               ,sline 300 115 300 125 2
-              ,sline 100 145 100 155 2 
+              ,sline model.ludIchi 145 model.ludIchi 155 2 
               ,sline 300 145 300 155 2 
 
               ,sline 20 115 20 155 1 
@@ -283,11 +305,18 @@ view model =
     [
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
        linex
-       ,cblu,cbru,cbld,cbrd
-       ,div [] [cba,cbz,cbb,if model.dispAns then eans else (span [] [text ""])]
+       ,if model.dispAns&&model.ansLRUD==Lu then  (span [] [text ""])  else cblu
+       ,if model.dispAns&&model.ansLRUD==Ru then  (span [] [text ""])  else cbru
+       ,if model.dispAns&&model.ansLRUD==Ld then  (span [] [text ""])  else cbld
+       ,if model.dispAns&&model.ansLRUD==Rd then  (span [] [text ""])  else cbrd
+       ,if model.dispAns then cans else (span [] [text ""]) 
+       ,marulu,maruru,maruld,marurd
+       ,div [] [cba,cbz,cbb,if model.dispAns then eans else (span [] [text ""]) ]
+       ,div [] [if model.dispAns then maru else (span [] [text ""])]
       ]   
      ,td [] [
        Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ]
+       
      -- ,sujibutton       
       ]
     ]
