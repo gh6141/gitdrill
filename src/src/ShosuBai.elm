@@ -38,6 +38,7 @@ type alias Mondai =
  }
 
 type Lrud = Lu | Ru | Ld | Rd
+type Motome = K | L | AK | M
 
 type alias Model =
   { 
@@ -60,17 +61,18 @@ type alias Model =
     ,ansLRUD:Lrud
     ,ludIchi:Int
     ,ichiikaflg:Bool
+    ,motome:Motome
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mondai={sa=11,sb=22,pattern=1},ans="2.2",ansLU="1.1",ansRU="2.42",ansLD="1",ansRD="2.0"
-    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False,ansLRUD=Rd,ludIchi=150,ichiikaflg=True}
+    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False,ansLRUD=Rd,ludIchi=150,ichiikaflg=True,motome=K}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int |ChangeS String String |IchiIka
+    =  Next | Newmon Mondai | Btn Int |ChangeS String String |IchiIka |Kmotome |Lmotome |AKmotome |Matome
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -122,7 +124,12 @@ update msg model =
              _ -> ( {lu="",ru="",ld="",rd="1",lrud=Lu}, "")
 
            lichi= if km1<km then 1/lt  else lt
-
+           
+           motomeflg= case model.motome of
+             K -> if (mnd.pattern==1 || mnd.pattern==2) then True else False
+             L -> if (mnd.pattern==2 || mnd.pattern==3) then True else False
+             AK -> if (mnd.pattern==1 || mnd.pattern==3) then True else False
+             M -> False
 
      in
    
@@ -130,7 +137,7 @@ update msg model =
       ,ansLU=ansm.lu  ,ansRU=ansm.ru   ,ansLD=ansm.ld   ,ansRD=ansm.rd
       ,dispAns=False ,ans=ansx ,ansLRUD=ansm.lrud,ludIchi=(round (300.0*lichi))
       }    ,
-       if (lt>0.5 && lt<2.0) || (model.ichiikaflg && (km1>km)) then --LRUDの位置が近づきすぎないように
+       if (lt>0.5 && lt<2.0) || (model.ichiikaflg && (km1>km)) || motomeflg then --LRUDの位置が近づきすぎないように
          Random.generate Newmon monGenerator
        else
          Cmd.none)
@@ -162,6 +169,10 @@ update msg model =
       in
        ( {model|inLU=lrud.lu,inLD=lrud.ld ,inRU=lrud.ru ,inRD=lrud.rd,inA=abez.aa,inB=abez.bb,inEz=abez.ez,dispAns=dpAns}, Cmd.none)
    IchiIka ->   ( {model|ichiikaflg=False}, Cmd.none)
+   Kmotome ->  ( {model|motome=K}, Cmd.none)
+   Lmotome -> ( {model|motome=L}, Cmd.none)
+   AKmotome -> ( {model|motome=AK}, Cmd.none)
+   Matome -> ( {model|motome=M}, Cmd.none)
  
 
 
@@ -317,8 +328,16 @@ view model =
       ]
       ,tr [] [td [] []]
       ,tr [] [td [] []]
+      ,tr [] [td [] []]
       , tr [] [
-         td [] [Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick IchiIka]] [ Html.text "1以下の倍率あり" ]
+         td [] [
+           
+             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ Html.text "Stage1(km)" ]
+           ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Lmotome]] [ Html.text "Stage2(L)" ]
+           ,   Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick AKmotome]] [ Html.text "Statge3(Lあたり)" ]          
+           ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Matome]] [ Html.text "Stage4(まとめ)" ]
+           ,Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick IchiIka]] [ Html.text "Stage5(1以下)" ]
+
          ]
        ]
        

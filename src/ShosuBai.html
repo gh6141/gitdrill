@@ -4403,6 +4403,7 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$Subunkai$K = {$: 'K'};
 var author$project$Subunkai$Rd = {$: 'Rd'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
@@ -4902,7 +4903,8 @@ var author$project$Subunkai$init = function (_n0) {
 			inRU: '',
 			init: '3',
 			ludIchi: 150,
-			mondai: {pattern: 1, sa: 11, sb: 22}
+			mondai: {pattern: 1, sa: 11, sb: 22},
+			motome: author$project$Subunkai$K
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -4911,8 +4913,11 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Subunkai$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var author$project$Subunkai$AK = {$: 'AK'};
+var author$project$Subunkai$L = {$: 'L'};
 var author$project$Subunkai$Ld = {$: 'Ld'};
 var author$project$Subunkai$Lu = {$: 'Lu'};
+var author$project$Subunkai$M = {$: 'M'};
 var author$project$Subunkai$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
@@ -5694,6 +5699,19 @@ var author$project$Subunkai$update = F2(
 					A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
+				var motomeflg = function () {
+					var _n3 = model.motome;
+					switch (_n3.$) {
+						case 'K':
+							return ((mnd.pattern === 1) || (mnd.pattern === 2)) ? true : false;
+						case 'L':
+							return ((mnd.pattern === 2) || (mnd.pattern === 3)) ? true : false;
+						case 'AK':
+							return ((mnd.pattern === 1) || (mnd.pattern === 3)) ? true : false;
+						default:
+							return false;
+					}
+				}();
 				var lt = author$project$Subunkai$tofloat(
 					author$project$Subunkai$tenmjo(mnd.sb));
 				var km1 = author$project$Subunkai$tofloat(
@@ -5781,7 +5799,7 @@ var author$project$Subunkai$update = F2(
 							ludIchi: elm$core$Basics$round(300.0 * lichi),
 							mondai: mnd
 						}),
-					(((lt > 0.5) && (lt < 2.0)) || (model.ichiikaflg && (_Utils_cmp(km1, km) > 0))) ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
+					(((lt > 0.5) && (lt < 2.0)) || ((model.ichiikaflg && (_Utils_cmp(km1, km) > 0)) || motomeflg)) ? A2(elm$random$Random$generate, author$project$Subunkai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				return _Utils_Tuple2(
@@ -5794,7 +5812,7 @@ var author$project$Subunkai$update = F2(
 			case 'ChangeS':
 				var snum = msg.a;
 				var lmr = msg.b;
-				var _n3 = function () {
+				var _n4 = function () {
 					switch (lmr) {
 						case 'LU':
 							return _Utils_Tuple2(
@@ -5830,11 +5848,11 @@ var author$project$Subunkai$update = F2(
 								{aa: model.inA, bb: model.inB, ez: model.inEz});
 					}
 				}();
-				var lrud = _n3.a;
-				var abez = _n3.b;
+				var lrud = _n4.a;
+				var abez = _n4.b;
 				var dpAns = function () {
-					var _n5 = model.mondai.pattern;
-					switch (_n5) {
+					var _n6 = model.mondai.pattern;
+					switch (_n6) {
 						case 1:
 							return (abez.ez === '÷') && (_Utils_eq(
 								abez.aa,
@@ -5866,18 +5884,46 @@ var author$project$Subunkai$update = F2(
 						model,
 						{dispAns: dpAns, inA: abez.aa, inB: abez.bb, inEz: abez.ez, inLD: lrud.ld, inLU: lrud.lu, inRD: lrud.rd, inRU: lrud.ru}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'IchiIka':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{ichiikaflg: false}),
 					elm$core$Platform$Cmd$none);
+			case 'Kmotome':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{motome: author$project$Subunkai$K}),
+					elm$core$Platform$Cmd$none);
+			case 'Lmotome':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{motome: author$project$Subunkai$L}),
+					elm$core$Platform$Cmd$none);
+			case 'AKmotome':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{motome: author$project$Subunkai$AK}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{motome: author$project$Subunkai$M}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
+var author$project$Subunkai$AKmotome = {$: 'AKmotome'};
 var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
 var author$project$Subunkai$IchiIka = {$: 'IchiIka'};
+var author$project$Subunkai$Kmotome = {$: 'Kmotome'};
+var author$project$Subunkai$Lmotome = {$: 'Lmotome'};
+var author$project$Subunkai$Matome = {$: 'Matome'};
 var author$project$Subunkai$Next = {$: 'Next'};
 var author$project$Subunkai$buttoncaption = function (ii) {
 	switch (ii) {
@@ -6790,6 +6836,13 @@ var author$project$Subunkai$view = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
+										A2(elm$html$Html$td, _List_Nil, _List_Nil)
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
 										A2(
 										elm$html$Html$td,
 										_List_Nil,
@@ -6803,12 +6856,72 @@ var author$project$Subunkai$view = function (model) {
 														_List_fromArray(
 															[
 																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Kmotome)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Stage1(km)')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Lmotome)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Stage2(L)')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$AKmotome)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Statge3(Lあたり)')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Matome)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Stage4(まとめ)')
+													])),
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
 																elm$html$Html$Events$onClick(author$project$Subunkai$IchiIka)
 															]))
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('1以下の倍率あり')
+														elm$html$Html$text('Stage5(1以下)')
 													]))
 											]))
 									]))
