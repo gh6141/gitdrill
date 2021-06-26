@@ -4404,6 +4404,7 @@ function _Browser_load(url)
 	}));
 }
 var author$project$ShosuWarizanH$Hyojun = {$: 'Hyojun'};
+var author$project$ShosuWarizanH$JidoT = {$: 'JidoT'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4883,7 +4884,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$ShosuWarizanH$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', cicls: 0, cicrs: 0, dispans: false, displ: false, dispm: false, dispr: false, hdisp: true, init: '3', k1: 1, k2: 1, keisiki: author$project$ShosuWarizanH$Hyojun, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', picls: 0, picrs: 0, pointlocation: 0},
+		{ans: '', ans1o: '2', bail: '', baim: '', bair: '', cicls: 0, cicrs: 0, dispans: false, displ: false, dispm: false, dispr: false, hdisp: true, init: '3', k1: 1, k2: 1, keisiki: author$project$ShosuWarizanH$Hyojun, mon1: '2.0', mon1o: '20', mon2: '1.0', mon2o: '10', picls: 0, picrs: 0, pointlocation: 0, shudo: author$project$ShosuWarizanH$JidoT},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4894,6 +4895,8 @@ var author$project$ShosuWarizanH$subscriptions = function (model) {
 var author$project$ShosuWarizanH$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
+var author$project$ShosuWarizanH$WarareruT = {$: 'WarareruT'};
+var author$project$ShosuWarizanH$WaruT = {$: 'WaruT'};
 var author$project$ShosuWarizanH$buttoncaption = function (ii) {
 	switch (ii) {
 		case 10:
@@ -4926,6 +4929,15 @@ var author$project$ShosuWarizanH$canslist = function (sans) {
 	return elm$core$String$toList(
 		author$project$ShosuWarizanH$zkcut(sans));
 };
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -4935,6 +4947,14 @@ var elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
+var elm$core$String$indexes = _String_indexes;
+var author$project$ShosuWarizanH$cic = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$List$head(
+			A2(elm$core$String$indexes, ',', st)));
+};
 var elm$core$String$toFloat = _String_toFloat;
 var author$project$ShosuWarizanH$tofloat = function (st) {
 	return A2(
@@ -4967,6 +4987,13 @@ var author$project$ShosuWarizanH$mojikake = F2(
 		return elm$core$String$fromInt(
 			author$project$ShosuWarizanH$toint(st1) * author$project$ShosuWarizanH$toint(st2));
 	});
+var author$project$ShosuWarizanH$pic = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$List$head(
+			A2(elm$core$String$indexes, '.', st)));
+};
 var elm$core$String$fromFloat = _String_fromNumber;
 var author$project$ShosuWarizanH$waru = F2(
 	function (st, keta) {
@@ -4978,15 +5005,6 @@ var elm$core$Basics$negate = function (n) {
 };
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Basics$not = _Basics_not;
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
 var elm$core$String$contains = _String_contains;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropRight = F2(
@@ -4997,7 +5015,6 @@ var elm$core$String$cons = _String_cons;
 var elm$core$String$fromChar = function (_char) {
 	return A2(elm$core$String$cons, _char, '');
 };
-var elm$core$String$indexes = _String_indexes;
 var elm$core$String$length = _String_length;
 var elm$core$String$right = F2(
 	function (n, string) {
@@ -5207,17 +5224,10 @@ var author$project$ShosuWarizanH$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{bail: '', baim: '', bair: ''}),
+						{bail: '', baim: '', bair: '', shudo: author$project$ShosuWarizanH$JidoT}),
 					A2(elm$random$Random$generate, author$project$ShosuWarizanH$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
-				var pic = function (st) {
-					return A2(
-						elm$core$Maybe$withDefault,
-						0,
-						elm$core$List$head(
-							A2(elm$core$String$indexes, '.', st)));
-				};
 				var mon2x = A2(author$project$ShosuWarizanH$waru, mnd.sb, mnd.k2);
 				var mon1x = A2(
 					author$project$ShosuWarizanH$waru,
@@ -5248,13 +5258,6 @@ var author$project$ShosuWarizanH$update = F2(
 					author$project$ShosuWarizanH$canslist(
 						author$project$ShosuWarizanH$zkcut(
 							A2(author$project$ShosuWarizanH$waru, mans1o, (-mk2) + mk1))));
-				var cic = function (st) {
-					return A2(
-						elm$core$Maybe$withDefault,
-						0,
-						elm$core$List$head(
-							A2(elm$core$String$indexes, ',', st)));
-				};
 				var amarikeisan = A3(
 					elm$core$List$foldl,
 					author$project$ShosuWarizanH$hikuac,
@@ -5290,8 +5293,8 @@ var author$project$ShosuWarizanH$update = F2(
 							bail: '',
 							baim: '',
 							bair: '',
-							cicls: cic(mon2x),
-							cicrs: cic(mon1x),
+							cicls: author$project$ShosuWarizanH$cic(mon2x),
+							cicrs: author$project$ShosuWarizanH$cic(mon1x),
 							dispans: false,
 							displ: false,
 							dispm: false,
@@ -5305,19 +5308,42 @@ var author$project$ShosuWarizanH$update = F2(
 								(-mnd.k2) + mnd.k1),
 							mon2: mon2x,
 							mon2o: mnd.sb,
-							picls: pic(mon2x),
-							picrs: pic(mon1x),
+							picls: author$project$ShosuWarizanH$pic(mon2x),
+							picrs: author$project$ShosuWarizanH$pic(mon1x),
 							pointlocation: 0
 						}),
 					recalflg ? A2(elm$random$Random$generate, author$project$ShosuWarizanH$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				var bcap = author$project$ShosuWarizanH$buttoncaption(si);
-				var anst = (bcap === 'C') ? A2(elm$core$String$dropRight, 1, model.ans) : _Utils_ap(model.ans, bcap);
+				var anst = function () {
+					var _n2 = model.shudo;
+					switch (_n2.$) {
+						case 'JidoT':
+							return (bcap === 'C') ? A2(elm$core$String$dropRight, 1, model.ans) : _Utils_ap(model.ans, bcap);
+						case 'WarareruT':
+							return (bcap === 'C') ? A2(elm$core$String$dropRight, 1, model.mon1) : _Utils_ap(model.mon1, bcap);
+						default:
+							return (bcap === 'C') ? A2(elm$core$String$dropRight, 1, model.mon2) : _Utils_ap(model.mon2, bcap);
+					}
+				}();
+				var m1 = _Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) ? anst : model.mon1;
+				var m2 = _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT) ? anst : model.mon2;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{ans: anst}),
+						{
+							ans: _Utils_eq(model.shudo, author$project$ShosuWarizanH$JidoT) ? anst : '',
+							ans1o: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? '' : model.ans1o,
+							k1: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? (author$project$ShosuWarizanH$pic(m1) + 2) : model.k1,
+							k2: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? (author$project$ShosuWarizanH$pic(m2) + 2) : model.k2,
+							mon1: m1,
+							mon1o: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? A3(elm$core$String$replace, '.', '', m1) : model.mon1o,
+							mon2: m2,
+							mon2o: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? A3(elm$core$String$replace, '.', '', m2) : model.mon2o,
+							picls: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? (author$project$ShosuWarizanH$pic(m2) - 2) : model.picls,
+							picrs: (_Utils_eq(model.shudo, author$project$ShosuWarizanH$WarareruT) || _Utils_eq(model.shudo, author$project$ShosuWarizanH$WaruT)) ? (author$project$ShosuWarizanH$pic(m1) - 2) : model.picrs
+						}),
 					elm$core$Platform$Cmd$none);
 			case 'ChangeS':
 				var snum = msg.a;
@@ -5368,11 +5394,29 @@ var author$project$ShosuWarizanH$update = F2(
 						model,
 						{keisiki: keisik}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Hissan':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{hdisp: false}),
+					elm$core$Platform$Cmd$none);
+			case 'Warareru':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ans: '', ans1o: '', bail: '', baim: '', bair: '', cicls: 0, cicrs: 0, dispans: false, displ: false, dispm: false, dispr: false, k1: 0, k2: 0, mon1: '', mon1o: '', mon2: '', mon2o: '', picls: 0, picrs: 0, pointlocation: 0, shudo: author$project$ShosuWarizanH$WarareruT}),
+					elm$core$Platform$Cmd$none);
+			case 'Waru':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{shudo: author$project$ShosuWarizanH$WaruT}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{shudo: author$project$ShosuWarizanH$JidoT}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5383,12 +5427,15 @@ var author$project$ShosuWarizanH$HijosuSeisu = {$: 'HijosuSeisu'};
 var author$project$ShosuWarizanH$Hissan = {$: 'Hissan'};
 var author$project$ShosuWarizanH$Junshosu = {$: 'Junshosu'};
 var author$project$ShosuWarizanH$Junshosu100 = {$: 'Junshosu100'};
+var author$project$ShosuWarizanH$KotaeIn = {$: 'KotaeIn'};
 var author$project$ShosuWarizanH$Leftx = {$: 'Leftx'};
 var author$project$ShosuWarizanH$Next = {$: 'Next'};
 var author$project$ShosuWarizanH$Rightx = {$: 'Rightx'};
 var author$project$ShosuWarizanH$TypeK = function (a) {
 	return {$: 'TypeK', a: a};
 };
+var author$project$ShosuWarizanH$Warareru = {$: 'Warareru'};
+var author$project$ShosuWarizanH$Waru = {$: 'Waru'};
 var author$project$ShosuWarizanH$ChangeS = F2(
 	function (a, b) {
 		return {$: 'ChangeS', a: a, b: b};
@@ -6252,6 +6299,57 @@ var author$project$ShosuWarizanH$view = function (model) {
 													]),
 												_List_fromArray(
 													[
+														A2(
+														elm$html$Html$div,
+														_List_Nil,
+														_List_fromArray(
+															[
+																A2(
+																rundis$elm_bootstrap$Bootstrap$Button$button,
+																_List_fromArray(
+																	[
+																		rundis$elm_bootstrap$Bootstrap$Button$attrs(
+																		_List_fromArray(
+																			[
+																				A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																				elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Warareru)
+																			]))
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('割られる数入力')
+																	])),
+																A2(
+																rundis$elm_bootstrap$Bootstrap$Button$button,
+																_List_fromArray(
+																	[
+																		rundis$elm_bootstrap$Bootstrap$Button$attrs(
+																		_List_fromArray(
+																			[
+																				A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																				elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Waru)
+																			]))
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('割る数入力')
+																	])),
+																A2(
+																rundis$elm_bootstrap$Bootstrap$Button$button,
+																_List_fromArray(
+																	[
+																		rundis$elm_bootstrap$Bootstrap$Button$attrs(
+																		_List_fromArray(
+																			[
+																				A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																				elm$html$Html$Events$onClick(author$project$ShosuWarizanH$KotaeIn)
+																			]))
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('答入力')
+																	]))
+															])),
 														elm$html$Html$text(
 														seikaiflg ? '〇' : '　')
 													]))
@@ -6623,7 +6721,7 @@ var author$project$ShosuWarizanH$view = function (model) {
 														rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
-																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
 																elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Leftx)
 															]))
 													]),
@@ -6638,7 +6736,7 @@ var author$project$ShosuWarizanH$view = function (model) {
 														rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
-																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
 																elm$html$Html$Events$onClick(author$project$ShosuWarizanH$Rightx)
 															]))
 													]),

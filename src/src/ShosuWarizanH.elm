@@ -37,6 +37,7 @@ type alias Mondai =
  }
 
 
+
 type alias Model =
   { 
     init:String
@@ -62,21 +63,23 @@ type alias Model =
     ,cicls:Int --kanma ichi  left
     ,picrs:Int
     ,cicrs:Int
+    ,shudo:Shudo
  
   }
 
 type Keisiki= Hyojun |Junshosu |Junshosu100|HijosuSeisu 
+type Shudo = WarareruT | WaruT | JidoT
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mon1="2.0",mon2="1.0",mon1o="20",mon2o="10",ans1o="2",k1=1,k2=1,bail="",baim="",bair=""
      ,displ=False,dispm=False,dispr=False,ans="",dispans=False,keisiki=Hyojun,hdisp=True,pointlocation=0
-     ,picls=0,cicls=0,picrs=0,cicrs=0}
+     ,picls=0,cicls=0,picrs=0,cicrs=0,shudo=JidoT}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx | TypeK Keisiki |Hissan
+    =  Next | Newmon Mondai | Btn Int | ChangeS String String | Rightx |Leftx | TypeK Keisiki |Hissan |Warareru |Waru |KotaeIn
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -92,34 +95,26 @@ update msg model =
   case msg of
  
    Next ->
-      ( {model |bail="",baim="",bair=""}
+      ( {model |bail="",baim="",bair="",shudo=JidoT}
        ,   Random.generate Newmon monGenerator 
       )
   
    Newmon mnd ->
       let
 
-       --mmon2o=model.mon2o
        mmon2o=mnd.sb
-       --mk1=model.k1
        mk1=mnd.k1
-       --mmon1o=model.mon1o
        mmon1o=waru (mojikake mnd.sa mnd.sb) (-mnd.k2+mnd.k1)
        mk2=model.k2
-
        mans1o=mnd.sa
 
        kaketa st =String.fromInt ((toint (String.fromChar st))*(toint mmon2o))
        func idx ch = (kaketa ch,idx)
-       --manslst=List.indexedMap func (canslist (zkcut (waru model.ans1o (-mk2+mk1))))    --(かけた結果,商の何文字目か)リスト
+
        manslst=List.indexedMap func (canslist (zkcut (waru mans1o (-mk2+mk1))))    --(かけた結果,商の何文字目か)リスト
        amarikeisan = List.foldl hikuac (toint (zkcut mmon1o)) manslst
-       --x=Debug.log "amari=" amarikeisan
-       --amarikeisan=0
 
-       recalflgo=amarikeisan/=0||(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"
-       -- recalflg=(String.right 1 mnd.sb)=="0"
-       
+       recalflgo=amarikeisan/=0||(String.right 1 (mojikake mnd.sa mnd.sb))=="0" || (String.right 1 mnd.sb)=="0"       
        mon1x=waru (mojikake mnd.sa mnd.sb) mnd.k1
        mon2x=waru mnd.sb mnd.k2
 
@@ -129,12 +124,7 @@ update msg model =
           Junshosu ->recalflgo || not ( (mnd.k1==2 && (String.length mnd.sa)==1 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
           Junshosu100 ->amarikeisan/=0||not ( ((String.right 1 mnd.sb)/="0")  && (String.right 1 (mojikake mnd.sa mnd.sb)=="0") && (mnd.k1==3 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
           HijosuSeisu ->amarikeisan/=0||not (((String.contains "." mon2x)==True) && ((String.contains "." mon1x)==False) && (mnd.k1==1 && (String.length mnd.sa)==2 ) && (mnd.k2==1 && (String.length mnd.sb)==2)   )
-     
-       
-       pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
-       cic st=Maybe.withDefault 0 (List.head (String.indexes "," st))
-
-
+            
 
      
       in
@@ -151,11 +141,30 @@ update msg model =
    Btn si ->
     let
       bcap=buttoncaption si
-      anst=(if bcap=="C" then (String.dropRight 1 model.ans) else (model.ans++bcap))
+      anst=
+       case model.shudo of
+        JidoT ->  (if bcap=="C" then (String.dropRight 1 model.ans) else (model.ans++bcap))
+        WarareruT ->  (if bcap=="C" then (String.dropRight 1 model.mon1) else (model.mon1++bcap))
+        WaruT ->  (if bcap=="C" then (String.dropRight 1 model.mon2) else (model.mon2++bcap))
+
+      m1= if (model.shudo==WarareruT) then anst else model.mon1 
+      m2=if (model.shudo==WaruT) then anst else model.mon2    
+          
 
     in
-     ( {model | ans=anst
-                 } ,Cmd.none)
+     ( {model |  ans=if (model.shudo==JidoT) then anst else ""   
+                 ,mon1=  m1  
+                 ,mon2= m2
+                 ,mon1o=  if (model.shudo==WarareruT || model.shudo==WaruT) then   (String.replace "." "" m1) else model.mon1o
+                 ,mon2o= if (model.shudo==WarareruT || model.shudo==WaruT) then   (String.replace "." "" m2) else model.mon2o
+                 ,ans1o=if (model.shudo==WarareruT || model.shudo==WaruT) then   ("") else model.ans1o               
+                 ,k1=if (model.shudo==WarareruT || model.shudo==WaruT) then   ((pic m1)+2) else model.k1
+                 ,k2=if (model.shudo==WarareruT || model.shudo==WaruT) then   ((pic m2)+2) else model.k2
+                 ,picls=if (model.shudo==WarareruT || model.shudo==WaruT) then   ((pic m2)-2) else model.picls
+                 ,picrs=if (model.shudo==WarareruT || model.shudo==WaruT) then   ((pic m1)-2) else model.picrs
+
+                  } ,Cmd.none)
+
    ChangeS snum ichi->
        let
         bl=if ichi=="L" then snum else model.bail
@@ -179,6 +188,21 @@ update msg model =
    TypeK keisik ->  ({model|keisiki=keisik},Cmd.none)
 
    Hissan ->  ({model|hdisp=False},Cmd.none)
+
+   Warareru ->
+
+       ({model|shudo=WarareruT
+                , mon1 ="",mon2=""
+                ,  mon1o="",mon2o=""
+                ,ans1o=""                
+                ,k1=0,k2=0
+                ,bail="",baim="",bair="",displ=False,dispm=False,dispr=False,ans="",dispans=False
+                ,picls=0,cicls=0,picrs=0,cicrs=0
+                ,pointlocation=0
+        },Cmd.none)
+
+   Waru ->   ({model|shudo=WaruT},Cmd.none)
+   KotaeIn ->  ({model|shudo=JidoT},Cmd.none)
                   
   
 
@@ -298,7 +322,14 @@ view model =
       td [style "width" "50%"] 
       [
         tr [] [
-         td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"][text (if seikaiflg then "〇" else "　")]  ]
+         td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"]
+         [
+           
+          div [] [Button.button [Button.attrs [style "font-size" "20px"   ,onClick Warareru]] [ text "割られる数入力" ] 
+                  , Button.button [Button.attrs [style "font-size" "20px"   ,onClick Waru]] [ text "割る数入力" ] 
+                   ,Button.button [Button.attrs [style "font-size" "20px"   ,onClick KotaeIn]] [ text "答入力" ]]
+          , text (if seikaiflg then "〇" else "　")
+           ]  ]
         ] 
         ,tr [] [
           td [style "font-size" "30px"] [ text (model.mon1++"　÷　"++model.mon2++"　=　")
@@ -389,9 +420,6 @@ view model =
 
 
 
-
-
-
            in
             td [style "position" "relative",style "font-size" "30px"] ([            
              adiv (8+(m1oketa-aoketa)) 1  model.ans  5         
@@ -425,8 +453,8 @@ view model =
        ]
        ,tr [] [
          td [] [
-          Button.button [Button.attrs [style "font-size" "20px"   ,onClick Leftx]] [ text "←" ]
-         ,Button.button [Button.attrs [style "font-size" "20px"   ,onClick Rightx]] [ text "→" ]
+          Button.button [Button.attrs [style "font-size" "30px"   ,onClick Leftx]] [ text "←" ]
+         ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Rightx]] [ text "→" ]
          ]
        ]
   
@@ -477,3 +505,6 @@ zkcut ss=String.replace "0" "" (String.replace "." "" ss)
 hikuac  st ac = ac- (toint (Tuple.first st))*10^(round (logBase 10 ((toFloat ac)/(tofloat (Tuple.first st))) ) ) --マイナスならないMaxで引く
 
 canslist sans=String.toList (zkcut sans)
+
+pic st=Maybe.withDefault 0 (List.head (String.indexes "." st))  --ピリオドの位置
+cic st=Maybe.withDefault 0 (List.head (String.indexes "," st))
