@@ -325,10 +325,11 @@ view model =
          td [style "text-align" "right"][span [style "font-size" "50px",style "color" "red"]
          [
            
-          div [] [Button.button [Button.attrs [style "font-size" "20px"   ,onClick Warareru]] [ text "割られる数入力" ] 
-                  , Button.button [Button.attrs [style "font-size" "20px"   ,onClick Waru]] [ text "割る数入力" ] 
-                   ,Button.button [Button.attrs [style "font-size" "20px"   ,onClick KotaeIn]] [ text "答入力" ]]
-          , text (if seikaiflg then "〇" else "　")
+         -- div [] [--Button.button [Button.attrs [style "font-size" "20px"   ,onClick Warareru]] [ text "割られる数入力" ] 
+                --  , Button.button [Button.attrs [style "font-size" "20px"   ,onClick Waru]] [ text "割る数入力" ] 
+                 --  ,Button.button [Button.attrs [style "font-size" "20px"   ,onClick KotaeIn]] [ text "答入力" ]]
+         -- , 
+          text (if seikaiflg then "〇" else "　")
            ]  ]
         ] 
         ,tr [] [
