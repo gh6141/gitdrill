@@ -4893,6 +4893,7 @@ var author$project$Subunkai$init = function (_n0) {
 			ansRU: '2.42',
 			dispAns: false,
 			dispSiki: false,
+			hintDisp: false,
 			ichiikaflg: true,
 			inA: '',
 			inB: '',
@@ -5789,6 +5790,7 @@ var author$project$Subunkai$update = F2(
 							ansRD: ansm.rd,
 							ansRU: ansm.ru,
 							dispAns: false,
+							hintDisp: false,
 							inA: '',
 							inB: '',
 							inEz: '',
@@ -5908,11 +5910,17 @@ var author$project$Subunkai$update = F2(
 						model,
 						{motome: author$project$Subunkai$AK}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Matome':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{motome: author$project$Subunkai$M}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{hintDisp: true}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5920,6 +5928,7 @@ var author$project$Subunkai$AKmotome = {$: 'AKmotome'};
 var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
+var author$project$Subunkai$Hint = {$: 'Hint'};
 var author$project$Subunkai$IchiIka = {$: 'IchiIka'};
 var author$project$Subunkai$Kmotome = {$: 'Kmotome'};
 var author$project$Subunkai$Lmotome = {$: 'Lmotome'};
@@ -6420,8 +6429,8 @@ var author$project$Subunkai$view = function (model) {
 					]))
 			]));
 	var sList = function () {
-		var _n2 = model.mondai.pattern;
-		switch (_n2) {
+		var _n3 = model.mondai.pattern;
+		switch (_n3) {
 			case 1:
 				return _List_fromArray(
 					[
@@ -6650,8 +6659,8 @@ var author$project$Subunkai$view = function (model) {
 		300,
 		A2(cboxlu, model.inA, author$project$Subunkai$handlerA));
 	var cans = function () {
-		var _n1 = model.ansLRUD;
-		switch (_n1.$) {
+		var _n2 = model.ansLRUD;
+		switch (_n2.$) {
 			case 'Lu':
 				return A3(dcbx, 100 + dvx, 90 + dvy, greenans);
 			case 'Ru':
@@ -6822,14 +6831,60 @@ var author$project$Subunkai$view = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(elm$html$Html$td, _List_Nil, _List_Nil)
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+																elm$html$Html$Events$onClick(author$project$Subunkai$Hint)
+															]))
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('ヒント')
+													]))
+											]))
 									])),
 								A2(
 								elm$html$Html$tr,
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(elm$html$Html$td, _List_Nil, _List_Nil)
+										A2(
+										elm$html$Html$td,
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+												A2(elm$html$Html$Attributes$style, 'color', 'red')
+											]),
+										_List_fromArray(
+											[
+												function () {
+												var shint = function () {
+													var _n1 = model.mondai.pattern;
+													switch (_n1) {
+														case 1:
+															return author$project$Subunkai$tenmjo(model.mondai.sa) + ('×□=' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + '(km)'));
+														case 2:
+															return '□×' + (author$project$Subunkai$tenmjo(model.mondai.sb) + ('=' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + '(km)')));
+														case 3:
+															return author$project$Subunkai$tenmjo(model.mondai.sa) + ('kmの' + (author$project$Subunkai$tenmjo(model.mondai.sb) + '倍は？'));
+														default:
+															return '';
+													}
+												}();
+												return elm$html$Html$text(
+													model.hintDisp ? shint : '');
+											}()
+											]))
 									])),
 								A2(
 								elm$html$Html$tr,

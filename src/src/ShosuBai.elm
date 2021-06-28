@@ -62,17 +62,19 @@ type alias Model =
     ,ludIchi:Int
     ,ichiikaflg:Bool
     ,motome:Motome
+    ,hintDisp:Bool
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {init="3",mondai={sa=11,sb=22,pattern=1},ans="2.2",ansLU="1.1",ansRU="2.42",ansLD="1",ansRD="2.0"
-    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False,ansLRUD=Rd,ludIchi=150,ichiikaflg=True,motome=K}
+    ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False,ansLRUD=Rd,ludIchi=150,ichiikaflg=True,motome=K
+    ,hintDisp=False}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon Mondai | Btn Int |ChangeS String String |IchiIka |Kmotome |Lmotome |AKmotome |Matome
+    =  Next | Newmon Mondai | Btn Int |ChangeS String String |IchiIka |Kmotome |Lmotome |AKmotome |Matome |Hint
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -136,6 +138,7 @@ update msg model =
       ( {model|mondai=mnd,inLD="",inRD="",inLU="",inRU="",inA="",inB="",inEz=""
       ,ansLU=ansm.lu  ,ansRU=ansm.ru   ,ansLD=ansm.ld   ,ansRD=ansm.rd
       ,dispAns=False ,ans=ansx ,ansLRUD=ansm.lrud,ludIchi=(round (300.0*lichi))
+      ,hintDisp=False
       }    ,
        if (lt>0.5 && lt<2.0) || (model.ichiikaflg && (km1>km)) || motomeflg then --LRUDの位置が近づきすぎないように
          Random.generate Newmon monGenerator
@@ -173,6 +176,7 @@ update msg model =
    Lmotome -> ( {model|motome=L}, Cmd.none)
    AKmotome -> ( {model|motome=AK}, Cmd.none)
    Matome -> ( {model|motome=M}, Cmd.none)
+   Hint -> ({model|hintDisp=True}, Cmd.none)
  
 
 
@@ -325,9 +329,20 @@ view model =
      ,td [] [
       tr [] [
        td [] [Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ] ]
+       
       ]
-      ,tr [] [td [] []]
-      ,tr [] [td [] []]
+      ,tr [] [td [] [Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Hint]] [ Html.text "ヒント" ] ]]
+      ,tr [] [td [Html.Attributes.style "font-size" "20px",style "color" "red" ] [
+         let
+          shint =
+           case model.mondai.pattern of
+            1 -> (tenmjo model.mondai.sa)++"×□="++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"(km)"
+            2 -> "□×"++(tenmjo model.mondai.sb)++"="++(tenmjo2 model.mondai.sa model.mondai.sb) ++"(km)"
+            3 -> (tenmjo model.mondai.sa)++"kmの"++(tenmjo model.mondai.sb) ++"倍は？"
+            _ -> ""
+         in
+          text (if model.hintDisp then shint else "")
+      ]]
       ,tr [] [td [] []]
       , tr [] [
          td [] [
