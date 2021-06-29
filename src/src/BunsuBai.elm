@@ -1,4 +1,4 @@
-module Subunkai exposing (..)
+module BunsuBai exposing (..)
 
 import Browser
 import Html exposing (..)
@@ -30,14 +30,14 @@ import Katex as K
         )
 import Bootstrap.Button as Button
 
-opassage : List Latex
-opassage =
-    [ human "等式の変形 "
-    , inline "s=\\dfrac{a}{b}"
-    , human " *** "
-    , display "s=\\dfrac{a}{b}"
+--opassage : List Latex
+--opassage =
+ --   [ human "等式の変形 "
+ --   , inline "s=\\dfrac{a}{b}"
+ --   , human " *** "
+ --   , display "s=\\dfrac{a}{b}"
 
-    ]
+ --   ]
 
 
 main =
@@ -60,8 +60,8 @@ type Motome = K | L | AK | M
 
 type alias Model =
   { 
-       passage:List Latex
-    ,init:String
+  
+    init:String
     ,mondai:Mondai
     ,ans:String
     ,ansLU:String
@@ -86,7 +86,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {passage=[display "a=s+t"],init="3",mondai={sa=11,sb=22,pattern=1},ans="2.2",ansLU="1.1",ansRU="2.42",ansLD="1",ansRD="2.0"
+  ( {init="3",mondai={sa=11,sb=22,pattern=1},ans="2.2",ansLU="1.1",ansRU="2.42",ansLD="1",ansRD="2.0"
     ,inLU="",inRU="",inLD="",inRD="",dispSiki=False,inA="",inEz="",inB="",dispAns=False,ansLRUD=Rd,ludIchi=150,ichiikaflg=True,motome=K
     ,hintDisp=False}
   , Cmd.none
@@ -212,13 +212,7 @@ view : Model -> Html Msg
 view model =
  let
 
-        htmlGenerator isDisplayMode stringLatex =
-            case isDisplayMode of
-                Just True ->
-                    div [style "font-size" "40px"] [ text stringLatex ]
-
-                _ ->
-                    span [style "font-size" "40px"] [ text stringLatex ]
+   
 
 
         sList = case  model.mondai.pattern of
@@ -229,11 +223,13 @@ view model =
 
  
       
+        --cboxlu inLRUD handler=select [style "font-size" "30px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) sList)  
         cboxlu inLRUD handler=select [style "font-size" "30px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) sList)  
         cboxez inLRUD handler=select [style "font-size" "30px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==inLRUD),value s][text (s)]) ["?","×","÷"])  
         dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
         dvx=30
         dvy=30
+
         maruspan=(span [style "color" "red",style "font-size" "30px"] [text "〇"])
         cblu=dcbx (100+dvx) (90+dvy) (cboxlu model.inLU handlerLU)
         marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (90+dvy) maruspan) else (span [] [])
@@ -328,18 +324,21 @@ view model =
          , Svg.Attributes.strokeLinecap "round"
           ] []
                   
+
+        katexl=case model.mondai.pattern of
+         1 -> divkatex [human "赤リボンの長さが",inline "\\dfrac{a}{b}",human ((tenmjo model.mondai.sa)++"mです。青リボンの長さは"), inline "\\dfrac{a}{b}",human ((tenmjo2 model.mondai.sa model.mondai.sb ) ++"mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?") ]
+         2 -> divkatex [human ("青リボンの長さは赤リボンの"++(tenmjo model.mondai.sb)++"倍です。青リボンは"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"mです。赤リボンは何m?")]
+         3 -> divkatex [human ("赤リボンの長さが"++(tenmjo model.mondai.sa)++"mです。青リボンの長さは赤リボンの"++(tenmjo model.mondai.sb) ++"倍です。青リボンの長さは?")]
+         _ -> divkatex [human ""] 
+
  in
 
    table [align "center",style "width" "80%"]
    [
-    tr [] [
-      td [colspan 2,style "font-size" "30px" ] [text (
-       case model.mondai.pattern of
-         1 -> "赤リボンの長さが"++(tenmjo model.mondai.sa)++"mです。青リボンの長さは"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?"
-         2 -> "青リボンの長さは赤リボンの"++(tenmjo model.mondai.sb)++"倍です。青リボンは"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"mです。赤リボンは何m?"
-         3 -> "赤リボンの長さが"++(tenmjo model.mondai.sa)++"mです。青リボンの長さは赤リボンの"++(tenmjo model.mondai.sb) ++"倍です。青リボンの長さは?"
-         _ -> ""
-      )]
+    tr [] [    
+       td [colspan 2,style "font-size" "30px" ] [katexl]       
+      
+      
     ]
 
     ,tr []
@@ -375,15 +374,13 @@ view model =
       ,tr [] [td [] []]
       , tr [] [
          td [] [
-           
-             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ Html.text "Stage1(km)" ]
+             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ spankatex "\\dfrac{a}{b}" ]
+            , Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ Html.text "Stage1(km)" ]
            ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Lmotome]] [ Html.text "Stage2(L)" ]
            ,   Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick AKmotome]] [ Html.text "Statge3(Lあたり)" ]          
            ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Matome]] [ Html.text "Stage4(まとめ)" ]
            ,Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick IchiIka]] [ Html.text "Stage5(1以下)" ]
-           ,       model.passage 
-            |> List.map (K.generate htmlGenerator)
-            |> div []
+           , spankatex "s=\\dfrac{a}{b}"
          ]
        ]
  
@@ -436,3 +433,16 @@ buttoncaption ii =
     10 -> "."
     11 -> "C"
     _  -> String.fromInt ii
+
+
+htmlGenerator isDisplayMode stringLatex =
+            case isDisplayMode of
+                Just True ->
+                    div [style "font-size" "30px"] [ text stringLatex ]
+
+                _ ->
+                    span [style "font-size" "30px"] [ text stringLatex ]
+
+spankatex siki= span [] [K.generate htmlGenerator (display siki)]
+spanhuman moji=span [] [K.generate htmlGenerator (human moji)]
+divkatex lstkatex= lstkatex |> List.map (K.generate htmlGenerator)  |> div []
