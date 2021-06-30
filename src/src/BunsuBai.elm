@@ -65,12 +65,14 @@ type alias Model =
   ludIchi:Int
   ,mondai:Mondai
   ,ans:String
+  ,bun1:String
+  ,bun2:String
   
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=2,si2=1,bo2=4,si3=1,bo3=8,pattern=1},ludIchi=1,ans=""}
+  ( {mondai={si1=1,bo1=2,si2=1,bo2=4,si3=1,bo3=8,pattern=1},ludIchi=1,ans="",bun1="*",bun2="*"}
   , Cmd.none
   )
 
@@ -99,9 +101,15 @@ update msg model =
       )
   
    Newmon mnd ->
+
+      let
+       xbun1=bun mnd.si1 model.mondai.bo1
+       xbun2=bun mnd.si2 model.mondai.bo2
+
+      in
   
    
-      ( {model|mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=1}},      Cmd.none)
+      ( {model|bun1=xbun1,bun2=xbun2,mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=1}},      Cmd.none)
   
    Btn si ->
 
@@ -131,14 +139,14 @@ view model =
         dvy=30
 
         maruspan=(span [style "color" "red",style "font-size" "30px"] [text "〇"])
-        cblu=dcbx (100+dvx) (50+dvy) (cboxlu model.inLU Kmotome)
-        marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (90+dvy) maruspan) else (span [] [])
-        cbru=dcbx (300+dvx) (50+dvy) (cboxlu model.inRU Kmotome)
-        maruru=if model.inRU==model.ansRU then (dcbx (300+dvx) (90+dvy) maruspan) else (span [] [])
-        cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD Kmotome)
-        maruld=if model.inLD==model.ansLD then (dcbx (100+dvx) (170+dvy) maruspan) else (span [] [])
-        cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD Kmotome)
-        marurd=if model.inRD==model.ansRD then (dcbx (300+dvx) (170+dvy) maruspan) else (span [] [])
+        --cblu=dcbx (100+dvx) (50+dvy) (cboxlu model.inLU Kmotome)
+        --marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (90+dvy) maruspan) else (span [] [])
+       -- cbru=dcbx (300+dvx) (50+dvy) (cboxlu model.inRU Kmotome)
+        --maruru=if model.inRU==model.ansRU then (dcbx (300+dvx) (90+dvy) maruspan) else (span [] [])
+       -- cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD Kmotome)
+        --maruld=if model.inLD==model.ansLD then (dcbx (100+dvx) (170+dvy) maruspan) else (span [] [])
+        --cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD Kmotome)
+        --marurd=if model.inRD==model.ansRD then (dcbx (300+dvx) (170+dvy) maruspan) else (span [] [])
 
         greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
 
@@ -189,9 +197,9 @@ view model =
                   
 
         katexl=case model.mondai.pattern of
-         1 -> divkatex [human "赤リボンの長さが",inline "\\dfrac{a}{b}",human ((tenmjo model.mondai.sa)++"mです。青リボンの長さは"), inline "\\dfrac{a}{b}",human ((tenmjo2 model.mondai.sa model.mondai.sb ) ++"mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?") ]
-         2 -> divkatex [human ("青リボンの長さは赤リボンの"++(tenmjo model.mondai.sb)++"倍です。青リボンは"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"mです。赤リボンは何m?")]
-         3 -> divkatex [human ("赤リボンの長さが"++(tenmjo model.mondai.sa)++"mです。青リボンの長さは赤リボンの"++(tenmjo model.mondai.sb) ++"倍です。青リボンの長さは?")]
+         1 -> divkatex [human "赤リボンの長さが",inline model.bun1,human "mです。青リボンの長さは", inline model.bun2,human "mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?" ]
+         2 -> divkatex [human "青リボンの長さは赤リボンの",inline model.bun1,human "倍です。青リボンは",inline model.bun2,human "mです。赤リボンは何m?"]
+         3 -> divkatex [human "赤リボンの長さが",inline model.bun1 ,human "mです。青リボンの長さは赤リボンの",inline model.bun2,human "倍です。青リボンの長さは?"]
          _ -> divkatex [human ""] 
 
  in
@@ -217,22 +225,13 @@ view model =
       ]
 
       ,tr [] [td [Html.Attributes.style "font-size" "20px",style "color" "red" ] [
-         let
-          shint =
-           case model.mondai.pattern of
-            1 -> (tenmjo model.mondai.sa)++"×□="++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"(m)"
-            2 -> "□×"++(tenmjo model.mondai.sb)++"="++(tenmjo2 model.mondai.sa model.mondai.sb) ++"(m)"
-            3 -> (tenmjo model.mondai.sa)++"mの"++(tenmjo model.mondai.sb) ++"倍は？"
-            _ -> ""
-         in
-          text (if model.hintDisp then shint else "")
+        
       ]]
       ,tr [] [td [] []]
       , tr [] [
          td [] [
              Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ spankatex "\\dfrac{a}{b}" ]
 
-           , spankatex "s=\\dfrac{a}{b}"
          ]
        ]
     
@@ -297,3 +296,5 @@ htmlGenerator isDisplayMode stringLatex =
 spankatex siki= span [] [K.generate htmlGenerator (display siki)]
 spanhuman moji=span [] [K.generate htmlGenerator (human moji)]
 divkatex lstkatex= lstkatex |> List.map (K.generate htmlGenerator)  |> div []
+
+bun a b="\\dfrac{"++(String.fromInt a)++"}{"++(String.fromInt b)++"}"
