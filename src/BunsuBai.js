@@ -5915,25 +5915,12 @@ var author$project$BunsuBai$update = F2(
 		}
 	});
 var author$project$BunsuBai$AKmotome = {$: 'AKmotome'};
-var author$project$BunsuBai$Btn = function (a) {
-	return {$: 'Btn', a: a};
-};
 var author$project$BunsuBai$Hint = {$: 'Hint'};
 var author$project$BunsuBai$IchiIka = {$: 'IchiIka'};
 var author$project$BunsuBai$Kmotome = {$: 'Kmotome'};
 var author$project$BunsuBai$Lmotome = {$: 'Lmotome'};
 var author$project$BunsuBai$Matome = {$: 'Matome'};
 var author$project$BunsuBai$Next = {$: 'Next'};
-var author$project$BunsuBai$buttoncaption = function (ii) {
-	switch (ii) {
-		case 10:
-			return '.';
-		case 11:
-			return 'C';
-		default:
-			return elm$core$String$fromInt(ii);
-	}
-};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -6033,59 +6020,6 @@ var author$project$BunsuBai$divkatex = function (lstkatex) {
 			yotamDvir$elm_katex$Katex$generate(author$project$BunsuBai$htmlGenerator),
 			lstkatex));
 };
-var author$project$BunsuBai$ChangeS = F2(
-	function (a, b) {
-		return {$: 'ChangeS', a: a, b: b};
-	});
-var author$project$BunsuBai$handlerA = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'A');
-};
-var author$project$BunsuBai$handlerB = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'B');
-};
-var author$project$BunsuBai$handlerEz = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'Ez');
-};
-var author$project$BunsuBai$handlerLD = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'LD');
-};
-var author$project$BunsuBai$handlerLU = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'LU');
-};
-var author$project$BunsuBai$handlerRD = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'RD');
-};
-var author$project$BunsuBai$handlerRU = function (selectedText) {
-	return A2(author$project$BunsuBai$ChangeS, selectedText, 'RU');
-};
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$json$Json$Decode$string = _Json_decodeString;
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var author$project$BunsuBai$onChange = function (handler) {
-	return A2(
-		elm$html$Html$Events$on,
-		'change',
-		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
-};
 var elm$core$Basics$always = F2(
 	function (a, _n0) {
 		return a;
@@ -6113,8 +6047,7 @@ var author$project$BunsuBai$spankatex = function (siki) {
 				yotamDvir$elm_katex$Katex$display(siki))
 			]));
 };
-var elm$html$Html$option = _VirtualDom_node('option');
-var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$html$Html$tr = _VirtualDom_node('tr');
@@ -6133,16 +6066,17 @@ var elm$html$Html$Attributes$colspan = function (n) {
 		'colspan',
 		elm$core$String$fromInt(n));
 };
-var elm$json$Json$Encode$bool = _Json_wrap;
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
+var elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$on = F2(
+	function (event, decoder) {
 		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
-var elm$html$Html$Attributes$selected = elm$html$Html$Attributes$boolProperty('selected');
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$html$Html$Events$onClick = function (msg) {
 	return A2(
 		elm$html$Html$Events$on,
@@ -6173,7 +6107,6 @@ var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
 	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
 };
-var elm$html$Html$button = _VirtualDom_node('button');
 var elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (maybeValue.$ === 'Just') {
@@ -6205,6 +6138,14 @@ var elm$html$Html$Attributes$classList = function (classes) {
 				elm$core$Tuple$first,
 				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
 };
+var elm$json$Json$Encode$bool = _Json_wrap;
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
 var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
 var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
 	switch (size.$) {
@@ -6383,139 +6324,6 @@ var author$project$BunsuBai$view = function (model) {
 					]),
 				_List_Nil);
 		});
-	var sbutton = function (ii) {
-		return A2(
-			rundis$elm_bootstrap$Bootstrap$Button$button,
-			_List_fromArray(
-				[
-					rundis$elm_bootstrap$Bootstrap$Button$attrs(
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-							elm$html$Html$Events$onClick(
-							author$project$BunsuBai$Btn(ii))
-						]))
-				]),
-			_List_fromArray(
-				[
-					elm$html$Html$text(
-					' ' + (author$project$BunsuBai$buttoncaption(ii) + ' '))
-				]));
-	};
-	var sujibutton = A2(
-		elm$html$Html$table,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(7)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(8)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(9)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(4)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(5)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(6)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(1)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(2)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(3)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(0)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(10)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(11)
-							]))
-					]))
-			]));
 	var sList = function () {
 		var _n3 = model.mondai.pattern;
 		switch (_n3) {
@@ -6694,95 +6502,68 @@ var author$project$BunsuBai$view = function (model) {
 	var marurd = _Utils_eq(model.inRD, model.ansRD) ? A3(dcbx, 300 + dvx, 170 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
 	var maruru = _Utils_eq(model.inRU, model.ansRU) ? A3(dcbx, 300 + dvx, 90 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
 	var cboxlu = F2(
-		function (inLRUD, handler) {
+		function (flg, km) {
 			return A2(
-				elm$html$Html$select,
+				elm$html$Html$button,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-						author$project$BunsuBai$onChange(handler)
+						A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+						elm$html$Html$Events$onClick(km)
 					]),
-				A2(
-					elm$core$List$map,
-					function (s) {
-						return A2(
-							elm$html$Html$option,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$selected(
-									_Utils_eq(s, inLRUD)),
-									elm$html$Html$Attributes$value(s)
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text(s)
-								]));
-					},
-					sList));
+				_List_fromArray(
+					[
+						author$project$BunsuBai$spankatex('\\dfrac{a}{b}')
+					]));
 		});
 	var cbrd = A3(
 		dcbx,
 		300 + dvx,
 		180 + dvy,
-		A2(cboxlu, model.inRD, author$project$BunsuBai$handlerRD));
+		A2(cboxlu, model.inRD, author$project$BunsuBai$Kmotome));
 	var cbru = A3(
 		dcbx,
 		300 + dvx,
-		90 + dvy,
-		A2(cboxlu, model.inRU, author$project$BunsuBai$handlerRU));
+		50 + dvy,
+		A2(cboxlu, model.inRU, author$project$BunsuBai$Kmotome));
 	var cboxez = F2(
-		function (inLRUD, handler) {
+		function (flg, km) {
 			return A2(
-				elm$html$Html$select,
+				elm$html$Html$button,
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-						author$project$BunsuBai$onChange(handler)
+						elm$html$Html$Events$onClick(km)
 					]),
-				A2(
-					elm$core$List$map,
-					function (s) {
-						return A2(
-							elm$html$Html$option,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$selected(
-									_Utils_eq(s, inLRUD)),
-									elm$html$Html$Attributes$value(s)
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text(s)
-								]));
-					},
-					_List_fromArray(
-						['?', '×', '÷'])));
+				_List_fromArray(
+					[
+						author$project$BunsuBai$spankatex('\\dfrac{a}{b}')
+					]));
 		});
 	var cbz = A3(
 		dcbx,
 		200,
 		300,
-		A2(cboxez, model.inEz, author$project$BunsuBai$handlerEz));
+		A2(cboxez, model.inEz, author$project$BunsuBai$Kmotome));
 	var cblu = A3(
 		dcbx,
 		100 + dvx,
-		90 + dvy,
-		A2(cboxlu, model.inLU, author$project$BunsuBai$handlerLU));
+		50 + dvy,
+		A2(cboxlu, model.inLU, author$project$BunsuBai$Kmotome));
 	var cbld = A3(
 		dcbx,
 		100 + dvx,
 		180 + dvy,
-		A2(cboxlu, model.inLD, author$project$BunsuBai$handlerLD));
+		A2(cboxlu, model.inLD, author$project$BunsuBai$Kmotome));
 	var cbb = A3(
 		dcbx,
 		270,
 		300,
-		A2(cboxlu, model.inB, author$project$BunsuBai$handlerB));
+		A2(cboxlu, model.inB, author$project$BunsuBai$Kmotome));
 	var cba = A3(
 		dcbx,
 		90,
 		300,
-		A2(cboxlu, model.inA, author$project$BunsuBai$handlerA));
+		A2(cboxlu, model.inA, author$project$BunsuBai$Kmotome));
 	var cans = function () {
 		var _n1 = model.ansLRUD;
 		switch (_n1.$) {
@@ -7041,7 +6822,7 @@ var author$project$BunsuBai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('Stage1(km)')
+														elm$html$Html$text('Stage1(青m)')
 													])),
 												A2(
 												rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -7056,7 +6837,7 @@ var author$project$BunsuBai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('Stage2(L)')
+														elm$html$Html$text('Stage2(倍)')
 													])),
 												A2(
 												rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -7071,7 +6852,7 @@ var author$project$BunsuBai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('Statge3(Lあたり)')
+														elm$html$Html$text('Statge3(赤m)')
 													])),
 												A2(
 												rundis$elm_bootstrap$Bootstrap$Button$button,
