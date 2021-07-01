@@ -6,7 +6,7 @@
     ]  ,
 
     "exposed-modules": [
-        "Native.KaTeX"
+  
     ],
     "native-modules": true,
     "elm-version": "0.19.0",
