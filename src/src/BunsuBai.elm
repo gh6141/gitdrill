@@ -44,7 +44,7 @@ main =
   Browser.element
     { init = init
     , update = update
-    , view = view
+    , view =  view
     , subscriptions = subscriptions
     }
 
@@ -109,7 +109,7 @@ update msg model =
       in
   
    
-      ( {model|bun1=xbun1,bun2=xbun2,mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=1}},      Cmd.none)
+      ( {model|bun1=xbun1,bun2=xbun2,mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=mnd.pattern}},      Cmd.none)
   
    Btn si ->
 
@@ -149,11 +149,6 @@ view model =
         --marurd=if model.inRD==model.ansRD then (dcbx (300+dvx) (170+dvy) maruspan) else (span [] [])
 
         greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
-
-    
-
-
-
 
         linex =Svg.svg 
          [ Svg.Attributes.viewBox "0 0 400 400"
@@ -230,7 +225,12 @@ view model =
       ,tr [] [td [] []]
       , tr [] [
          td [] [
-             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ spankatex "\\dfrac{a}{b}" ]
+             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] 
+             [ if model.mondai.pattern==1 then
+                (spankatex "\\dfrac{a}{b}") 
+               else 
+                (spankatex "\\dfrac{c}{d}")
+            ]
 
          ]
        ]

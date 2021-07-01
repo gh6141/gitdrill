@@ -5101,7 +5101,7 @@ var author$project$BunsuBai$update = F2(
 						{
 							bun1: xbun1,
 							bun2: xbun2,
-							mondai: {bo1: model.mondai.bo1, bo2: model.mondai.bo2, bo3: model.mondai.bo3, pattern: 1, si1: mnd.si1, si2: mnd.si2, si3: mnd.si3}
+							mondai: {bo1: model.mondai.bo1, bo2: model.mondai.bo2, bo3: model.mondai.bo3, pattern: mnd.pattern, si1: mnd.si1, si2: mnd.si2, si3: mnd.si3}
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
@@ -5829,7 +5829,7 @@ var author$project$BunsuBai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														author$project$BunsuBai$spankatex('\\dfrac{a}{b}')
+														(model.mondai.pattern === 1) ? author$project$BunsuBai$spankatex('\\dfrac{a}{b}') : author$project$BunsuBai$spankatex('\\dfrac{c}{d}')
 													]))
 											]))
 									]))
