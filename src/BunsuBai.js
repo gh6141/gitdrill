@@ -4874,7 +4874,7 @@ var author$project$BunsuBai$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			ans: '',
-			bun1: '*',
+			bun1: '\\frac{1}{2}',
 			bun2: '*',
 			ludIchi: 1,
 			mondai: {bo1: 2, bo2: 4, bo3: 8, pattern: 1, si1: 1, si2: 1, si3: 1}
