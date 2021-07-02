@@ -17,6 +17,48 @@
    <!-- <script src="https://gh6141.github.io/gitdrill/src/BunsuBai.js" integrity="sha384-HSbxr50ViRItif0cXHqEiqUEsRrUro9LOcVNmIGHYUes3VVGGMvTtlh0TNmacb0L" crossorigin="anonymous"></script>
    -->   
    <script src="BunsuBai.js"></script>
+  
+
+<script>
+ 
+    document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {
+          left: "$begin-inline$", 
+          right: "$end-inline$", 
+          display: false
+        }, 
+        {
+          left: "$begin-display$",
+          right: "$end-display$", 
+          display: true
+        }
+      ]});
+    });
+
+    
+   document.addEventListener("DOMSubtreeModified", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+       {
+          left: "$begin-inline$", 
+          right: "$end-inline$", 
+          display: false
+        }, 
+        {
+          left: "$begin-display$",
+          right: "$end-display$", 
+          display: true
+        }
+
+      
+      ]});
+
+
+
+    });
+</script>
 
     <title></title>
   </head>
@@ -25,47 +67,11 @@
 
     <!-- Run the app + render LaTeX using KaTeX (note the seperate script tags!) -->
     <script>
-        var app = Elm.BunsuBai.init({
-          node: document.getElementById('myapp'),
-          flags: Date.now()
-        });
-    </script>
-
-    <script>
-     
-        document.addEventListener("DOMContentLoaded", function() {
-        renderMathInElement(document.body, {
-          delimiters: [
-            {
-              left: "$begin-inline$", 
-              right: "$end-inline$", 
-              display: false
-            }, 
-            {
-              left: "$begin-display$",
-              right: "$end-display$", 
-              display: true
-            }
-          ]});
-        });
-
-       document.addEventListener("DOMSubtreeModified", function() {
-        renderMathInElement(document.body, {
-          delimiters: [
-           {
-              left: "$begin-inline$", 
-              right: "$end-inline$", 
-              display: false
-            }, 
-            {
-              left: "$begin-display$",
-              right: "$end-display$", 
-              display: true
-            }
-    
-          
-          ]});
-        });
-    </script>
+      var app = Elm.BunsuBai.init({
+        node: document.getElementById('myapp'),
+        flags: Date.now()
+      });
+  </script>
+ 
   </body>
 </html>
