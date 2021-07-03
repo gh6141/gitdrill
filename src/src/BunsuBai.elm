@@ -103,8 +103,8 @@ update msg model =
    Newmon mnd ->
 
       let
-       xbun1=bun mnd.si1 model.mondai.bo1
-       xbun2=bun mnd.si2 model.mondai.bo2
+       xbun1=bunsu mnd.si1 model.mondai.bo1
+       xbun2=bunsu mnd.si2 model.mondai.bo2
 
       in
   
@@ -293,8 +293,8 @@ htmlGenerator isDisplayMode stringLatex =
                 _ ->
                     span [style "font-size" "30px"] [ text stringLatex ]
 
-spankatex siki= span [] [K.generate htmlGenerator (display siki)]
-spanhuman moji=span [] [K.generate htmlGenerator (human moji)]
-divkatex lstkatex= lstkatex |> List.map (K.generate htmlGenerator)  |> div []
+spankatex siki= span [class "katexl"] [K.generate htmlGenerator (display siki)]
+spanhuman moji=span [class "katexl"] [K.generate htmlGenerator (human moji)]
+divkatex lstkatex= lstkatex |> List.map (K.generate htmlGenerator)  |> div [class "katexl"]
 
-bun a b="\\dfrac{"++(String.fromInt a)++"}{"++(String.fromInt b)++"}"
+bunsu a b="\\dfrac{"++(String.fromInt a)++"b}{"++(String.fromInt b)++"}"

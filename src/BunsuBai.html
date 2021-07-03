@@ -20,6 +20,26 @@
   
 
 <script>
+
+
+var opt = {
+    delimiters: [
+
+        {
+          left: "$begin-inline$", 
+          right: "$end-inline$", 
+          display: false
+        }, 
+        {
+          left: "$begin-display$",
+          right: "$end-display$", 
+          display: true
+        }
+]};
+
+
+
+   var elts = document.getElementsByClassName('katexl');
  
     document.addEventListener("DOMContentLoaded", function() {
     renderMathInElement(document.body, {
@@ -39,24 +59,12 @@
 
     
    document.addEventListener("DOMSubtreeModified", function() {
-    renderMathInElement(document.body, {
-      delimiters: [
-       {
-          left: "$begin-inline$", 
-          right: "$end-inline$", 
-          display: false
-        }, 
-        {
-          left: "$begin-display$",
-          right: "$end-display$", 
-          display: true
-        }
+    
+    for(var i = 0 ; i < elts.length ; ++i){
+    renderMathInElement(elts[i],opt);
+}
+ 
         
-       
-
-      
-      ]});
-
 
 
     });

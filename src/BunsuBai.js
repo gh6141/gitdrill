@@ -4889,9 +4889,9 @@ var author$project$BunsuBai$subscriptions = function (model) {
 var author$project$BunsuBai$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
-var author$project$BunsuBai$bun = F2(
+var author$project$BunsuBai$bunsu = F2(
 	function (a, b) {
-		return '\\dfrac{' + (elm$core$String$fromInt(a) + ('}{' + (elm$core$String$fromInt(b) + '}')));
+		return '\\dfrac{' + (elm$core$String$fromInt(a) + ('b}{' + (elm$core$String$fromInt(b) + '}')));
 	});
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -5093,8 +5093,8 @@ var author$project$BunsuBai$update = F2(
 					A2(elm$random$Random$generate, author$project$BunsuBai$Newmon, monGenerator));
 			case 'Newmon':
 				var mnd = msg.a;
-				var xbun2 = A2(author$project$BunsuBai$bun, mnd.si2, model.mondai.bo2);
-				var xbun1 = A2(author$project$BunsuBai$bun, mnd.si1, model.mondai.bo1);
+				var xbun2 = A2(author$project$BunsuBai$bunsu, mnd.si2, model.mondai.bo2);
+				var xbun1 = A2(author$project$BunsuBai$bunsu, mnd.si1, model.mondai.bo1);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5235,6 +5235,15 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var yotamDvir$elm_katex$Katex$Configs$generate = F4(
 	function (g, m, h, latex) {
 		var g_ = A2(g, m, h);
@@ -5267,7 +5276,10 @@ var yotamDvir$elm_katex$Katex$generate = function (g) {
 var author$project$BunsuBai$divkatex = function (lstkatex) {
 	return A2(
 		elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('katexl')
+			]),
 		A2(
 			elm$core$List$map,
 			yotamDvir$elm_katex$Katex$generate(author$project$BunsuBai$htmlGenerator),
@@ -5291,7 +5303,10 @@ var yotamDvir$elm_katex$Katex$display = A2(elm$core$Basics$composeL, yotamDvir$e
 var author$project$BunsuBai$spankatex = function (siki) {
 	return A2(
 		elm$html$Html$span,
-		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('katexl')
+			]),
 		_List_fromArray(
 			[
 				A2(
@@ -5304,14 +5319,6 @@ var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$html$Html$tr = _VirtualDom_node('tr');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
 var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
 var elm$html$Html$Attributes$colspan = function (n) {
 	return A2(
@@ -5369,7 +5376,6 @@ var elm$core$Maybe$andThen = F2(
 			return elm$core$Maybe$Nothing;
 		}
 	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5622,7 +5628,7 @@ var author$project$BunsuBai$view = function (model) {
 					_List_fromArray(
 						[
 							yotamDvir$elm_katex$Katex$human('赤リボンの長さが'),
-							yotamDvir$elm_katex$Katex$inline(model.bun1),
+							(model.mondai.pattern < 4) ? yotamDvir$elm_katex$Katex$human('human') : yotamDvir$elm_katex$Katex$inline(model.bun1),
 							yotamDvir$elm_katex$Katex$human('mです。青リボンの長さは'),
 							yotamDvir$elm_katex$Katex$inline(model.bun2),
 							yotamDvir$elm_katex$Katex$human('mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?')
