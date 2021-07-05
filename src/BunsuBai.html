@@ -39,7 +39,7 @@ var opt = {
 
 
 
-   var elts = document.getElementsByClassName('katexl');
+   var elts = document.getElementsByClassName('katex');
  
     document.addEventListener("DOMContentLoaded", function() {
     renderMathInElement(document.body, {
@@ -59,8 +59,9 @@ var opt = {
 
     
    document.addEventListener("DOMSubtreeModified", function() {
-    
     for(var i = 0 ; i < elts.length ; ++i){
+      pel=elts[i].previousElementSibling;
+      
     renderMathInElement(elts[i],opt);
 }
  
