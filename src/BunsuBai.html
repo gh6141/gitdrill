@@ -39,34 +39,21 @@ var opt = {
 
 
 
-   var elts = document.getElementsByClassName('katex');
+ 
  
     document.addEventListener("DOMContentLoaded", function() {
-    renderMathInElement(document.body, {
-      delimiters: [
-        {
-          left: "$begin-inline$", 
-          right: "$end-inline$", 
-          display: false
-        }, 
-        {
-          left: "$begin-display$",
-          right: "$end-display$", 
-          display: true
-        }
-      ]});
+    renderMathInElement(document.body, opt);
     });
 
-    
-   document.addEventListener("DOMSubtreeModified", function() {
-    for(var i = 0 ; i < elts.length ; ++i){
-      pel=elts[i].previousElementSibling;
-      
-    renderMathInElement(elts[i],opt);
-}
- 
-        
-
+    var ilns = document.getElementsByClassName('inline');   
+    document.addEventListener("DOMSubtreeModified", function() {
+     renderMathInElement(document.body,opt);
+     for(var i = 0 ; i < ilns.length ; ++i){  
+      if (ilns[i].childElementCount>1) {
+        ilns[i].removeChild(ilns[i].lastChild) ;
+      }else{
+      }       
+     };
 
     });
 </script>

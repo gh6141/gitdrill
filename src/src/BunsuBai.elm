@@ -290,10 +290,13 @@ htmlGenerator isDisplayMode stringLatex =
                 Just True ->
                     div [style "font-size" "30px"] [ text stringLatex ]
 
-                _ ->
-                    span [style "font-size" "30px"] [ text stringLatex ]
+                Just False ->
+                    span [style "font-size" "30px",class "inline"] [ text stringLatex ]
 
-spankatex siki= span [class "katexl"] [K.generate htmlGenerator (display siki)]
+                Nothing ->
+                    span [style "font-size" "30px",class "human"] [ text stringLatex ]
+
+spankatex siki= span [class "katexl"] [K.generate htmlGenerator (inline siki)]
 spanhuman moji=span [class "katexl"] [K.generate htmlGenerator (human moji)]
 divkatex lstkatex= lstkatex |> List.map (K.generate htmlGenerator)  |> div [class "katexl"]
 

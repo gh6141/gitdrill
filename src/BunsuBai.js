@@ -5138,27 +5138,51 @@ var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$span = _VirtualDom_node('span');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var author$project$BunsuBai$htmlGenerator = F2(
 	function (isDisplayMode, stringLatex) {
-		if ((isDisplayMode.$ === 'Just') && isDisplayMode.a) {
-			return A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '30px')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text(stringLatex)
-					]));
+		if (isDisplayMode.$ === 'Just') {
+			if (isDisplayMode.a) {
+				return A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(stringLatex)
+						]));
+			} else {
+				return A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+							elm$html$Html$Attributes$class('inline')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(stringLatex)
+						]));
+			}
 		} else {
 			return A2(
 				elm$html$Html$span,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+						A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+						elm$html$Html$Attributes$class('human')
 					]),
 				_List_fromArray(
 					[
@@ -5235,15 +5259,6 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var yotamDvir$elm_katex$Katex$Configs$generate = F4(
 	function (g, m, h, latex) {
 		var g_ = A2(g, m, h);
@@ -5298,8 +5313,8 @@ var yotamDvir$elm_katex$Katex$Configs$Math = F2(
 	function (a, b) {
 		return {$: 'Math', a: a, b: b};
 	});
-var yotamDvir$elm_katex$Katex$Configs$display = yotamDvir$elm_katex$Katex$Configs$Math(true);
-var yotamDvir$elm_katex$Katex$display = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$display, elm$core$Basics$always);
+var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
+var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
 var author$project$BunsuBai$spankatex = function (siki) {
 	return A2(
 		elm$html$Html$span,
@@ -5312,7 +5327,7 @@ var author$project$BunsuBai$spankatex = function (siki) {
 				A2(
 				yotamDvir$elm_katex$Katex$generate,
 				author$project$BunsuBai$htmlGenerator,
-				yotamDvir$elm_katex$Katex$display(siki))
+				yotamDvir$elm_katex$Katex$inline(siki))
 			]));
 };
 var elm$html$Html$button = _VirtualDom_node('button');
@@ -5546,8 +5561,6 @@ var yotamDvir$elm_katex$Katex$Configs$Human = function (a) {
 };
 var yotamDvir$elm_katex$Katex$Configs$human = yotamDvir$elm_katex$Katex$Configs$Human;
 var yotamDvir$elm_katex$Katex$human = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$human, elm$core$Basics$always);
-var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
-var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
 var author$project$BunsuBai$view = function (model) {
 	var stext = F3(
 		function (xx, yy, moji) {
@@ -5628,7 +5641,7 @@ var author$project$BunsuBai$view = function (model) {
 					_List_fromArray(
 						[
 							yotamDvir$elm_katex$Katex$human('赤リボンの長さが'),
-							(model.mondai.pattern < 4) ? yotamDvir$elm_katex$Katex$human('human') : yotamDvir$elm_katex$Katex$inline(model.bun1),
+							yotamDvir$elm_katex$Katex$inline(model.bun1),
 							yotamDvir$elm_katex$Katex$human('mです。青リボンの長さは'),
 							yotamDvir$elm_katex$Katex$inline(model.bun2),
 							yotamDvir$elm_katex$Katex$human('mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?')
