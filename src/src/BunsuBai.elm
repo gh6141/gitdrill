@@ -300,4 +300,4 @@ spankatex siki= span [class "katexl"] [K.generate htmlGenerator (inline siki)]
 spanhuman moji=span [class "katexl"] [K.generate htmlGenerator (human moji)]
 divkatex lstkatex= lstkatex |> List.map (K.generate htmlGenerator)  |> div [class "katexl"]
 
-bunsu a b="\\dfrac{"++(String.fromInt a)++"b}{"++(String.fromInt b)++"}"
+bunsu a b="\\dfrac{"++(String.fromInt a)++"}{"++(String.fromInt b)++"}"

@@ -4891,7 +4891,7 @@ var author$project$BunsuBai$Newmon = function (a) {
 };
 var author$project$BunsuBai$bunsu = F2(
 	function (a, b) {
-		return '\\dfrac{' + (elm$core$String$fromInt(a) + ('b}{' + (elm$core$String$fromInt(b) + '}')));
+		return '\\dfrac{' + (elm$core$String$fromInt(a) + ('}{' + (elm$core$String$fromInt(b) + '}')));
 	});
 var elm$core$Basics$identity = function (x) {
 	return x;
