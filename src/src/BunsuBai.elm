@@ -139,14 +139,7 @@ view model =
         dvy=30
 
         maruspan=(span [style "color" "red",style "font-size" "30px"] [text "〇"])
-        --cblu=dcbx (100+dvx) (50+dvy) (cboxlu model.inLU Kmotome)
-        --marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (90+dvy) maruspan) else (span [] [])
-       -- cbru=dcbx (300+dvx) (50+dvy) (cboxlu model.inRU Kmotome)
-        --maruru=if model.inRU==model.ansRU then (dcbx (300+dvx) (90+dvy) maruspan) else (span [] [])
-       -- cbld=dcbx (100+dvx) (180+dvy) (cboxlu model.inLD Kmotome)
-        --maruld=if model.inLD==model.ansLD then (dcbx (100+dvx) (170+dvy) maruspan) else (span [] [])
-        --cbrd=dcbx (300+dvx) (180+dvy) (cboxlu model.inRD Kmotome)
-        --marurd=if model.inRD==model.ansRD then (dcbx (300+dvx) (170+dvy) maruspan) else (span [] [])
+
 
         greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
 
