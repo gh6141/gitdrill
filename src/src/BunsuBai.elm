@@ -59,6 +59,43 @@ type alias Mondai =
    ,pattern:Int
  }
 
+type alias Yurisu =
+ {
+   bunsi:Int
+   ,bunbo:Int
+   ,enzan:Enzan
+   ,katex:String
+  }
+
+type Enzan = Waru | Kakeru | Sento
+
+ysCreate ax = 
+        if (String.contains "分の" ax) then
+           let
+             bL= String.split "分の" ax
+             bsi= Maybe.withDefault "0" (List.head (List.reverse bL))
+             bbo= Maybe.withDefault "1" (List.head bL)
+           in
+            { bunsi=toint bsi,bunbo=toint bbo,enzan=Sento,katex="\\dfrac{"++bsi++"}{"++bbo++"}"  }
+        else
+          {bunsi=toint ax,bunbo=1,enzan=Sento,katex=ax}
+
+yLCreate gyo= List.concat (List.map   (\ss->String.split "÷" ss)  (String.split "×" gyo))
+
+
+viewCreate ans=  
+  let  
+     ansL=String.split "=" ans
+     gl=  List.map (\gyo-> yLCreate gyo ) ansL  -- [[ , , ],    ]
+
+
+  in
+
+
+ List.map (\gyo-> div [] (List.map (\bs-> (spankatex bs.katex)  )  gyo))   )      (  List.map (\ax-> ysCreate ax)   (glCreate ans)  )
+
+
+
 
 type alias Model =
   { 
@@ -287,10 +324,9 @@ view model =
          let
           siki=model.ans
 
-          bunsuL=String.split "分の" siki
-          bunsuKtx="\\dfrac{"+List.head bunsuL"}{"+"}"
+      
          in
-          spankatex siki
+          viewCreate siki
           
         ])
 

@@ -6095,7 +6095,10 @@ var author$project$BunsuBai$view = function (model) {
 										]),
 									_List_fromArray(
 										[
-											author$project$BunsuBai$spankatex(model.ans)
+											function () {
+											var siki = model.ans;
+											return author$project$BunsuBai$spankatex(siki);
+										}()
 										])))
 							])),
 						A2(
