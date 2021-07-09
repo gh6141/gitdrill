@@ -4876,7 +4876,9 @@ var author$project$BunsuBai$init = function (_n0) {
 			ans: '',
 			bun1: '\\frac{1}{2}',
 			bun2: '*',
+			lu: '',
 			ludIchi: 1,
+			luflg: false,
 			mondai: {bo1: 2, bo2: 4, bo3: 8, pattern: 1, si1: 1, si2: 1, si3: 1}
 		},
 		elm$core$Platform$Cmd$none);
@@ -5113,11 +5115,31 @@ var author$project$BunsuBai$update = F2(
 							ans: elm$core$String$fromInt(si)
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Kmotome':
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			default:
+				var lut = function () {
+					var _n1 = model.mondai.pattern;
+					switch (_n1) {
+						case 1:
+							return model.bun1;
+						case 2:
+							return '*';
+						case 3:
+							return '*';
+						default:
+							return '*';
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{lu: lut, luflg: true}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$BunsuBai$Kmotome = {$: 'Kmotome'};
+var author$project$BunsuBai$Lu = {$: 'Lu'};
 var author$project$BunsuBai$Next = {$: 'Next'};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
@@ -5623,9 +5645,9 @@ var author$project$BunsuBai$view = function (model) {
 			[
 				A5(sline, 20, 120, 400, 120, 3),
 				A5(sline, 20, 150, 400, 150, 3),
-				A5(sline, model.ludIchi, 115, model.ludIchi, 125, 2),
+				A5(sline, 20 + 100, 115, 20 + 100, 125, 2),
 				A5(sline, 300, 115, 300, 125, 2),
-				A5(sline, model.ludIchi, 145, model.ludIchi, 155, 2),
+				A5(sline, 20 + 100, 145, 20 + 100, 155, 2),
 				A5(sline, 300, 145, 300, 155, 2),
 				A5(sline, 20, 115, 20, 155, 1),
 				A3(stext, 15, 110, '0'),
@@ -5688,7 +5710,7 @@ var author$project$BunsuBai$view = function (model) {
 	var dvy = 30;
 	var dvx = 30;
 	var dcbx = F3(
-		function (xx, yy, cbx) {
+		function (xx, yy, ob) {
 			return A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -5704,7 +5726,7 @@ var author$project$BunsuBai$view = function (model) {
 						elm$core$String$fromInt(xx) + 'px')
 					]),
 				_List_fromArray(
-					[cbx]));
+					[ob]));
 		});
 	var cboxlu = F2(
 		function (flg, km) {
@@ -5771,7 +5793,28 @@ var author$project$BunsuBai$view = function (model) {
 								A2(elm$html$Html$Attributes$style, 'padding', '3em')
 							]),
 						_List_fromArray(
-							[linex])),
+							[
+								linex,
+								A3(
+								dcbx,
+								200,
+								100,
+								A2(
+									rundis$elm_bootstrap$Bootstrap$Button$button,
+									_List_fromArray(
+										[
+											rundis$elm_bootstrap$Bootstrap$Button$attrs(
+											_List_fromArray(
+												[
+													A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+													elm$html$Html$Events$onClick(author$project$BunsuBai$Lu)
+												]))
+										]),
+									_List_fromArray(
+										[
+											model.luflg ? author$project$BunsuBai$spankatex(model.lu) : elm$html$Html$text('?')
+										])))
+							])),
 						A2(
 						elm$html$Html$td,
 						_List_Nil,

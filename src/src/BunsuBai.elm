@@ -67,16 +67,18 @@ type alias Model =
   ,ans:String
   ,bun1:String
   ,bun2:String
-  
+  ,luflg:Bool
+  ,lu:String
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=2,si2=1,bo2=4,si3=1,bo3=8,pattern=1},ludIchi=1,ans="",bun1="\\frac{1}{2}",bun2="*"}
+  ( {mondai={si1=1,bo1=2,si2=1,bo2=4,si3=1,bo3=8,pattern=1},ludIchi=1,ans="",bun1="\\frac{1}{2}",bun2="*"
+     ,luflg=False,lu=""}
   , Cmd.none
   )
 
-type Msg    =  Next | Newmon Mondai | Btn Int |Kmotome
+type Msg    =  Next | Newmon Mondai | Btn Int |Kmotome |Lu
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -119,7 +121,16 @@ update msg model =
    Kmotome ->
       
             ( model ,Cmd.none)
+   Lu -> 
+     let
+      lut= case model.mondai.pattern of
+       1 -> model.bun1
+       2 -> "*"
+       3 -> "*"
+       _ -> "*"
 
+     in
+      ({model|lu= lut ,luflg=True},Cmd.none)
   
  
  
@@ -134,7 +145,9 @@ view model =
         cboxlu flg km =button [style "font-size" "20px" ,onClick km] [ spankatex "\\dfrac{a}{b}" ]
       
         cboxez flg km=button [style "font-size" "30px" ,onClick km ]  [ spankatex "\\dfrac{a}{b}" ]
-        dcbx xx yy cbx=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [cbx]
+        dcbx xx yy ob=div [Html.Attributes.style "position" "absolute", Html.Attributes.style "top" ((String.fromInt yy)++"px"), Html.Attributes.style "left" ((String.fromInt xx)++"px")] [ob]
+        
+        
         dvx=30
         dvy=30
 
@@ -152,9 +165,9 @@ view model =
               sline 20 120 400 120 3 
               ,sline 20 150 400 150 3 
 
-              ,sline model.ludIchi 115 model.ludIchi 125 2 
+              ,sline (20+100) 115 (20+100) 125 2 
               ,sline 300 115 300 125 2
-              ,sline model.ludIchi 145 model.ludIchi 155 2 
+              ,sline (20+100) 145 (20+100) 155 2 
               ,sline 300 145 300 155 2 
 
               ,sline 20 115 20 155 1 
@@ -163,6 +176,7 @@ view model =
               ,stext 400 110 "(m)"
               ,stext 400 170 "(倍)"
 
+              
           ]
          
         stext xx yy moji = Svg.text_
@@ -190,6 +204,8 @@ view model =
          3 -> divkatex [human "赤リボンの長さが",inline model.bun1 ,human "mです。青リボンの長さは赤リボンの",inline model.bun2,human "倍です。青リボンの長さは?"]
          _ -> divkatex [human ""] 
 
+        
+
  in
 
    table [align "center",style "width" "80%"]
@@ -204,6 +220,8 @@ view model =
     [
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
        linex
+       ,dcbx  200 100  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Lu]] [  (if model.luflg then (spankatex model.lu) else (text "?")) ])
+
   
       ]   
      ,td [] [
