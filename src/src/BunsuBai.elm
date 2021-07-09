@@ -86,13 +86,23 @@ yLCreate gyo= List.concat (List.map   (\ss->String.split "÷" ss)  (String.split
 viewCreate ans=  
   let  
      ansL=String.split "=" ans
-     gl=  List.map (\gyo-> yLCreate gyo ) ansL  -- [[ , , ],    ]
+     gl=  List.map (\gyo-> 
+       List.map (\ax->
+         let
+          bns= ysCreate ax
+         in
+          spankatex bns.katex
+       )
+     
+      ( yLCreate gyo)
+      
+       ) ansL   
 
 
   in
+     List.concat (List.concat gl)
 
 
- List.map (\gyo-> div [] (List.map (\bs-> (spankatex bs.katex)  )  gyo))   )      (  List.map (\ax-> ysCreate ax)   (glCreate ans)  )
 
 
 
