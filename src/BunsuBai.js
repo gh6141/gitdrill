@@ -4879,7 +4879,11 @@ var author$project$BunsuBai$init = function (_n0) {
 			lu: '',
 			ludIchi: 1,
 			luflg: false,
-			mondai: {bo1: 2, bo2: 4, bo3: 8, pattern: 1, si1: 1, si2: 1, si3: 1}
+			mondai: {bo1: 2, bo2: 4, bo3: 8, pattern: 1, si1: 1, si2: 1, si3: 1},
+			rd: '',
+			rdflg: false,
+			ru: '',
+			ruflg: false
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -5101,9 +5105,13 @@ var author$project$BunsuBai$update = F2(
 					_Utils_update(
 						model,
 						{
+							ans: '',
 							bun1: xbun1,
 							bun2: xbun2,
-							mondai: {bo1: model.mondai.bo1, bo2: model.mondai.bo2, bo3: model.mondai.bo3, pattern: mnd.pattern, si1: mnd.si1, si2: mnd.si2, si3: mnd.si3}
+							luflg: false,
+							mondai: {bo1: model.mondai.bo1, bo2: model.mondai.bo2, bo3: model.mondai.bo3, pattern: mnd.pattern, si1: mnd.si1, si2: mnd.si2, si3: mnd.si3},
+							rdflg: false,
+							ruflg: false
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
@@ -5112,21 +5120,21 @@ var author$project$BunsuBai$update = F2(
 					_Utils_update(
 						model,
 						{
-							ans: elm$core$String$fromInt(si)
+							ans: _Utils_ap(model.ans, si)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Kmotome':
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			default:
+			case 'Lu':
 				var lut = function () {
 					var _n1 = model.mondai.pattern;
 					switch (_n1) {
 						case 1:
 							return model.bun1;
 						case 2:
-							return '*';
+							return '?';
 						case 3:
-							return '*';
+							return model.bun1;
 						default:
 							return '*';
 					}
@@ -5136,11 +5144,69 @@ var author$project$BunsuBai$update = F2(
 						model,
 						{lu: lut, luflg: true}),
 					elm$core$Platform$Cmd$none);
+			case 'Ru':
+				var rut = function () {
+					var _n2 = model.mondai.pattern;
+					switch (_n2) {
+						case 1:
+							return model.bun2;
+						case 2:
+							return model.bun2;
+						case 3:
+							return '?';
+						default:
+							return '*';
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{ru: rut, ruflg: true}),
+					elm$core$Platform$Cmd$none);
+			default:
+				var rdt = function () {
+					var _n3 = model.mondai.pattern;
+					switch (_n3) {
+						case 1:
+							return '?';
+						case 2:
+							return model.bun1;
+						case 3:
+							return model.bun2;
+						default:
+							return '*';
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{rd: rdt, rdflg: true}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$BunsuBai$Kmotome = {$: 'Kmotome'};
+var author$project$BunsuBai$Btn = function (a) {
+	return {$: 'Btn', a: a};
+};
 var author$project$BunsuBai$Lu = {$: 'Lu'};
 var author$project$BunsuBai$Next = {$: 'Next'};
+var author$project$BunsuBai$Rd = {$: 'Rd'};
+var author$project$BunsuBai$Ru = {$: 'Ru'};
+var author$project$BunsuBai$btnLabel = function (xi) {
+	switch (xi) {
+		case 12:
+			return '分の';
+		case 13:
+			return 'C';
+		case 14:
+			return '=';
+		case 15:
+			return '×';
+		case 16:
+			return '÷';
+		default:
+			return elm$core$String$fromInt(xi);
+	}
+};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -5622,6 +5688,157 @@ var author$project$BunsuBai$view = function (model) {
 					]),
 				_List_Nil);
 		});
+	var sbutton = function (ii) {
+		return A2(
+			elm$html$Html$button,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+					elm$html$Html$Events$onClick(
+					author$project$BunsuBai$Btn(
+						author$project$BunsuBai$btnLabel(ii)))
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text(
+					' ' + (author$project$BunsuBai$btnLabel(ii) + ' '))
+				]));
+	};
+	var sujibutton = A2(
+		elm$html$Html$table,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(7)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(8)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(9)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(14)
+							]))
+					])),
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(4)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(5)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(6)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(15)
+							]))
+					])),
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(1)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(2)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(3)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(16)
+							]))
+					])),
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(0)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(13)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(12)
+							]))
+					]))
+			]));
 	var maruspan = A2(
 		elm$html$Html$span,
 		_List_fromArray(
@@ -5797,8 +6014,8 @@ var author$project$BunsuBai$view = function (model) {
 								linex,
 								A3(
 								dcbx,
-								200,
-								100,
+								190,
+								80,
 								A2(
 									rundis$elm_bootstrap$Bootstrap$Button$button,
 									_List_fromArray(
@@ -5813,6 +6030,72 @@ var author$project$BunsuBai$view = function (model) {
 									_List_fromArray(
 										[
 											model.luflg ? author$project$BunsuBai$spankatex(model.lu) : elm$html$Html$text('?')
+										]))),
+								A3(
+								dcbx,
+								200,
+								220,
+								A2(
+									elm$html$Html$span,
+									_List_fromArray(
+										[
+											A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('1')
+										]))),
+								A3(
+								dcbx,
+								350,
+								80,
+								A2(
+									rundis$elm_bootstrap$Bootstrap$Button$button,
+									_List_fromArray(
+										[
+											rundis$elm_bootstrap$Bootstrap$Button$attrs(
+											_List_fromArray(
+												[
+													A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+													elm$html$Html$Events$onClick(author$project$BunsuBai$Ru)
+												]))
+										]),
+									_List_fromArray(
+										[
+											model.ruflg ? author$project$BunsuBai$spankatex(model.ru) : elm$html$Html$text('?')
+										]))),
+								A3(
+								dcbx,
+								350,
+								220,
+								A2(
+									rundis$elm_bootstrap$Bootstrap$Button$button,
+									_List_fromArray(
+										[
+											rundis$elm_bootstrap$Bootstrap$Button$attrs(
+											_List_fromArray(
+												[
+													A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+													elm$html$Html$Events$onClick(author$project$BunsuBai$Rd)
+												]))
+										]),
+									_List_fromArray(
+										[
+											model.rdflg ? author$project$BunsuBai$spankatex(model.rd) : elm$html$Html$text('?')
+										]))),
+								A3(
+								dcbx,
+								20,
+								300,
+								A2(
+									elm$html$Html$span,
+									_List_fromArray(
+										[
+											A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+										]),
+									_List_fromArray(
+										[
+											author$project$BunsuBai$spankatex(model.ans)
 										])))
 							])),
 						A2(
@@ -5866,34 +6149,11 @@ var author$project$BunsuBai$view = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(elm$html$Html$td, _List_Nil, _List_Nil)
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
 										A2(
 										elm$html$Html$td,
 										_List_Nil,
 										_List_fromArray(
-											[
-												A2(
-												rundis$elm_bootstrap$Bootstrap$Button$button,
-												_List_fromArray(
-													[
-														rundis$elm_bootstrap$Bootstrap$Button$attrs(
-														_List_fromArray(
-															[
-																A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-																elm$html$Html$Events$onClick(author$project$BunsuBai$Kmotome)
-															]))
-													]),
-												_List_fromArray(
-													[
-														(model.mondai.pattern === 1) ? author$project$BunsuBai$spankatex('\\dfrac{a}{b}') : author$project$BunsuBai$spankatex('\\dfrac{c}{d}')
-													]))
-											]))
+											[sujibutton]))
 									]))
 							]))
 					]))
