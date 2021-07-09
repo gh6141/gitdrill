@@ -100,7 +100,7 @@ viewCreate ans=
 
 
   in
-     List.concat (List.concat gl)
+     List.concat gl
 
 
 
@@ -330,7 +330,7 @@ view model =
        ,dcbx  350 80  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Ru]] [  (if model.ruflg then (spankatex model.ru) else (text "?")) ])
        ,dcbx  350 220  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Rd]] [  (if model.rdflg then (spankatex model.rd) else (text "?")) ])
        ,dcbx  20 300 (span [Html.Attributes.style "font-size" "30px"]
-        [
+        (
          let
           siki=model.ans
 
@@ -338,7 +338,8 @@ view model =
          in
           viewCreate siki
           
-        ])
+        )
+       )
 
   
       ]   
