@@ -69,16 +69,20 @@ type alias Model =
   ,bun2:String
   ,luflg:Bool
   ,lu:String
+  ,ruflg:Bool
+  ,ru:String
+  ,rdflg:Bool
+  ,rd:String
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {mondai={si1=1,bo1=2,si2=1,bo2=4,si3=1,bo3=8,pattern=1},ludIchi=1,ans="",bun1="\\frac{1}{2}",bun2="*"
-     ,luflg=False,lu=""}
+     ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd=""}
   , Cmd.none
   )
 
-type Msg    =  Next | Newmon Mondai | Btn Int |Kmotome |Lu
+type Msg    =  Next | Newmon Mondai | Btn String |Kmotome |Lu |Ru |Rd
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -111,11 +115,13 @@ update msg model =
       in
   
    
-      ( {model|bun1=xbun1,bun2=xbun2,mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=mnd.pattern}},      Cmd.none)
+      ( {model|bun1=xbun1,bun2=xbun2,
+        mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=mnd.pattern}
+        ,luflg=False,ruflg=False,rdflg=False,ans=""},      Cmd.none)
   
-   Btn si ->
+   Btn si ->     
 
-      ( {model | ans=String.fromInt si
+      ( {model | ans= model.ans++si
                  } ,Cmd.none)
 
    Kmotome ->
@@ -125,12 +131,31 @@ update msg model =
      let
       lut= case model.mondai.pattern of
        1 -> model.bun1
-       2 -> "*"
-       3 -> "*"
+       2 -> "?"
+       3 -> model.bun1
        _ -> "*"
-
      in
       ({model|lu= lut ,luflg=True},Cmd.none)
+   Ru ->
+    let
+      rut= case model.mondai.pattern of
+       1 -> model.bun2
+       2 -> model.bun2
+       3 -> "?"
+       _ -> "*"
+    in
+      ({model|ru= rut ,ruflg=True},Cmd.none)
+   Rd ->
+    let
+      rdt= case model.mondai.pattern of
+       1 -> "?"
+       2 -> model.bun1
+       3 -> model.bun2
+       _ -> "*"
+    in
+      ({model|rd= rdt ,rdflg=True},Cmd.none)
+
+
   
  
  
@@ -139,6 +164,39 @@ update msg model =
 view : Model -> Html Msg
 view model =
  let
+        sbutton : Int -> Html Msg
+        sbutton ii = (button [style "font-size" "30px"   ,onClick (Btn (btnLabel ii))] [ text (" "++(btnLabel ii)++" ")])
+
+        sujibutton=
+           table []
+            [
+             tr [] [
+               td [] [sbutton 7]
+               ,td [] [sbutton 8]
+               ,td [] [sbutton 9]
+               ,td [] [sbutton 14]
+             ]
+             ,tr [] [
+               td [] [sbutton 4]
+               ,td [] [sbutton 5]
+               ,td [] [sbutton 6]
+               ,td [] [sbutton 15]
+             ]
+             ,tr [] [
+               td [] [sbutton 1]
+               ,td [] [sbutton 2]
+               ,td [] [sbutton 3]
+               ,td [] [sbutton 16]
+             ]
+             ,tr [] [
+               td [] [sbutton 0]
+               ,td [] [sbutton 13]
+               ,td [] [sbutton 12]
+             ]
+            
+            ]
+
+
 
    
       
@@ -220,7 +278,21 @@ view model =
     [
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
        linex
-       ,dcbx  200 100  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Lu]] [  (if model.luflg then (spankatex model.lu) else (text "?")) ])
+       ,dcbx  190 80  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Lu]] [  (if model.luflg then (spankatex model.lu) else (text "?")) ])
+       ,dcbx  200 220 (span [Html.Attributes.style "font-size" "30px"] [text "1"])
+       ,dcbx  350 80  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Ru]] [  (if model.ruflg then (spankatex model.ru) else (text "?")) ])
+       ,dcbx  350 220  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Rd]] [  (if model.rdflg then (spankatex model.rd) else (text "?")) ])
+       ,dcbx  20 300 (span [Html.Attributes.style "font-size" "30px"]
+        [
+         let
+          siki=model.ans
+
+          bunsuL=String.split "分の" siki
+          bunsuKtx="\\dfrac{"+List.head bunsuL"}{"+"}"
+         in
+          spankatex siki
+          
+        ])
 
   
       ]   
@@ -233,15 +305,10 @@ view model =
       ,tr [] [td [Html.Attributes.style "font-size" "20px",style "color" "red" ] [
         
       ]]
-      ,tr [] [td [] []]
+  
       , tr [] [
          td [] [
-             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] 
-             [ if model.mondai.pattern==1 then
-                (spankatex "\\dfrac{a}{b}") 
-               else 
-                (spankatex "\\dfrac{c}{d}")
-            ]
+           sujibutton
 
          ]
        ]
@@ -289,11 +356,14 @@ sharesLocale =
      
     }
 
-buttoncaption ii = 
-  case ii of
-    10 -> "."
-    11 -> "C"
-    _  -> String.fromInt ii
+btnLabel : Int -> String
+btnLabel xi = case xi of
+               12 -> "分の"
+               13 -> "C"
+               14 -> "="
+               15 -> "×"
+               16 -> "÷"
+               _  -> String.fromInt xi
 
 
 htmlGenerator isDisplayMode stringLatex =
