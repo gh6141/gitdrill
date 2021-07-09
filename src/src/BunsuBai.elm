@@ -74,33 +74,56 @@ ysCreate ax =
            let
              bL= String.split "分の" ax
              bsi= Maybe.withDefault "0" (List.head (List.reverse bL))
-             bbo= Maybe.withDefault "1" (List.head bL)
+             bbot= Maybe.withDefault "1" (List.head bL)
+             bbo=
+              case (String.contains "×" bbot,String.contains "÷" bbot) of
+               (True,False) -> "×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}"
+               (False,True) -> "÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}"
+               _ -> "\\dfrac{"++bsi++"}{"++bbot++"}"
+
            in
-            { bunsi=toint bsi,bunbo=toint bbo,enzan=Sento,katex="\\dfrac{"++bsi++"}{"++bbo++"}"  }
+            { bunsi=toint bsi,bunbo=toint bbo,enzan=Sento,katex=bbo  }
         else
           {bunsi=toint ax,bunbo=1,enzan=Sento,katex=ax}
 
-yLCreate gyo= List.concat (List.map   (\ss->String.split "÷" ss)  (String.split "×" gyo))
+yLCreate gyo= 
+ let
+
+     xlist=String.split "×" gyo
+     xlistx=List.indexedMap  (sento "x") xlist
+ in
+   List.concat (List.map (\ss->  ( List.indexedMap (sento "÷")    (String.split "÷" ss)    ) )  xlistx)
+
+sento moji idx ss=    
+      if (idx==0) then
+       ss
+      else 
+       moji++ss
 
 
 viewCreate ans=  
   let  
-     ansL=String.split "=" ans
+
+     ansL=List.indexedMap (sento "=")  (String.split "=" ans)
+
+
      gl=  List.map (\gyo-> 
-       List.map (\ax->
-         let
-          bns= ysCreate ax
-         in
-          spankatex bns.katex
-       )
-     
-      ( yLCreate gyo)
-      
-       ) ansL   
+          div []  
+
+         (  (List.map (\ax->
+           let
+            bns= ysCreate ax
+           in
+            spankatex bns.katex       
+           ) )
+
+          ( yLCreate gyo) )
+       
+        ) ansL   
 
 
   in
-     List.concat gl
+      gl
 
 
 
