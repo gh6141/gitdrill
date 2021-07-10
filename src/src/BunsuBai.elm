@@ -29,6 +29,7 @@ import Katex as K
         , display
         )
 import Bootstrap.Button as Button
+import Debug
 
 
 --opassage : List Latex
@@ -84,20 +85,20 @@ ysCreate ax =
 
         if (String.contains "分の" ax) then
            let
-             bL= String.split "分の" ax
+             bL= (String.split "分の" ax)
              bsi= Maybe.withDefault "1" (List.head (List.reverse bL))
              bbot= Maybe.withDefault "1" (List.head bL)
-             ktx=
+             (ktx,bbot2)=
               case [String.contains "×" bbot,String.contains "÷" bbot,String.contains "=" bbot] of
-               [True,False,False] -> "×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}"
-               [False,True,False] -> "÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}"
-               [False,False,True] -> "=\\dfrac{"++bsi++"}{"++(String.replace "=" "" bbot)++"}"
-               _ -> "\\dfrac{"++bsi++"}{"++bbot++"}"
+               [True,False,False] -> ("×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}",String.replace "×" "" bbot)
+               [False,True,False] -> ("÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}",String.replace "÷" "" bbot)
+               [False,False,True] -> ("=\\dfrac{"++bsi++"}{"++(String.replace "=" "" bbot)++"}",String.replace "=" "" bbot)
+               _ -> ("\\dfrac{"++bsi++"}{"++bbot++"}",bbot)
 
 
 
            in
-            { bunsi=toint bsi,bunbo=toint bbot,enzan=enzant,katex=ktx  }
+            { bunsi=toint bsi,bunbo=toint bbot2,enzan=enzant,katex=ktx  }
         else
           {bunsi=toint ax,bunbo=1,enzan=enzant,katex=ax}
 
@@ -142,6 +143,14 @@ viewCreateMaru ans yuseikai
    in
      ml
 
+seikaiDisp ans yuseikai =
+   let
+     mll= yuriKeisanL ans
+     yusu=    Maybe.withDefault  {bunsi=1,bunbo=1,enzan=Sento,katex=""}  ( List.head (List.reverse mll) )
+   in
+    ( yusu.bunsi==yuseikai.bunsi && yusu.bunbo==yuseikai.bunbo)
+
+
 viewCreateSiki ans 
   =
    let
@@ -164,20 +173,22 @@ yuriL ans =
 
 yuriKeisanL ans =
  let
-   yl=yuriL ans
-   ykl=
+   yl= (yuriL ans)
+   ykl= 
     let
       func yu yuacl = 
        let
-        test=Debug.log "bo bs=" ((String.fromInt yu.bunsi)++"/"++(String.fromInt yu.bunbo))
-        acbs=if yu.enzan==Waru then yu.bunbo*yuacl.bunsi else yu.bunsi*yuacl.bunsi
-        acbb=if yu.enzan==Waru then yu.bunsi*yuacl.bunbo else yu.bunbo*yuacl.bunbo
+        ysi=if yu.bunsi==0 then 1 else yu.bunsi
+        ybo=if yu.bunbo==0 then 1 else yu.bunbo 
+        
+        acbs= if yu.enzan==Waru then (ybo*yuacl.bunsi) else (ysi*yuacl.bunsi)
+        acbb= if yu.enzan==Waru then (ysi*yuacl.bunbo) else (ybo*yuacl.bunbo)
        in
         {bunsi= acbs ,bunbo=acbb  ,enzan=Sento,katex="\\dfrac{"++(String.fromInt acbs)++"}{"++(String.fromInt acbb)++"}"}
     in
-     List.map  (\ylst ->      
+      (List.map  (\ylst ->      
        List.foldl func {bunsi=1,bunbo=1,enzan=Sento,katex=""} ylst   
-     )  yl
+     )  yl )
  in
   ykl
 
@@ -233,13 +244,14 @@ type alias Model =
   ,ru:String
   ,rdflg:Bool
   ,rd:String
+  ,ansdisp:Bool
   
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=4,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="1",tmpans="1",bun1="\\frac{1}{2}",bun2="1"
-     ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd=""}
+  ( {mondai={si1=1,bo1=4,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="",tmpans="",bun1="\\frac{1}{2}",bun2="1"
+     ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd="",ansdisp=False}
   , Cmd.none
   )
 
@@ -294,15 +306,17 @@ update msg model =
    
       ( {model|bun1=xbun1,bun2=xbun2,
         mondai=mnd
-        ,luflg=False,ruflg=False,rdflg=False,ans="",tmpans=""},      Cmd.none)
+        ,luflg=False,ruflg=False,rdflg=False,ans="",tmpans="",ansdisp=False},      Cmd.none)
   
    Btn si ->     
      let
         tans = if si=="=" then model.ans else model.tmpans
 
+        mans=if si=="C" then (String.dropRight 1 model.ans ) else (model.ans++(if si=="答" then "" else si))
+
      in
 
-      ( {model | ans= model.ans++si ,tmpans=tans
+      ( {model | ans= mans ,tmpans=tans ,ansdisp=if si=="答" then True else model.ansdisp
                  } ,Cmd.none)
 
    Kmotome ->
@@ -373,6 +387,7 @@ view model =
                td [] [sbutton 0]
                ,td [] [sbutton 13]
                ,td [] [sbutton 12]
+               ,td [] [sbutton 17]
              ]
             
             ]
@@ -472,11 +487,13 @@ view model =
         )
        )
        ,dcbx  0 300 (span [Html.Attributes.style "font-size" "30px",style "color" "red"]        
-         --( viewCreateMaru model.tmpans model.mondai.seikai )           
-          (viewCreateSiki model.tmpans)
+         ( viewCreateMaru model.ans model.mondai.seikai )           
+         -- (viewCreateSiki model.ans)
        )
-       ,spankatex model.mondai.seikai.katex
-
+       ,if model.ansdisp then (spankatex model.mondai.seikai.katex) else (span [] [text ""])
+       ,dcbx 20 280 (span  [Html.Attributes.style "font-size" "40px",style "color" "red"]  
+            [text (if (seikaiDisp model.ans model.mondai.seikai) then "正解！！" else "")]
+         )
   
       ]   
      ,td [] [
@@ -546,6 +563,7 @@ btnLabel xi = case xi of
                14 -> "="
                15 -> "×"
                16 -> "÷"
+               17 -> "答"
                _  -> String.fromInt xi
 
 
