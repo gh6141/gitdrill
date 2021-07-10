@@ -30,6 +30,7 @@ import Katex as K
         )
 import Bootstrap.Button as Button
 
+
 --opassage : List Latex
 --opassage =
  --   [ human "等式の変形 "
@@ -84,9 +85,9 @@ ysCreate ax =
         if (String.contains "分の" ax) then
            let
              bL= String.split "分の" ax
-             bsi= Maybe.withDefault "0" (List.head (List.reverse bL))
+             bsi= Maybe.withDefault "1" (List.head (List.reverse bL))
              bbot= Maybe.withDefault "1" (List.head bL)
-             bbo=
+             ktx=
               case [String.contains "×" bbot,String.contains "÷" bbot,String.contains "=" bbot] of
                [True,False,False] -> "×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}"
                [False,True,False] -> "÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}"
@@ -96,7 +97,7 @@ ysCreate ax =
 
 
            in
-            { bunsi=toint bsi,bunbo=toint bbo,enzan=enzant,katex=bbo  }
+            { bunsi=toint bsi,bunbo=toint bbot,enzan=enzant,katex=ktx  }
         else
           {bunsi=toint ax,bunbo=1,enzan=enzant,katex=ax}
 
@@ -138,14 +139,16 @@ viewCreateMaru ans yuseikai
   =
    let
      ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "〇" else "*")]   )    ( yuriCheck ans yuseikai)
-
    in
      ml
-  
-    
 
-
-
+viewCreateSiki ans 
+  =
+   let
+     ml=List.map (\siki ->  div [style "margin" "20px"]  [spankatex siki]   )    ( yuriCheckSiki ans )
+   in
+     ml
+      
 
 yuriL ans =  
  let  
@@ -166,6 +169,7 @@ yuriKeisanL ans =
     let
       func yu yuacl = 
        let
+        test=Debug.log "bo bs=" ((String.fromInt yu.bunsi)++"/"++(String.fromInt yu.bunbo))
         acbs=if yu.enzan==Waru then yu.bunbo*yuacl.bunsi else yu.bunsi*yuacl.bunsi
         acbb=if yu.enzan==Waru then yu.bunsi*yuacl.bunbo else yu.bunbo*yuacl.bunbo
        in
@@ -184,6 +188,12 @@ yuriCheck ans yuans=
  in
    List.map (\yus->   ( hikaku yus yuans)   )   ykL
 
+yuriCheckSiki ans =
+ let
+   ykL=yuriKeisanL ans 
+
+ in
+   List.map (\yus->  yus.katex  )   ykL
 
 
 
@@ -195,8 +205,8 @@ gcm a b =
    if r==0 then sho else (gcm sho r)
 
 yakubun ysu=
- let
-  ww=gcm ysu.bunsi ysu.bunbo 
+ let  
+  ww=if (ysu.bunsi==0||ysu.bunbo==0) then 1 else (gcm ysu.bunsi ysu.bunbo )
   bs=ysu.bunsi//ww
   bb=ysu.bunbo//ww
  in
@@ -227,7 +237,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=1,si2=1,bo2=1,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="",bun1="\\frac{1}{2}",bun2="*"
+  ( {mondai={si1=1,bo1=4,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="1",bun1="\\frac{1}{2}",bun2="1"
      ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd=""}
   , Cmd.none
   )
@@ -248,7 +258,7 @@ update msg model =
             _ -> (1,1)
        
           in
-           {
+           yakubun  {
             bunsi=kaisi
            ,bunbo=kaibo
            ,enzan=Sento
@@ -457,8 +467,10 @@ view model =
         )
        )
        ,dcbx  0 300 (span [Html.Attributes.style "font-size" "30px",style "color" "red"]        
-         ( viewCreateMaru model.ans model.mondai.seikai )           
+        --  ( viewCreateMaru model.ans model.mondai.seikai )           
+        (viewCreateSiki model.ans)
        )
+       ,spankatex model.mondai.seikai.katex
 
   
       ]   
