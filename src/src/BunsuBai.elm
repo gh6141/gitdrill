@@ -224,6 +224,7 @@ type alias Model =
   ludIchi:Int
   ,mondai:Mondai
   ,ans:String
+  ,tmpans:String
   ,bun1:String
   ,bun2:String
   ,luflg:Bool
@@ -237,7 +238,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=4,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="1",bun1="\\frac{1}{2}",bun2="1"
+  ( {mondai={si1=1,bo1=4,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="1",tmpans="1",bun1="\\frac{1}{2}",bun2="1"
      ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd=""}
   , Cmd.none
   )
@@ -293,11 +294,15 @@ update msg model =
    
       ( {model|bun1=xbun1,bun2=xbun2,
         mondai=mnd
-        ,luflg=False,ruflg=False,rdflg=False,ans=""},      Cmd.none)
+        ,luflg=False,ruflg=False,rdflg=False,ans="",tmpans=""},      Cmd.none)
   
    Btn si ->     
+     let
+        tans = if si=="=" then model.ans else model.tmpans
 
-      ( {model | ans= model.ans++si
+     in
+
+      ( {model | ans= model.ans++si ,tmpans=tans
                  } ,Cmd.none)
 
    Kmotome ->
@@ -467,8 +472,8 @@ view model =
         )
        )
        ,dcbx  0 300 (span [Html.Attributes.style "font-size" "30px",style "color" "red"]        
-        --  ( viewCreateMaru model.ans model.mondai.seikai )           
-        (viewCreateSiki model.ans)
+         --( viewCreateMaru model.tmpans model.mondai.seikai )           
+          (viewCreateSiki model.tmpans)
        )
        ,spankatex model.mondai.seikai.katex
 

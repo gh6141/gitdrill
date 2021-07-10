@@ -4893,7 +4893,8 @@ var author$project$BunsuBai$init = function (_n0) {
 			rd: '',
 			rdflg: false,
 			ru: '',
-			ruflg: false
+			ruflg: false,
+			tmpans: '1'
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -5176,15 +5177,17 @@ var author$project$BunsuBai$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{ans: '', bun1: xbun1, bun2: xbun2, luflg: false, mondai: mnd, rdflg: false, ruflg: false}),
+						{ans: '', bun1: xbun1, bun2: xbun2, luflg: false, mondai: mnd, rdflg: false, ruflg: false, tmpans: ''}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
+				var tans = (si === '=') ? model.ans : model.tmpans;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							ans: _Utils_ap(model.ans, si)
+							ans: _Utils_ap(model.ans, si),
+							tmpans: tans
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Kmotome':
@@ -6461,7 +6464,7 @@ var author$project$BunsuBai$view = function (model) {
 											A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
 											A2(elm$html$Html$Attributes$style, 'color', 'red')
 										]),
-									author$project$BunsuBai$viewCreateSiki(model.ans))),
+									author$project$BunsuBai$viewCreateSiki(model.tmpans))),
 								author$project$BunsuBai$spankatex(model.mondai.seikai.katex)
 							])),
 						A2(
