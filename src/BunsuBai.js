@@ -5437,7 +5437,7 @@ var author$project$BunsuBai$yLCreate = function (gyo) {
 	var xlist = A2(elm$core$String$split, '×', gyo);
 	var xlistx = A2(
 		elm$core$List$indexedMap,
-		author$project$BunsuBai$sento('x'),
+		author$project$BunsuBai$sento('×'),
 		xlist);
 	return elm$core$List$concat(
 		A2(
@@ -5450,7 +5450,10 @@ var author$project$BunsuBai$yLCreate = function (gyo) {
 			},
 			xlistx));
 };
+var author$project$BunsuBai$Eq = {$: 'Eq'};
+var author$project$BunsuBai$Kakeru = {$: 'Kakeru'};
 var author$project$BunsuBai$Sento = {$: 'Sento'};
+var author$project$BunsuBai$Waru = {$: 'Waru'};
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5485,6 +5488,53 @@ var elm$core$String$replace = F3(
 			A2(elm$core$String$split, before, string));
 	});
 var author$project$BunsuBai$ysCreate = function (ax) {
+	var enzant = function () {
+		var _n7 = _List_fromArray(
+			[
+				A2(elm$core$String$contains, '×', ax),
+				A2(elm$core$String$contains, '÷', ax),
+				A2(elm$core$String$contains, '=', ax)
+			]);
+		_n7$3:
+		while (true) {
+			if (_n7.b) {
+				if (_n7.a) {
+					if ((((_n7.b.b && (!_n7.b.a)) && _n7.b.b.b) && (!_n7.b.b.a)) && (!_n7.b.b.b.b)) {
+						var _n8 = _n7.b;
+						var _n9 = _n8.b;
+						return author$project$BunsuBai$Kakeru;
+					} else {
+						break _n7$3;
+					}
+				} else {
+					if (_n7.b.b) {
+						if (_n7.b.a) {
+							if ((_n7.b.b.b && (!_n7.b.b.a)) && (!_n7.b.b.b.b)) {
+								var _n10 = _n7.b;
+								var _n11 = _n10.b;
+								return author$project$BunsuBai$Waru;
+							} else {
+								break _n7$3;
+							}
+						} else {
+							if ((_n7.b.b.b && _n7.b.b.a) && (!_n7.b.b.b.b)) {
+								var _n12 = _n7.b;
+								var _n13 = _n12.b;
+								return author$project$BunsuBai$Eq;
+							} else {
+								break _n7$3;
+							}
+						}
+					} else {
+						break _n7$3;
+					}
+				}
+			} else {
+				break _n7$3;
+			}
+		}
+		return author$project$BunsuBai$Sento;
+	}();
 	if (A2(elm$core$String$contains, '分の', ax)) {
 		var bL = A2(elm$core$String$split, '分の', ax);
 		var bbot = A2(
@@ -5497,23 +5547,48 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 			elm$core$List$head(
 				elm$core$List$reverse(bL)));
 		var bbo = function () {
-			var _n0 = _Utils_Tuple2(
-				A2(elm$core$String$contains, '×', bbot),
-				A2(elm$core$String$contains, '÷', bbot));
-			_n0$2:
+			var _n0 = _List_fromArray(
+				[
+					A2(elm$core$String$contains, '×', bbot),
+					A2(elm$core$String$contains, '÷', bbot),
+					A2(elm$core$String$contains, '=', bbot)
+				]);
+			_n0$3:
 			while (true) {
-				if (_n0.a) {
-					if (!_n0.b) {
-						return '×\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '×', '', bbot) + '}')));
+				if (_n0.b) {
+					if (_n0.a) {
+						if ((((_n0.b.b && (!_n0.b.a)) && _n0.b.b.b) && (!_n0.b.b.a)) && (!_n0.b.b.b.b)) {
+							var _n1 = _n0.b;
+							var _n2 = _n1.b;
+							return '×\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '×', '', bbot) + '}')));
+						} else {
+							break _n0$3;
+						}
 					} else {
-						break _n0$2;
+						if (_n0.b.b) {
+							if (_n0.b.a) {
+								if ((_n0.b.b.b && (!_n0.b.b.a)) && (!_n0.b.b.b.b)) {
+									var _n3 = _n0.b;
+									var _n4 = _n3.b;
+									return '÷\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '÷', '', bbot) + '}')));
+								} else {
+									break _n0$3;
+								}
+							} else {
+								if ((_n0.b.b.b && _n0.b.b.a) && (!_n0.b.b.b.b)) {
+									var _n5 = _n0.b;
+									var _n6 = _n5.b;
+									return '=\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '=', '', bbot) + '}')));
+								} else {
+									break _n0$3;
+								}
+							}
+						} else {
+							break _n0$3;
+						}
 					}
 				} else {
-					if (_n0.b) {
-						return '÷\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '÷', '', bbot) + '}')));
-					} else {
-						break _n0$2;
-					}
+					break _n0$3;
 				}
 			}
 			return '\\dfrac{' + (bsi + ('}{' + (bbot + '}')));
@@ -5521,14 +5596,14 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 		return {
 			bunbo: author$project$BunsuBai$toint(bbo),
 			bunsi: author$project$BunsuBai$toint(bsi),
-			enzan: author$project$BunsuBai$Sento,
+			enzan: enzant,
 			katex: bbo
 		};
 	} else {
 		return {
 			bunbo: 1,
 			bunsi: author$project$BunsuBai$toint(ax),
-			enzan: author$project$BunsuBai$Sento,
+			enzan: enzant,
 			katex: ax
 		};
 	}
@@ -5543,7 +5618,10 @@ var author$project$BunsuBai$viewCreate = function (ans) {
 		function (gyo) {
 			return A2(
 				elm$html$Html$div,
-				_List_Nil,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'margin', '20px')
+					]),
 				elm$core$List$map(
 					function (ax) {
 						var bns = author$project$BunsuBai$ysCreate(ax);

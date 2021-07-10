@@ -67,30 +67,43 @@ type alias Yurisu =
    ,katex:String
   }
 
-type Enzan = Waru | Kakeru | Sento
+type Enzan = Waru | Kakeru | Sento |Eq
 
 ysCreate ax = 
+       let
+           enzant=
+              case [String.contains "×" ax,String.contains "÷" ax,String.contains "=" ax] of
+               [True,False,False] -> Kakeru
+               [False,True,False] -> Waru
+               [False,False,True] -> Eq
+               _ -> Sento
+
+       in
+
         if (String.contains "分の" ax) then
            let
              bL= String.split "分の" ax
              bsi= Maybe.withDefault "0" (List.head (List.reverse bL))
              bbot= Maybe.withDefault "1" (List.head bL)
              bbo=
-              case (String.contains "×" bbot,String.contains "÷" bbot) of
-               (True,False) -> "×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}"
-               (False,True) -> "÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}"
+              case [String.contains "×" bbot,String.contains "÷" bbot,String.contains "=" bbot] of
+               [True,False,False] -> "×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}"
+               [False,True,False] -> "÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}"
+               [False,False,True] -> "=\\dfrac{"++bsi++"}{"++(String.replace "=" "" bbot)++"}"
                _ -> "\\dfrac{"++bsi++"}{"++bbot++"}"
 
+
+
            in
-            { bunsi=toint bsi,bunbo=toint bbo,enzan=Sento,katex=bbo  }
+            { bunsi=toint bsi,bunbo=toint bbo,enzan=enzant,katex=bbo  }
         else
-          {bunsi=toint ax,bunbo=1,enzan=Sento,katex=ax}
+          {bunsi=toint ax,bunbo=1,enzan=enzant,katex=ax}
 
 yLCreate gyo= 
  let
 
      xlist=String.split "×" gyo
-     xlistx=List.indexedMap  (sento "x") xlist
+     xlistx=List.indexedMap  (sento "×") xlist
  in
    List.concat (List.map (\ss->  ( List.indexedMap (sento "÷")    (String.split "÷" ss)    ) )  xlistx)
 
@@ -103,12 +116,9 @@ sento moji idx ss=
 
 viewCreate ans=  
   let  
-
      ansL=List.indexedMap (sento "=")  (String.split "=" ans)
-
-
      gl=  List.map (\gyo-> 
-          div []  
+          div [style "margin" "20px"]  
 
          (  (List.map (\ax->
            let
@@ -120,15 +130,41 @@ viewCreate ans=
           ( yLCreate gyo) )
        
         ) ansL   
-
-
   in
       gl
 
 
+keisanL ans =  
+ let  
+     ansL=List.indexedMap (sento "=")  (String.split "=" ans)
+     kl=  List.map (\gyo->  
+         (  (List.map  (\ax->
+          ( ysCreate ax )  --ここで、YurisuのList作成           
+           ) )
+          ( yLCreate gyo) )       
+        ) ansL   
+  in
+      kl
 
+gcm a b =
+  let
+   (dai,sho)=  if a>b then (a,b) else (b,a)
+   r=modBy sho dai
+  in
+   if r==0 then sho else (gcm sho r)
 
+yakubun ysu=
+ let
+  ww=gcm ysu.bunsi ysu.bunbo 
+ in
+  {bunsi=ysu.bunsi//ww,bunbo=ysu.bunbo//ww,enzan=ysu.enzan,katex=""}
 
+hikaku ysu1 ysu2=
+ let
+   y1=yakubun ysu1
+   y2=yakubun ysu2
+ in
+  ( y1.bunsi==y2.bunsi && y1.bunbo==y2.bunbo)
 
 type alias Model =
   { 
