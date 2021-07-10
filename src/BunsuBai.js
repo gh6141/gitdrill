@@ -4393,6 +4393,7 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$BunsuBai$Sento = {$: 'Sento'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4879,7 +4880,16 @@ var author$project$BunsuBai$init = function (_n0) {
 			lu: '',
 			ludIchi: 1,
 			luflg: false,
-			mondai: {bo1: 2, bo2: 4, bo3: 8, pattern: 1, si1: 1, si2: 1, si3: 1},
+			mondai: {
+				bo1: 1,
+				bo2: 1,
+				bo3: 1,
+				pattern: 1,
+				seikai: {bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
+				si1: 1,
+				si2: 1,
+				si3: 1
+			},
 			rd: '',
 			rdflg: false,
 			ru: '',
@@ -5083,7 +5093,37 @@ var author$project$BunsuBai$update = F2(
 	function (msg, model) {
 		var mhenkan = F4(
 			function (i1, i2, i3, i4) {
-				return {bo1: model.mondai.bo1, bo2: model.mondai.bo2, bo3: model.mondai.bo3, pattern: i4, si1: i1, si2: i2, si3: i3};
+				return {
+					bo1: model.mondai.bo1,
+					bo2: model.mondai.bo2,
+					bo3: model.mondai.bo3,
+					pattern: i4,
+					seikai: function () {
+						var _n4 = function () {
+							switch (i4) {
+								case 1:
+									return _Utils_Tuple2(i2 * model.mondai.bo1, i1 * model.mondai.bo2);
+								case 2:
+									return _Utils_Tuple2(i2 * model.mondai.bo1, i1 * model.mondai.bo2);
+								case 3:
+									return _Utils_Tuple2(i1 * i2, model.mondai.bo1 * model.mondai.bo2);
+								default:
+									return _Utils_Tuple2(1, 1);
+							}
+						}();
+						var kaisi = _n4.a;
+						var kaibo = _n4.b;
+						return {
+							bunbo: kaibo,
+							bunsi: kaisi,
+							enzan: author$project$BunsuBai$Sento,
+							katex: '\\dfrac{' + (elm$core$String$fromInt(kaisi) + ('}{' + (elm$core$String$fromInt(kaibo) + '}')))
+						};
+					}(),
+					si1: i1,
+					si2: i2,
+					si3: i3
+				};
 			});
 		var monGenerator = A5(
 			elm$random$Random$map4,
@@ -5104,15 +5144,7 @@ var author$project$BunsuBai$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{
-							ans: '',
-							bun1: xbun1,
-							bun2: xbun2,
-							luflg: false,
-							mondai: {bo1: model.mondai.bo1, bo2: model.mondai.bo2, bo3: model.mondai.bo3, pattern: mnd.pattern, si1: mnd.si1, si2: mnd.si2, si3: mnd.si3},
-							rdflg: false,
-							ruflg: false
-						}),
+						{ans: '', bun1: xbun1, bun2: xbun2, luflg: false, mondai: mnd, rdflg: false, ruflg: false}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
@@ -5452,7 +5484,6 @@ var author$project$BunsuBai$yLCreate = function (gyo) {
 };
 var author$project$BunsuBai$Eq = {$: 'Eq'};
 var author$project$BunsuBai$Kakeru = {$: 'Kakeru'};
-var author$project$BunsuBai$Sento = {$: 'Sento'};
 var author$project$BunsuBai$Waru = {$: 'Waru'};
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -5632,6 +5663,117 @@ var author$project$BunsuBai$viewCreate = function (ans) {
 		ansL);
 	return gl;
 };
+var elm$core$Basics$modBy = _Basics_modBy;
+var author$project$BunsuBai$gcm = F2(
+	function (a, b) {
+		gcm:
+		while (true) {
+			var _n0 = (_Utils_cmp(a, b) > 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+			var dai = _n0.a;
+			var sho = _n0.b;
+			var r = A2(elm$core$Basics$modBy, sho, dai);
+			if (!r) {
+				return sho;
+			} else {
+				var $temp$a = sho,
+					$temp$b = r;
+				a = $temp$a;
+				b = $temp$b;
+				continue gcm;
+			}
+		}
+	});
+var author$project$BunsuBai$yakubun = function (ysu) {
+	var ww = A2(author$project$BunsuBai$gcm, ysu.bunsi, ysu.bunbo);
+	var bs = (ysu.bunsi / ww) | 0;
+	var bb = (ysu.bunbo / ww) | 0;
+	return {
+		bunbo: bb,
+		bunsi: bs,
+		enzan: author$project$BunsuBai$Sento,
+		katex: '\\dfrac{' + (elm$core$String$fromInt(bs) + ('}{' + (elm$core$String$fromInt(bb) + '}')))
+	};
+};
+var author$project$BunsuBai$hikaku = F2(
+	function (ysu1, ysu2) {
+		var y2 = author$project$BunsuBai$yakubun(ysu2);
+		var y1 = author$project$BunsuBai$yakubun(ysu1);
+		return _Utils_eq(y1.bunsi, y2.bunsi) && _Utils_eq(y1.bunbo, y2.bunbo);
+	});
+var author$project$BunsuBai$yuriL = function (ans) {
+	var ansL = A2(
+		elm$core$List$indexedMap,
+		author$project$BunsuBai$sento('='),
+		A2(elm$core$String$split, '=', ans));
+	var kl = A2(
+		elm$core$List$map,
+		function (gyo) {
+			return elm$core$List$map(
+				function (ax) {
+					return author$project$BunsuBai$ysCreate(ax);
+				})(
+				author$project$BunsuBai$yLCreate(gyo));
+		},
+		ansL);
+	return kl;
+};
+var author$project$BunsuBai$yuriKeisanL = function (ans) {
+	var yl = author$project$BunsuBai$yuriL(ans);
+	var ykl = function () {
+		var func = F2(
+			function (yu, yuacl) {
+				var acbs = _Utils_eq(yu.enzan, author$project$BunsuBai$Waru) ? (yu.bunbo * yuacl.bunsi) : (yu.bunsi * yuacl.bunsi);
+				var acbb = _Utils_eq(yu.enzan, author$project$BunsuBai$Waru) ? (yu.bunsi * yuacl.bunbo) : (yu.bunbo * yuacl.bunbo);
+				return {
+					bunbo: acbb,
+					bunsi: acbs,
+					enzan: author$project$BunsuBai$Sento,
+					katex: '\\dfrac{' + (elm$core$String$fromInt(acbs) + ('}{' + (elm$core$String$fromInt(acbb) + '}')))
+				};
+			});
+		return A2(
+			elm$core$List$map,
+			function (ylst) {
+				return A3(
+					elm$core$List$foldl,
+					func,
+					{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
+					ylst);
+			},
+			yl);
+	}();
+	return ykl;
+};
+var author$project$BunsuBai$yuriCheck = F2(
+	function (ans, yuans) {
+		var ykL = author$project$BunsuBai$yuriKeisanL(ans);
+		return A2(
+			elm$core$List$map,
+			function (yus) {
+				return A2(author$project$BunsuBai$hikaku, yus, yuans);
+			},
+			ykL);
+	});
+var author$project$BunsuBai$viewCreateMaru = F2(
+	function (ans, yuseikai) {
+		var ml = A2(
+			elm$core$List$map,
+			function (flg) {
+				return A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'margin', '20px')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(
+							flg ? '〇' : '*')
+						]));
+			},
+			A2(author$project$BunsuBai$yuriCheck, ans, yuseikai));
+		return ml;
+	});
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
@@ -6310,7 +6452,19 @@ var author$project$BunsuBai$view = function (model) {
 									function () {
 										var siki = model.ans;
 										return author$project$BunsuBai$viewCreate(siki);
-									}()))
+									}())),
+								A3(
+								dcbx,
+								0,
+								300,
+								A2(
+									elm$html$Html$span,
+									_List_fromArray(
+										[
+											A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+											A2(elm$html$Html$Attributes$style, 'color', 'red')
+										]),
+									A2(author$project$BunsuBai$viewCreateMaru, model.ans, model.mondai.seikai)))
 							])),
 						A2(
 						elm$html$Html$td,

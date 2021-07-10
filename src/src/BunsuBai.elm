@@ -57,6 +57,7 @@ type alias Mondai =
    ,si3:Int
    ,bo3:Int
    ,pattern:Int
+   ,seikai:Yurisu
  }
 
 type alias Yurisu =
@@ -133,8 +134,20 @@ viewCreate ans=
   in
       gl
 
+viewCreateMaru ans yuseikai
+  =
+   let
+     ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "〇" else "*")]   )    ( yuriCheck ans yuseikai)
 
-keisanL ans =  
+   in
+     ml
+  
+    
+
+
+
+
+yuriL ans =  
  let  
      ansL=List.indexedMap (sento "=")  (String.split "=" ans)
      kl=  List.map (\gyo->  
@@ -146,6 +159,34 @@ keisanL ans =
   in
       kl
 
+yuriKeisanL ans =
+ let
+   yl=yuriL ans
+   ykl=
+    let
+      func yu yuacl = 
+       let
+        acbs=if yu.enzan==Waru then yu.bunbo*yuacl.bunsi else yu.bunsi*yuacl.bunsi
+        acbb=if yu.enzan==Waru then yu.bunsi*yuacl.bunbo else yu.bunbo*yuacl.bunbo
+       in
+        {bunsi= acbs ,bunbo=acbb  ,enzan=Sento,katex="\\dfrac{"++(String.fromInt acbs)++"}{"++(String.fromInt acbb)++"}"}
+    in
+     List.map  (\ylst ->      
+       List.foldl func {bunsi=1,bunbo=1,enzan=Sento,katex=""} ylst   
+     )  yl
+ in
+  ykl
+
+yuriCheck ans yuans=
+ let
+   ykL=yuriKeisanL ans 
+
+ in
+   List.map (\yus->   ( hikaku yus yuans)   )   ykL
+
+
+
+
 gcm a b =
   let
    (dai,sho)=  if a>b then (a,b) else (b,a)
@@ -156,8 +197,10 @@ gcm a b =
 yakubun ysu=
  let
   ww=gcm ysu.bunsi ysu.bunbo 
+  bs=ysu.bunsi//ww
+  bb=ysu.bunbo//ww
  in
-  {bunsi=ysu.bunsi//ww,bunbo=ysu.bunbo//ww,enzan=ysu.enzan,katex=""}
+  {bunsi=bs,bunbo=bb,enzan=Sento,katex="\\dfrac{"++(String.fromInt bs)++"}{"++(String.fromInt bb)++"}"}
 
 hikaku ysu1 ysu2=
  let
@@ -179,11 +222,12 @@ type alias Model =
   ,ru:String
   ,rdflg:Bool
   ,rd:String
+  
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=2,si2=1,bo2=4,si3=1,bo3=8,pattern=1},ludIchi=1,ans="",bun1="\\frac{1}{2}",bun2="*"
+  ( {mondai={si1=1,bo1=1,si2=1,bo2=1,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="",bun1="\\frac{1}{2}",bun2="*"
      ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd=""}
   , Cmd.none
   )
@@ -194,7 +238,23 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
        mhenkan :Int -> Int -> Int -> Int -> Mondai
-       mhenkan i1 i2 i3 i4 = {si1=i1,si2= i2,si3=i3,bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,pattern=i4} 
+       mhenkan i1 i2 i3 i4 = {si1=i1,si2= i2,si3=i3,bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,pattern=i4
+        ,seikai=
+          let
+           (kaisi,kaibo) = case i4 of
+            1 -> (i2*model.mondai.bo1,i1*model.mondai.bo2)
+            2 -> (i2*model.mondai.bo1,i1*model.mondai.bo2)
+            3 -> (i1*i2,model.mondai.bo1*model.mondai.bo2)
+            _ -> (1,1)
+       
+          in
+           {
+            bunsi=kaisi
+           ,bunbo=kaibo
+           ,enzan=Sento
+           ,katex="\\dfrac{"++(String.fromInt kaisi)++"}{"++(String.fromInt kaibo)++"}"           
+           }
+        } 
 
        monGenerator : Random.Generator Mondai   
        monGenerator = Random.map4  mhenkan (Random.int 1 9 ) (Random.int 1  9 ) (Random.int 1 9) (Random.int 1 3)
@@ -222,7 +282,7 @@ update msg model =
   
    
       ( {model|bun1=xbun1,bun2=xbun2,
-        mondai={bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,si1=mnd.si1,si2=mnd.si2,si3=mnd.si3,pattern=mnd.pattern}
+        mondai=mnd
         ,luflg=False,ruflg=False,rdflg=False,ans=""},      Cmd.none)
   
    Btn si ->     
@@ -392,12 +452,12 @@ view model =
         (
          let
           siki=model.ans
-
-      
          in
-          viewCreate siki
-          
+          viewCreate siki          
         )
+       )
+       ,dcbx  0 300 (span [Html.Attributes.style "font-size" "30px",style "color" "red"]        
+         ( viewCreateMaru model.ans model.mondai.seikai )           
        )
 
   
