@@ -254,7 +254,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=4,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="つぎへをクリック",tmpans="",bun1="\\frac{1}{2}",bun2="1"
+  ( {mondai={si1=1,bo1=4,si2=1,bo2=3,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="つぎへをクリック",tmpans="",bun1="\\frac{1}{2}",bun2="1"
      ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd="",ansdisp=False,rireki1=0,rireki2=0,rireki3=0}
   , Cmd.none
   )
@@ -312,7 +312,11 @@ update msg model =
         mondai=mnd
         ,luflg=False,ruflg=False,rdflg=False,ans="",tmpans="",ansdisp=False},  
         
-        if (mnd.si1==mnd.bo1 || mnd.si2==mnd.bo2 || mnd.seikai.bunsi==mnd.seikai.bunbo || mnd.seikai.bunbo==1) then
+        if (mnd.si1==mnd.bo1 || mnd.si2==mnd.bo2 || mnd.seikai.bunsi==mnd.seikai.bunbo || mnd.seikai.bunbo==1
+         || mnd.seikai.bunsi<mnd.seikai.bunbo
+         || mnd.si1<mnd.bo1
+         || mnd.si2<mnd.bo2
+        ) then
            Random.generate Newmon monGenerator
         else
          Cmd.none)
@@ -323,8 +327,6 @@ update msg model =
 
         mans=if si=="C" then (String.dropRight 1 model.ans ) else (model.ans++(if si=="答" then "" else si))
 
-       -- test=Debug.log "ans=" model.ans
-       -- test2= (seikaiDisp model.ans++si model.mondai.seikai)
 
         r1=if (model.mondai.pattern==1 && ( seikaiDisp mans model.mondai.seikai)) then 
            model.rireki1+1
@@ -481,9 +483,9 @@ view model =
                   
 
         katexl=case model.mondai.pattern of
-         1 -> divkatex [human "赤リボンの長さが",inline model.bun1,human "mです。青リボンの長さは", inline model.bun2,human "mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?" ]
-         2 -> divkatex [human "青リボンの長さは赤リボンの",inline model.bun1,human "倍です。青リボンは",inline model.bun2,human "mです。赤リボンは何m?"]
-         3 -> divkatex [human "赤リボンの長さが",inline model.bun1 ,human "mです。青リボンの長さは赤リボンの",inline model.bun2,human "倍です。青リボンの長さは?"]
+         1 -> divkatex [human "(1) 赤リボンの長さが",inline model.bun1,human "mです。青リボンの長さは", inline model.bun2,human "mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?" ]
+         2 -> divkatex [human "(2) 青リボンの長さは赤リボンの",inline model.bun1,human "倍です。青リボンは",inline model.bun2,human "mです。赤リボンは何m?"]
+         3 -> divkatex [human "(3) 赤リボンの長さが",inline model.bun1 ,human "mです。青リボンの長さは赤リボンの",inline model.bun2,human "倍です。青リボンの長さは?"]
          _ -> divkatex [human ""] 
 
         msg=

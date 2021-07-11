@@ -4883,7 +4883,7 @@ var author$project$BunsuBai$init = function (_n0) {
 			luflg: false,
 			mondai: {
 				bo1: 4,
-				bo2: 8,
+				bo2: 3,
 				bo3: 1,
 				pattern: 1,
 				seikai: {bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
@@ -5500,7 +5500,7 @@ var author$project$BunsuBai$update = F2(
 					_Utils_update(
 						model,
 						{ans: '', ansdisp: false, bun1: xbun1, bun2: xbun2, luflg: false, mondai: mnd, rdflg: false, ruflg: false, tmpans: ''}),
-					(_Utils_eq(mnd.si1, mnd.bo1) || (_Utils_eq(mnd.si2, mnd.bo2) || (_Utils_eq(mnd.seikai.bunsi, mnd.seikai.bunbo) || (mnd.seikai.bunbo === 1)))) ? A2(elm$random$Random$generate, author$project$BunsuBai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
+					(_Utils_eq(mnd.si1, mnd.bo1) || (_Utils_eq(mnd.si2, mnd.bo2) || (_Utils_eq(mnd.seikai.bunsi, mnd.seikai.bunbo) || ((mnd.seikai.bunbo === 1) || ((_Utils_cmp(mnd.seikai.bunsi, mnd.seikai.bunbo) < 0) || ((_Utils_cmp(mnd.si1, mnd.bo1) < 0) || (_Utils_cmp(mnd.si2, mnd.bo2) < 0))))))) ? A2(elm$random$Random$generate, author$project$BunsuBai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				var tans = (si === '=') ? model.ans : model.tmpans;
@@ -6315,7 +6315,7 @@ var author$project$BunsuBai$view = function (model) {
 				return author$project$BunsuBai$divkatex(
 					_List_fromArray(
 						[
-							yotamDvir$elm_katex$Katex$human('赤リボンの長さが'),
+							yotamDvir$elm_katex$Katex$human('(1) 赤リボンの長さが'),
 							yotamDvir$elm_katex$Katex$inline(model.bun1),
 							yotamDvir$elm_katex$Katex$human('mです。青リボンの長さは'),
 							yotamDvir$elm_katex$Katex$inline(model.bun2),
@@ -6325,7 +6325,7 @@ var author$project$BunsuBai$view = function (model) {
 				return author$project$BunsuBai$divkatex(
 					_List_fromArray(
 						[
-							yotamDvir$elm_katex$Katex$human('青リボンの長さは赤リボンの'),
+							yotamDvir$elm_katex$Katex$human('(2) 青リボンの長さは赤リボンの'),
 							yotamDvir$elm_katex$Katex$inline(model.bun1),
 							yotamDvir$elm_katex$Katex$human('倍です。青リボンは'),
 							yotamDvir$elm_katex$Katex$inline(model.bun2),
@@ -6335,7 +6335,7 @@ var author$project$BunsuBai$view = function (model) {
 				return author$project$BunsuBai$divkatex(
 					_List_fromArray(
 						[
-							yotamDvir$elm_katex$Katex$human('赤リボンの長さが'),
+							yotamDvir$elm_katex$Katex$human('(3) 赤リボンの長さが'),
 							yotamDvir$elm_katex$Katex$inline(model.bun1),
 							yotamDvir$elm_katex$Katex$human('mです。青リボンの長さは赤リボンの'),
 							yotamDvir$elm_katex$Katex$inline(model.bun2),
