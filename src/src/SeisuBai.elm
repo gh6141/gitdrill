@@ -204,7 +204,7 @@ view model =
         dvx=30
         dvy=30
         maruspan=(span [style "color" "red",style "font-size" "30px"] [text "〇"])
-        cblu=dcbx (model.mondai.sa*24+dvx+30) (80+dvy) (cboxlu model.inLU handlerLU)
+        cblu=dcbx (model.mondai.sa*24+dvx+30) (60+dvy) (cboxlu model.inLU handlerLU)
         -- (20+ix*model.mondai.sb*22)
         marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (60+dvy) maruspan) else (span [] [])
         cbru=dcbx (model.mondai.sb*model.mondai.sa*24+dvx+30) (60+dvy) (cboxlu model.inRU handlerRU)
