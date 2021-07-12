@@ -6588,9 +6588,9 @@ var author$project$Subunkai$view = function (model) {
 				[
 					elm$html$Html$text('〇')
 				])));
-	var marulu = _Utils_eq(model.inLU, model.ansLU) ? A3(dcbx, 100 + dvx, 60 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
-	var marurd = _Utils_eq(model.inRD, model.ansRD) ? A3(dcbx, 300 + dvx, 200 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
-	var maruru = _Utils_eq(model.inRU, model.ansRU) ? A3(dcbx, 300 + dvx, 60 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var marulu = _Utils_eq(model.inLU, model.ansLU) ? A3(dcbx, 100 + dvx, 80 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var marurd = _Utils_eq(model.inRD, model.ansRD) ? A3(dcbx, 300 + dvx, 180 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var maruru = _Utils_eq(model.inRU, model.ansRU) ? A3(dcbx, 300 + dvx, 80 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
 	var cboxlu = F2(
 		function (inLRUD, handler) {
 			return A2(
@@ -6621,12 +6621,12 @@ var author$project$Subunkai$view = function (model) {
 	var cbrd = A3(
 		dcbx,
 		(((model.mondai.sb === 2) ? 170 : (model.mondai.sb * 60)) + dvx) - 10,
-		200 + dvy,
+		180 + dvy,
 		A2(cboxlu, model.inRD, author$project$Subunkai$handlerRD));
 	var cbru = A3(
 		dcbx,
 		(((model.mondai.sb * model.mondai.sa) * 24) + dvx) + 30,
-		60 + dvy,
+		80 + dvy,
 		A2(cboxlu, model.inRU, author$project$Subunkai$handlerRU));
 	var cboxez = F2(
 		function (inLRUD, handler) {
@@ -6664,12 +6664,12 @@ var author$project$Subunkai$view = function (model) {
 	var cblu = A3(
 		dcbx,
 		((model.mondai.sa * 24) + dvx) + 30,
-		60 + dvy,
+		80 + dvy,
 		A2(cboxlu, model.inLU, author$project$Subunkai$handlerLU));
 	var cbld = A3(
 		dcbx,
 		90 + dvx,
-		200 + dvy,
+		180 + dvy,
 		A2(cboxlu, model.inLD, author$project$Subunkai$handlerLD));
 	var cbb = A3(
 		dcbx,
