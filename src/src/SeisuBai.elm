@@ -221,10 +221,10 @@ view model =
         greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
 
         cans=case model.ansLRUD of
-         Lu -> dcbx (model.mondai.sa*24+dvx+30) (50+dvy) greenans
-         Ru -> dcbx (model.mondai.sb*model.mondai.sa*24+dvx+30) (50+dvy) greenans
-         Ld -> dcbx (100+dvx) (300+dvy) greenans
-         Rd -> dcbx (model.mondai.sb*60+dvx+30) (300+dvy) greenans
+         Lu -> dcbx (model.mondai.sa*24+dvx+30) (80+dvy) greenans
+         Ru -> dcbx (model.mondai.sb*model.mondai.sa*24+dvx+30) (80+dvy) greenans
+         Ld -> dcbx (100+dvx) (180+dvy) greenans
+         Rd -> dcbx (model.mondai.sb*60+dvx+30) (180+dvy) greenans
 
 
         cba=dcbx (90)  (300)  (cboxlu model.inA handlerA)
