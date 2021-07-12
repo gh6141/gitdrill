@@ -5955,9 +5955,6 @@ var author$project$Subunkai$handlerB = function (selectedText) {
 var author$project$Subunkai$handlerEz = function (selectedText) {
 	return A2(author$project$Subunkai$ChangeS, selectedText, 'Ez');
 };
-var author$project$Subunkai$handlerLD = function (selectedText) {
-	return A2(author$project$Subunkai$ChangeS, selectedText, 'LD');
-};
 var author$project$Subunkai$handlerLU = function (selectedText) {
 	return A2(author$project$Subunkai$ChangeS, selectedText, 'LU');
 };
@@ -6588,9 +6585,9 @@ var author$project$Subunkai$view = function (model) {
 				[
 					elm$html$Html$text('〇')
 				])));
-	var marulu = _Utils_eq(model.inLU, model.ansLU) ? A3(dcbx, 100 + dvx, 80 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
-	var marurd = _Utils_eq(model.inRD, model.ansRD) ? A3(dcbx, 300 + dvx, 180 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
-	var maruru = _Utils_eq(model.inRU, model.ansRU) ? A3(dcbx, 300 + dvx, 80 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var marulu = _Utils_eq(model.inLU, model.ansLU) ? A3(dcbx, ((model.mondai.sa * 24) + dvx) + 30, 80 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var marurd = _Utils_eq(model.inRD, model.ansRD) ? A3(dcbx, ((model.mondai.sb * 60) + dvx) - 10, 180 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
+	var maruru = _Utils_eq(model.inRU, model.ansRU) ? A3(dcbx, (((model.mondai.sb * model.mondai.sa) * 24) + dvx) + 30, 80 + dvy, maruspan) : A2(elm$html$Html$span, _List_Nil, _List_Nil);
 	var cboxlu = F2(
 		function (inLRUD, handler) {
 			return A2(
@@ -6668,9 +6665,18 @@ var author$project$Subunkai$view = function (model) {
 		A2(cboxlu, model.inLU, author$project$Subunkai$handlerLU));
 	var cbld = A3(
 		dcbx,
-		90 + dvx,
+		110 + dvx,
 		180 + dvy,
-		A2(cboxlu, model.inLD, author$project$Subunkai$handlerLD));
+		A2(
+			elm$html$Html$span,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'font-size', '26px')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('1')
+				])));
 	var cbb = A3(
 		dcbx,
 		270,

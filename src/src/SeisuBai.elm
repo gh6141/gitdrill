@@ -207,16 +207,17 @@ view model =
 
         cblu=dcbx (model.mondai.sa*24+dvx+30) (80+dvy) (cboxlu model.inLU handlerLU)
         -- (20+ix*model.mondai.sb*22)
-        marulu=if model.inLU==model.ansLU then (dcbx (100+dvx) (80+dvy) maruspan) else (span [] [])
+        marulu=if model.inLU==model.ansLU then (dcbx (model.mondai.sa*24+dvx+30) (80+dvy) maruspan) else (span [] [])
 
         cbru=dcbx (model.mondai.sb*model.mondai.sa*24+dvx+30) (80+dvy) (cboxlu model.inRU handlerRU)
-        maruru=if model.inRU==model.ansRU then (dcbx (300+dvx) (80+dvy) maruspan) else (span [] [])
+        maruru=if model.inRU==model.ansRU then (dcbx (model.mondai.sb*model.mondai.sa*24+dvx+30) (80+dvy) maruspan) else (span [] [])
 
-        cbld=dcbx (90+dvx) (180+dvy) (cboxlu model.inLD handlerLD)
+        --cbld=dcbx (90+dvx) (180+dvy) (cboxlu model.inLD handlerLD)
+        cbld =dcbx (110+dvx) (180+dvy) (span [style "font-size" "26px"] [text "1"])
         --maruld=if model.inLD==model.ansLD then (dcbx (100+dvx) (180+dvy) maruspan) else (span [] [])
 
         cbrd=dcbx ((if model.mondai.sb==2 then 170 else model.mondai.sb*60)+dvx-10) (180+dvy) (cboxlu model.inRD handlerRD)        
-        marurd=if model.inRD==model.ansRD then (dcbx (300+dvx) (180+dvy) maruspan) else (span [] [])
+        marurd=if model.inRD==model.ansRD then (dcbx (model.mondai.sb*60+dvx-10) (180+dvy) maruspan) else (span [] [])
 
         greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
 
