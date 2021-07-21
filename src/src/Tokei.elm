@@ -40,12 +40,14 @@ type alias Model =
     ,pattern:Int
     ,ans:String
     ,dispans:Bool
+    ,hundisp:Bool
+    ,jidisp:Bool
     
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {ji=10,hun=10,pattern=1,ans="",dispans=False}
+  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=True,jidisp=True}
   , Cmd.none
   )
 
@@ -56,7 +58,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
        mhenkan :Int -> Int -> Int -> Model
-       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False} 
+       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=True,hundisp=True} 
 
        monGenerator : Random.Generator Model   
        monGenerator = Random.map3  mhenkan (Random.int 1 12 ) (Random.int 0  59 ) (Random.int 1 1) 
@@ -72,13 +74,14 @@ update msg model =
       )
   
    Newmon mdl ->   
-      ( mdl    , 
+      ( {model| ji=mdl.ji,hun=mdl.hun,pattern=mdl.pattern,dispans=False}    , 
          Cmd.none)
   
    Btn si ->
 
-
       ( {model |  dispans=if si==14 then True else model.dispans
+                  ,hundisp=if si==15 then False else model.hundisp
+                  ,jidisp=if si==16 then False else model.jidisp
                  } ,Cmd.none)
   
  
@@ -118,19 +121,21 @@ view model =
              ]                  
             ]  
 
-        tokei ji hun =Svg.svg 
+        tokei ji hun jidisp hundisp =Svg.svg 
          [ Svg.Attributes.viewBox "0 0 400 400"
          , Svg.Attributes.width "480"
          , Svg.Attributes.height "400"
          ]
           ([
-           scircle 120 160 150
+           scircle 125 165 150
            ,chosin ji hun
            ,tansin ji hun
  
-          ]++(List.map (\n-> (shankei 120 160 ((toFloat n)*pi/6) 140.0 150.0) )  (List.range 0 11)) 
-           ++(List.map (\n-> (shankei 120 160 ((toFloat n)*pi/30) 147.0 150.0) )  (List.range 0 59)) 
-           ++(List.map (\n-> (tmoji 120 160 n 120.0))  (List.range 1 12))
+          ]++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/6) 140.0 150.0) )  (List.range 0 11)) 
+           ++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/30) 147.0 150.0) )  (List.range 0 59)) 
+           ++(List.map (\n-> (tmoji 125 165 n 120.0))  (List.range 1 12))
+           ++(if jidisp then (List.map (\n-> (tmojim 125 165 n 120.0))  (List.range 1 12)) else [])
+           ++(if hundisp then (List.map (\n-> (tmoji2 125 165 n 160.0))  (List.range 0 59)) else [])
     
           )
 
@@ -140,9 +145,17 @@ view model =
         tmoji xx yy nn rr = stext ((round (rr*(cos (-(toFloat nn)*pi/6+pi/2))))+xx-10+(if nn==12 then -5 else 0))
           ((round (rr*(-1*sin (-(toFloat nn)*pi/6+pi/2)))) +yy+10)
            (String.fromInt nn)
+        
+        tmojim xx yy nn rr = stextm ((round (rr*(cos (-((toFloat nn)+0.5)*pi/6+pi/2))))+xx-10+(if nn==12 then -5 else 0))
+          ((round (rr*(-1*sin (-((toFloat nn)+0.5)*pi/6+pi/2)))) +yy+10)
+           (String.fromInt nn)
+        
+        tmoji2 xx yy nn rr = stext2 ((round (rr*(cos (-(toFloat nn)*pi/30+pi/2))))+xx-5)
+          ((round (rr*(-1*sin (-(toFloat nn)*pi/30+pi/2)))) +yy+5)
+           (String.fromInt nn)
 
-        tansin jix hunx = shankei 120 160 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80
-        chosin jix hunx = shankei 120 160 ((toFloat hunx)/60.0*2.0*pi)  0 110
+        tansin jix hunx = shankei 125 165 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80
+        chosin jix hunx = shankei 125 165 ((toFloat hunx)/60.0*2.0*pi)  0 110
         
         scircle xx yy radius = Svg.circle [ 
           Svg.Attributes.cx (String.fromInt xx)
@@ -157,6 +170,24 @@ view model =
          , Svg.Attributes.y (String.fromInt yy)
          , Svg.Attributes.fill "black"   
          ,Svg.Attributes.fontSize "26"       
+         ]
+         [ Svg.text moji
+         ]
+
+        stextm xx yy moji = Svg.text_
+         [ Svg.Attributes.x (String.fromInt xx)
+         , Svg.Attributes.y (String.fromInt yy)
+         , Svg.Attributes.fill "gray"   
+         ,Svg.Attributes.fontSize "14"       
+         ]
+         [ Svg.text moji
+         ]
+
+        stext2 xx yy moji = Svg.text_
+         [ Svg.Attributes.x (String.fromInt xx)
+         , Svg.Attributes.y (String.fromInt yy)
+         , Svg.Attributes.fill "black"   
+         ,Svg.Attributes.fontSize "10"       
          ]
          [ Svg.text moji
          ]
@@ -178,7 +209,7 @@ view model =
     tr []
     [
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
-       tokei model.ji model.hun
+       tokei model.ji model.hun model.jidisp model.hundisp
       
       ]   
      ,td [] [
