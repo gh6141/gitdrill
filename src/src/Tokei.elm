@@ -42,12 +42,13 @@ type alias Model =
     ,dispans:Bool
     ,hundisp:Bool
     ,jidisp:Bool
+    ,maru :Bool
     
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=True,jidisp=True}
+  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=True,jidisp=True,maru=False}
   , Cmd.none
   )
 
@@ -58,7 +59,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
        mhenkan :Int -> Int -> Int -> Model
-       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=True,hundisp=True} 
+       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=True,hundisp=True,maru=False} 
 
        monGenerator : Random.Generator Model   
        monGenerator = Random.map3  mhenkan (Random.int 1 12 ) (Random.int 0  59 ) (Random.int 1 1) 
@@ -74,7 +75,7 @@ update msg model =
       )
   
    Newmon mdl ->   
-      ( {model| ji=mdl.ji,hun=mdl.hun,pattern=mdl.pattern,dispans=False}    , 
+      ( {model| ji=mdl.ji,hun=mdl.hun,pattern=mdl.pattern,dispans=False,maru=False}    , 
          Cmd.none)
   
    Btn si ->
@@ -85,7 +86,12 @@ update msg model =
              "答" -> ""
              "Lv1" -> ""
              "Lv2" -> ""
-             _  -> model.ans++(String.fromInt si)
+             _  -> model.ans++(
+                 case si of
+                  12 -> "時"
+                  13 -> "分"
+                  _  ->   (String.fromInt si)
+               )
 
      in
 
@@ -132,7 +138,7 @@ view model =
              ]                  
             ]  
 
-        tokei ji hun jidisp hundisp =Svg.svg 
+        tokei ji hun jidisp hundisp maruflg=Svg.svg 
          [ Svg.Attributes.viewBox "0 0 400 400"
          , Svg.Attributes.width "480"
          , Svg.Attributes.height "400"
@@ -141,6 +147,8 @@ view model =
            scircle 125 165 150
            ,chosin ji hun
            ,tansin ji hun
+           , if maruflg then scircleMaru else (stext  0 0 "")
+
  
           ]++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/6) 140.0 150.0) )  (List.range 0 11)) 
            ++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/30) 147.0 150.0) )  (List.range 0 59)) 
@@ -168,12 +176,15 @@ view model =
         tansin jix hunx = shankei 125 165 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80
         chosin jix hunx = shankei 125 165 ((toFloat hunx)/60.0*2.0*pi)  0 110
         
-        scircle xx yy radius = Svg.circle [ 
+        scircle xx yy radius = scircleorg xx yy radius "black"
+        scircleMaru = scircleorg 50 50 50 "red"
+
+        scircleorg xx yy radius color = Svg.circle [ 
           Svg.Attributes.cx (String.fromInt xx)
           , Svg.Attributes.cy (String.fromInt yy)
           , Svg.Attributes.r (String.fromInt radius) 
           , Svg.Attributes.fill "white"
-          , Svg.Attributes.stroke "black"
+          , Svg.Attributes.stroke color
           , Svg.Attributes.strokeWidth "3"] []
          
         stext xx yy moji = Svg.text_
@@ -220,7 +231,12 @@ view model =
     tr []
     [
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
-       tokei model.ji model.hun model.jidisp model.hundisp
+      tr [] [td [] [span [Html.Attributes.style "font-size" "30px"] [text ("　"++model.ans)]]]
+      ,tr [] [td [] [ tokei model.ji model.hun model.jidisp model.hundisp (model.ans==((String.fromInt model.ji)++"時"++(String.fromInt model.hun)++"分"))
+
+      
+      ]]
+      
       
       ]   
      ,td [] [
@@ -232,7 +248,7 @@ view model =
       ]
       ,tr [] [
         td [] [
-          span [style "font-size" "30px"] [text ( if model.dispans then ((String.fromInt model.ji)++"じ"++(String.fromInt model.hun)++"ふん") else "")  ]
+          span [style "font-size" "30px"] [text ( if model.dispans then ((String.fromInt model.ji)++"時"++(String.fromInt model.hun)++"分") else "")  ]
          ]
        ]
          

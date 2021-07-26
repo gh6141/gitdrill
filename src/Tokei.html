@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Tokei$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', dispans: false, hun: 10, hundisp: true, ji: 10, jidisp: true, pattern: 1},
+		{ans: '', dispans: false, hun: 10, hundisp: true, ji: 10, jidisp: true, maru: false, pattern: 1},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5098,7 +5098,7 @@ var author$project$Tokei$update = F2(
 	function (msg, model) {
 		var mhenkan = F3(
 			function (i1, i2, k1) {
-				return {ans: '', dispans: false, hun: i2, hundisp: true, ji: i1, jidisp: true, pattern: k1};
+				return {ans: '', dispans: false, hun: i2, hundisp: true, ji: i1, jidisp: true, maru: false, pattern: k1};
 			});
 		var monGenerator = A4(
 			elm$random$Random$map3,
@@ -5118,7 +5118,7 @@ var author$project$Tokei$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{dispans: false, hun: mdl.hun, ji: mdl.ji, pattern: mdl.pattern}),
+						{dispans: false, hun: mdl.hun, ji: mdl.ji, maru: false, pattern: mdl.pattern}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var si = msg.a;
@@ -5138,7 +5138,16 @@ var author$project$Tokei$update = F2(
 						default:
 							return _Utils_ap(
 								model.ans,
-								elm$core$String$fromInt(si));
+								function () {
+									switch (si) {
+										case 12:
+											return '時';
+										case 13:
+											return '分';
+										default:
+											return elm$core$String$fromInt(si);
+									}
+								}());
 					}
 				}();
 				return _Utils_Tuple2(
@@ -5608,8 +5617,8 @@ var author$project$Tokei$view = function (model) {
 		function (jix, hunx) {
 			return A5(shankei, 125, 165, (((jix / 12.0) * 2.0) * elm$core$Basics$pi) + ((((hunx / 60.0) / 12.0) * 2.0) * elm$core$Basics$pi), 0, 80);
 		});
-	var scircle = F3(
-		function (xx, yy, radius) {
+	var scircleorg = F4(
+		function (xx, yy, radius, color) {
 			return A2(
 				elm$svg$Svg$circle,
 				_List_fromArray(
@@ -5621,10 +5630,15 @@ var author$project$Tokei$view = function (model) {
 						elm$svg$Svg$Attributes$r(
 						elm$core$String$fromInt(radius)),
 						elm$svg$Svg$Attributes$fill('white'),
-						elm$svg$Svg$Attributes$stroke('black'),
+						elm$svg$Svg$Attributes$stroke(color),
 						elm$svg$Svg$Attributes$strokeWidth('3')
 					]),
 				_List_Nil);
+		});
+	var scircleMaru = A4(scircleorg, 50, 50, 50, 'red');
+	var scircle = F3(
+		function (xx, yy, radius) {
+			return A4(scircleorg, xx, yy, radius, 'black');
 		});
 	var sbutton = function (ii) {
 		return A2(
@@ -5798,8 +5812,8 @@ var author$project$Tokei$view = function (model) {
 		function (jix, hunx) {
 			return A5(shankei, 125, 165, ((hunx / 60.0) * 2.0) * elm$core$Basics$pi, 0, 110);
 		});
-	var tokei = F4(
-		function (ji, hun, jidisp, hundisp) {
+	var tokei = F5(
+		function (ji, hun, jidisp, hundisp, maruflg) {
 			return A2(
 				elm$svg$Svg$svg,
 				_List_fromArray(
@@ -5813,7 +5827,8 @@ var author$project$Tokei$view = function (model) {
 						[
 							A3(scircle, 125, 165, 150),
 							A2(chosin, ji, hun),
-							A2(tansin, ji, hun)
+							A2(tansin, ji, hun),
+							maruflg ? scircleMaru : A3(stext, 0, 0, '')
 						]),
 					_Utils_ap(
 						A2(
@@ -5873,7 +5888,49 @@ var author$project$Tokei$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								A4(tokei, model.ji, model.hun, model.jidisp, model.hundisp)
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '30px')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('　' + model.ans)
+													]))
+											]))
+									])),
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$td,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A5(
+												tokei,
+												model.ji,
+												model.hun,
+												model.jidisp,
+												model.hundisp,
+												_Utils_eq(
+													model.ans,
+													elm$core$String$fromInt(model.ji) + ('時' + (elm$core$String$fromInt(model.hun) + '分'))))
+											]))
+									]))
 							])),
 						A2(
 						elm$html$Html$td,
@@ -5937,7 +5994,7 @@ var author$project$Tokei$view = function (model) {
 												_List_fromArray(
 													[
 														elm$html$Html$text(
-														model.dispans ? (elm$core$String$fromInt(model.ji) + ('じ' + (elm$core$String$fromInt(model.hun) + 'ふん'))) : '')
+														model.dispans ? (elm$core$String$fromInt(model.ji) + ('時' + (elm$core$String$fromInt(model.hun) + '分'))) : '')
 													]))
 											]))
 									]))
