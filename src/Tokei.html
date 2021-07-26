@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Tokei$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '', dispans: false, hun: 10, hundisp: true, ji: 10, jidisp: true, maru: false, pattern: 1},
+		{ans: '', dispans: false, fmin: 1, hun: 10, hundisp: true, ji: 10, jidisp: true, maru: false, pattern: 1},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -4896,7 +4896,7 @@ var author$project$Tokei$Newmon = function (a) {
 var author$project$Tokei$buttoncaption = function (ii) {
 	switch (ii) {
 		case 10:
-			return '.';
+			return '5分';
 		case 11:
 			return 'C';
 		case 12:
@@ -4913,6 +4913,8 @@ var author$project$Tokei$buttoncaption = function (ii) {
 			return elm$core$String$fromInt(ii);
 	}
 };
+var elm$core$Basics$modBy = _Basics_modBy;
+var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5098,7 +5100,7 @@ var author$project$Tokei$update = F2(
 	function (msg, model) {
 		var mhenkan = F3(
 			function (i1, i2, k1) {
-				return {ans: '', dispans: false, hun: i2, hundisp: true, ji: i1, jidisp: true, maru: false, pattern: k1};
+				return {ans: '', dispans: false, fmin: 1, hun: i2, hundisp: true, ji: i1, jidisp: true, maru: false, pattern: k1};
 			});
 		var monGenerator = A4(
 			elm$random$Random$map3,
@@ -5119,13 +5121,13 @@ var author$project$Tokei$update = F2(
 					_Utils_update(
 						model,
 						{dispans: false, hun: mdl.hun, ji: mdl.ji, maru: false, pattern: mdl.pattern}),
-					elm$core$Platform$Cmd$none);
+					((model.fmin === 2) && A2(elm$core$Basics$modBy, 5, mdl.hun)) ? A2(elm$random$Random$generate, author$project$Tokei$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			default:
 				var si = msg.a;
 				var suji = function () {
 					var _n1 = author$project$Tokei$buttoncaption(si);
 					switch (_n1) {
-						case '.':
+						case '5分':
 							return '';
 						case 'C':
 							return A2(elm$core$String$dropRight, 1, model.ans);
@@ -5156,6 +5158,7 @@ var author$project$Tokei$update = F2(
 						{
 							ans: suji,
 							dispans: (si === 14) ? true : model.dispans,
+							fmin: (author$project$Tokei$buttoncaption(si) === '5分') ? 2 : 1,
 							hundisp: (si === 15) ? false : model.hundisp,
 							jidisp: (si === 16) ? false : model.jidisp
 						}),
@@ -5783,13 +5786,6 @@ var author$project$Tokei$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								sbutton(10)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
 								sbutton(11)
 							])),
 						A2(
@@ -5805,6 +5801,21 @@ var author$project$Tokei$view = function (model) {
 						_List_fromArray(
 							[
 								sbutton(16)
+							]))
+					])),
+				A2(
+				elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$td, _List_Nil, _List_Nil),
+						A2(elm$html$Html$td, _List_Nil, _List_Nil),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(10)
 							]))
 					]))
 			]));

@@ -43,12 +43,13 @@ type alias Model =
     ,hundisp:Bool
     ,jidisp:Bool
     ,maru :Bool
+    ,fmin:Int
     
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=True,jidisp=True,maru=False}
+  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=True,jidisp=True,maru=False,fmin=1}
   , Cmd.none
   )
 
@@ -59,7 +60,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
        mhenkan :Int -> Int -> Int -> Model
-       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=True,hundisp=True,maru=False} 
+       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=True,hundisp=True,maru=False,fmin=1} 
 
        monGenerator : Random.Generator Model   
        monGenerator = Random.map3  mhenkan (Random.int 1 12 ) (Random.int 0  59 ) (Random.int 1 1) 
@@ -76,12 +77,12 @@ update msg model =
   
    Newmon mdl ->   
       ( {model| ji=mdl.ji,hun=mdl.hun,pattern=mdl.pattern,dispans=False,maru=False}    , 
-         Cmd.none)
+         if ( model.fmin==2 && ( (modBy 5 mdl.hun) /=0)     ) then ( Random.generate Newmon monGenerator ) else    Cmd.none)
   
    Btn si ->
      let
       suji= case (buttoncaption si) of
-             "." -> ""
+             "5分" -> ""
              "C" -> String.dropRight 1 model.ans
              "答" -> ""
              "Lv1" -> ""
@@ -92,13 +93,14 @@ update msg model =
                   13 -> "分"
                   _  ->   (String.fromInt si)
                )
-
+  
      in
 
       ( {model |  dispans=if si==14 then True else model.dispans
                   ,hundisp=if si==15 then False else model.hundisp
                   ,jidisp=if si==16 then False else model.jidisp
                   ,ans=suji
+                  ,fmin=if (buttoncaption si)=="5分" then 2 else 1
                  } ,Cmd.none)
   
  
@@ -130,12 +132,16 @@ view model =
                ,td [] [sbutton 14]
              ]     
              ,tr [] [
-               td [] [sbutton 0]
-               ,td [] [sbutton 10]
+               td [] [sbutton 0]               
                ,td [] [sbutton 11]
                ,td [] [sbutton 15]
                     ,td [] [sbutton 16]
-             ]                  
+             ]     
+             ,tr [] [
+               td [] []
+               ,td [] []
+               ,td [] [sbutton 10]
+             ]             
             ]  
 
         tokei ji hun jidisp hundisp maruflg=Svg.svg 
@@ -298,7 +304,7 @@ sharesLocale =
 
 buttoncaption ii = 
   case ii of
-    10 -> "."
+    10 -> "5分"
     11 -> "C"
     12 -> "時"
     13 -> "分"    
