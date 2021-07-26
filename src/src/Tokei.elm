@@ -78,10 +78,21 @@ update msg model =
          Cmd.none)
   
    Btn si ->
+     let
+      suji= case (buttoncaption si) of
+             "." -> ""
+             "C" -> String.dropRight 1 model.ans
+             "答" -> ""
+             "Lv1" -> ""
+             "Lv2" -> ""
+             _  -> model.ans++(String.fromInt si)
+
+     in
 
       ( {model |  dispans=if si==14 then True else model.dispans
                   ,hundisp=if si==15 then False else model.hundisp
                   ,jidisp=if si==16 then False else model.jidisp
+                  ,ans=suji
                  } ,Cmd.none)
   
  

@@ -4893,6 +4893,34 @@ var author$project$Tokei$subscriptions = function (model) {
 var author$project$Tokei$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
+var author$project$Tokei$buttoncaption = function (ii) {
+	switch (ii) {
+		case 10:
+			return '.';
+		case 11:
+			return 'C';
+		case 12:
+			return '時';
+		case 13:
+			return '分';
+		case 14:
+			return '答';
+		case 15:
+			return 'Lv1';
+		case 16:
+			return 'Lv2';
+		default:
+			return elm$core$String$fromInt(ii);
+	}
+};
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var elm$core$String$slice = _String_slice;
+var elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
+	});
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -5006,9 +5034,6 @@ var elm$random$Random$generate = F2(
 			elm$random$Random$Generate(
 				A2(elm$random$Random$map, tagger, generator)));
 	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var elm$core$Bitwise$and = _Bitwise_and;
 var elm$core$Bitwise$xor = _Bitwise_xor;
 var elm$random$Random$peel = function (_n0) {
@@ -5097,10 +5122,30 @@ var author$project$Tokei$update = F2(
 					elm$core$Platform$Cmd$none);
 			default:
 				var si = msg.a;
+				var suji = function () {
+					var _n1 = author$project$Tokei$buttoncaption(si);
+					switch (_n1) {
+						case '.':
+							return '';
+						case 'C':
+							return A2(elm$core$String$dropRight, 1, model.ans);
+						case '答':
+							return '';
+						case 'Lv1':
+							return '';
+						case 'Lv2':
+							return '';
+						default:
+							return _Utils_ap(
+								model.ans,
+								elm$core$String$fromInt(si));
+					}
+				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
+							ans: suji,
 							dispans: (si === 14) ? true : model.dispans,
 							hundisp: (si === 15) ? false : model.hundisp,
 							jidisp: (si === 16) ? false : model.jidisp
@@ -5112,26 +5157,6 @@ var author$project$Tokei$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
 var author$project$Tokei$Next = {$: 'Next'};
-var author$project$Tokei$buttoncaption = function (ii) {
-	switch (ii) {
-		case 10:
-			return '.';
-		case 11:
-			return 'C';
-		case 12:
-			return '時';
-		case 13:
-			return '分';
-		case 14:
-			return '答';
-		case 15:
-			return 'Lv1';
-		case 16:
-			return 'Lv2';
-		default:
-			return elm$core$String$fromInt(ii);
-	}
-};
 var elm$core$Basics$cos = _Basics_cos;
 var elm$core$Basics$pi = _Basics_pi;
 var elm$core$Basics$round = _Basics_round;
@@ -6015,7 +6040,6 @@ var elm$core$Task$perform = F2(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
 var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
