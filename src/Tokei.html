@@ -5507,7 +5507,7 @@ var author$project$Tokei$view = function (model) {
 						elm$core$String$fromInt(xx)),
 						elm$svg$Svg$Attributes$y(
 						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$fill('gray'),
+						elm$svg$Svg$Attributes$fill('red'),
 						elm$svg$Svg$Attributes$fontSize('14')
 					]),
 				_List_fromArray(
@@ -5535,7 +5535,7 @@ var author$project$Tokei$view = function (model) {
 						elm$core$String$fromInt(xx)),
 						elm$svg$Svg$Attributes$y(
 						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$fill('black'),
+						elm$svg$Svg$Attributes$fill('green'),
 						elm$svg$Svg$Attributes$fontSize('10')
 					]),
 				_List_fromArray(
@@ -5581,8 +5581,8 @@ var author$project$Tokei$view = function (model) {
 					rr * ((-1) * elm$core$Basics$sin((((-nn) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2)))) + yy) + 10,
 				elm$core$String$fromInt(nn));
 		});
-	var sline = F5(
-		function (x1, y1, x2, y2, wd) {
+	var sline = F6(
+		function (x1, y1, x2, y2, wd, color) {
 			return A2(
 				elm$svg$Svg$line,
 				_List_fromArray(
@@ -5595,16 +5595,16 @@ var author$project$Tokei$view = function (model) {
 						elm$core$String$fromInt(x2)),
 						elm$svg$Svg$Attributes$y2(
 						elm$core$String$fromInt(y2)),
-						elm$svg$Svg$Attributes$stroke('blue'),
+						elm$svg$Svg$Attributes$stroke(color),
 						elm$svg$Svg$Attributes$strokeWidth(
 						elm$core$String$fromInt(wd)),
 						elm$svg$Svg$Attributes$strokeLinecap('round')
 					]),
 				_List_Nil);
 		});
-	var shankei = F5(
-		function (xx, yy, th, str, enr) {
-			return A5(
+	var shankei = F7(
+		function (xx, yy, th, str, enr, color, width) {
+			return A6(
 				sline,
 				elm$core$Basics$round(
 					str * elm$core$Basics$cos((-th) + (elm$core$Basics$pi / 2))) + xx,
@@ -5614,11 +5614,12 @@ var author$project$Tokei$view = function (model) {
 					enr * elm$core$Basics$cos((-th) + (elm$core$Basics$pi / 2))) + xx,
 				elm$core$Basics$round(
 					enr * ((-1) * elm$core$Basics$sin((-th) + (elm$core$Basics$pi / 2)))) + yy,
-				3);
+				width,
+				color);
 		});
 	var tansin = F2(
 		function (jix, hunx) {
-			return A5(shankei, 125, 165, (((jix / 12.0) * 2.0) * elm$core$Basics$pi) + ((((hunx / 60.0) / 12.0) * 2.0) * elm$core$Basics$pi), 0, 80);
+			return A7(shankei, 125, 165, (((jix / 12.0) * 2.0) * elm$core$Basics$pi) + ((((hunx / 60.0) / 12.0) * 2.0) * elm$core$Basics$pi), 0, 80, 'red', 8);
 		});
 	var scircleorg = F4(
 		function (xx, yy, radius, color) {
@@ -5821,7 +5822,7 @@ var author$project$Tokei$view = function (model) {
 			]));
 	var chosin = F2(
 		function (jix, hunx) {
-			return A5(shankei, 125, 165, ((hunx / 60.0) * 2.0) * elm$core$Basics$pi, 0, 110);
+			return A7(shankei, 125, 165, ((hunx / 60.0) * 2.0) * elm$core$Basics$pi, 0, 110, 'green', 8);
 		});
 	var tokei = F5(
 		function (ji, hun, jidisp, hundisp, maruflg) {
@@ -5845,14 +5846,14 @@ var author$project$Tokei$view = function (model) {
 						A2(
 							elm$core$List$map,
 							function (n) {
-								return A5(shankei, 125, 165, (n * elm$core$Basics$pi) / 6, 140.0, 150.0);
+								return A7(shankei, 125, 165, (n * elm$core$Basics$pi) / 6, 140.0, 150.0, 'black', 3);
 							},
 							A2(elm$core$List$range, 0, 11)),
 						_Utils_ap(
 							A2(
 								elm$core$List$map,
 								function (n) {
-									return A5(shankei, 125, 165, (n * elm$core$Basics$pi) / 30, 147.0, 150.0);
+									return A7(shankei, 125, 165, (n * elm$core$Basics$pi) / 30, 147.0, 150.0, 'black', 3);
 								},
 								A2(elm$core$List$range, 0, 59)),
 							_Utils_ap(

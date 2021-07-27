@@ -156,16 +156,16 @@ view model =
            , if maruflg then scircleMaru else (stext  0 0 "")
 
  
-          ]++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/6) 140.0 150.0) )  (List.range 0 11)) 
-           ++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/30) 147.0 150.0) )  (List.range 0 59)) 
+          ]++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/6) 140.0 150.0 "black" 3) )  (List.range 0 11)) 
+           ++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/30) 147.0 150.0 "black" 3) )  (List.range 0 59)) 
            ++(List.map (\n-> (tmoji 125 165 n 120.0))  (List.range 1 12))
            ++(if jidisp then (List.map (\n-> (tmojim 125 165 n 120.0))  (List.range 1 12)) else [])
            ++(if hundisp then (List.map (\n-> (tmoji2 125 165 n 160.0))  (List.range 0 59)) else [])
     
           )
 
-        shankei xx yy th str enr = sline  ((round (str*(cos (-th+pi/2))))+xx)  ((round (str*(-1*sin (-th+pi/2)))) +yy)
-          ((round (enr*(cos (-th+pi/2))))+xx)  ((round (enr*(-1*sin (-th+pi/2))))+yy) 3
+        shankei xx yy th str enr color width= sline  ((round (str*(cos (-th+pi/2))))+xx)  ((round (str*(-1*sin (-th+pi/2)))) +yy)
+          ((round (enr*(cos (-th+pi/2))))+xx)  ((round (enr*(-1*sin (-th+pi/2))))+yy) width color 
 
         tmoji xx yy nn rr = stext ((round (rr*(cos (-(toFloat nn)*pi/6+pi/2))))+xx-10+(if nn==12 then -5 else 0))
           ((round (rr*(-1*sin (-(toFloat nn)*pi/6+pi/2)))) +yy+10)
@@ -179,8 +179,8 @@ view model =
           ((round (rr*(-1*sin (-(toFloat nn)*pi/30+pi/2)))) +yy+5)
            (String.fromInt nn)
 
-        tansin jix hunx = shankei 125 165 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80
-        chosin jix hunx = shankei 125 165 ((toFloat hunx)/60.0*2.0*pi)  0 110
+        tansin jix hunx = shankei 125 165 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80 "red" 8
+        chosin jix hunx = shankei 125 165 ((toFloat hunx)/60.0*2.0*pi)  0 110 "green" 8
         
         scircle xx yy radius = scircleorg xx yy radius "black"
         scircleMaru = scircleorg 50 50 50 "red"
@@ -205,7 +205,7 @@ view model =
         stextm xx yy moji = Svg.text_
          [ Svg.Attributes.x (String.fromInt xx)
          , Svg.Attributes.y (String.fromInt yy)
-         , Svg.Attributes.fill "gray"   
+         , Svg.Attributes.fill "red"   
          ,Svg.Attributes.fontSize "14"       
          ]
          [ Svg.text moji
@@ -214,18 +214,18 @@ view model =
         stext2 xx yy moji = Svg.text_
          [ Svg.Attributes.x (String.fromInt xx)
          , Svg.Attributes.y (String.fromInt yy)
-         , Svg.Attributes.fill "black"   
+         , Svg.Attributes.fill "green"   
          ,Svg.Attributes.fontSize "10"       
          ]
          [ Svg.text moji
          ]
         
-        sline x1 y1 x2 y2 wd =Svg.line
+        sline x1 y1 x2 y2 wd color =Svg.line
           [ Svg.Attributes.x1 (String.fromInt x1)
          , Svg.Attributes.y1 (String.fromInt y1)
          , Svg.Attributes.x2 (String.fromInt x2)
          , Svg.Attributes.y2 (String.fromInt y2)
-         , Svg.Attributes.stroke "blue"
+         , Svg.Attributes.stroke color
          , Svg.Attributes.strokeWidth (String.fromInt wd)
          , Svg.Attributes.strokeLinecap "round"
           ] []
