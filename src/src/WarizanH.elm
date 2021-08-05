@@ -33,23 +33,25 @@ type alias Model =
     ,ans:String
     ,nyuryoku:String
     ,ansdisp:Bool
+    ,seed:Sd
   }
+type alias Sd={s1:Int,e1:Int,s2:Int,e2:Int}
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False}
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99}}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon (Int,Int) | Btn Int 
+    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
 
       mhenkan i1 i2 = (i1,i2)
-      monGenerator = Random.map2  mhenkan (Random.int 888 2999 ) (Random.int 2  4 ) 
+      monGenerator = Random.map2  mhenkan (Random.int model.seed.s1 model.seed.e1 ) (Random.int model.seed.s2  model.seed.e2 ) 
  in
  
   case msg of
@@ -81,7 +83,9 @@ update msg model =
     in
      ( {model | nyuryoku=mans , ansdisp=if si==11 then True else model.ansdisp
                  } ,Cmd.none)
-
+   Btn2 sed ->
+          ( {model | seed=sed
+                 } ,Cmd.none)
 
 
 view : Model -> Html Msg
@@ -126,32 +130,44 @@ view model =
         x0=100
         y0=80
         hwidth=200
+        tatekankaku=44
 
         ansL=String.length model.ans
         --hijosuL=String.length model.hijosu
-        hijos1 ke= toint (String.dropRight (if ke>=0 then ke else 0) model.hijosu )        
+        hijos1 ke = toint (
+           if ke<0 then model.hijosu++"0" else (String.dropRight ke model.hijosu )
+                    
+          )        
 
         kake idx=(toint model.josu)*(toint (suchushutu (idx-1) model.nyuryoku))
 
+        fcr ix acc= (acc+(kake ix))*10
+        ruiseki ii= List.foldl fcr 0 (List.range 1 ii)
+
+        optionsu ii= if (ii==(String.length model.ans) && ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) ==0 ) then -1 else 0
+        tochukeisanL ii=
+                     (sjtext (x0+150) (y0+44) (String.fromInt (kake ii) ) ((ansL-ii)*(-1)) (ii*2-1) )
+           ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 "blue" ]
+           ++(sjtext (x0+150) (y0+44) (String.fromInt ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) ) (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
+
         svgview=       
-          Svg.svg [ Svg.Attributes.viewBox "0 0 400 400"
+          Svg.svg [ Svg.Attributes.viewBox "0 0 400 600"
           , Svg.Attributes.width "480"
-          , Svg.Attributes.height "400"
+          , Svg.Attributes.height "600"
           ]
           (
            [
           sline x0 y0 (x0+hwidth) y0 3 "black" 
           ,stext x0 (y0+40) ")" "black" "50px"
+          ,stext (x0+0) (y0+120) (if (model.ans==model.nyuryoku) then "◎" else "　") "red" "300px"
            ]++(sjtext (x0-50) (y0+44) model.josu 0 0)
            ++(sjtext (x0+150) (y0+44) model.hijosu 0 0)
            ++(rsjtext (x0+150) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) 
 
-           ++(sjtext (x0+150) (y0+44) (String.fromInt (kake 1) ) ((ansL-1)*(-1)) (1*2-1) )
-           ++(sjtext (x0+150) (y0+44) (String.fromInt ( (hijos1 (ansL-2)) - ((kake 1)*10) ) ) (1+(ansL-1)*(-1)) (1*2) )
-           ++(sjtext (x0+150) (y0+44) (String.fromInt (kake 2) ) ((ansL-2)*(-1)) (2*2-1) )
-           ++(sjtext (x0+150) (y0+44) (String.fromInt ( (hijos1 (ansL-3)) - ((kake 1)*10 +(kake 2))*10 ) ) (2+(ansL-1)*(-1)) (2*2) )
-           ++(sjtext (x0+150) (y0+44) (String.fromInt (kake 3) ) ((ansL-3)*(-1)) (3*2-1) )
+
+           ++ (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
           )
+
 
         fc idx chr = (idx,chr)
         fc2 ix (idx,chr) = if ix==idx then True else False
@@ -176,12 +192,12 @@ view model =
          [ Svg.text moji
          ]
         
-        func txx tyy tdivx tdivy idx chr = stext (txx+(-idx+tdivx)*40)   (tyy+tdivy*40)  (String.fromChar chr) "black" "46px" 
+        func txx tyy tdivx tdivy idx chr = stext (txx+(-idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" 
         --indexedMap : (Int -> a -> b) -> List a -> List b
         sjtext xx yy moji divx divy =
           List.indexedMap (func xx yy divx divy)  (List.reverse (String.toList moji))
         
-        rfunc txx tyy tdivx tdivy idx chr = stext (txx+(idx+tdivx)*40)   (tyy+tdivy*40)  (String.fromChar chr) "black" "46px" 
+        rfunc txx tyy tdivx tdivy idx chr = stext (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" 
         rsjtext xx yy moji divx divy =
           List.indexedMap (rfunc xx yy divx divy)  (String.toList moji)
           
@@ -204,6 +220,11 @@ view model =
                    ,
        sujibutton       
        ,div [style "font-size" "40px"] [text (if model.ansdisp then model.ans else "　")]
+       ,div [][
+          Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "*/1=4" ]
+         , Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=11,e1= 99 ,s2=11,e2= 99})]] [ text "*/2=2" ]
+         , Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "*/2=3" ]
+       ]
      ]
     ]
    ]

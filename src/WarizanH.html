@@ -4882,7 +4882,14 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '50', ansdisp: false, hijosu: '100', josu: '2', nyuryoku: ''},
+		{
+			ans: '50',
+			ansdisp: false,
+			hijosu: '100',
+			josu: '2',
+			nyuryoku: '',
+			seed: {e1: 99, e2: 99, s1: 19, s2: 19}
+		},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5089,8 +5096,8 @@ var author$project$Subunkai$update = F2(
 		var monGenerator = A3(
 			elm$random$Random$map2,
 			mhenkan,
-			A2(elm$random$Random$int, 888, 2999),
-			A2(elm$random$Random$int, 2, 4));
+			A2(elm$random$Random$int, model.seed.s1, model.seed.e1),
+			A2(elm$random$Random$int, model.seed.s2, model.seed.e2));
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
@@ -5112,7 +5119,7 @@ var author$project$Subunkai$update = F2(
 							nyuryoku: ''
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Btn':
 				var si = msg.a;
 				var mans = function () {
 					switch (si) {
@@ -5134,10 +5141,20 @@ var author$project$Subunkai$update = F2(
 							nyuryoku: mans
 						}),
 					elm$core$Platform$Cmd$none);
+			default:
+				var sed = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{seed: sed}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
+};
+var author$project$Subunkai$Btn2 = function (a) {
+	return {$: 'Btn2', a: a};
 };
 var author$project$Subunkai$Next = {$: 'Next'};
 var elm$core$Maybe$withDefault = F2(
@@ -5156,7 +5173,6 @@ var author$project$Subunkai$toint = function (st) {
 		0,
 		elm$core$String$toInt(st));
 };
-var elm$core$Basics$ge = _Utils_ge;
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5212,6 +5228,17 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
+};
 var elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5489,6 +5516,7 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 var author$project$Subunkai$view = function (model) {
 	var y0 = 80;
 	var x0 = 100;
+	var tatekankaku = 44;
 	var stext = F5(
 		function (xx, yy, moji, color, fs) {
 			return A2(
@@ -5674,8 +5702,8 @@ var author$project$Subunkai$view = function (model) {
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
 			return A5(
 				stext,
-				txx + ((idx + tdivx) * 40),
-				tyy + (tdivy * 40),
+				txx + ((idx + tdivx) * tatekankaku),
+				tyy + (tdivy * tatekankaku),
 				elm$core$String$fromChar(chr),
 				'black',
 				'46px');
@@ -5690,17 +5718,14 @@ var author$project$Subunkai$view = function (model) {
 	var hwidth = 200;
 	var hijos1 = function (ke) {
 		return author$project$Subunkai$toint(
-			A2(
-				elm$core$String$dropRight,
-				(ke >= 0) ? ke : 0,
-				model.hijosu));
+			(ke < 0) ? (model.hijosu + '0') : A2(elm$core$String$dropRight, ke, model.hijosu));
 	};
 	var func = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
 			return A5(
 				stext,
-				txx + (((-idx) + tdivx) * 40),
-				tyy + (tdivy * 40),
+				txx + (((-idx) + tdivx) * tatekankaku),
+				tyy + (tdivy * tatekankaku),
 				elm$core$String$fromChar(chr),
 				'black',
 				'46px');
@@ -5743,20 +5768,67 @@ var author$project$Subunkai$view = function (model) {
 		return author$project$Subunkai$toint(model.josu) * author$project$Subunkai$toint(
 			A2(suchushutu, idx - 1, model.nyuryoku));
 	};
+	var fcr = F2(
+		function (ix, acc) {
+			return (acc + kake(ix)) * 10;
+		});
+	var ruiseki = function (ii) {
+		return A3(
+			elm$core$List$foldl,
+			fcr,
+			0,
+			A2(elm$core$List$range, 1, ii));
+	};
 	var ansL = elm$core$String$length(model.ans);
+	var optionsu = function (ii) {
+		return (_Utils_eq(
+			ii,
+			elm$core$String$length(model.ans)) && (!(hijos1((ansL - ii) - 1) - ruiseki(ii)))) ? (-1) : 0;
+	};
+	var tochukeisanL = function (ii) {
+		return _Utils_ap(
+			A5(
+				sjtext,
+				x0 + 150,
+				y0 + 44,
+				elm$core$String$fromInt(
+					kake(ii)),
+				(ansL - ii) * (-1),
+				(ii * 2) - 1),
+			_Utils_ap(
+				_List_fromArray(
+					[
+						A6(sline, x0, (y0 + ((2 * tatekankaku) * ii)) + 6, x0 + hwidth, (y0 + ((2 * tatekankaku) * ii)) + 6, 1, 'blue')
+					]),
+				A5(
+					sjtext,
+					x0 + 150,
+					y0 + 44,
+					elm$core$String$fromInt(
+						hijos1((ansL - ii) - 1) - ruiseki(ii)),
+					(ii + ((ansL - 1) * (-1))) + optionsu(ii),
+					ii * 2)));
+	};
 	var svgview = A2(
 		elm$svg$Svg$svg,
 		_List_fromArray(
 			[
-				elm$svg$Svg$Attributes$viewBox('0 0 400 400'),
+				elm$svg$Svg$Attributes$viewBox('0 0 400 600'),
 				elm$svg$Svg$Attributes$width('480'),
-				elm$svg$Svg$Attributes$height('400')
+				elm$svg$Svg$Attributes$height('600')
 			]),
 		_Utils_ap(
 			_List_fromArray(
 				[
 					A6(sline, x0, y0, x0 + hwidth, y0, 3, 'black'),
-					A5(stext, x0, y0 + 40, ')', 'black', '50px')
+					A5(stext, x0, y0 + 40, ')', 'black', '50px'),
+					A5(
+					stext,
+					x0 + 0,
+					y0 + 120,
+					_Utils_eq(model.ans, model.nyuryoku) ? '◎' : '　',
+					'red',
+					'300px')
 				]),
 			_Utils_ap(
 				A5(sjtext, x0 - 50, y0 + 44, model.josu, 0, 0),
@@ -5764,50 +5836,16 @@ var author$project$Subunkai$view = function (model) {
 					A5(sjtext, x0 + 150, y0 + 44, model.hijosu, 0, 0),
 					_Utils_ap(
 						A5(rsjtext, x0 + 150, y0 - 4, model.nyuryoku, (ansL - 1) * (-1), 0),
-						_Utils_ap(
-							A5(
-								sjtext,
-								x0 + 150,
-								y0 + 44,
-								elm$core$String$fromInt(
-									kake(1)),
-								(ansL - 1) * (-1),
-								(1 * 2) - 1),
-							_Utils_ap(
-								A5(
-									sjtext,
-									x0 + 150,
-									y0 + 44,
-									elm$core$String$fromInt(
-										hijos1(ansL - 2) - (kake(1) * 10)),
-									1 + ((ansL - 1) * (-1)),
-									1 * 2),
-								_Utils_ap(
-									A5(
-										sjtext,
-										x0 + 150,
-										y0 + 44,
-										elm$core$String$fromInt(
-											kake(2)),
-										(ansL - 2) * (-1),
-										(2 * 2) - 1),
-									_Utils_ap(
-										A5(
-											sjtext,
-											x0 + 150,
-											y0 + 44,
-											elm$core$String$fromInt(
-												hijos1(ansL - 3) - (((kake(1) * 10) + kake(2)) * 10)),
-											2 + ((ansL - 1) * (-1)),
-											2 * 2),
-										A5(
-											sjtext,
-											x0 + 150,
-											y0 + 44,
-											elm$core$String$fromInt(
-												kake(3)),
-											(ansL - 3) * (-1),
-											(3 * 2) - 1))))))))));
+						elm$core$List$concat(
+							A2(
+								elm$core$List$map,
+								function (xi) {
+									return tochukeisanL(xi);
+								},
+								A2(
+									elm$core$List$range,
+									1,
+									elm$core$String$length(model.nyuryoku)))))))));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -5857,6 +5895,63 @@ var author$project$Subunkai$view = function (model) {
 									[
 										elm$html$Html$text(
 										model.ansdisp ? model.ans : '　')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
+														elm$html$Html$Events$onClick(
+														author$project$Subunkai$Btn2(
+															{e1: 1499, e2: 5, s1: 111, s2: 2}))
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('*/1=4')
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
+														elm$html$Html$Events$onClick(
+														author$project$Subunkai$Btn2(
+															{e1: 99, e2: 99, s1: 11, s2: 11}))
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('*/2=2')
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
+														elm$html$Html$Events$onClick(
+														author$project$Subunkai$Btn2(
+															{e1: 299, e2: 29, s1: 111, s2: 11}))
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('*/2=3')
+											]))
 									]))
 							]))
 					]))
