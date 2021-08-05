@@ -49,7 +49,7 @@ update msg model =
  let
 
       mhenkan i1 i2 = (i1,i2)
-      monGenerator = Random.map2  mhenkan (Random.int 2 99 ) (Random.int 2  99 ) 
+      monGenerator = Random.map2  mhenkan (Random.int 888 2999 ) (Random.int 2  4 ) 
  in
  
   case msg of
@@ -127,21 +127,35 @@ view model =
         y0=80
         hwidth=200
 
+        ansL=String.length model.ans
+        --hijosuL=String.length model.hijosu
+        hijos1 ke= toint (String.dropRight (if ke>=0 then ke else 0) model.hijosu )        
 
-        svgview mdl=Svg.svg 
-         [ Svg.Attributes.viewBox "0 0 400 400"
-         , Svg.Attributes.width "480"
-         , Svg.Attributes.height "400"
-         ]
-         (
-          [
+        kake idx=(toint model.josu)*(toint (suchushutu (idx-1) model.nyuryoku))
+
+        svgview=       
+          Svg.svg [ Svg.Attributes.viewBox "0 0 400 400"
+          , Svg.Attributes.width "480"
+          , Svg.Attributes.height "400"
+          ]
+          (
+           [
           sline x0 y0 (x0+hwidth) y0 3 "black" 
           ,stext x0 (y0+40) ")" "black" "50px"
-          ]++(sjtext (x0-50) (y0+44) mdl.josu 0 0)
-           ++(sjtext (x0+150) (y0+44) mdl.hijosu 0 0)
-           ++(rsjtext (x0+150) (y0-4) mdl.nyuryoku ((String.length model.ans-1)*(-1)) 0) 
+           ]++(sjtext (x0-50) (y0+44) model.josu 0 0)
+           ++(sjtext (x0+150) (y0+44) model.hijosu 0 0)
+           ++(rsjtext (x0+150) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) 
 
-         )
+           ++(sjtext (x0+150) (y0+44) (String.fromInt (kake 1) ) ((ansL-1)*(-1)) (1*2-1) )
+           ++(sjtext (x0+150) (y0+44) (String.fromInt ( (hijos1 (ansL-2)) - ((kake 1)*10) ) ) (1+(ansL-1)*(-1)) (1*2) )
+           ++(sjtext (x0+150) (y0+44) (String.fromInt (kake 2) ) ((ansL-2)*(-1)) (2*2-1) )
+           ++(sjtext (x0+150) (y0+44) (String.fromInt ( (hijos1 (ansL-3)) - ((kake 1)*10 +(kake 2))*10 ) ) (2+(ansL-1)*(-1)) (2*2) )
+           ++(sjtext (x0+150) (y0+44) (String.fromInt (kake 3) ) ((ansL-3)*(-1)) (3*2-1) )
+          )
+
+        fc idx chr = (idx,chr)
+        fc2 ix (idx,chr) = if ix==idx then True else False
+        suchushutu ic suji=String.fromList ( List.map (\tpl->(snd tpl))  (List.filter (fc2 ic)  (List.indexedMap fc  (String.toList suji) ) ) )
 
         sline x1 y1 x2 y2 wd color =Svg.line
           [ Svg.Attributes.x1 (String.fromInt x1)
@@ -180,7 +194,7 @@ view model =
     [
      td []
      [
-       svgview model
+       svgview
      ]
       ,
    

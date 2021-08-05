@@ -5089,8 +5089,8 @@ var author$project$Subunkai$update = F2(
 		var monGenerator = A3(
 			elm$random$Random$map2,
 			mhenkan,
-			A2(elm$random$Random$int, 2, 99),
-			A2(elm$random$Random$int, 2, 99));
+			A2(elm$random$Random$int, 888, 2999),
+			A2(elm$random$Random$int, 2, 4));
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
@@ -5140,10 +5140,108 @@ var author$project$Subunkai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
 var author$project$Subunkai$Next = {$: 'Next'};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$core$String$toInt = _String_toInt;
+var author$project$Subunkai$toint = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toInt(st));
+};
+var elm$core$Basics$ge = _Utils_ge;
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
 var elm$core$String$cons = _String_cons;
 var elm$core$String$fromChar = function (_char) {
 	return A2(elm$core$String$cons, _char, '');
 };
+var elm$core$String$fromList = _String_fromList;
 var elm$core$String$length = _String_length;
 var elm$core$String$foldr = _String_foldr;
 var elm$core$String$toList = function (string) {
@@ -5234,86 +5332,6 @@ var elm$core$Maybe$andThen = F2(
 		}
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
 var elm$core$Tuple$second = function (_n0) {
 	var y = _n0.b;
 	return y;
@@ -5670,6 +5688,13 @@ var author$project$Subunkai$view = function (model) {
 				elm$core$String$toList(moji));
 		});
 	var hwidth = 200;
+	var hijos1 = function (ke) {
+		return author$project$Subunkai$toint(
+			A2(
+				elm$core$String$dropRight,
+				(ke >= 0) ? ke : 0,
+				model.hijosu));
+	};
 	var func = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
 			return A5(
@@ -5688,33 +5713,101 @@ var author$project$Subunkai$view = function (model) {
 				elm$core$List$reverse(
 					elm$core$String$toList(moji)));
 		});
-	var svgview = function (mdl) {
-		return A2(
-			elm$svg$Svg$svg,
+	var fc2 = F2(
+		function (ix, _n0) {
+			var idx = _n0.a;
+			var chr = _n0.b;
+			return _Utils_eq(ix, idx) ? true : false;
+		});
+	var fc = F2(
+		function (idx, chr) {
+			return _Utils_Tuple2(idx, chr);
+		});
+	var suchushutu = F2(
+		function (ic, suji) {
+			return elm$core$String$fromList(
+				A2(
+					elm$core$List$map,
+					function (tpl) {
+						return author$project$Subunkai$snd(tpl);
+					},
+					A2(
+						elm$core$List$filter,
+						fc2(ic),
+						A2(
+							elm$core$List$indexedMap,
+							fc,
+							elm$core$String$toList(suji)))));
+		});
+	var kake = function (idx) {
+		return author$project$Subunkai$toint(model.josu) * author$project$Subunkai$toint(
+			A2(suchushutu, idx - 1, model.nyuryoku));
+	};
+	var ansL = elm$core$String$length(model.ans);
+	var svgview = A2(
+		elm$svg$Svg$svg,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$viewBox('0 0 400 400'),
+				elm$svg$Svg$Attributes$width('480'),
+				elm$svg$Svg$Attributes$height('400')
+			]),
+		_Utils_ap(
 			_List_fromArray(
 				[
-					elm$svg$Svg$Attributes$viewBox('0 0 400 400'),
-					elm$svg$Svg$Attributes$width('480'),
-					elm$svg$Svg$Attributes$height('400')
+					A6(sline, x0, y0, x0 + hwidth, y0, 3, 'black'),
+					A5(stext, x0, y0 + 40, ')', 'black', '50px')
 				]),
 			_Utils_ap(
-				_List_fromArray(
-					[
-						A6(sline, x0, y0, x0 + hwidth, y0, 3, 'black'),
-						A5(stext, x0, y0 + 40, ')', 'black', '50px')
-					]),
+				A5(sjtext, x0 - 50, y0 + 44, model.josu, 0, 0),
 				_Utils_ap(
-					A5(sjtext, x0 - 50, y0 + 44, mdl.josu, 0, 0),
+					A5(sjtext, x0 + 150, y0 + 44, model.hijosu, 0, 0),
 					_Utils_ap(
-						A5(sjtext, x0 + 150, y0 + 44, mdl.hijosu, 0, 0),
-						A5(
-							rsjtext,
-							x0 + 150,
-							y0 - 4,
-							mdl.nyuryoku,
-							(elm$core$String$length(model.ans) - 1) * (-1),
-							0)))));
-	};
+						A5(rsjtext, x0 + 150, y0 - 4, model.nyuryoku, (ansL - 1) * (-1), 0),
+						_Utils_ap(
+							A5(
+								sjtext,
+								x0 + 150,
+								y0 + 44,
+								elm$core$String$fromInt(
+									kake(1)),
+								(ansL - 1) * (-1),
+								(1 * 2) - 1),
+							_Utils_ap(
+								A5(
+									sjtext,
+									x0 + 150,
+									y0 + 44,
+									elm$core$String$fromInt(
+										hijos1(ansL - 2) - (kake(1) * 10)),
+									1 + ((ansL - 1) * (-1)),
+									1 * 2),
+								_Utils_ap(
+									A5(
+										sjtext,
+										x0 + 150,
+										y0 + 44,
+										elm$core$String$fromInt(
+											kake(2)),
+										(ansL - 2) * (-1),
+										(2 * 2) - 1),
+									_Utils_ap(
+										A5(
+											sjtext,
+											x0 + 150,
+											y0 + 44,
+											elm$core$String$fromInt(
+												hijos1(ansL - 3) - (((kake(1) * 10) + kake(2)) * 10)),
+											2 + ((ansL - 1) * (-1)),
+											2 * 2),
+										A5(
+											sjtext,
+											x0 + 150,
+											y0 + 44,
+											elm$core$String$fromInt(
+												kake(3)),
+											(ansL - 3) * (-1),
+											(3 * 2) - 1))))))))));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -5732,9 +5825,7 @@ var author$project$Subunkai$view = function (model) {
 						elm$html$Html$td,
 						_List_Nil,
 						_List_fromArray(
-							[
-								svgview(model)
-							])),
+							[svgview])),
 						A2(
 						elm$html$Html$td,
 						_List_Nil,
@@ -5885,7 +5976,6 @@ var elm$core$String$left = F2(
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
 var elm$core$String$contains = _String_contains;
-var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
