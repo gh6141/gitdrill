@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>WarizanH</title>
+  <title>WarizanH2</title>
 </head>
 
 <body>
@@ -4880,7 +4880,7 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$WarizanH$init = function (_n0) {
+var author$project$WarizanH2$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			ans: '50',
@@ -4894,18 +4894,18 @@ var author$project$WarizanH$init = function (_n0) {
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$WarizanH$subscriptions = function (model) {
+var author$project$WarizanH2$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$WarizanH$Newmon = function (a) {
+var author$project$WarizanH2$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
-var author$project$WarizanH$fst = function (tuple) {
+var author$project$WarizanH2$fst = function (tuple) {
 	var _n0 = tuple;
 	var value1 = _n0.a;
 	return value1;
 };
-var author$project$WarizanH$snd = function (tuple) {
+var author$project$WarizanH2$snd = function (tuple) {
 	var _n0 = tuple;
 	var value2 = _n0.b;
 	return value2;
@@ -5087,7 +5087,7 @@ var elm$random$Random$map2 = F3(
 					seed2);
 			});
 	});
-var author$project$WarizanH$update = F2(
+var author$project$WarizanH2$update = F2(
 	function (msg, model) {
 		var mhenkan = F2(
 			function (i1, i2) {
@@ -5102,11 +5102,11 @@ var author$project$WarizanH$update = F2(
 			case 'Next':
 				return _Utils_Tuple2(
 					model,
-					A2(elm$random$Random$generate, author$project$WarizanH$Newmon, monGenerator));
+					A2(elm$random$Random$generate, author$project$WarizanH2$Newmon, monGenerator));
 			case 'Newmon':
 				var tpl = msg.a;
-				var m2 = author$project$WarizanH$snd(tpl);
-				var m1 = author$project$WarizanH$fst(tpl);
+				var m2 = author$project$WarizanH2$snd(tpl);
+				var m1 = author$project$WarizanH2$fst(tpl);
 				var hij = m1 * m2;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5141,22 +5141,28 @@ var author$project$WarizanH$update = F2(
 							nyuryoku: mans
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Btn2':
 				var sed = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{seed: sed}),
 					elm$core$Platform$Cmd$none);
+			case 'Susumu':
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$WarizanH$Btn = function (a) {
+var author$project$WarizanH2$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
-var author$project$WarizanH$Btn2 = function (a) {
+var author$project$WarizanH2$Btn2 = function (a) {
 	return {$: 'Btn2', a: a};
 };
-var author$project$WarizanH$Next = {$: 'Next'};
+var author$project$WarizanH2$Modoru = {$: 'Modoru'};
+var author$project$WarizanH2$Next = {$: 'Next'};
+var author$project$WarizanH2$Susumu = {$: 'Susumu'};
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5167,7 +5173,7 @@ var elm$core$Maybe$withDefault = F2(
 		}
 	});
 var elm$core$String$toInt = _String_toInt;
-var author$project$WarizanH$toint = function (st) {
+var author$project$WarizanH2$toint = function (st) {
 	return A2(
 		elm$core$Maybe$withDefault,
 		0,
@@ -5513,7 +5519,7 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
 			children);
 	});
-var author$project$WarizanH$view = function (model) {
+var author$project$WarizanH2$view = function (model) {
 	var y0 = 80;
 	var x0 = 100;
 	var tatekankaku = 44;
@@ -5566,7 +5572,7 @@ var author$project$WarizanH$view = function (model) {
 						[
 							A2(elm$html$Html$Attributes$style, 'font-size', '40px'),
 							elm$html$Html$Events$onClick(
-							author$project$WarizanH$Btn(ii))
+							author$project$WarizanH2$Btn(ii))
 						]))
 				]),
 			_List_fromArray(
@@ -5717,7 +5723,7 @@ var author$project$WarizanH$view = function (model) {
 		});
 	var hwidth = 200;
 	var hijos1 = function (ke) {
-		return author$project$WarizanH$toint(
+		return author$project$WarizanH2$toint(
 			(ke < 0) ? (model.hijosu + '0') : A2(elm$core$String$dropRight, ke, model.hijosu));
 	};
 	var func = F6(
@@ -5754,7 +5760,7 @@ var author$project$WarizanH$view = function (model) {
 				A2(
 					elm$core$List$map,
 					function (tpl) {
-						return author$project$WarizanH$snd(tpl);
+						return author$project$WarizanH2$snd(tpl);
 					},
 					A2(
 						elm$core$List$filter,
@@ -5765,7 +5771,7 @@ var author$project$WarizanH$view = function (model) {
 							elm$core$String$toList(suji)))));
 		});
 	var kake = function (idx) {
-		return author$project$WarizanH$toint(model.josu) * author$project$WarizanH$toint(
+		return author$project$WarizanH2$toint(model.josu) * author$project$WarizanH2$toint(
 			A2(suchushutu, idx - 1, model.nyuryoku));
 	};
 	var fcr = F2(
@@ -5877,7 +5883,7 @@ var author$project$WarizanH$view = function (model) {
 										_List_fromArray(
 											[
 												A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-												elm$html$Html$Events$onClick(author$project$WarizanH$Next)
+												elm$html$Html$Events$onClick(author$project$WarizanH2$Next)
 											]))
 									]),
 								_List_fromArray(
@@ -5885,6 +5891,42 @@ var author$project$WarizanH$view = function (model) {
 										elm$html$Html$text('つぎへ')
 									])),
 								sujibutton,
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+														elm$html$Html$Events$onClick(author$project$WarizanH2$Modoru)
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('←')
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+														elm$html$Html$Events$onClick(author$project$WarizanH2$Susumu)
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('→')
+											]))
+									])),
 								A2(
 								elm$html$Html$div,
 								_List_fromArray(
@@ -5910,7 +5952,7 @@ var author$project$WarizanH$view = function (model) {
 													[
 														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
 														elm$html$Html$Events$onClick(
-														author$project$WarizanH$Btn2(
+														author$project$WarizanH2$Btn2(
 															{e1: 1499, e2: 5, s1: 111, s2: 2}))
 													]))
 											]),
@@ -5927,7 +5969,7 @@ var author$project$WarizanH$view = function (model) {
 													[
 														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
 														elm$html$Html$Events$onClick(
-														author$project$WarizanH$Btn2(
+														author$project$WarizanH2$Btn2(
 															{e1: 99, e2: 99, s1: 11, s2: 11}))
 													]))
 											]),
@@ -5944,7 +5986,7 @@ var author$project$WarizanH$view = function (model) {
 													[
 														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
 														elm$html$Html$Events$onClick(
-														author$project$WarizanH$Btn2(
+														author$project$WarizanH2$Btn2(
 															{e1: 299, e2: 29, s1: 111, s2: 11}))
 													]))
 											]),
@@ -6178,12 +6220,12 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$WarizanH$main = elm$browser$Browser$element(
-	{init: author$project$WarizanH$init, subscriptions: author$project$WarizanH$subscriptions, update: author$project$WarizanH$update, view: author$project$WarizanH$view});
-_Platform_export({'WarizanH':{'init':author$project$WarizanH$main(
+var author$project$WarizanH2$main = elm$browser$Browser$element(
+	{init: author$project$WarizanH2$init, subscriptions: author$project$WarizanH2$subscriptions, update: author$project$WarizanH2$update, view: author$project$WarizanH2$view});
+_Platform_export({'WarizanH2':{'init':author$project$WarizanH2$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
 
-var app = Elm.WarizanH.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
+var app = Elm.WarizanH2.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
 if (document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49"))
 {
   document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49").innerText = 'This is a headless program, meaning there is nothing to show here.\n\nI started the program anyway though, and you can access it as `app` in the developer console.';
