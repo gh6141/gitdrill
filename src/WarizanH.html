@@ -4882,7 +4882,7 @@ var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Subunkai$init = function (_n0) {
 	return _Utils_Tuple2(
-		{ans: '50', hijosu: '100', josu: '2', nyuryoku: ''},
+		{ans: '50', ansdisp: false, hijosu: '100', josu: '2', nyuryoku: ''},
 		elm$core$Platform$Cmd$none);
 };
 var elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5106,6 +5106,7 @@ var author$project$Subunkai$update = F2(
 						model,
 						{
 							ans: elm$core$String$fromInt(m1),
+							ansdisp: false,
 							hijosu: elm$core$String$fromInt(hij),
 							josu: elm$core$String$fromInt(m2),
 							nyuryoku: ''
@@ -5114,18 +5115,24 @@ var author$project$Subunkai$update = F2(
 			default:
 				var si = msg.a;
 				var mans = function () {
-					if (si === 10) {
-						return A2(elm$core$String$dropRight, 1, model.nyuryoku);
-					} else {
-						return _Utils_ap(
-							model.nyuryoku,
-							elm$core$String$fromInt(si));
+					switch (si) {
+						case 10:
+							return A2(elm$core$String$dropRight, 1, model.nyuryoku);
+						case 11:
+							return model.nyuryoku;
+						default:
+							return _Utils_ap(
+								model.nyuryoku,
+								elm$core$String$fromInt(si));
 					}
 				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{nyuryoku: mans}),
+						{
+							ansdisp: (si === 11) ? true : model.ansdisp,
+							nyuryoku: mans
+						}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5137,6 +5144,7 @@ var elm$core$String$cons = _String_cons;
 var elm$core$String$fromChar = function (_char) {
 	return A2(elm$core$String$cons, _char, '');
 };
+var elm$core$String$length = _String_length;
 var elm$core$String$foldr = _String_foldr;
 var elm$core$String$toList = function (string) {
 	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
@@ -5156,6 +5164,7 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
+var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5517,7 +5526,16 @@ var author$project$Subunkai$view = function (model) {
 			_List_fromArray(
 				[
 					elm$html$Html$text(
-					' ' + (((ii > 9) ? 'C' : elm$core$String$fromInt(ii)) + ' '))
+					' ' + (function () {
+						switch (ii) {
+							case 10:
+								return 'C';
+							case 11:
+								return '答';
+							default:
+								return elm$core$String$fromInt(ii);
+						}
+					}() + ' '))
 				]));
 	};
 	var sujibutton = A2(
@@ -5624,9 +5642,33 @@ var author$project$Subunkai$view = function (model) {
 						_List_fromArray(
 							[
 								sbutton(10)
+							])),
+						A2(
+						elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								sbutton(11)
 							]))
 					]))
 			]));
+	var rfunc = F6(
+		function (txx, tyy, tdivx, tdivy, idx, chr) {
+			return A5(
+				stext,
+				txx + ((idx + tdivx) * 40),
+				tyy + (tdivy * 40),
+				elm$core$String$fromChar(chr),
+				'black',
+				'46px');
+		});
+	var rsjtext = F5(
+		function (xx, yy, moji, divx, divy) {
+			return A2(
+				elm$core$List$indexedMap,
+				A4(rfunc, xx, yy, divx, divy),
+				elm$core$String$toList(moji));
+		});
 	var hwidth = 200;
 	var func = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
@@ -5665,12 +5707,13 @@ var author$project$Subunkai$view = function (model) {
 					A5(sjtext, x0 - 50, y0 + 44, mdl.josu, 0, 0),
 					_Utils_ap(
 						A5(sjtext, x0 + 150, y0 + 44, mdl.hijosu, 0, 0),
-						_Utils_ap(
-							_List_fromArray(
-								[
-									A5(stext, x0 + 150, y0 - 4, mdl.nyuryoku, 'black', '46px')
-								]),
-							A5(sjtext, x0 + 200, y0 + 200, mdl.ans, 0, 0))))));
+						A5(
+							rsjtext,
+							x0 + 150,
+							y0 - 4,
+							mdl.nyuryoku,
+							(elm$core$String$length(model.ans) - 1) * (-1),
+							0)))));
 	};
 	return A2(
 		elm$html$Html$table,
@@ -5712,7 +5755,18 @@ var author$project$Subunkai$view = function (model) {
 									[
 										elm$html$Html$text('つぎへ')
 									])),
-								sujibutton
+								sujibutton,
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '40px')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(
+										model.ansdisp ? model.ans : '　')
+									]))
 							]))
 					]))
 			]));
@@ -5811,7 +5865,6 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
-var elm$core$String$length = _String_length;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(

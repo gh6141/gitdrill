@@ -32,12 +32,12 @@ type alias Model =
     ,josu:String
     ,ans:String
     ,nyuryoku:String
- 
+    ,ansdisp:Bool
   }
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku=""}
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False}
   , Cmd.none
   )
 
@@ -50,13 +50,9 @@ update msg model =
 
       mhenkan i1 i2 = (i1,i2)
       monGenerator = Random.map2  mhenkan (Random.int 2 99 ) (Random.int 2  99 ) 
-
-
  in
  
   case msg of
-
-
   
    Next ->
       ( model 
@@ -72,18 +68,18 @@ update msg model =
      in
    
       ( {model |  hijosu =String.fromInt hij ,josu=String.fromInt  m2,ans=String.fromInt m1
-      ,nyuryoku="" }    ,Cmd.none)
+      ,nyuryoku="" ,ansdisp=False}    ,Cmd.none)
   
    Btn si ->
     let
       mans=
         case si of
          10 -> String.dropRight 1 model.nyuryoku
+         11 -> model.nyuryoku
          _ ->  model.nyuryoku++(String.fromInt si)
 
-
     in
-     ( {model | nyuryoku=mans
+     ( {model | nyuryoku=mans , ansdisp=if si==11 then True else model.ansdisp
                  } ,Cmd.none)
 
 
@@ -91,42 +87,14 @@ update msg model =
 view : Model -> Html Msg
 view model =
  let
-      
-
-      --  img1=img [src ("https://rasp.cld9.work/py/car3.jpg"),style "width" isizex, style "height" isizey] []
-
-      --  list1 = List.map  (\ii -> 
-      --    let
-       --     nakami=  img [onClick (Img ii),id (String.fromInt ii)
-      --               ,src (if (Maybe.withDefault True (Array.get (ii-1) model.imgl)) then "https://rasp.cld9.work/py/car3.jpg" else "https://rasp.cld9.work/py/car1.jpg") 
-      --               ,style "width" isizex, style "height" isizey] []
-     
-
-        --list1=List.repeat (toint model.init) (img3)
-        --list2=List.repeat (toint model.mon2) (img3)
-  
-      --  contents=  div [style "font-size" "70px",style "margin" "10px"]
-       --   [     
-        --  div [align "center"]
-        --   [            
-        --   select [style "text-align-last" "center",style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.init),value s][text ("　"++s++"　")]) ["?","3","4","5","6","7","8","9","10"])
-        --   ,text "は"             
-        --    ]
-        --    ,
-         --  div [align "center"]
-         --   [    
-         --  input [style "background-color"  "green" ,style "text-align" "center",style "font-size" "50px", type_ "text",maxlength 1,size 1 ,value model.mon1] []
-          
-          --  ]
-          --]
-
+ 
         sbutton : Int -> Html Msg
         sbutton ii = (Button.button [Button.attrs [style "font-size" "40px"   ,onClick (Btn ii)]] 
          [ text (" "++(
-           if ii>9 then
-            "C"
-           else 
-            String.fromInt ii
+             case ii of
+              10-> "C"
+              11-> "答"
+              _ -> String.fromInt ii 
            
            )++" ")])
 
@@ -151,7 +119,7 @@ view model =
              ,tr [] [
                td [] [sbutton 0]
                ,td [] [sbutton 10]
-               
+               ,td [] [sbutton 11]
              ]                   
             ]
 
@@ -169,12 +137,10 @@ view model =
           [
           sline x0 y0 (x0+hwidth) y0 3 "black" 
           ,stext x0 (y0+40) ")" "black" "50px"
-      --    ,stext (x0-80) (y0+44) mdl.josu "black" "46px"
-      --     ,stext (x0+40) (y0+44) mdl.hijosu "black" "46px"
           ]++(sjtext (x0-50) (y0+44) mdl.josu 0 0)
            ++(sjtext (x0+150) (y0+44) mdl.hijosu 0 0)
-           ++([stext (x0+150) (y0-4) mdl.nyuryoku "black" "46px"]) 
-           ++(sjtext (x0+200) (y0+200) mdl.ans 0 0) 
+           ++(rsjtext (x0+150) (y0-4) mdl.nyuryoku ((String.length model.ans-1)*(-1)) 0) 
+
          )
 
         sline x1 y1 x2 y2 wd color =Svg.line
@@ -197,10 +163,13 @@ view model =
          ]
         
         func txx tyy tdivx tdivy idx chr = stext (txx+(-idx+tdivx)*40)   (tyy+tdivy*40)  (String.fromChar chr) "black" "46px" 
-
         --indexedMap : (Int -> a -> b) -> List a -> List b
         sjtext xx yy moji divx divy =
           List.indexedMap (func xx yy divx divy)  (List.reverse (String.toList moji))
+        
+        rfunc txx tyy tdivx tdivy idx chr = stext (txx+(idx+tdivx)*40)   (tyy+tdivy*40)  (String.fromChar chr) "black" "46px" 
+        rsjtext xx yy moji divx divy =
+          List.indexedMap (rfunc xx yy divx divy)  (String.toList moji)
           
                   
  in
@@ -220,6 +189,7 @@ view model =
                 Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
                    ,
        sujibutton       
+       ,div [style "font-size" "40px"] [text (if model.ansdisp then model.ans else "　")]
      ]
     ]
    ]
