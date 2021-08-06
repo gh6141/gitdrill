@@ -4887,6 +4887,7 @@ var author$project$WarizanH2$init = function (_n0) {
 			ansdisp: false,
 			hijosu: '100',
 			josu: '2',
+			kirikae: 'AC',
 			nyuryoku: '',
 			seed: {e1: 99, e2: 99, s1: 19, s2: 19}
 		},
@@ -5150,8 +5151,16 @@ var author$project$WarizanH2$update = F2(
 					elm$core$Platform$Cmd$none);
 			case 'Susumu':
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			default:
+			case 'Modoru':
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							kirikae: (model.kirikae === 'AC') ? 'MC' : 'AC'
+						}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$WarizanH2$Btn = function (a) {
@@ -5160,6 +5169,7 @@ var author$project$WarizanH2$Btn = function (a) {
 var author$project$WarizanH2$Btn2 = function (a) {
 	return {$: 'Btn2', a: a};
 };
+var author$project$WarizanH2$Kirikae = {$: 'Kirikae'};
 var author$project$WarizanH2$Modoru = {$: 'Modoru'};
 var author$project$WarizanH2$Next = {$: 'Next'};
 var author$project$WarizanH2$Susumu = {$: 'Susumu'};
@@ -5745,9 +5755,9 @@ var author$project$WarizanH2$view = function (model) {
 					elm$core$String$toList(moji)));
 		});
 	var fc2 = F2(
-		function (ix, _n0) {
-			var idx = _n0.a;
-			var chr = _n0.b;
+		function (ix, _n1) {
+			var idx = _n1.a;
+			var chr = _n1.b;
 			return _Utils_eq(ix, idx) ? true : false;
 		});
 	var fc = F2(
@@ -5791,29 +5801,44 @@ var author$project$WarizanH2$view = function (model) {
 			ii,
 			elm$core$String$length(model.ans)) && (!(hijos1((ansL - ii) - 1) - ruiseki(ii)))) ? (-1) : 0;
 	};
+	var tochukL = F3(
+		function (ii, skk, shh) {
+			return _Utils_ap(
+				A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+				_Utils_ap(
+					_List_fromArray(
+						[
+							A6(sline, x0, (y0 + ((2 * tatekankaku) * ii)) + 6, x0 + hwidth, (y0 + ((2 * tatekankaku) * ii)) + 6, 1, 'blue')
+						]),
+					A5(
+						sjtext,
+						x0 + 150,
+						y0 + 44,
+						shh,
+						(ii + ((ansL - 1) * (-1))) + optionsu(ii),
+						ii * 2)));
+		});
+	var mtochukeisanL = function (ii) {
+		return A3(tochukL, ii, 'xx', 'yy');
+	};
+	var mcList = elm$core$List$concat(
+		A2(
+			elm$core$List$map,
+			function (xi) {
+				return mtochukeisanL(xi);
+			},
+			A2(
+				elm$core$List$range,
+				1,
+				elm$core$String$length(model.nyuryoku))));
 	var tochukeisanL = function (ii) {
-		return _Utils_ap(
-			A5(
-				sjtext,
-				x0 + 150,
-				y0 + 44,
-				elm$core$String$fromInt(
-					kake(ii)),
-				(ansL - ii) * (-1),
-				(ii * 2) - 1),
-			_Utils_ap(
-				_List_fromArray(
-					[
-						A6(sline, x0, (y0 + ((2 * tatekankaku) * ii)) + 6, x0 + hwidth, (y0 + ((2 * tatekankaku) * ii)) + 6, 1, 'blue')
-					]),
-				A5(
-					sjtext,
-					x0 + 150,
-					y0 + 44,
-					elm$core$String$fromInt(
-						hijos1((ansL - ii) - 1) - ruiseki(ii)),
-					(ii + ((ansL - 1) * (-1))) + optionsu(ii),
-					ii * 2)));
+		return A3(
+			tochukL,
+			ii,
+			elm$core$String$fromInt(
+				kake(ii)),
+			elm$core$String$fromInt(
+				hijos1((ansL - ii) - 1) - ruiseki(ii)));
 	};
 	var svgview = A2(
 		elm$svg$Svg$svg,
@@ -5842,16 +5867,35 @@ var author$project$WarizanH2$view = function (model) {
 					A5(sjtext, x0 + 150, y0 + 44, model.hijosu, 0, 0),
 					_Utils_ap(
 						A5(rsjtext, x0 + 150, y0 - 4, model.nyuryoku, (ansL - 1) * (-1), 0),
-						elm$core$List$concat(
-							A2(
-								elm$core$List$map,
-								function (xi) {
-									return tochukeisanL(xi);
-								},
-								A2(
-									elm$core$List$range,
-									1,
-									elm$core$String$length(model.nyuryoku)))))))));
+						function () {
+							var _n0 = model.kirikae;
+							switch (_n0) {
+								case 'MC':
+									return elm$core$List$concat(
+										A2(
+											elm$core$List$map,
+											function (xi) {
+												return tochukeisanL(xi);
+											},
+											A2(
+												elm$core$List$range,
+												1,
+												elm$core$String$length(model.nyuryoku))));
+								case 'AC':
+									return mcList;
+								default:
+									return elm$core$List$concat(
+										A2(
+											elm$core$List$map,
+											function (xi) {
+												return tochukeisanL(xi);
+											},
+											A2(
+												elm$core$List$range,
+												1,
+												elm$core$String$length(model.nyuryoku))));
+							}
+						}())))));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
@@ -5925,6 +5969,21 @@ var author$project$WarizanH2$view = function (model) {
 										_List_fromArray(
 											[
 												elm$html$Html$text('→')
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+														elm$html$Html$Events$onClick(author$project$WarizanH2$Kirikae)
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text(model.kirikae)
 											]))
 									])),
 								A2(

@@ -26,6 +26,7 @@ main =
     , subscriptions = subscriptions
     }
 
+
 type alias Model =
   { 
     hijosu:String
@@ -34,17 +35,50 @@ type alias Model =
     ,nyuryoku:String
     ,ansdisp:Bool
     ,seed:Sd
+    ,kirikae:String
   }
+
 type alias Sd={s1:Int,e1:Int,s2:Int,e2:Int}
+
+type Kurai= Kurai10 | Kurai1
+
+type alias Suji=
+ {
+   kurai10:String
+   ,kurai1:String
+   ,keta:Int
+   ,ichix:Int
+   ,ichiy:Int
+   ,curketa:Kurai
+ }
+
+type alias SujiL=
+ {
+   slist:List Suji
+   ,sentox:Int
+   ,sentoy:Int
+   ,curidx:Int 
+ }
+
+type alias SuBlock=
+  {
+    sekigyo:SujiL
+    ,sagyo:SujiL
+    ,curidx:Int
+  }
+
+
+
+
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99}}
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Susumu |Modoru
+    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Susumu |Modoru|Kirikae
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -89,6 +123,8 @@ update msg model =
    Susumu -> (model,Cmd.none)
 
    Modoru -> (model,Cmd.none)
+
+   Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"},Cmd.none)
 
 
 view : Model -> Html Msg
@@ -147,11 +183,20 @@ view model =
         fcr ix acc= (acc+(kake ix))*10
         ruiseki ii= List.foldl fcr 0 (List.range 1 ii)
 
+       
+        tochukeisanL ii= tochukL ii (String.fromInt (kake ii) ) (String.fromInt ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) )                
+
         optionsu ii= if (ii==(String.length model.ans) && ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) ==0 ) then -1 else 0
-        tochukeisanL ii=
-                     (sjtext (x0+150) (y0+44) (String.fromInt (kake ii) ) ((ansL-ii)*(-1)) (ii*2-1) )
+        tochukL ii  skk shh =      (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
            ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 "blue" ]
-           ++(sjtext (x0+150) (y0+44) (String.fromInt ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) ) (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
+           ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
+
+        -- //////////////////////　Manual calc  //////////////////////////////////////
+        mtochukeisanL ii= tochukL ii "xx" "yy"
+
+        mcList=(List.concat ( List.map (\xi-> mtochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+
+        -- ///////////////
 
         svgview=       
           Svg.svg [ Svg.Attributes.viewBox "0 0 400 600"
@@ -167,7 +212,16 @@ view model =
            ++(sjtext (x0+150) (y0+44) model.hijosu 0 0)
            ++(rsjtext (x0+150) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) 
 
-           ++ (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+           ++ 
+            (
+              case model.kirikae of
+               "MC" -> (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+               "AC" -> mcList 
+               _ -> (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+
+            )
+           
+           
           )
 
 
@@ -224,6 +278,7 @@ view model =
        ,div [] [
             Button.button [Button.attrs [style "font-size" "30px"   ,onClick Modoru]] [ text "←" ]
             , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Susumu]] [ text "→" ]
+            , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae]] [ text model.kirikae ]
        ]      
        ,div [style "font-size" "40px"] [text (if model.ansdisp then model.ans else "　")]
        ,div [][
