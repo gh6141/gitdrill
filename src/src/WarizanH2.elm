@@ -36,6 +36,7 @@ type alias Model =
     ,ansdisp:Bool
     ,seed:Sd
     ,kirikae:String
+    ,sublockl:List SuBlock
   }
 
 type alias Sd={s1:Int,e1:Int,s2:Int,e2:Int}
@@ -44,21 +45,15 @@ type Kurai= Kurai10 | Kurai1
 
 type alias Suji=
  {
-   kurai10:String
-   ,kurai1:String
-   ,keta:Int
-   ,ichix:Int
-   ,ichiy:Int
-   ,curketa:Kurai
+   kurai10:Char
+   ,kurai1:Char
  }
 
-type alias SujiL=
- {
-   slist:List Suji
-   ,sentox:Int
-   ,sentoy:Int
-   ,curidx:Int 
- }
+type alias SujiL= List Suji
+
+ 
+slistToString :List Suji -> String
+slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )
 
 type alias SuBlock=
   {
@@ -73,7 +68,7 @@ type alias SuBlock=
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"}
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC",sublockl=[]}
   , Cmd.none
   )
 
@@ -104,7 +99,7 @@ update msg model =
      in
    
       ( {model |  hijosu =String.fromInt hij ,josu=String.fromInt  m2,ans=String.fromInt m1
-      ,nyuryoku="" ,ansdisp=False}    ,Cmd.none)
+      ,nyuryoku=(if model.kirikae=="AC" then "?" else "") ,ansdisp=False}    ,Cmd.none)
   
    Btn si ->
     let
@@ -112,7 +107,7 @@ update msg model =
         case si of
          10 -> String.dropRight 1 model.nyuryoku
          11 -> model.nyuryoku
-         _ ->  model.nyuryoku++(String.fromInt si)
+         _ ->  (String.replace "?" "" model.nyuryoku)++(String.fromInt si)
 
     in
      ( {model | nyuryoku=mans , ansdisp=if si==11 then True else model.ansdisp
@@ -124,7 +119,9 @@ update msg model =
 
    Modoru -> (model,Cmd.none)
 
-   Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"},Cmd.none)
+   Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"
+    ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
+    },Cmd.none)
 
 
 view : Model -> Html Msg
@@ -192,7 +189,8 @@ view model =
            ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
 
         -- //////////////////////　Manual calc  //////////////////////////////////////
-        mtochukeisanL ii= tochukL ii "xx" "yy"
+        mtochukeisanL ii= tochukL ii  (slistToString  (getAtx ii model.sublockl ).sekigyo) 
+                                      (slistToString  (getAtx ii model.sublockl).sagyo)
 
         mcList=(List.concat ( List.map (\xi-> mtochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
 
@@ -313,3 +311,16 @@ snd tuple =
         (_, value2) = tuple
     in
     value2
+
+getAt : Int -> List a -> Maybe a
+getAt idx xs =
+    if idx < 0 then
+        Nothing
+
+    else
+        List.head <| List.drop idx xs
+
+getAtx idx xs = 
+  case (getAt idx xs) of
+   Nothing -> {sekigyo=[],sagyo=[],curidx=0}
+   Just a -> a
