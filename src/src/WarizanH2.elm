@@ -54,8 +54,7 @@ type alias Suji=
 type alias SujiL= List Suji
 
  
-slistToString :List Suji -> String
-slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )
+
 
 type alias SuBlock=
   {
@@ -206,8 +205,10 @@ view model =
            ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
 
         -- //////////////////////　Manual calc  //////////////////////////////////////
-        --mtochukeisanL ii= tochukL ii  (slistToString  (getAtx ii model.sublockl ).sekigyo)   (slistToString  (getAtx ii model.sublockl).sagyo)
-        mtochukeisanL ii= tochukL ii  ("aa")   ("bb")
+        mtochukeisanL ii= tochukL ii  (slistToString  (getAtx (ii-1) model.sublockl ).sekigyo)   (slistToString  (getAtx (ii-1) model.sublockl).sagyo)
+        slistToString :List Suji -> String
+        slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )
+       -- mtochukeisanL ii= tochukL ii  ("aa")   ("bb")
         mcList=(List.concat ( List.map (\xi-> mtochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
 
         -- ///////////////

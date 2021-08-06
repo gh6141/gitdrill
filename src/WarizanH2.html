@@ -5224,6 +5224,51 @@ var author$project$WarizanH2$Kirikae = {$: 'Kirikae'};
 var author$project$WarizanH2$Modoru = {$: 'Modoru'};
 var author$project$WarizanH2$Next = {$: 'Next'};
 var author$project$WarizanH2$Susumu = {$: 'Susumu'};
+var elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var author$project$WarizanH2$getAt = F2(
+	function (idx, xs) {
+		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
+			A2(elm$core$List$drop, idx, xs));
+	});
+var author$project$WarizanH2$getAtx = F2(
+	function (idx, xs) {
+		var _n0 = A2(author$project$WarizanH2$getAt, idx, xs);
+		if (_n0.$ === 'Nothing') {
+			return {curidx: 0, sagyo: _List_Nil, sekigyo: _List_Nil};
+		} else {
+			var a = _n0.a;
+			return a;
+		}
+	});
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5602,6 +5647,15 @@ var author$project$WarizanH2$view = function (model) {
 						elm$svg$Svg$text(moji)
 					]));
 		});
+	var slistToString = function (slst) {
+		return elm$core$String$fromList(
+			A2(
+				elm$core$List$map,
+				function (sj) {
+					return sj.kurai1;
+				},
+				slst));
+	};
 	var sline = F6(
 		function (x1, y1, x2, y2, wd, color) {
 			return A2(
@@ -5870,7 +5924,13 @@ var author$project$WarizanH2$view = function (model) {
 						ii * 2)));
 		});
 	var mtochukeisanL = function (ii) {
-		return A3(tochukL, ii, 'aa', 'bb');
+		return A3(
+			tochukL,
+			ii,
+			slistToString(
+				A2(author$project$WarizanH2$getAtx, ii - 1, model.sublockl).sekigyo),
+			slistToString(
+				A2(author$project$WarizanH2$getAtx, ii - 1, model.sublockl).sagyo));
 	};
 	var mcList = elm$core$List$concat(
 		A2(
