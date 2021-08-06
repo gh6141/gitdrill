@@ -37,11 +37,13 @@ type alias Model =
     ,seed:Sd
     ,kirikae:String
     ,sublockl:List SuBlock
+    ,cmoji:String
   }
+
 
 type alias Sd={s1:Int,e1:Int,s2:Int,e2:Int}
 
-type Kurai= Kurai10 | Kurai1
+
 
 type alias Suji=
  {
@@ -68,7 +70,8 @@ type alias SuBlock=
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC",sublockl=[]}
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC",sublockl=[]
+  ,cmoji=""}
   , Cmd.none
   )
 
@@ -99,7 +102,9 @@ update msg model =
      in
    
       ( {model |  hijosu =String.fromInt hij ,josu=String.fromInt  m2,ans=String.fromInt m1
-      ,nyuryoku=(if model.kirikae=="AC" then "?" else "") ,ansdisp=False}    ,Cmd.none)
+      ,nyuryoku=(if model.kirikae=="AC" then "?" else "") ,ansdisp=False
+
+      }    ,Cmd.none)
   
    Btn si ->
     let
@@ -108,9 +113,21 @@ update msg model =
          10 -> String.dropRight 1 model.nyuryoku
          11 -> model.nyuryoku
          _ ->  (String.replace "?" "" model.nyuryoku)++(String.fromInt si)
+      
+      mans2=
+        case si of
+         10 -> String.dropRight 1 model.cmoji
+         11 -> model.cmoji
+         _ ->  (String.replace "?" "" model.cmoji)++(String.fromInt si)
+
+
+      sbltmp=[{sekigyo=[{kurai10='x',kurai1='x'},{kurai10='y',kurai1='y'}],sagyo=[{kurai10='?',kurai1='?'},{kurai10='?',kurai1='?'}],curidx=0}]
+
 
     in
-     ( {model | nyuryoku=mans , ansdisp=if si==11 then True else model.ansdisp
+     ( {model | nyuryoku=mans
+                , ansdisp=if si==11 then True else model.ansdisp
+                ,sublockl=sbltmp
                  } ,Cmd.none)
    Btn2 sed ->
           ( {model | seed=sed
@@ -189,9 +206,8 @@ view model =
            ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
 
         -- //////////////////////　Manual calc  //////////////////////////////////////
-        mtochukeisanL ii= tochukL ii  (slistToString  (getAtx ii model.sublockl ).sekigyo) 
-                                      (slistToString  (getAtx ii model.sublockl).sagyo)
-
+        --mtochukeisanL ii= tochukL ii  (slistToString  (getAtx ii model.sublockl ).sekigyo)   (slistToString  (getAtx ii model.sublockl).sagyo)
+        mtochukeisanL ii= tochukL ii  ("aa")   ("bb")
         mcList=(List.concat ( List.map (\xi-> mtochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
 
         -- ///////////////
