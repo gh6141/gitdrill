@@ -103,21 +103,63 @@ update msg model =
        hijosuo=String.fromInt hij
        josuo=String.fromInt  m2
        anso=String.fromInt m1
+       jsolen=(String.length josuo)       
        
-       fnChrToSbc ch= {
+       fnChrToSbc iix ch= {
           sho={kurai10='0',kurai1=ch}
          ,sekigyo=
             let
-              sgl= List.map (ch->{kurai10=  ,kurai1=  })   (String.toList josuo)
+    
+              
+              sglt=  List.map   (\idx->
+                            let
+                             kake=(toint (String.dropLeft (jsolen-idx) josuo) )* (tointc ch)
+                             kakes="0"++(String.fromInt kake)
+                             tmp1=String.dropRight (idx-1)  kakes
+                             tmp2=String.dropRight 1 tmp1
 
+                            in                           
+                             {
+                             kurai10= Maybe.withDefault '0' (List.head (String.toList (String.right 1 tmp2)))                            
+                             ,kurai1= Maybe.withDefault '0' (List.head (String.toList (String.right 1 tmp1)))
+                              }
+                             ) ( List.reverse (List.range 1 jsolen ) )
+              hd=(Maybe.withDefault {kurai10='0',kurai1='0'} (List.head sglt)).kurai10
+              sgl=if hd=='0' then sglt else {kurai10='0',kurai1=hd}::sglt
             in
-
-
+             sgl
          ,sagyo=
-         ,curidx=0
-       }
+            let
+               ansLx=String.length anso
+               hijos1x ke = toint  ( if ke<0 then hijosuo++"0" else (String.dropRight ke hijosuo ))                                      
+               kakea idx=(toint josuo)*(toint (suchushutu (idx-1) anso))
+               
+               yxx=Debug.log "hijos1x (ansLx-iix-1)=" (hijos1x (ansLx-iix-1))
+               
+               fcrx ix acc= (acc+(kakea ix))*10
+               ruisekix ii= List.foldl fcrx 0  (List.range 1 (ii))
+               
+               xx=Debug.log "ruisekix iix=" (ruisekix iix+1)
 
-       sbTinit=  List.map fnChrToSbc   (String.toList anso)
+               tmp=(String.fromInt ( (hijos1x (ansLx-iix-1)) - (ruisekix (iix+1)) ) )  
+               
+               aa=Debug.log "tmp=" tmp
+
+               sagl=List.map  (\chh ->
+                                       
+                             {
+                             kurai10= '0'                           
+                             ,kurai1=chh 
+                             }
+                  )
+                   (String.toList tmp )
+            in
+             sagl
+
+         ,curidx=0
+        }
+
+       sbTinit=  List.indexedMap fnChrToSbc  (String.toList anso)
 
 
 
@@ -125,9 +167,10 @@ update msg model =
      in
    
       ( {model |  hijosu = hijosuo,josu=josuo,ans=anso
-      ,nyuryoku=(if model.kirikae=="AC" then "?" else ""
+      ,nyuryoku=if model.kirikae=="AC" then "?" else ""
       ,sublocklT=sbTinit
-      ) ,ansdisp=False
+      ,sublockl=sbTinit
+       ,ansdisp=False
 
       }    ,Cmd.none)
   
@@ -216,15 +259,11 @@ view model =
         ansL=String.length model.ans
         --hijosuL=String.length model.hijosu
         hijos1 ke = toint (
-           if ke<0 then model.hijosu++"0" else (String.dropRight ke model.hijosu )
-                    
-          )        
-
+           if ke<0 then model.hijosu++"0" else (String.dropRight ke model.hijosu )                    
+          )   
         kake idx=(toint model.josu)*(toint (suchushutu (idx-1) model.nyuryoku))
-
         fcr ix acc= (acc+(kake ix))*10
         ruiseki ii= List.foldl fcr 0 (List.range 1 ii)
-
        
         tochukeisanL ii= tochukL ii model.nyuryoku (String.fromInt (kake ii) ) (String.fromInt ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) )                
 
@@ -273,9 +312,7 @@ view model =
           )
 
 
-        fc idx chr = (idx,chr)
-        fc2 ix (idx,chr) = if ix==idx then True else False
-        suchushutu ic suji=String.fromList ( List.map (\tpl->(snd tpl))  (List.filter (fc2 ic)  (List.indexedMap fc  (String.toList suji) ) ) )
+
 
         sline x1 y1 x2 y2 wd color =Svg.line
           [ Svg.Attributes.x1 (String.fromInt x1)
@@ -350,6 +387,9 @@ onChange handler =
 
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+tointc ch= toint (String.fromChar ch)
+
+
 fst tuple =
     let
         (value1, _) = tuple
@@ -374,3 +414,7 @@ getAtx idx xs =
   case (getAt idx xs) of
    Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],curidx=0}
    Just a -> a
+
+fc idx chr = (idx,chr)
+fc2 ix (idx,chr) = if ix==idx then True else False
+suchushutu ic suji=String.fromList ( List.map (\tpl->(snd tpl))  (List.filter (fc2 ic)  (List.indexedMap fc  (String.toList suji) ) ) )
