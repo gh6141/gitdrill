@@ -125,7 +125,10 @@ update msg model =
                               }
                              ) ( List.reverse (List.range 1 jsolen ) )
               hd=(Maybe.withDefault {kurai10='0',kurai1='0'} (List.head sglt)).kurai10
-              sgl=if hd=='0' then sglt else {kurai10='0',kurai1=hd}::sglt
+              sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd}::sglt
+              hd2=(Maybe.withDefault {kurai10='0',kurai1='0'} (List.head sglx) ).kurai1
+              sgl=if hd2=='0' then (List.drop 1 sglx) else sglx
+
             in
              sgl
          ,sagyo=
@@ -134,25 +137,17 @@ update msg model =
                hijos1x ke = toint  ( if ke<0 then hijosuo++"0" else (String.dropRight ke hijosuo ))                                      
                kakea idx=(toint josuo)*(toint (suchushutu (idx-1) anso))
                
-               yxx=Debug.log "hijos1x (ansLx-iix-1)=" (hijos1x (ansLx-iix-1))
-               
                fcrx ix acc= (acc+(kakea ix))*10
                ruisekix ii= List.foldl fcrx 0  (List.range 1 (ii))
                
-               xx=Debug.log "ruisekix iix=" (ruisekix iix+1)
+               hijo=hijos1x (ansLx-iix-2)
+               rsx=ruisekix (iix+1)
 
-               tmp=(String.fromInt ( (hijos1x (ansLx-iix-1)) - (ruisekix (iix+1)) ) )  
-               
-               aa=Debug.log "tmp=" tmp
+              -- yxx=Debug.log "hij=" hijo
+              -- xx=Debug.log "rsx=" rsx
 
-               sagl=List.map  (\chh ->
-                                       
-                             {
-                             kurai10= '0'                           
-                             ,kurai1=chh 
-                             }
-                  )
-                   (String.toList tmp )
+               tmp=(String.fromInt ( hijo - rsx )  )
+               sagl=List.map  (\chh ->   {  kurai10= '0'  ,kurai1=chh }  )  (String.toList tmp )
             in
              sagl
 
@@ -273,7 +268,11 @@ view model =
            ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
 
         -- //////////////////////　Manual calc  //////////////////////////////////////
-        mtochukeisanL ii= tochukL ii (slistToString2 model.sublockl)  (slistToString  (sbcToSj ii).sekigyo)   (slistToString  (sbcToSj ii).sagyo)
+        optionsu2 ii= if (ii==(String.length model.ans)) then -1 else 0
+        tochukL2 ii mnyu skk shh =(rsjtext (x0+150) (y0-4) mnyu ((ansL-1)*(-1)) 0) ++      (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
+           ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 "green" ]
+           ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu2 ii)) (ii*2) ) 
+        mtochukeisanL ii= tochukL2 ii (slistToString2 model.sublockl)  (slistToString  (sbcToSj ii).sekigyo)   (slistToString  (sbcToSj ii).sagyo)
         slistToString :List Suji -> String
         slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )         
         sbcToSj ii=(getAtx (ii-1) model.sublockl )       
