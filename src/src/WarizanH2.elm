@@ -38,6 +38,7 @@ type alias Model =
     ,kirikae:String
     ,sublockl:List SuBlock
     ,cmoji:String
+    ,sublocklT:List SuBlock
   }
 
 
@@ -58,7 +59,8 @@ type alias SujiL= List Suji
 
 type alias SuBlock=
   {
-    sekigyo:SujiL
+     sho:Suji
+    ,sekigyo:SujiL
     ,sagyo:SujiL
     ,curidx:Int
   }
@@ -70,7 +72,7 @@ type alias SuBlock=
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC",sublockl=[]
-  ,cmoji=""}
+  ,cmoji="",sublocklT=[]}
   , Cmd.none
   )
 
@@ -98,15 +100,42 @@ update msg model =
        m2=snd tpl
        hij=m1*m2
 
+       hijosuo=String.fromInt hij
+       josuo=String.fromInt  m2
+       anso=String.fromInt m1
+       
+       fnChrToSbc ch= {
+          sho={kurai10='0',kurai1=ch}
+         ,sekigyo=
+            let
+              sgl= List.map (ch->{kurai10=  ,kurai1=  })   (String.toList josuo)
+
+            in
+
+
+         ,sagyo=
+         ,curidx=0
+       }
+
+       sbTinit=  List.map fnChrToSbc   (String.toList anso)
+
+
+
+
      in
    
-      ( {model |  hijosu =String.fromInt hij ,josu=String.fromInt  m2,ans=String.fromInt m1
-      ,nyuryoku=(if model.kirikae=="AC" then "?" else "") ,ansdisp=False
+      ( {model |  hijosu = hijosuo,josu=josuo,ans=anso
+      ,nyuryoku=(if model.kirikae=="AC" then "?" else ""
+      ,sublocklT=sbTinit
+      ) ,ansdisp=False
 
       }    ,Cmd.none)
   
    Btn si ->
     let
+     
+
+
       mans=
         case si of
          10 -> String.dropRight 1 model.nyuryoku
@@ -120,7 +149,7 @@ update msg model =
          _ ->  (String.replace "?" "" model.cmoji)++(String.fromInt si)
 
 
-      sbltmp=[{sekigyo=[{kurai10='x',kurai1='x'},{kurai10='y',kurai1='y'}],sagyo=[{kurai10='?',kurai1='?'},{kurai10='?',kurai1='?'}],curidx=0}]
+      sbltmp=[{sho={kurai10='0',kurai1='1'},sekigyo=[{kurai10='x',kurai1='x'},{kurai10='y',kurai1='y'}],sagyo=[{kurai10='?',kurai1='?'},{kurai10='?',kurai1='?'}],curidx=0}]
 
 
     in
@@ -197,19 +226,23 @@ view model =
         ruiseki ii= List.foldl fcr 0 (List.range 1 ii)
 
        
-        tochukeisanL ii= tochukL ii (String.fromInt (kake ii) ) (String.fromInt ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) )                
+        tochukeisanL ii= tochukL ii model.nyuryoku (String.fromInt (kake ii) ) (String.fromInt ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) )                
 
         optionsu ii= if (ii==(String.length model.ans) && ( (hijos1 (ansL-ii-1)) - (ruiseki ii) ) ==0 ) then -1 else 0
-        tochukL ii  skk shh =      (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
+        tochukL ii mnyu skk shh =(rsjtext (x0+150) (y0-4) mnyu ((ansL-1)*(-1)) 0) ++      (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
            ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 "blue" ]
            ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu ii)) (ii*2) ) 
 
         -- //////////////////////　Manual calc  //////////////////////////////////////
-        mtochukeisanL ii= tochukL ii  (slistToString  (getAtx (ii-1) model.sublockl ).sekigyo)   (slistToString  (getAtx (ii-1) model.sublockl).sagyo)
+        mtochukeisanL ii= tochukL ii (slistToString2 model.sublockl)  (slistToString  (sbcToSj ii).sekigyo)   (slistToString  (sbcToSj ii).sagyo)
         slistToString :List Suji -> String
-        slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )
+        slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )         
+        sbcToSj ii=(getAtx (ii-1) model.sublockl )       
+        slistToString2 blst = String.fromList  ( List.map (\blk->blk.sho.kurai1 ) blst ) 
+
+
        -- mtochukeisanL ii= tochukL ii  ("aa")   ("bb")
-        mcList=(List.concat ( List.map (\xi-> mtochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+        mcList=  (List.concat ( List.map (\xi-> mtochukeisanL xi )  (List.range 1 (List.length model.sublockl))  )) 
 
         -- ///////////////
 
@@ -225,12 +258,12 @@ view model =
           ,stext (x0+0) (y0+120) (if (model.ans==model.nyuryoku) then "◎" else "　") "red" "300px"
            ]++(sjtext (x0-50) (y0+44) model.josu 0 0)
            ++(sjtext (x0+150) (y0+44) model.hijosu 0 0)
-           ++(rsjtext (x0+150) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) 
 
            ++ 
             (
               case model.kirikae of
-               "MC" -> (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+               --"MC" -> (rsjtext (x0+150) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) ++ (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+               "MC" -> List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku)))
                "AC" -> mcList 
                _ -> (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
 
@@ -339,5 +372,5 @@ getAt idx xs =
 
 getAtx idx xs = 
   case (getAt idx xs) of
-   Nothing -> {sekigyo=[],sagyo=[],curidx=0}
+   Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],curidx=0}
    Just a -> a

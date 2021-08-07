@@ -4891,7 +4891,8 @@ var author$project$WarizanH2$init = function (_n0) {
 			kirikae: 'AC',
 			nyuryoku: '',
 			seed: {e1: 99, e2: 99, s1: 19, s2: 19},
-			sublockl: _List_Nil
+			sublockl: _List_Nil,
+			sublocklT: _List_Nil
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -5117,15 +5118,18 @@ var author$project$WarizanH2$update = F2(
 				var tpl = msg.a;
 				var m2 = author$project$WarizanH2$snd(tpl);
 				var m1 = author$project$WarizanH2$fst(tpl);
+				var josuo = elm$core$String$fromInt(m2);
 				var hij = m1 * m2;
+				var hijosuo = elm$core$String$fromInt(hij);
+				var anso = elm$core$String$fromInt(m1);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							ans: elm$core$String$fromInt(m1),
+							ans: anso,
 							ansdisp: false,
-							hijosu: elm$core$String$fromInt(hij),
-							josu: elm$core$String$fromInt(m2),
+							hijosu: hijosuo,
+							josu: josuo,
 							nyuryoku: (model.kirikae === 'AC') ? '?' : ''
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5156,7 +5160,11 @@ var author$project$WarizanH2$update = F2(
 								kurai1: _Utils_chr('y'),
 								kurai10: _Utils_chr('y')
 							}
-							])
+							]),
+						sho: {
+							kurai1: _Utils_chr('1'),
+							kurai10: _Utils_chr('0')
+						}
 					}
 					]);
 				var mans2 = function () {
@@ -5263,7 +5271,15 @@ var author$project$WarizanH2$getAtx = F2(
 	function (idx, xs) {
 		var _n0 = A2(author$project$WarizanH2$getAt, idx, xs);
 		if (_n0.$ === 'Nothing') {
-			return {curidx: 0, sagyo: _List_Nil, sekigyo: _List_Nil};
+			return {
+				curidx: 0,
+				sagyo: _List_Nil,
+				sekigyo: _List_Nil,
+				sho: {
+					kurai1: _Utils_chr('?'),
+					kurai10: _Utils_chr('0')
+				}
+			};
 		} else {
 			var a = _n0.a;
 			return a;
@@ -5647,6 +5663,15 @@ var author$project$WarizanH2$view = function (model) {
 						elm$svg$Svg$text(moji)
 					]));
 		});
+	var slistToString2 = function (blst) {
+		return elm$core$String$fromList(
+			A2(
+				elm$core$List$map,
+				function (blk) {
+					return blk.sho.kurai1;
+				},
+				blst));
+	};
 	var slistToString = function (slst) {
 		return elm$core$String$fromList(
 			A2(
@@ -5819,6 +5844,9 @@ var author$project$WarizanH2$view = function (model) {
 							]))
 					]))
 			]));
+	var sbcToSj = function (ii) {
+		return A2(author$project$WarizanH2$getAtx, ii - 1, model.sublockl);
+	};
 	var rfunc = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
 			return A5(
@@ -5906,31 +5934,34 @@ var author$project$WarizanH2$view = function (model) {
 			ii,
 			elm$core$String$length(model.ans)) && (!(hijos1((ansL - ii) - 1) - ruiseki(ii)))) ? (-1) : 0;
 	};
-	var tochukL = F3(
-		function (ii, skk, shh) {
+	var tochukL = F4(
+		function (ii, mnyu, skk, shh) {
 			return _Utils_ap(
-				A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+				A5(rsjtext, x0 + 150, y0 - 4, mnyu, (ansL - 1) * (-1), 0),
 				_Utils_ap(
-					_List_fromArray(
-						[
-							A6(sline, x0, (y0 + ((2 * tatekankaku) * ii)) + 6, x0 + hwidth, (y0 + ((2 * tatekankaku) * ii)) + 6, 1, 'blue')
-						]),
-					A5(
-						sjtext,
-						x0 + 150,
-						y0 + 44,
-						shh,
-						(ii + ((ansL - 1) * (-1))) + optionsu(ii),
-						ii * 2)));
+					A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+					_Utils_ap(
+						_List_fromArray(
+							[
+								A6(sline, x0, (y0 + ((2 * tatekankaku) * ii)) + 6, x0 + hwidth, (y0 + ((2 * tatekankaku) * ii)) + 6, 1, 'blue')
+							]),
+						A5(
+							sjtext,
+							x0 + 150,
+							y0 + 44,
+							shh,
+							(ii + ((ansL - 1) * (-1))) + optionsu(ii),
+							ii * 2))));
 		});
 	var mtochukeisanL = function (ii) {
-		return A3(
+		return A4(
 			tochukL,
 			ii,
+			slistToString2(model.sublockl),
 			slistToString(
-				A2(author$project$WarizanH2$getAtx, ii - 1, model.sublockl).sekigyo),
+				sbcToSj(ii).sekigyo),
 			slistToString(
-				A2(author$project$WarizanH2$getAtx, ii - 1, model.sublockl).sagyo));
+				sbcToSj(ii).sagyo));
 	};
 	var mcList = elm$core$List$concat(
 		A2(
@@ -5941,11 +5972,12 @@ var author$project$WarizanH2$view = function (model) {
 			A2(
 				elm$core$List$range,
 				1,
-				elm$core$String$length(model.nyuryoku))));
+				elm$core$List$length(model.sublockl))));
 	var tochukeisanL = function (ii) {
-		return A3(
+		return A4(
 			tochukL,
 			ii,
+			model.nyuryoku,
 			elm$core$String$fromInt(
 				kake(ii)),
 			elm$core$String$fromInt(
@@ -5976,37 +6008,35 @@ var author$project$WarizanH2$view = function (model) {
 				A5(sjtext, x0 - 50, y0 + 44, model.josu, 0, 0),
 				_Utils_ap(
 					A5(sjtext, x0 + 150, y0 + 44, model.hijosu, 0, 0),
-					_Utils_ap(
-						A5(rsjtext, x0 + 150, y0 - 4, model.nyuryoku, (ansL - 1) * (-1), 0),
-						function () {
-							var _n0 = model.kirikae;
-							switch (_n0) {
-								case 'MC':
-									return elm$core$List$concat(
+					function () {
+						var _n0 = model.kirikae;
+						switch (_n0) {
+							case 'MC':
+								return elm$core$List$concat(
+									A2(
+										elm$core$List$map,
+										function (xi) {
+											return tochukeisanL(xi);
+										},
 										A2(
-											elm$core$List$map,
-											function (xi) {
-												return tochukeisanL(xi);
-											},
-											A2(
-												elm$core$List$range,
-												1,
-												elm$core$String$length(model.nyuryoku))));
-								case 'AC':
-									return mcList;
-								default:
-									return elm$core$List$concat(
+											elm$core$List$range,
+											1,
+											elm$core$String$length(model.nyuryoku))));
+							case 'AC':
+								return mcList;
+							default:
+								return elm$core$List$concat(
+									A2(
+										elm$core$List$map,
+										function (xi) {
+											return tochukeisanL(xi);
+										},
 										A2(
-											elm$core$List$map,
-											function (xi) {
-												return tochukeisanL(xi);
-											},
-											A2(
-												elm$core$List$range,
-												1,
-												elm$core$String$length(model.nyuryoku))));
-							}
-						}())))));
+											elm$core$List$range,
+											1,
+											elm$core$String$length(model.nyuryoku))));
+						}
+					}()))));
 	return A2(
 		elm$html$Html$table,
 		_List_fromArray(
