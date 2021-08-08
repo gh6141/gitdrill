@@ -37,7 +37,7 @@ type alias Model =
     ,seed:Sd
     ,kirikae:String
     ,sublockl:List SuBlock
-    ,cmoji:String
+
     ,sublocklT:List SuBlock
   }
 
@@ -62,7 +62,7 @@ type alias SuBlock=
      sho:Suji
     ,sekigyo:SujiL
     ,sagyo:SujiL
-    ,curidx:Int
+
   }
 
 
@@ -71,13 +71,15 @@ type alias SuBlock=
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC",sublockl=[]
-  ,cmoji="",sublocklT=[]}
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"
+  ,sublockl=[ {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]} ]
+
+  ,sublocklT=[]}
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Susumu |Modoru|Kirikae
+    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -151,11 +153,13 @@ update msg model =
             in
              sagl
 
-         ,curidx=0
         }
 
        sbTinit=  List.indexedMap fnChrToSbc  (String.toList anso)
 
+       
+
+       sbltmp=[{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]}]
 
 
 
@@ -164,43 +168,103 @@ update msg model =
       ( {model |  hijosu = hijosuo,josu=josuo,ans=anso
       ,nyuryoku=if model.kirikae=="AC" then "?" else ""
       ,sublocklT=sbTinit
-      ,sublockl=sbTinit
+      ,sublockl=sbltmp      
        ,ansdisp=False
 
       }    ,Cmd.none)
   
    Btn si ->
     let
-     
-
-
       mans=
         case si of
          10 -> String.dropRight 1 model.nyuryoku
          11 -> model.nyuryoku
-         _ ->  (String.replace "?" "" model.nyuryoku)++(String.fromInt si)
-      
-      mans2=
+         _ ->  (String.replace "?" "" model.nyuryoku)++(String.fromInt si)     
+
+      ss=
         case si of
-         10 -> String.dropRight 1 model.cmoji
-         11 -> model.cmoji
-         _ ->  (String.replace "?" "" model.cmoji)++(String.fromInt si)
+         10 -> "?"  -- Cancel
+         11 -> "" -- to *  Ans
+         _ ->  (String.fromInt si)
 
 
-      sbltmp=[{sho={kurai10='0',kurai1='1'},sekigyo=[{kurai10='x',kurai1='x'},{kurai10='y',kurai1='y'}],sagyo=[{kurai10='?',kurai1='?'},{kurai10='?',kurai1='?'}],curidx=0}]
+      sch=Maybe.withDefault '*' (List.head (String.toList ss))
+
+      --? to chr henkan
+      sbQtoS chr sblt =
+               List.map  (\blk ->
+                  {
+                    sho={kurai10='0',kurai1=if (blk.sho.kurai1=='?') then chr else blk.sho.kurai1}
+                    ,sekigyo=
+                      List.map (\sj-> {kurai10=if (sj.kurai10=='?') then chr else sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sekigyo
+                    ,sagyo=
+                       List.map (\sj-> {kurai10=sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sagyo
+                  } 
+                )   sblt
+     
+     
+     
+      -- ? ichi no seikai 
+      check sblt =
+           let
+             fnc (blk1,blk2) = if blk1.sho.kurai1=='?' then 
+                                ( Just blk2.sho.kurai1 )
+                               else 
+                                let
+                                  fnc2 (sj1,sj2) = if sj1.kurai1=='?' then 
+                                                      (Just sj2.kurai1)
+                                                   else if sj1.kurai10=='?' then
+                                                      (Just sj2.kurai10)
+                                                   else
+                                                      Nothing
+                                                      
+                                  sekig= Maybe.withDefault '?' (List.head ( List.filterMap fnc2  (List.map2 Tuple.pair blk1.sekigyo blk2.sekigyo) ))
+                                  sag=Maybe.withDefault '?' (List.head ( List.filterMap fnc2  (List.map2 Tuple.pair blk1.sagyo blk2.sagyo) ))
+                                in
+                                  if sekig=='?' then
+                                   ( if sag=='?' then
+                                    Nothing
+                                   else
+                                    (Just sag) )
+                                  else
+                                   (Just sekig)
+
+             psbl= Maybe.withDefault '?' (List.head ( List.filterMap fnc  (List.map2 Tuple.pair sblt model.sublocklT) ))
+
+           in
+            psbl
+
+
+      sblUpdate scht sublt=
+        case scht of
+         '*' -> sublt
+
+         '?' -> [{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]}]
+
+         _ ->   if scht==(check sublt) then (sbQtoS scht sublt) else sublt            
+     
+             -- [{sho={kurai10='0',kurai1=scht},sekigyo=[],sagyo=[]}]
+
+
+
+
+      sbltmp= sblUpdate sch model.sublockl
 
 
     in
-     ( {model | nyuryoku=mans
+     ( {model |
+                nyuryoku= 
+                 if model.kirikae=="AC" then
+                  String.fromList  ( List.map (\bl-> bl.sho.kurai1  ) sbltmp)
+                 else
+                  mans
                 , ansdisp=if si==11 then True else model.ansdisp
-                ,sublockl=sbltmp
+                ,sublockl=sbltmp --手動計算のときのみ表示で使用
+ 
                  } ,Cmd.none)
    Btn2 sed ->
           ( {model | seed=sed
                  } ,Cmd.none)
-   Susumu -> (model,Cmd.none)
-
-   Modoru -> (model,Cmd.none)
 
    Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"
     ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
@@ -269,12 +333,15 @@ view model =
 
         -- //////////////////////　Manual calc  //////////////////////////////////////
         optionsu2 ii= if (ii==(String.length model.ans)) then -1 else 0
-        tochukL2 ii mnyu skk shh =(rsjtext (x0+150) (y0-4) mnyu ((ansL-1)*(-1)) 0) ++      (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
-           ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 "green" ]
+        tochukL2 ii mnyu kr10 skk shh =(rsjtext (x0+150) (y0-4) mnyu ((ansL-1)*(-1)) 0)
+           ++ (sjtext2 (x0+150) (y0+44) (String.dropLeft 1 (String.replace "0" "\u{00a0}" kr10)) ((ansL-ii)*(-1)) (ii*2-1) )
+           ++ (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
+           ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 (if shh=="" then "white" else "green") ]
            ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu2 ii)) (ii*2) ) 
-        mtochukeisanL ii= tochukL2 ii (slistToString2 model.sublockl)  (slistToString  (sbcToSj ii).sekigyo)   (slistToString  (sbcToSj ii).sagyo)
+        mtochukeisanL ii= tochukL2 ii (slistToString2 model.sublockl)  (slistToString3 (sbcToSj ii).sekigyo)  (slistToString (sbcToSj ii).sekigyo)   (slistToString  (sbcToSj ii).sagyo)
         slistToString :List Suji -> String
-        slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )         
+        slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )   
+        slistToString3 slst= String.fromList  ( List.map (\sj->sj.kurai10 ) slst )        
         sbcToSj ii=(getAtx (ii-1) model.sublockl )       
         slistToString2 blst = String.fromList  ( List.map (\blk->blk.sho.kurai1 ) blst ) 
 
@@ -336,6 +403,10 @@ view model =
         --indexedMap : (Int -> a -> b) -> List a -> List b
         sjtext xx yy moji divx divy =
           List.indexedMap (func xx yy divx divy)  (List.reverse (String.toList moji))
+
+        func2 txx tyy tdivx tdivy idx chr = stext (txx+(-idx+tdivx)*tatekankaku-20)   (tyy+tdivy*tatekankaku-22)  (String.fromChar chr) "black" "24px" 
+        sjtext2 xx yy moji divx divy =
+          List.indexedMap (func2 xx yy divx divy)  (List.reverse (String.toList moji))
         
         rfunc txx tyy tdivx tdivy idx chr = stext (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" 
         rsjtext xx yy moji divx divy =
@@ -360,9 +431,7 @@ view model =
                    ,
        sujibutton 
        ,div [] [
-            Button.button [Button.attrs [style "font-size" "30px"   ,onClick Modoru]] [ text "←" ]
-            , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Susumu]] [ text "→" ]
-            , Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae]] [ text model.kirikae ]
+             Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae]] [ text model.kirikae ]
        ]      
        ,div [style "font-size" "40px"] [text (if model.ansdisp then model.ans else "　")]
        ,div [][
@@ -411,7 +480,7 @@ getAt idx xs =
 
 getAtx idx xs = 
   case (getAt idx xs) of
-   Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],curidx=0}
+   Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]}
    Just a -> a
 
 fc idx chr = (idx,chr)
