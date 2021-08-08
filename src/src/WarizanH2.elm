@@ -274,6 +274,23 @@ update msg model =
             bsho
 
       sbAddQ bsh subltt =
+            let
+             --bsh={idx=1,basho=Nowhere,sidx=1,kurai=K1} 
+              sblt2 =   case bsh.basho of
+                          Sho ->
+                             List.map (\blk-> {idx=blk.idx  ,sho={blk.sho| kurai1=if (blk.idx==bsh.idx  && bsh.kurai==K1) then '?' else blk.sho.kurai1 
+                               ,kurai10=if (blk.idx==bsh.idx && bsh.kurai==K10) then '?' else blk.sho.kurai10    } ,sekigyo=blk.sekigyo  ,sagyo=blk.sagyo}     )  subltt
+
+                          Seki ->
+                            
+
+                          Sa ->
+
+                          _ -> subltt
+                        
+
+           in
+            sblt2
 
 
 
