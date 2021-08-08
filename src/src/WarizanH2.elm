@@ -53,6 +53,8 @@ type alias Suji=
  {
    kurai10:Char
    ,kurai1:Char
+   ,ix:Int
+   ,iy:Int
  }
 
 type alias SujiL= List Suji
@@ -77,7 +79,7 @@ type alias Ichi= {xx:Int,yy:Int}
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"
-  ,sublockl=[ {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1} ]
+  ,sublockl=[ {sho={kurai10='□',kurai1='□',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1} ]
 
   ,sublocklT=[]}
   , Cmd.none
@@ -111,14 +113,15 @@ update msg model =
        josuo=String.fromInt  m2
        anso=String.fromInt m1
        jsolen=(String.length josuo)       
+       ansL=String.length anso
        
-       fnChrToSbc iix ch= {
-          sho={kurai10='0',kurai1=ch}
+       fnChrToSbc iix ch= { --iix:sho　何文字目か 0~  
+          sho={kurai10='0',kurai1=ch,ix=iix+1-ansL,iy=0}
          ,sekigyo=
             let
     
               
-              sglt=  List.map   (\idx->
+              sglt=  List.map   (\idx->  -- idx:josu sentokara 1~
                             let
                              kake=(toint (String.dropLeft (jsolen-idx) josuo) )* (tointc ch)
                              kakes="0"++(String.fromInt kake)
@@ -129,11 +132,13 @@ update msg model =
                              {
                              kurai10= Maybe.withDefault '0' (List.head (String.toList (String.right 1 tmp2)))                            
                              ,kurai1= Maybe.withDefault '0' (List.head (String.toList (String.right 1 tmp1)))
+                             ,ix=iix-ansL-idx
+                             ,iy=2*iix-1
                               }
                              ) ( List.reverse (List.range 1 jsolen ) )
-              hd=(Maybe.withDefault {kurai10='0',kurai1='0'} (List.head sglt)).kurai10
-              sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd}::sglt
-              hd2=(Maybe.withDefault {kurai10='0',kurai1='0'} (List.head sglx) ).kurai1
+              hd=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).kurai10
+              sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd,ix=0,iy=0}::sglt
+              hd2=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglx) ).kurai1
               sgl=if hd2=='0' then (List.drop 1 sglx) else sglx
 
             in
@@ -154,7 +159,9 @@ update msg model =
               -- xx=Debug.log "rsx=" rsx
 
                tmp=(String.fromInt ( hijo - rsx )  )
-               sagl=List.map  (\chh ->   {  kurai10= '0'  ,kurai1=chh }  )  (String.toList tmp )
+
+               fff idx chh=  {  kurai10= '0'  ,kurai1=chh ,ix=iix-ansL+1-idx  ,iy=2* iix } 
+               sagl=List.indexedMap  fff  (String.toList tmp )
             in
              sagl
          ,idx=iix+1  -- 1 kara start
@@ -165,7 +172,7 @@ update msg model =
 
        
 
-       sbltmp=[{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}]
+       sbltmp=[{sho={kurai10='0',kurai1='?',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}]
 
 
 
@@ -216,7 +223,26 @@ update msg model =
     ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
     },Cmd.none)
 
-   Suj ichi -> ({model|josu=String.fromInt ichi.xx },Cmd.none)
+   Suj ichix ->
+    let
+     --   ichi de settei
+     sbset ichi char sblst=
+       let
+        sblst1=  List.map (\blk-> 
+          let 
+
+
+          in
+           {blk|sho={kurai1=(if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then char else blk.sho.kurai1),kurai10=blk.sho.kurai10,ix=blk.sho.ix ,iy=blk.sho.iy } }   ) sblst
+  
+       in
+          sblst1
+
+    in 
+     ({model| 
+              ,sublockl=sbset ichix '■' model.sublocklT
+
+      },Cmd.none)
 
 
 view : Model -> Html Msg
@@ -283,9 +309,9 @@ view model =
         optionsu2 ii= if (ii==(String.length model.ans)) then -1 else 0
         tochukL2 ii mnyu kr10 skk shh =(rsjtext (x0+150) (y0-4) mnyu ((ansL-1)*(-1)) 0)
            ++ (sjtext2 (x0+150) (y0+44) (String.dropLeft 1 (String.replace "0" "\u{00a0}" kr10)) ((ansL-ii)*(-1)) (ii*2-1) )
-           ++ (sjtext (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
+           ++ (sjtext1 (x0+150) (y0+44)  skk ((ansL-ii)*(-1)) (ii*2-1) )
            ++[ sline x0 (y0+2*tatekankaku*(ii)+6) (x0+hwidth) (y0+2*tatekankaku*(ii)+6) 1 (if shh=="" then "white" else "green") ]
-           ++(sjtext (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu2 ii)) (ii*2) ) 
+           ++(sjtext1 (x0+150) (y0+44)  shh (ii+(ansL-1)*(-1)+(optionsu2 ii)) (ii*2) ) 
         mtochukeisanL ii= tochukL2 ii (slistToString2 model.sublockl)  (slistToString3 (sbcToSj ii).sekigyo)  (slistToString (sbcToSj ii).sekigyo)   (slistToString  (sbcToSj ii).sagyo)
         slistToString :List Suji -> String
         slistToString slst= String.fromList  ( List.map (\sj->sj.kurai1 ) slst )   
@@ -343,7 +369,16 @@ view model =
          , Svg.Attributes.y (String.fromInt yy)
          , Svg.Attributes.fill color   
          ,Svg.Attributes.fontSize fs    
-         ,onClick (Suj {xx=xx,yy=yy})   
+         ]
+         [ Svg.text moji
+         ]
+        
+        stextix xx yy moji color fs ix iy =  Svg.text_
+         [ Svg.Attributes.x (String.fromInt xx)
+         , Svg.Attributes.y (String.fromInt yy)
+         , Svg.Attributes.fill color   
+         ,Svg.Attributes.fontSize fs    
+         ,onClick (Suj {xx=ix,yy=iy})   
          ]
          [ Svg.text moji
          ]
@@ -353,11 +388,15 @@ view model =
         sjtext xx yy moji divx divy =
           List.indexedMap (func xx yy divx divy)  (List.reverse (String.toList moji))
 
-        func2 txx tyy tdivx tdivy idx chr = stext (txx+(-idx+tdivx)*tatekankaku-20)   (tyy+tdivy*tatekankaku-22)  (String.fromChar chr) "black" "24px" 
+        func1 txx tyy tdivx tdivy idx chr = stextix (txx+(-idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (-idx+tdivx) tdivy
+        sjtext1 xx yy moji divx divy =
+          List.indexedMap (func1 xx yy divx divy)  (List.reverse (String.toList moji))
+
+        func2 txx tyy tdivx tdivy idx chr = stextix (txx+(-idx+tdivx)*tatekankaku-20)   (tyy+tdivy*tatekankaku-22)  (String.fromChar chr) "black" "24px" (-idx+tdivx) tdivy
         sjtext2 xx yy moji divx divy =
           List.indexedMap (func2 xx yy divx divy)  (List.reverse (String.toList moji))
         
-        rfunc txx tyy tdivx tdivy idx chr = stext (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" 
+        rfunc txx tyy tdivx tdivy idx chr = stextix (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (idx+tdivx) tdivy
         rsjtext xx yy moji divx divy =
           List.indexedMap (rfunc xx yy divx divy)  (String.toList moji)
           
@@ -429,7 +468,7 @@ getAt idx xs =
 
 getAtx idx xs = 
   case (getAt idx xs) of
-   Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}
+   Nothing -> {sho={kurai10='0',kurai1='?',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}
    Just a -> a
 
 fc idx chr = (idx,chr)

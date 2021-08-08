@@ -4897,8 +4897,10 @@ var author$project$WarizanH2$init = function (_n0) {
 					sagyo: _List_Nil,
 					sekigyo: _List_Nil,
 					sho: {
-						kurai1: _Utils_chr('?'),
-						kurai10: _Utils_chr('0')
+						ix: 0,
+						iy: 0,
+						kurai1: _Utils_chr('□'),
+						kurai10: _Utils_chr('□')
 					}
 				}
 				]),
@@ -5059,6 +5061,7 @@ var author$project$WarizanH2$tointc = function (ch) {
 	return author$project$WarizanH2$toint(
 		elm$core$String$fromChar(ch));
 };
+var elm$core$Debug$log = _Debug_log;
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5315,6 +5318,8 @@ var author$project$WarizanH2$update = F2(
 						sagyo: _List_Nil,
 						sekigyo: _List_Nil,
 						sho: {
+							ix: 0,
+							iy: 0,
 							kurai1: _Utils_chr('?'),
 							kurai10: _Utils_chr('0')
 						}
@@ -5327,6 +5332,7 @@ var author$project$WarizanH2$update = F2(
 				var hij = m1 * m2;
 				var hijosuo = elm$core$String$fromInt(hij);
 				var anso = elm$core$String$fromInt(m1);
+				var ansL = elm$core$String$length(anso);
 				var fnChrToSbc = F2(
 					function (iix, ch) {
 						return {
@@ -5340,6 +5346,15 @@ var author$project$WarizanH2$update = F2(
 									return author$project$WarizanH2$toint(
 										(ke < 0) ? (hijosuo + '0') : A2(elm$core$String$dropRight, ke, hijosuo));
 								};
+								var fff = F2(
+									function (idx, chh) {
+										return {
+											ix: ((iix - ansL) + 1) - idx,
+											iy: 2 * iix,
+											kurai1: chh,
+											kurai10: _Utils_chr('0')
+										};
+									});
 								var fcrx = F2(
 									function (ix, acc) {
 										return (acc + kakea(ix)) * 10;
@@ -5356,13 +5371,8 @@ var author$project$WarizanH2$update = F2(
 								var hijo = hijos1x((ansLx - iix) - 2);
 								var tmp = elm$core$String$fromInt(hijo - rsx);
 								var sagl = A2(
-									elm$core$List$map,
-									function (chh) {
-										return {
-											kurai1: chh,
-											kurai10: _Utils_chr('0')
-										};
-									},
+									elm$core$List$indexedMap,
+									fff,
 									elm$core$String$toList(tmp));
 								return sagl;
 							}(),
@@ -5376,6 +5386,8 @@ var author$project$WarizanH2$update = F2(
 										var tmp1 = A2(elm$core$String$dropRight, idx - 1, kakes);
 										var tmp2 = A2(elm$core$String$dropRight, 1, tmp1);
 										return {
+											ix: (iix - ansL) - idx,
+											iy: (2 * iix) - 1,
 											kurai1: A2(
 												elm$core$Maybe$withDefault,
 												_Utils_chr('0'),
@@ -5395,6 +5407,8 @@ var author$project$WarizanH2$update = F2(
 								var hd = A2(
 									elm$core$Maybe$withDefault,
 									{
+										ix: 0,
+										iy: 0,
 										kurai1: _Utils_chr('0'),
 										kurai10: _Utils_chr('0')
 									},
@@ -5404,6 +5418,8 @@ var author$project$WarizanH2$update = F2(
 									_Utils_chr('0')) ? sglt : A2(
 									elm$core$List$cons,
 									{
+										ix: 0,
+										iy: 0,
 										kurai1: hd,
 										kurai10: _Utils_chr('0')
 									},
@@ -5411,6 +5427,8 @@ var author$project$WarizanH2$update = F2(
 								var hd2 = A2(
 									elm$core$Maybe$withDefault,
 									{
+										ix: 0,
+										iy: 0,
 										kurai1: _Utils_chr('0'),
 										kurai10: _Utils_chr('0')
 									},
@@ -5421,6 +5439,8 @@ var author$project$WarizanH2$update = F2(
 								return sgl;
 							}(),
 							sho: {
+								ix: (iix + 1) - ansL,
+								iy: 0,
 								kurai1: ch,
 								kurai10: _Utils_chr('0')
 							}
@@ -5504,12 +5524,43 @@ var author$project$WarizanH2$update = F2(
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
-				var ichi = msg.a;
+				var ichix = msg.a;
+				var sbset = F3(
+					function (ichi, _char, sblst) {
+						var sblst1 = A2(
+							elm$core$List$map,
+							function (blk) {
+								var test3 = A2(elm$core$Debug$log, 'ichiy=', ichi.yy);
+								var test2 = A2(elm$core$Debug$log, 'ichix=', ichi.xx);
+								var test = A2(elm$core$Debug$log, 'blk=', blk);
+								return _Utils_update(
+									blk,
+									{
+										sho: {
+											ix: blk.sho.ix,
+											iy: blk.sho.iy,
+											kurai1: (_Utils_eq(ichi.xx, blk.sho.ix) && _Utils_eq(ichi.yy, blk.sho.iy)) ? _char : blk.sho.kurai1,
+											kurai10: blk.sho.kurai10
+										}
+									});
+							},
+							sblst);
+						return sblst1;
+					});
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							josu: elm$core$String$fromInt(ichi.xx)
+							sublockl: A3(
+								sbset,
+								ichix,
+								_Utils_chr('■'),
+								model.sublocklT),
+							sublocklT: A3(
+								sbset,
+								ichix,
+								_Utils_chr('■'),
+								model.sublocklT)
 						}),
 					elm$core$Platform$Cmd$none);
 		}
@@ -5539,6 +5590,8 @@ var author$project$WarizanH2$getAtx = F2(
 				sagyo: _List_Nil,
 				sekigyo: _List_Nil,
 				sho: {
+					ix: 0,
+					iy: 0,
 					kurai1: _Utils_chr('?'),
 					kurai10: _Utils_chr('0')
 				}
@@ -5802,8 +5855,8 @@ var author$project$WarizanH2$view = function (model) {
 	var y0 = 80;
 	var x0 = 100;
 	var tatekankaku = 44;
-	var stext = F5(
-		function (xx, yy, moji, color, fs) {
+	var stextix = F7(
+		function (xx, yy, moji, color, fs, ix, iy) {
 			return A2(
 				elm$svg$Svg$text_,
 				_List_fromArray(
@@ -5816,7 +5869,25 @@ var author$project$WarizanH2$view = function (model) {
 						elm$svg$Svg$Attributes$fontSize(fs),
 						elm$html$Html$Events$onClick(
 						author$project$WarizanH2$Suj(
-							{xx: xx, yy: yy}))
+							{xx: ix, yy: iy}))
+					]),
+				_List_fromArray(
+					[
+						elm$svg$Svg$text(moji)
+					]));
+		});
+	var stext = F5(
+		function (xx, yy, moji, color, fs) {
+			return A2(
+				elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$x(
+						elm$core$String$fromInt(xx)),
+						elm$svg$Svg$Attributes$y(
+						elm$core$String$fromInt(yy)),
+						elm$svg$Svg$Attributes$fill(color),
+						elm$svg$Svg$Attributes$fontSize(fs)
 					]),
 				_List_fromArray(
 					[
@@ -6018,13 +6089,15 @@ var author$project$WarizanH2$view = function (model) {
 	};
 	var rfunc = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
-			return A5(
-				stext,
+			return A7(
+				stextix,
 				txx + ((idx + tdivx) * tatekankaku),
 				tyy + (tdivy * tatekankaku),
 				elm$core$String$fromChar(chr),
 				'black',
-				'46px');
+				'46px',
+				idx + tdivx,
+				tdivy);
 		});
 	var rsjtext = F5(
 		function (xx, yy, moji, divx, divy) {
@@ -6049,19 +6122,41 @@ var author$project$WarizanH2$view = function (model) {
 	};
 	var func2 = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
-			return A5(
-				stext,
+			return A7(
+				stextix,
 				(txx + (((-idx) + tdivx) * tatekankaku)) - 20,
 				(tyy + (tdivy * tatekankaku)) - 22,
 				elm$core$String$fromChar(chr),
 				'black',
-				'24px');
+				'24px',
+				(-idx) + tdivx,
+				tdivy);
 		});
 	var sjtext2 = F5(
 		function (xx, yy, moji, divx, divy) {
 			return A2(
 				elm$core$List$indexedMap,
 				A4(func2, xx, yy, divx, divy),
+				elm$core$List$reverse(
+					elm$core$String$toList(moji)));
+		});
+	var func1 = F6(
+		function (txx, tyy, tdivx, tdivy, idx, chr) {
+			return A7(
+				stextix,
+				txx + (((-idx) + tdivx) * tatekankaku),
+				tyy + (tdivy * tatekankaku),
+				elm$core$String$fromChar(chr),
+				'black',
+				'46px',
+				(-idx) + tdivx,
+				tdivy);
+		});
+	var sjtext1 = F5(
+		function (xx, yy, moji, divx, divy) {
+			return A2(
+				elm$core$List$indexedMap,
+				A4(func1, xx, yy, divx, divy),
 				elm$core$List$reverse(
 					elm$core$String$toList(moji)));
 		});
@@ -6135,7 +6230,7 @@ var author$project$WarizanH2$view = function (model) {
 						(ansL - ii) * (-1),
 						(ii * 2) - 1),
 					_Utils_ap(
-						A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+						A5(sjtext1, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
 						_Utils_ap(
 							_List_fromArray(
 								[
@@ -6149,7 +6244,7 @@ var author$project$WarizanH2$view = function (model) {
 									(shh === '') ? 'white' : 'green')
 								]),
 							A5(
-								sjtext,
+								sjtext1,
 								x0 + 150,
 								y0 + 44,
 								shh,
