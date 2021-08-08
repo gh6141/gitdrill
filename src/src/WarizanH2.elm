@@ -68,6 +68,8 @@ type alias SuBlock=
     ,idx:Int
   }
 
+type alias Ichi= {xx:Int,yy:Int}
+
 
 
 
@@ -82,7 +84,7 @@ init _ =
   )
 
 type Msg
-    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae
+    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae |Suj Ichi
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -194,141 +196,16 @@ update msg model =
 
       sch=Maybe.withDefault '*' (List.head (String.toList ss))
 
-      --? to chr henkan
-      sbQtoS chr sblt =
-            let
-              fncx iixx blk= {
-                    sho={kurai10='0',kurai1=if (blk.sho.kurai1=='?') then chr else blk.sho.kurai1}
-                    ,sekigyo=
-                      List.map (\sj-> {kurai10=if (sj.kurai10=='?') then chr else sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sekigyo
-                    ,sagyo=
-                       List.map (\sj-> {kurai10=sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sagyo
-                    ,idx=iixx+1 --1 kara start
-                  } 
-            in
-               List.indexedMap  fncx  sblt
-     
-     
-     
-      -- ? ichi no seikai 
-
-      check: List SuBlock-> Char
-      check sblt =
-           let
-             fnc (blk1,blk2) = if blk1.sho.kurai1=='?' then 
-                                ( Just blk2.sho.kurai1 )
-                               else 
-                                let
-                                  fnc2 (sj1,sj2) = if sj1.kurai1=='?' then 
-                                                      (Just sj2.kurai1 )
-                                                   else if sj1.kurai10=='?' then
-                                                      (Just sj2.kurai10 )
-                                                   else
-                                                      (Nothing)
-                                                      
-                                  sekig= Maybe.withDefault '?' (List.head ( List.filterMap fnc2  (List.map2 Tuple.pair blk1.sekigyo blk2.sekigyo) ))
-                                  sag=Maybe.withDefault '?' (List.head ( List.filterMap fnc2  (List.map2 Tuple.pair blk1.sagyo blk2.sagyo) ))
-                                in
-                                  if sekig=='?' then
-                                   ( if sag=='?' then
-                                    Nothing
-                                   else
-                                    Just sag ) 
-                                  else
-                                    Just sekig 
-
-             psbl= Maybe.withDefault '?' (List.head ( List.filterMap fnc  (List.map2 Tuple.pair sblt model.sublocklT) ))
-
-           in
-            psbl
-
-      --type Sss=Sho|Seki|Sa|Nowhere    type Kt=K10|K1  type alias Basho={idx:Int,basho:Sss,sidx:Int,kurai:Kt}
-      bcheck: List SuBlock-> Basho
-      bcheck sblt =
-           let
-             fncb blk1 = if blk1.sho.kurai1=='?' then 
-                                ( Just {idx=blk1.idx,basho=Seki,sidx=(List.length blk1.sekigyo),kurai=K10})
-                               else 
-                                let
-                                  fnc2b bsh (idx,sj1) = if sj1.kurai1=='?' then 
-                                                      (Just {idx=blk1.idx,basho=bsh,sidx=idx-1,kurai=K10} )
-                                                   else if sj1.kurai10=='?' then
-                                                      (Just {idx=blk1.idx,basho=bsh,sidx=idx,kurai=K1} )
-                                                   else
-                                                      (Nothing)
-                                  fnn idx sj=(idx,sj)
-                                  sekig= Maybe.withDefault {idx=1,basho=Nowhere,sidx=1,kurai=K1} (List.head ( List.filterMap (fnc2b Seki)  (List.indexedMap fnn blk1.sekigyo ) ))
-                                  sag=Maybe.withDefault {idx=1,basho=Nowhere,sidx=1,kurai=K1} (List.head ( List.filterMap (fnc2b Sa)  (List.indexedMap fnn blk1.sagyo ) ))
-                                in
-                                  if sekig.basho==Nowhere then
-                                   ( if sag.basho==Nowhere then
-                                    Nothing
-                                   else
-                                    Just sag ) 
-                                  else
-                                    Just sekig 
-             
-             bsho= Maybe.withDefault {idx=1,basho=Nowhere,sidx=1,kurai=K1} (List.head ( List.filterMap fncb  sblt  ))
-
-           in
-            bsho
-
-      sbAddQ bsh subltt =
-            let
-             --bsh={idx=1,basho=Nowhere,sidx=1,kurai=K1} 
-              sblt2 =   case bsh.basho of
-                          Sho ->
-                             List.map (\blk-> {idx=blk.idx  ,sho={blk.sho| kurai1=if (blk.idx==bsh.idx  && bsh.kurai==K1) then '?' else blk.sho.kurai1 
-                               ,kurai10=if (blk.idx==bsh.idx && bsh.kurai==K10) then '?' else blk.sho.kurai10    } ,sekigyo=blk.sekigyo  ,sagyo=blk.sagyo}     )  subltt
-
-                          Seki ->
-                            
-
-                          Sa ->
-
-                          _ -> subltt
-                        
-
-           in
-            sblt2
-
-
-
-      sblUpdate scht sublt=
-        case scht of
-         '*' -> sublt
-
-         '?' -> [{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}] --sakujo koujichu
-
-         _ ->  
-             let
-              --?の次の場所を取得する
-              nbasho=bncheck sublt
-
-             in         
-                if scht==(check sublt) then  -- check subltで　?の正しい値を取得
-                 sbAddQ nbasho (sbQtoS scht sublt) -- schtが正しい値なら　? -> scht   sbQtoS
-                                                   --　同時に　次の場所を?にする sbAddQ
-                else 
-                  sublt            
-     
-             -- [{sho={kurai10='0',kurai1=scht},sekigyo=[],sagyo=[]}]
-
-
-
-
-      sbltmp= sblUpdate sch model.sublockl
-
 
     in
      ( {model |
                 nyuryoku= 
                  if model.kirikae=="AC" then
-                  String.fromList  ( List.map (\bl-> bl.sho.kurai1  ) sbltmp)
+                  String.fromList  ( List.map (\bl-> bl.sho.kurai1  ) model.sublockl)
                  else
                   mans
                 , ansdisp=if si==11 then True else model.ansdisp
-                ,sublockl=sbltmp --手動計算のときのみ表示で使用
+                ,sublockl=model.sublocklT
  
                  } ,Cmd.none)
    Btn2 sed ->
@@ -338,6 +215,8 @@ update msg model =
    Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"
     ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
     },Cmd.none)
+
+   Suj ichi -> ({model|josu=String.fromInt ichi.xx },Cmd.none)
 
 
 view : Model -> Html Msg
@@ -463,7 +342,8 @@ view model =
          [ Svg.Attributes.x (String.fromInt xx)
          , Svg.Attributes.y (String.fromInt yy)
          , Svg.Attributes.fill color   
-         ,Svg.Attributes.fontSize fs       
+         ,Svg.Attributes.fontSize fs    
+         ,onClick (Suj {xx=xx,yy=yy})   
          ]
          [ Svg.text moji
          ]
