@@ -155,7 +155,7 @@ update msg model =
                sagl=List.map  (\chh ->   {  kurai10= '0'  ,kurai1=chh }  )  (String.toList tmp )
             in
              sagl
-         ,idx=iix
+         ,idx=iix+1  -- 1 kara start
 
         }
 
@@ -195,22 +195,23 @@ update msg model =
       sch=Maybe.withDefault '*' (List.head (String.toList ss))
 
       --? to chr henkan
-      sbQtoS chr sblt iixx=
-               List.map  (\blk ->
-                  {
+      sbQtoS chr sblt =
+            let
+              fncx iixx blk= {
                     sho={kurai10='0',kurai1=if (blk.sho.kurai1=='?') then chr else blk.sho.kurai1}
                     ,sekigyo=
                       List.map (\sj-> {kurai10=if (sj.kurai10=='?') then chr else sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sekigyo
                     ,sagyo=
                        List.map (\sj-> {kurai10=sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sagyo
-                    ,idx=iixx
+                    ,idx=iixx+1 --1 kara start
                   } 
-                )   sblt
+            in
+               List.indexedMap  fncx  sblt
      
      
      
-      -- ? ichi no seikai & tugino basho
-      --type Sss=Sho|Seki|Sa|Nowhere    type Kt=K10|K1  type alias Basho={idx:Int,basho:Sss,sidx:Int,kurai:Kt}
+      -- ? ichi no seikai 
+
       check: List SuBlock-> Char
       check sblt =
            let
@@ -234,12 +235,46 @@ update msg model =
                                    else
                                     Just sag ) 
                                   else
-                                    (Just sekig )
+                                    Just sekig 
 
              psbl= Maybe.withDefault '?' (List.head ( List.filterMap fnc  (List.map2 Tuple.pair sblt model.sublocklT) ))
 
            in
             psbl
+
+      --type Sss=Sho|Seki|Sa|Nowhere    type Kt=K10|K1  type alias Basho={idx:Int,basho:Sss,sidx:Int,kurai:Kt}
+      bcheck: List SuBlock-> Basho
+      bcheck sblt =
+           let
+             fncb blk1 = if blk1.sho.kurai1=='?' then 
+                                ( Just {idx=blk1.idx,basho=Seki,sidx=(List.length blk1.sekigyo),kurai=K10})
+                               else 
+                                let
+                                  fnc2b bsh (idx,sj1) = if sj1.kurai1=='?' then 
+                                                      (Just {idx=blk1.idx,basho=bsh,sidx=idx-1,kurai=K10} )
+                                                   else if sj1.kurai10=='?' then
+                                                      (Just {idx=blk1.idx,basho=bsh,sidx=idx,kurai=K1} )
+                                                   else
+                                                      (Nothing)
+                                  fnn idx sj=(idx,sj)
+                                  sekig= Maybe.withDefault {idx=1,basho=Nowhere,sidx=1,kurai=K1} (List.head ( List.filterMap (fnc2b Seki)  (List.indexedMap fnn blk1.sekigyo ) ))
+                                  sag=Maybe.withDefault {idx=1,basho=Nowhere,sidx=1,kurai=K1} (List.head ( List.filterMap (fnc2b Sa)  (List.indexedMap fnn blk1.sagyo ) ))
+                                in
+                                  if sekig.basho==Nowhere then
+                                   ( if sag.basho==Nowhere then
+                                    Nothing
+                                   else
+                                    Just sag ) 
+                                  else
+                                    Just sekig 
+             
+             bsho= Maybe.withDefault {idx=1,basho=Nowhere,sidx=1,kurai=K1} (List.head ( List.filterMap fncb  sblt  ))
+
+           in
+            bsho
+
+      sbAddQ bsh subltt =
+
 
 
       sblUpdate scht sublt=
@@ -248,7 +283,17 @@ update msg model =
 
          '?' -> [{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}] --sakujo koujichu
 
-         _ ->   if scht==(check sublt) then (sbQtoS scht sublt) else sublt            
+         _ ->  
+             let
+              --?の次の場所を取得する
+              nbasho=bncheck sublt
+
+             in         
+                if scht==(check sublt) then  -- check subltで　?の正しい値を取得
+                 sbAddQ nbasho (sbQtoS scht sublt) -- schtが正しい値なら　? -> scht   sbQtoS
+                                                   --　同時に　次の場所を?にする sbAddQ
+                else 
+                  sublt            
      
              -- [{sho={kurai10='0',kurai1=scht},sekigyo=[],sagyo=[]}]
 

@@ -4893,6 +4893,7 @@ var author$project$WarizanH2$init = function (_n0) {
 			sublockl: _List_fromArray(
 				[
 					{
+					idx: 1,
 					sagyo: _List_Nil,
 					sekigyo: _List_Nil,
 					sho: {
@@ -4910,9 +4911,14 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$WarizanH2$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var author$project$WarizanH2$K1 = {$: 'K1'};
+var author$project$WarizanH2$K10 = {$: 'K10'};
 var author$project$WarizanH2$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
 };
+var author$project$WarizanH2$Nowhere = {$: 'Nowhere'};
+var author$project$WarizanH2$Sa = {$: 'Sa'};
+var author$project$WarizanH2$Seki = {$: 'Seki'};
 var author$project$WarizanH2$fst = function (tuple) {
 	var _n0 = tuple;
 	var value1 = _n0.a;
@@ -5332,6 +5338,7 @@ var author$project$WarizanH2$update = F2(
 				var sbltmp = _List_fromArray(
 					[
 						{
+						idx: 1,
 						sagyo: _List_Nil,
 						sekigyo: _List_Nil,
 						sho: {
@@ -5350,6 +5357,7 @@ var author$project$WarizanH2$update = F2(
 				var fnChrToSbc = F2(
 					function (iix, ch) {
 						return {
+							idx: iix + 1,
 							sagyo: function () {
 								var kakea = function (idx) {
 									return author$project$WarizanH2$toint(josuo) * author$project$WarizanH2$toint(
@@ -5481,10 +5489,10 @@ var author$project$WarizanH2$update = F2(
 						elm$core$String$toList(ss)));
 				var sbQtoS = F2(
 					function (chr, sblt) {
-						return A2(
-							elm$core$List$map,
-							function (blk) {
+						var fncx = F2(
+							function (iixx, blk) {
 								return {
+									idx: iixx + 1,
 									sagyo: A2(
 										elm$core$List$map,
 										function (sj) {
@@ -5516,8 +5524,8 @@ var author$project$WarizanH2$update = F2(
 										kurai10: _Utils_chr('0')
 									}
 								};
-							},
-							sblt);
+							});
+						return A2(elm$core$List$indexedMap, fncx, sblt);
 					});
 				var mans = function () {
 					switch (si) {
@@ -5532,17 +5540,17 @@ var author$project$WarizanH2$update = F2(
 					}
 				}();
 				var check = function (sblt) {
-					var fnc = function (_n3) {
-						var blk1 = _n3.a;
-						var blk2 = _n3.b;
+					var fnc = function (_n4) {
+						var blk1 = _n4.a;
+						var blk2 = _n4.b;
 						if (_Utils_eq(
 							blk1.sho.kurai1,
 							_Utils_chr('?'))) {
 							return elm$core$Maybe$Just(blk2.sho.kurai1);
 						} else {
-							var fnc2 = function (_n2) {
-								var sj1 = _n2.a;
-								var sj2 = _n2.b;
+							var fnc2 = function (_n3) {
+								var sj1 = _n3.a;
+								var sj2 = _n3.b;
 								return _Utils_eq(
 									sj1.kurai1,
 									_Utils_chr('?')) ? elm$core$Maybe$Just(sj2.kurai1) : (_Utils_eq(
@@ -5591,6 +5599,7 @@ var author$project$WarizanH2$update = F2(
 								return _List_fromArray(
 									[
 										{
+										idx: 1,
 										sagyo: _List_Nil,
 										sekigyo: _List_Nil,
 										sho: {
@@ -5600,12 +5609,68 @@ var author$project$WarizanH2$update = F2(
 									}
 									]);
 							default:
+								var nbasho = 1;
 								return _Utils_eq(
 									scht,
 									check(sublt)) ? A2(sbQtoS, scht, sublt) : sublt;
 						}
 					});
 				var sbltmp = A2(sblUpdate, sch, model.sublockl);
+				var bcheck = function (sblt) {
+					var fncb = function (blk1) {
+						if (_Utils_eq(
+							blk1.sho.kurai1,
+							_Utils_chr('?'))) {
+							return elm$core$Maybe$Just(
+								{
+									basho: author$project$WarizanH2$Seki,
+									idx: blk1.idx,
+									kurai: author$project$WarizanH2$K10,
+									sidx: elm$core$List$length(blk1.sekigyo)
+								});
+						} else {
+							var fnn = F2(
+								function (idx, sj) {
+									return _Utils_Tuple2(idx, sj);
+								});
+							var fnc2b = F2(
+								function (bsh, _n1) {
+									var idx = _n1.a;
+									var sj1 = _n1.b;
+									return _Utils_eq(
+										sj1.kurai1,
+										_Utils_chr('?')) ? elm$core$Maybe$Just(
+										{basho: bsh, idx: blk1.idx, kurai: author$project$WarizanH2$K10, sidx: idx - 1}) : (_Utils_eq(
+										sj1.kurai10,
+										_Utils_chr('?')) ? elm$core$Maybe$Just(
+										{basho: bsh, idx: blk1.idx, kurai: author$project$WarizanH2$K1, sidx: idx}) : elm$core$Maybe$Nothing);
+								});
+							var sag = A2(
+								elm$core$Maybe$withDefault,
+								{basho: author$project$WarizanH2$Nowhere, idx: 1, kurai: author$project$WarizanH2$K1, sidx: 1},
+								elm$core$List$head(
+									A2(
+										elm$core$List$filterMap,
+										fnc2b(author$project$WarizanH2$Sa),
+										A2(elm$core$List$indexedMap, fnn, blk1.sagyo))));
+							var sekig = A2(
+								elm$core$Maybe$withDefault,
+								{basho: author$project$WarizanH2$Nowhere, idx: 1, kurai: author$project$WarizanH2$K1, sidx: 1},
+								elm$core$List$head(
+									A2(
+										elm$core$List$filterMap,
+										fnc2b(author$project$WarizanH2$Seki),
+										A2(elm$core$List$indexedMap, fnn, blk1.sekigyo))));
+							return _Utils_eq(sekig.basho, author$project$WarizanH2$Nowhere) ? (_Utils_eq(sag.basho, author$project$WarizanH2$Nowhere) ? elm$core$Maybe$Nothing : elm$core$Maybe$Just(sag)) : elm$core$Maybe$Just(sekig);
+						}
+					};
+					var bsho = A2(
+						elm$core$Maybe$withDefault,
+						{basho: author$project$WarizanH2$Nowhere, idx: 1, kurai: author$project$WarizanH2$K1, sidx: 1},
+						elm$core$List$head(
+							A2(elm$core$List$filterMap, fncb, sblt)));
+					return bsho;
+				};
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5657,6 +5722,7 @@ var author$project$WarizanH2$getAtx = F2(
 		var _n0 = A2(author$project$WarizanH2$getAt, idx, xs);
 		if (_n0.$ === 'Nothing') {
 			return {
+				idx: 1,
 				sagyo: _List_Nil,
 				sekigyo: _List_Nil,
 				sho: {
