@@ -4885,13 +4885,22 @@ var author$project$WarizanH2$init = function (_n0) {
 		{
 			ans: '50',
 			ansdisp: false,
-			cmoji: '',
 			hijosu: '100',
 			josu: '2',
 			kirikae: 'AC',
 			nyuryoku: '',
 			seed: {e1: 99, e2: 99, s1: 19, s2: 19},
-			sublockl: _List_Nil,
+			sublockl: _List_fromArray(
+				[
+					{
+					sagyo: _List_Nil,
+					sekigyo: _List_Nil,
+					sho: {
+						kurai1: _Utils_chr('?'),
+						kurai10: _Utils_chr('0')
+					}
+				}
+				]),
 			sublocklT: _List_Nil
 		},
 		elm$core$Platform$Cmd$none);
@@ -5070,6 +5079,24 @@ var elm$core$List$drop = F2(
 			}
 		}
 	});
+var elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _n0 = f(mx);
+		if (_n0.$ === 'Just') {
+			var x = _n0.a;
+			return A2(elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
 var elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5110,6 +5137,10 @@ var elm$core$String$right = F2(
 			-n,
 			elm$core$String$length(string),
 			string);
+	});
+var elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
 	});
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -5298,6 +5329,17 @@ var author$project$WarizanH2$update = F2(
 					A2(elm$random$Random$generate, author$project$WarizanH2$Newmon, monGenerator));
 			case 'Newmon':
 				var tpl = msg.a;
+				var sbltmp = _List_fromArray(
+					[
+						{
+						sagyo: _List_Nil,
+						sekigyo: _List_Nil,
+						sho: {
+							kurai1: _Utils_chr('?'),
+							kurai10: _Utils_chr('0')
+						}
+					}
+					]);
 				var m2 = author$project$WarizanH2$snd(tpl);
 				var m1 = author$project$WarizanH2$fst(tpl);
 				var josuo = elm$core$String$fromInt(m2);
@@ -5308,7 +5350,6 @@ var author$project$WarizanH2$update = F2(
 				var fnChrToSbc = F2(
 					function (iix, ch) {
 						return {
-							curidx: 0,
 							sagyo: function () {
 								var kakea = function (idx) {
 									return author$project$WarizanH2$toint(josuo) * author$project$WarizanH2$toint(
@@ -5417,56 +5458,67 @@ var author$project$WarizanH2$update = F2(
 							hijosu: hijosuo,
 							josu: josuo,
 							nyuryoku: (model.kirikae === 'AC') ? '?' : '',
-							sublockl: sbTinit,
+							sublockl: sbltmp,
 							sublocklT: sbTinit
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				var sbltmp = _List_fromArray(
-					[
-						{
-						curidx: 0,
-						sagyo: _List_fromArray(
-							[
-								{
-								kurai1: _Utils_chr('?'),
-								kurai10: _Utils_chr('?')
-							},
-								{
-								kurai1: _Utils_chr('?'),
-								kurai10: _Utils_chr('?')
-							}
-							]),
-						sekigyo: _List_fromArray(
-							[
-								{
-								kurai1: _Utils_chr('x'),
-								kurai10: _Utils_chr('x')
-							},
-								{
-								kurai1: _Utils_chr('y'),
-								kurai10: _Utils_chr('y')
-							}
-							]),
-						sho: {
-							kurai1: _Utils_chr('1'),
-							kurai10: _Utils_chr('0')
-						}
-					}
-					]);
-				var mans2 = function () {
+				var ss = function () {
 					switch (si) {
 						case 10:
-							return A2(elm$core$String$dropRight, 1, model.cmoji);
+							return '?';
 						case 11:
-							return model.cmoji;
+							return '';
 						default:
-							return _Utils_ap(
-								A3(elm$core$String$replace, '?', '', model.cmoji),
-								elm$core$String$fromInt(si));
+							return elm$core$String$fromInt(si);
 					}
 				}();
+				var sch = A2(
+					elm$core$Maybe$withDefault,
+					_Utils_chr('*'),
+					elm$core$List$head(
+						elm$core$String$toList(ss)));
+				var sbQtoS = F2(
+					function (chr, sblt) {
+						return A2(
+							elm$core$List$map,
+							function (blk) {
+								return {
+									sagyo: A2(
+										elm$core$List$map,
+										function (sj) {
+											return {
+												kurai1: _Utils_eq(
+													sj.kurai1,
+													_Utils_chr('?')) ? chr : sj.kurai1,
+												kurai10: sj.kurai10
+											};
+										},
+										blk.sagyo),
+									sekigyo: A2(
+										elm$core$List$map,
+										function (sj) {
+											return {
+												kurai1: _Utils_eq(
+													sj.kurai1,
+													_Utils_chr('?')) ? chr : sj.kurai1,
+												kurai10: _Utils_eq(
+													sj.kurai10,
+													_Utils_chr('?')) ? chr : sj.kurai10
+											};
+										},
+										blk.sekigyo),
+									sho: {
+										kurai1: _Utils_eq(
+											blk.sho.kurai1,
+											_Utils_chr('?')) ? chr : blk.sho.kurai1,
+										kurai10: _Utils_chr('0')
+									}
+								};
+							},
+							sblt);
+					});
 				var mans = function () {
 					switch (si) {
 						case 10:
@@ -5479,12 +5531,93 @@ var author$project$WarizanH2$update = F2(
 								elm$core$String$fromInt(si));
 					}
 				}();
+				var check = function (sblt) {
+					var fnc = function (_n3) {
+						var blk1 = _n3.a;
+						var blk2 = _n3.b;
+						if (_Utils_eq(
+							blk1.sho.kurai1,
+							_Utils_chr('?'))) {
+							return elm$core$Maybe$Just(blk2.sho.kurai1);
+						} else {
+							var fnc2 = function (_n2) {
+								var sj1 = _n2.a;
+								var sj2 = _n2.b;
+								return _Utils_eq(
+									sj1.kurai1,
+									_Utils_chr('?')) ? elm$core$Maybe$Just(sj2.kurai1) : (_Utils_eq(
+									sj1.kurai10,
+									_Utils_chr('?')) ? elm$core$Maybe$Just(sj2.kurai10) : elm$core$Maybe$Nothing);
+							};
+							var sag = A2(
+								elm$core$Maybe$withDefault,
+								_Utils_chr('?'),
+								elm$core$List$head(
+									A2(
+										elm$core$List$filterMap,
+										fnc2,
+										A3(elm$core$List$map2, elm$core$Tuple$pair, blk1.sagyo, blk2.sagyo))));
+							var sekig = A2(
+								elm$core$Maybe$withDefault,
+								_Utils_chr('?'),
+								elm$core$List$head(
+									A2(
+										elm$core$List$filterMap,
+										fnc2,
+										A3(elm$core$List$map2, elm$core$Tuple$pair, blk1.sekigyo, blk2.sekigyo))));
+							return _Utils_eq(
+								sekig,
+								_Utils_chr('?')) ? (_Utils_eq(
+								sag,
+								_Utils_chr('?')) ? elm$core$Maybe$Nothing : elm$core$Maybe$Just(sag)) : elm$core$Maybe$Just(sekig);
+						}
+					};
+					var psbl = A2(
+						elm$core$Maybe$withDefault,
+						_Utils_chr('?'),
+						elm$core$List$head(
+							A2(
+								elm$core$List$filterMap,
+								fnc,
+								A3(elm$core$List$map2, elm$core$Tuple$pair, sblt, model.sublocklT))));
+					return psbl;
+				};
+				var sblUpdate = F2(
+					function (scht, sublt) {
+						switch (scht.valueOf()) {
+							case '*':
+								return sublt;
+							case '?':
+								return _List_fromArray(
+									[
+										{
+										sagyo: _List_Nil,
+										sekigyo: _List_Nil,
+										sho: {
+											kurai1: _Utils_chr('?'),
+											kurai10: _Utils_chr('0')
+										}
+									}
+									]);
+							default:
+								return _Utils_eq(
+									scht,
+									check(sublt)) ? A2(sbQtoS, scht, sublt) : sublt;
+						}
+					});
+				var sbltmp = A2(sblUpdate, sch, model.sublockl);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							ansdisp: (si === 11) ? true : model.ansdisp,
-							nyuryoku: mans,
+							nyuryoku: (model.kirikae === 'AC') ? elm$core$String$fromList(
+								A2(
+									elm$core$List$map,
+									function (bl) {
+										return bl.sho.kurai1;
+									},
+									sbltmp)) : mans,
 							sublockl: sbltmp
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5495,10 +5628,6 @@ var author$project$WarizanH2$update = F2(
 						model,
 						{seed: sed}),
 					elm$core$Platform$Cmd$none);
-			case 'Susumu':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 'Modoru':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5517,9 +5646,7 @@ var author$project$WarizanH2$Btn2 = function (a) {
 	return {$: 'Btn2', a: a};
 };
 var author$project$WarizanH2$Kirikae = {$: 'Kirikae'};
-var author$project$WarizanH2$Modoru = {$: 'Modoru'};
 var author$project$WarizanH2$Next = {$: 'Next'};
-var author$project$WarizanH2$Susumu = {$: 'Susumu'};
 var author$project$WarizanH2$getAt = F2(
 	function (idx, xs) {
 		return (idx < 0) ? elm$core$Maybe$Nothing : elm$core$List$head(
@@ -5530,7 +5657,6 @@ var author$project$WarizanH2$getAtx = F2(
 		var _n0 = A2(author$project$WarizanH2$getAt, idx, xs);
 		if (_n0.$ === 'Nothing') {
 			return {
-				curidx: 0,
 				sagyo: _List_Nil,
 				sekigyo: _List_Nil,
 				sho: {
@@ -5815,6 +5941,15 @@ var author$project$WarizanH2$view = function (model) {
 						elm$svg$Svg$text(moji)
 					]));
 		});
+	var slistToString3 = function (slst) {
+		return elm$core$String$fromList(
+			A2(
+				elm$core$List$map,
+				function (sj) {
+					return sj.kurai10;
+				},
+				slst));
+	};
 	var slistToString2 = function (blst) {
 		return elm$core$String$fromList(
 			A2(
@@ -6030,6 +6165,24 @@ var author$project$WarizanH2$view = function (model) {
 		return author$project$WarizanH2$toint(
 			(ke < 0) ? (model.hijosu + '0') : A2(elm$core$String$dropRight, ke, model.hijosu));
 	};
+	var func2 = F6(
+		function (txx, tyy, tdivx, tdivy, idx, chr) {
+			return A5(
+				stext,
+				(txx + (((-idx) + tdivx) * tatekankaku)) - 20,
+				(tyy + (tdivy * tatekankaku)) - 22,
+				elm$core$String$fromChar(chr),
+				'black',
+				'24px');
+		});
+	var sjtext2 = F5(
+		function (xx, yy, moji, divx, divy) {
+			return A2(
+				elm$core$List$indexedMap,
+				A4(func2, xx, yy, divx, divy),
+				elm$core$List$reverse(
+					elm$core$String$toList(moji)));
+		});
 	var func = F6(
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
 			return A5(
@@ -6084,30 +6237,50 @@ var author$project$WarizanH2$view = function (model) {
 							(ii + ((ansL - 1) * (-1))) + optionsu(ii),
 							ii * 2))));
 		});
-	var tochukL2 = F4(
-		function (ii, mnyu, skk, shh) {
+	var tochukL2 = F5(
+		function (ii, mnyu, kr10, skk, shh) {
 			return _Utils_ap(
 				A5(rsjtext, x0 + 150, y0 - 4, mnyu, (ansL - 1) * (-1), 0),
 				_Utils_ap(
-					A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+					A5(
+						sjtext2,
+						x0 + 150,
+						y0 + 44,
+						A2(
+							elm$core$String$dropLeft,
+							1,
+							A3(elm$core$String$replace, '0', '\u00a0', kr10)),
+						(ansL - ii) * (-1),
+						(ii * 2) - 1),
 					_Utils_ap(
-						_List_fromArray(
-							[
-								A6(sline, x0, (y0 + ((2 * tatekankaku) * ii)) + 6, x0 + hwidth, (y0 + ((2 * tatekankaku) * ii)) + 6, 1, 'green')
-							]),
-						A5(
-							sjtext,
-							x0 + 150,
-							y0 + 44,
-							shh,
-							(ii + ((ansL - 1) * (-1))) + optionsu2(ii),
-							ii * 2))));
+						A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									A6(
+									sline,
+									x0,
+									(y0 + ((2 * tatekankaku) * ii)) + 6,
+									x0 + hwidth,
+									(y0 + ((2 * tatekankaku) * ii)) + 6,
+									1,
+									(shh === '') ? 'white' : 'green')
+								]),
+							A5(
+								sjtext,
+								x0 + 150,
+								y0 + 44,
+								shh,
+								(ii + ((ansL - 1) * (-1))) + optionsu2(ii),
+								ii * 2)))));
 		});
 	var mtochukeisanL = function (ii) {
-		return A4(
+		return A5(
 			tochukL2,
 			ii,
 			slistToString2(model.sublockl),
+			slistToString3(
+				sbcToSj(ii).sekigyo),
 			slistToString(
 				sbcToSj(ii).sekigyo),
 			slistToString(
@@ -6231,36 +6404,6 @@ var author$project$WarizanH2$view = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										A2(
-										rundis$elm_bootstrap$Bootstrap$Button$button,
-										_List_fromArray(
-											[
-												rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-														elm$html$Html$Events$onClick(author$project$WarizanH2$Modoru)
-													]))
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text('←')
-											])),
-										A2(
-										rundis$elm_bootstrap$Bootstrap$Button$button,
-										_List_fromArray(
-											[
-												rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-														elm$html$Html$Events$onClick(author$project$WarizanH2$Susumu)
-													]))
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text('→')
-											])),
 										A2(
 										rundis$elm_bootstrap$Bootstrap$Button$button,
 										_List_fromArray(
