@@ -44,6 +44,9 @@ type alias Model =
 
 type alias Sd={s1:Int,e1:Int,s2:Int,e2:Int}
 
+type Sss=Sho|Seki|Sa|Nowhere
+type Kt=K10|K1
+type alias Basho={idx:Int,basho:Sss,sidx:Int,kurai:Kt}
 
 
 type alias Suji=
@@ -62,7 +65,7 @@ type alias SuBlock=
      sho:Suji
     ,sekigyo:SujiL
     ,sagyo:SujiL
-
+    ,idx:Int
   }
 
 
@@ -72,7 +75,7 @@ type alias SuBlock=
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"
-  ,sublockl=[ {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]} ]
+  ,sublockl=[ {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1} ]
 
   ,sublocklT=[]}
   , Cmd.none
@@ -152,6 +155,7 @@ update msg model =
                sagl=List.map  (\chh ->   {  kurai10= '0'  ,kurai1=chh }  )  (String.toList tmp )
             in
              sagl
+         ,idx=iix
 
         }
 
@@ -159,7 +163,7 @@ update msg model =
 
        
 
-       sbltmp=[{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]}]
+       sbltmp=[{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}]
 
 
 
@@ -191,7 +195,7 @@ update msg model =
       sch=Maybe.withDefault '*' (List.head (String.toList ss))
 
       --? to chr henkan
-      sbQtoS chr sblt =
+      sbQtoS chr sblt iixx=
                List.map  (\blk ->
                   {
                     sho={kurai10='0',kurai1=if (blk.sho.kurai1=='?') then chr else blk.sho.kurai1}
@@ -199,12 +203,15 @@ update msg model =
                       List.map (\sj-> {kurai10=if (sj.kurai10=='?') then chr else sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sekigyo
                     ,sagyo=
                        List.map (\sj-> {kurai10=sj.kurai10,kurai1=if (sj.kurai1=='?') then chr else sj.kurai1}   )  blk.sagyo
+                    ,idx=iixx
                   } 
                 )   sblt
      
      
      
-      -- ? ichi no seikai 
+      -- ? ichi no seikai & tugino basho
+      --type Sss=Sho|Seki|Sa|Nowhere    type Kt=K10|K1  type alias Basho={idx:Int,basho:Sss,sidx:Int,kurai:Kt}
+      check: List SuBlock-> Char
       check sblt =
            let
              fnc (blk1,blk2) = if blk1.sho.kurai1=='?' then 
@@ -212,11 +219,11 @@ update msg model =
                                else 
                                 let
                                   fnc2 (sj1,sj2) = if sj1.kurai1=='?' then 
-                                                      (Just sj2.kurai1)
+                                                      (Just sj2.kurai1 )
                                                    else if sj1.kurai10=='?' then
-                                                      (Just sj2.kurai10)
+                                                      (Just sj2.kurai10 )
                                                    else
-                                                      Nothing
+                                                      (Nothing)
                                                       
                                   sekig= Maybe.withDefault '?' (List.head ( List.filterMap fnc2  (List.map2 Tuple.pair blk1.sekigyo blk2.sekigyo) ))
                                   sag=Maybe.withDefault '?' (List.head ( List.filterMap fnc2  (List.map2 Tuple.pair blk1.sagyo blk2.sagyo) ))
@@ -225,9 +232,9 @@ update msg model =
                                    ( if sag=='?' then
                                     Nothing
                                    else
-                                    (Just sag) )
+                                    Just sag ) 
                                   else
-                                   (Just sekig)
+                                    (Just sekig )
 
              psbl= Maybe.withDefault '?' (List.head ( List.filterMap fnc  (List.map2 Tuple.pair sblt model.sublocklT) ))
 
@@ -239,7 +246,7 @@ update msg model =
         case scht of
          '*' -> sublt
 
-         '?' -> [{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]}]
+         '?' -> [{sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}] --sakujo koujichu
 
          _ ->   if scht==(check sublt) then (sbQtoS scht sublt) else sublt            
      
@@ -480,7 +487,7 @@ getAt idx xs =
 
 getAtx idx xs = 
   case (getAt idx xs) of
-   Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[]}
+   Nothing -> {sho={kurai10='0',kurai1='?'},sekigyo=[],sagyo=[],idx=1}
    Just a -> a
 
 fc idx chr = (idx,chr)
