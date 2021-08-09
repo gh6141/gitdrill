@@ -5063,6 +5063,7 @@ var author$project$WarizanH2$tointc = function (ch) {
 	return author$project$WarizanH2$toint(
 		elm$core$String$fromChar(ch));
 };
+var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5312,22 +5313,54 @@ var author$project$WarizanH2$update = F2(
 					A2(elm$random$Random$generate, author$project$WarizanH2$Newmon, monGenerator));
 			case 'Newmon':
 				var tpl = msg.a;
-				var sbltmp = _List_fromArray(
-					[
-						{
-						idx: 1,
-						sagyo: _List_Nil,
-						sekigyo: _List_Nil,
-						sho: {
-							ix: 0,
-							iy: 0,
-							kurai1: _Utils_chr('?'),
-							kurai10: _Utils_chr('0')
-						}
-					}
-					]);
 				var m2 = author$project$WarizanH2$snd(tpl);
 				var m1 = author$project$WarizanH2$fst(tpl);
+				var kuhaku = function (sblst) {
+					var sblst1 = A2(
+						elm$core$List$map,
+						function (blk) {
+							return _Utils_update(
+								blk,
+								{
+									sagyo: function () {
+										var ffsbsa = function (sjx) {
+											return _Utils_update(
+												sjx,
+												{
+													kurai1: _Utils_chr('□'),
+													kurai10: (!_Utils_eq(
+														sjx.kurai10,
+														_Utils_chr('0'))) ? _Utils_chr('□') : _Utils_chr('0')
+												});
+										};
+										return A2(elm$core$List$map, ffsbsa, blk.sagyo);
+									}(),
+									sekigyo: function () {
+										var ffsb = function (sj) {
+											return _Utils_update(
+												sj,
+												{
+													kurai1: _Utils_chr('□'),
+													kurai10: (!_Utils_eq(
+														sj.kurai10,
+														_Utils_chr('0'))) ? _Utils_chr('□') : _Utils_chr('0')
+												});
+										};
+										return A2(elm$core$List$map, ffsb, blk.sekigyo);
+									}(),
+									sho: {
+										ix: blk.sho.ix,
+										iy: blk.sho.iy,
+										kurai1: _Utils_chr('□'),
+										kurai10: (!_Utils_eq(
+											blk.sho.kurai10,
+											_Utils_chr('0'))) ? _Utils_chr('□') : _Utils_chr('0')
+									}
+								});
+						},
+						sblst);
+					return sblst1;
+				};
 				var josuo = elm$core$String$fromInt(m2);
 				var jsolen = elm$core$String$length(josuo);
 				var hij = m1 * m2;
@@ -5480,7 +5513,7 @@ var author$project$WarizanH2$update = F2(
 							hijosu: hijosuo,
 							josu: josuo,
 							nyuryoku: (model.kirikae === 'AC') ? '?' : '',
-							sublockl: sbltmp,
+							sublockl: kuhaku(sbTinit),
 							sublocklT: sbTinit
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5598,8 +5631,8 @@ var author$project$WarizanH2$update = F2(
 							sublockl: A3(
 								sbset,
 								ichix,
-								_Utils_chr('■'),
-								model.sublocklT)
+								_Utils_chr('?'),
+								model.sublockl)
 						}),
 					elm$core$Platform$Cmd$none);
 		}
