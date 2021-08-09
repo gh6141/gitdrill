@@ -37,8 +37,8 @@ type alias Model =
     ,seed:Sd
     ,kirikae:String
     ,sublockl:List SuBlock
-
     ,sublocklT:List SuBlock
+    ,currentIchi:(Ichi,Kt)
   }
 
 
@@ -80,8 +80,7 @@ init : () -> (Model, Cmd Msg)
 init _ =
   ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"
   ,sublockl=[ {sho={kurai10='□',kurai1='□',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1} ]
-
-  ,sublocklT=[]}
+  ,sublocklT=[],currentIchi=({xx=0,yy=0},K1)}
   , Cmd.none
   )
 
@@ -94,6 +93,38 @@ update msg model =
 
       mhenkan i1 i2 = (i1,i2)
       monGenerator = Random.map2  mhenkan (Random.int model.seed.s1 model.seed.e1 ) (Random.int model.seed.s2  model.seed.e2 ) 
+
+      sbset ichi char ktx sblst=
+       let
+        sblst1=  List.map (\blk-> 
+         let
+          ichixx=ichi.xx
+          ichiyy=ichi.yy    
+         in
+           {blk|
+            sho=  {kurai1=(if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then char else blk.sho.kurai1)
+                 ,kurai10=blk.sho.kurai10
+                 ,ix=blk.sho.ix,iy=blk.sho.iy
+                    }
+            ,sekigyo= 
+               let    
+                 ffsb sj = {sj|kurai1= if (ichixx==sj.ix && ichiyy==sj.iy && ktx==K1 ) then char  else sj.kurai1
+                              ,kurai10=  if (ichixx==sj.ix && ichiyy==sj.iy && ktx==K10 ) then char  else sj.kurai10
+                           }
+               in            
+                 List.map  ffsb  blk.sekigyo
+            ,sagyo=
+               let
+                 ffsbsa sjx = {sjx|kurai1= if (ichixx==sjx.ix && ichiyy==sjx.iy && ktx==K1 ) then char  else sjx.kurai1
+                                ,kurai10=  if (ichixx==sjx.ix && ichiyy==sjx.iy && ktx==K10 ) then char  else sjx.kurai10
+                               }
+               in            
+                 List.map  ffsbsa  blk.sagyo
+             }   ) sblst
+  
+       in
+          sblst1
+
  in
  
   case msg of
@@ -240,8 +271,8 @@ update msg model =
                  else
                   mans
                 , ansdisp=if si==11 then True else model.ansdisp
-                ,sublockl=model.sublocklT
- 
+               -- ,sublockl=model.sublocklT
+                ,sublockl=sbset (fst model.currentIchi) sch (snd model.currentIchi) model.sublockl
                  } ,Cmd.none)
    Btn2 sed ->
           ( {model | seed=sed
@@ -255,42 +286,11 @@ update msg model =
     let
      ichix=fst tpl    
      kt=snd tpl
-     --   ichi de settei     
-     sbset ichi char sblst=
-       let
-        sblst1=  List.map (\blk-> 
-         let
-          ichixx=ichi.xx
-          ichiyy=ichi.yy    
-         in
-           {blk|
-            sho=  {kurai1=(if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then char else blk.sho.kurai1)
-                 ,kurai10=blk.sho.kurai10
-                 ,ix=blk.sho.ix,iy=blk.sho.iy
-                    }
-            ,sekigyo= 
-               let    
-                 ffsb sj = {sj|kurai1= if (ichixx==sj.ix && ichiyy==sj.iy && kt==K1 ) then char  else sj.kurai1
-                              ,kurai10=  if (ichixx==sj.ix && ichiyy==sj.iy && kt==K10 ) then char  else sj.kurai10
-                           }
-               in            
-                 List.map  ffsb  blk.sekigyo
-            ,sagyo=
-               let
-                 ffsbsa sjx = {sjx|kurai1= if (ichixx==sjx.ix && ichiyy==sjx.iy && kt==K1 ) then char  else sjx.kurai1
-                                ,kurai10=  if (ichixx==sjx.ix && ichiyy==sjx.iy && kt==K10 ) then char  else sjx.kurai10
-                               }
-               in            
-                 List.map  ffsbsa  blk.sagyo
-             }   ) sblst
-  
-       in
-          sblst1
-     
-
+     --   ichi de settei       
 
     in 
-     ({model|  sublockl=sbset ichix '?' model.sublockl },Cmd.none)
+     ({model|  sublockl=sbset ichix '?' kt model.sublockl
+     ,currentIchi=(ichix,kt) },Cmd.none)
 
 
 view : Model -> Html Msg

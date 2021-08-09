@@ -4403,6 +4403,7 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$WarizanH2$K1 = {$: 'K1'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4885,6 +4886,9 @@ var author$project$WarizanH2$init = function (_n0) {
 		{
 			ans: '50',
 			ansdisp: false,
+			currentIchi: _Utils_Tuple2(
+				{xx: 0, yy: 0},
+				author$project$WarizanH2$K1),
 			hijosu: '100',
 			josu: '2',
 			kirikae: 'AC',
@@ -4913,7 +4917,6 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$WarizanH2$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$WarizanH2$K1 = {$: 'K1'};
 var author$project$WarizanH2$K10 = {$: 'K10'};
 var author$project$WarizanH2$Newmon = function (a) {
 	return {$: 'Newmon', a: a};
@@ -5297,6 +5300,49 @@ var elm$random$Random$map2 = F3(
 	});
 var author$project$WarizanH2$update = F2(
 	function (msg, model) {
+		var sbset = F4(
+			function (ichi, _char, ktx, sblst) {
+				var sblst1 = A2(
+					elm$core$List$map,
+					function (blk) {
+						var ichiyy = ichi.yy;
+						var ichixx = ichi.xx;
+						return _Utils_update(
+							blk,
+							{
+								sagyo: function () {
+									var ffsbsa = function (sjx) {
+										return _Utils_update(
+											sjx,
+											{
+												kurai1: (_Utils_eq(ichixx, sjx.ix) && (_Utils_eq(ichiyy, sjx.iy) && _Utils_eq(ktx, author$project$WarizanH2$K1))) ? _char : sjx.kurai1,
+												kurai10: (_Utils_eq(ichixx, sjx.ix) && (_Utils_eq(ichiyy, sjx.iy) && _Utils_eq(ktx, author$project$WarizanH2$K10))) ? _char : sjx.kurai10
+											});
+									};
+									return A2(elm$core$List$map, ffsbsa, blk.sagyo);
+								}(),
+								sekigyo: function () {
+									var ffsb = function (sj) {
+										return _Utils_update(
+											sj,
+											{
+												kurai1: (_Utils_eq(ichixx, sj.ix) && (_Utils_eq(ichiyy, sj.iy) && _Utils_eq(ktx, author$project$WarizanH2$K1))) ? _char : sj.kurai1,
+												kurai10: (_Utils_eq(ichixx, sj.ix) && (_Utils_eq(ichiyy, sj.iy) && _Utils_eq(ktx, author$project$WarizanH2$K10))) ? _char : sj.kurai10
+											});
+									};
+									return A2(elm$core$List$map, ffsb, blk.sekigyo);
+								}(),
+								sho: {
+									ix: blk.sho.ix,
+									iy: blk.sho.iy,
+									kurai1: (_Utils_eq(ichi.xx, blk.sho.ix) && _Utils_eq(ichi.yy, blk.sho.iy)) ? _char : blk.sho.kurai1,
+									kurai10: blk.sho.kurai10
+								}
+							});
+					},
+					sblst);
+				return sblst1;
+			});
 		var mhenkan = F2(
 			function (i1, i2) {
 				return _Utils_Tuple2(i1, i2);
@@ -5558,7 +5604,12 @@ var author$project$WarizanH2$update = F2(
 										return bl.sho.kurai1;
 									},
 									model.sublockl)) : mans,
-							sublockl: model.sublocklT
+							sublockl: A4(
+								sbset,
+								author$project$WarizanH2$fst(model.currentIchi),
+								sch,
+								author$project$WarizanH2$snd(model.currentIchi),
+								model.sublockl)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn2':
@@ -5580,58 +5631,17 @@ var author$project$WarizanH2$update = F2(
 			default:
 				var tpl = msg.a;
 				var kt = author$project$WarizanH2$snd(tpl);
-				var sbset = F3(
-					function (ichi, _char, sblst) {
-						var sblst1 = A2(
-							elm$core$List$map,
-							function (blk) {
-								var ichiyy = ichi.yy;
-								var ichixx = ichi.xx;
-								return _Utils_update(
-									blk,
-									{
-										sagyo: function () {
-											var ffsbsa = function (sjx) {
-												return _Utils_update(
-													sjx,
-													{
-														kurai1: (_Utils_eq(ichixx, sjx.ix) && (_Utils_eq(ichiyy, sjx.iy) && _Utils_eq(kt, author$project$WarizanH2$K1))) ? _char : sjx.kurai1,
-														kurai10: (_Utils_eq(ichixx, sjx.ix) && (_Utils_eq(ichiyy, sjx.iy) && _Utils_eq(kt, author$project$WarizanH2$K10))) ? _char : sjx.kurai10
-													});
-											};
-											return A2(elm$core$List$map, ffsbsa, blk.sagyo);
-										}(),
-										sekigyo: function () {
-											var ffsb = function (sj) {
-												return _Utils_update(
-													sj,
-													{
-														kurai1: (_Utils_eq(ichixx, sj.ix) && (_Utils_eq(ichiyy, sj.iy) && _Utils_eq(kt, author$project$WarizanH2$K1))) ? _char : sj.kurai1,
-														kurai10: (_Utils_eq(ichixx, sj.ix) && (_Utils_eq(ichiyy, sj.iy) && _Utils_eq(kt, author$project$WarizanH2$K10))) ? _char : sj.kurai10
-													});
-											};
-											return A2(elm$core$List$map, ffsb, blk.sekigyo);
-										}(),
-										sho: {
-											ix: blk.sho.ix,
-											iy: blk.sho.iy,
-											kurai1: (_Utils_eq(ichi.xx, blk.sho.ix) && _Utils_eq(ichi.yy, blk.sho.iy)) ? _char : blk.sho.kurai1,
-											kurai10: blk.sho.kurai10
-										}
-									});
-							},
-							sblst);
-						return sblst1;
-					});
 				var ichix = author$project$WarizanH2$fst(tpl);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							sublockl: A3(
+							currentIchi: _Utils_Tuple2(ichix, kt),
+							sublockl: A4(
 								sbset,
 								ichix,
 								_Utils_chr('?'),
+								kt,
 								model.sublockl)
 						}),
 					elm$core$Platform$Cmd$none);
