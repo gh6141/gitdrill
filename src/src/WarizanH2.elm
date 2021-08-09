@@ -86,7 +86,7 @@ init _ =
   )
 
 type Msg
-    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae |Suj Ichi
+    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae |Suj (Ichi,Kt)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -132,12 +132,14 @@ update msg model =
                              {
                              kurai10= Maybe.withDefault '0' (List.head (String.toList (String.right 1 tmp2)))                            
                              ,kurai1= Maybe.withDefault '0' (List.head (String.toList (String.right 1 tmp1)))
-                             ,ix=iix-ansL-idx
-                             ,iy=2*iix-1
+                             ,ix=iix-ansL-idx+2
+                             ,iy=2*iix+1
                               }
                              ) ( List.reverse (List.range 1 jsolen ) )
               hd=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).kurai10
-              sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd,ix=0,iy=0}::sglt
+              ixt=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).ix
+              iyt=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).iy
+              sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd,ix=ixt-1,iy=iyt}::sglt
               hd2=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglx) ).kurai1
               sgl=if hd2=='0' then (List.drop 1 sglx) else sglx
 
@@ -155,12 +157,11 @@ update msg model =
                hijo=hijos1x (ansLx-iix-2)
                rsx=ruisekix (iix+1)
 
-              -- yxx=Debug.log "hij=" hijo
-              -- xx=Debug.log "rsx=" rsx
+ 
 
                tmp=(String.fromInt ( hijo - rsx )  )
 
-               fff idx chh=  {  kurai10= '0'  ,kurai1=chh ,ix=iix-ansL+1-idx  ,iy=2* iix } 
+               fff idx chh=  {  kurai10= '0'  ,kurai1=chh ,ix=iix-ansLx+idx+(if (String.length anso)==(iix+1) then 1 else 0)  ,iy=2* iix+2 } 
                sagl=List.indexedMap  fff  (String.toList tmp )
             in
              sagl
@@ -223,26 +224,52 @@ update msg model =
     ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
     },Cmd.none)
 
-   Suj ichix ->
+   Suj tpl ->
     let
+     ichix=fst tpl    
+     kt=snd tpl
      --   ichi de settei
+     
      sbset ichi char sblst=
        let
         sblst1=  List.map (\blk-> 
-          let 
+         let
+          ichixx=ichi.xx
+          ichiyy=ichi.yy
+    
+         in
 
-
-          in
-           {blk|sho={kurai1=(if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then char else blk.sho.kurai1),kurai10=blk.sho.kurai10,ix=blk.sho.ix ,iy=blk.sho.iy } }   ) sblst
+           {blk|
+            sho=  {kurai1=(if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then char else blk.sho.kurai1)
+                 ,kurai10=blk.sho.kurai10
+                 ,ix=blk.sho.ix,iy=blk.sho.iy
+                    }
+            ,sekigyo= 
+               let
+    
+                 ffsb sj =
+                 
+                    {sj|kurai1= if (ichixx==sj.ix && ichiyy==sj.iy && kt==K1 ) then char  else sj.kurai1
+                              ,kurai10=  if (ichixx==sj.ix && ichiyy==sj.iy && kt==K10 ) then char  else sj.kurai10
+                               }
+               in            
+                 List.map  ffsb  blk.sekigyo
+            ,sagyo=
+               let
+                 ffsbsa sjx =
+                                  
+                     {sjx|kurai1= if (ichixx==sjx.ix && ichiyy==sjx.iy && kt==K1 ) then char  else sjx.kurai1
+                                ,kurai10=  if (ichixx==sjx.ix && ichiyy==sjx.iy && kt==K10 ) then char  else sjx.kurai10
+                               }
+               in            
+                 List.map  ffsbsa  blk.sagyo
+             }   ) sblst
   
        in
           sblst1
 
     in 
-     ({model| 
-              ,sublockl=sbset ichix '■' model.sublocklT
-
-      },Cmd.none)
+     ({model|  sublockl=sbset ichix '■' model.sublocklT },Cmd.none)
 
 
 view : Model -> Html Msg
@@ -373,12 +400,12 @@ view model =
          [ Svg.text moji
          ]
         
-        stextix xx yy moji color fs ix iy =  Svg.text_
+        stextix xx yy moji color fs ix iy kt =  Svg.text_
          [ Svg.Attributes.x (String.fromInt xx)
          , Svg.Attributes.y (String.fromInt yy)
          , Svg.Attributes.fill color   
          ,Svg.Attributes.fontSize fs    
-         ,onClick (Suj {xx=ix,yy=iy})   
+         ,onClick (Suj ({xx=ix,yy=iy},kt))   
          ]
          [ Svg.text moji
          ]
@@ -388,15 +415,15 @@ view model =
         sjtext xx yy moji divx divy =
           List.indexedMap (func xx yy divx divy)  (List.reverse (String.toList moji))
 
-        func1 txx tyy tdivx tdivy idx chr = stextix (txx+(-idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (-idx+tdivx) tdivy
+        func1 txx tyy tdivx tdivy idx chr = stextix (txx+(-idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (-idx+tdivx) tdivy K1
         sjtext1 xx yy moji divx divy =
           List.indexedMap (func1 xx yy divx divy)  (List.reverse (String.toList moji))
 
-        func2 txx tyy tdivx tdivy idx chr = stextix (txx+(-idx+tdivx)*tatekankaku-20)   (tyy+tdivy*tatekankaku-22)  (String.fromChar chr) "black" "24px" (-idx+tdivx) tdivy
+        func2 txx tyy tdivx tdivy idx chr = stextix (txx+(-idx+tdivx)*tatekankaku-20)   (tyy+tdivy*tatekankaku-22)  (String.fromChar chr) "black" "24px" (-idx+tdivx) tdivy K10
         sjtext2 xx yy moji divx divy =
           List.indexedMap (func2 xx yy divx divy)  (List.reverse (String.toList moji))
         
-        rfunc txx tyy tdivx tdivy idx chr = stextix (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (idx+tdivx) tdivy
+        rfunc txx tyy tdivx tdivy idx chr = stextix (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (idx+tdivx) tdivy K1
         rsjtext xx yy moji divx divy =
           List.indexedMap (rfunc xx yy divx divy)  (String.toList moji)
           
