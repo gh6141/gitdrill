@@ -326,7 +326,7 @@ update msg model =
                   String.fromList  ( List.map (\bl-> bl.sho.kurai1  ) tmpsbl)
                  else
                   mans
-                , ansdisp=if si==11 then True else model.ansdisp
+                , ansdisp=if (si==11&&model.ansdisp==False) then True else False
                -- ,sublockl=model.sublocklT
                 ,sublockl=tmpsbl
                 ,renzoku=renzokusu
@@ -361,7 +361,7 @@ view model =
          [ text (" "++(
              case ii of
               10-> "C"
-              11-> "答"
+              11-> "A"
               _ -> String.fromInt ii 
            
            )++" ")])
@@ -386,8 +386,8 @@ view model =
              ]
              ,tr [] [
                td [] [sbutton 0]
-               ,td [] [sbutton 10]
-               ,td [] [sbutton 11]
+               ,td [title "けします"] [sbutton 10]
+               ,td [title "答"] [sbutton 11]
              ]                   
             ]
 
@@ -538,14 +538,14 @@ view model =
        ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
        ,sujibutton 
        ,div [] [
-             Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae]] [ text model.kirikae ]
+             Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae,title "計算する・しないをえらべます"]] [ text model.kirikae ]
+            ,span [style "font-size" "40px",style "color" "red"] [text ("\u{00a0}"++(if model.ansdisp then model.ans else "　"))]
        ]      
-       ,div [style "font-size" "40px"] [text (if model.ansdisp then model.ans else "　")]
        ,div [][
-          Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "レベル1（*/1=4）" ]
+          Button.button [Button.attrs [title "１けたの数でわります",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "レベル1のもんだい" ]
           ]
-       ,div [] [  Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "レベル２(*/2=3)" ]]
-       ,div [] [  Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=11,e1= 99 ,s2=11,e2= 99})]] [ text "レベル３(*/2=2)" ]]
+       ,div [] [  Button.button [Button.attrs [title "２けたの数でわり、答えは３けたです",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "レベル2のもんだい" ]]
+       ,div [] [  Button.button [Button.attrs [title "２けたの数でわり、答えは２けたです",style "font-size" "16px"   ,onClick (Btn2 {s1=11,e1= 99 ,s2=11,e2= 99})]] [ text "レベル3のもんだい" ]]
        
      ]
     ]
