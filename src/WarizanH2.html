@@ -4405,6 +4405,9 @@ function _Browser_load(url)
 }
 var author$project$WarizanH2$K1 = {$: 'K1'};
 var elm$core$Basics$False = {$: 'False'};
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
 	if (result.$ === 'Ok') {
@@ -4898,6 +4901,39 @@ var author$project$WarizanH2$init = function (_n0) {
 				[
 					{
 					idx: 1,
+					sagyo: _List_fromArray(
+						[
+							{
+							ix: 0,
+							iy: 2,
+							kurai1: _Utils_chr('□'),
+							kurai10: _Utils_chr('□')
+						}
+						]),
+					sekigyo: _List_fromArray(
+						[
+							{
+							ix: -2,
+							iy: 1,
+							kurai1: _Utils_chr('□'),
+							kurai10: _Utils_chr('0')
+						},
+							{
+							ix: -1,
+							iy: 1,
+							kurai1: _Utils_chr('□'),
+							kurai10: _Utils_chr('0')
+						}
+						]),
+					sho: {
+						ix: -1,
+						iy: 0,
+						kurai1: _Utils_chr('□'),
+						kurai10: _Utils_chr('□')
+					}
+				},
+					{
+					idx: 1,
 					sagyo: _List_Nil,
 					sekigyo: _List_Nil,
 					sho: {
@@ -4908,7 +4944,53 @@ var author$project$WarizanH2$init = function (_n0) {
 					}
 				}
 				]),
-			sublocklT: _List_Nil
+			sublocklT: _List_fromArray(
+				[
+					{
+					idx: 1,
+					sagyo: _List_fromArray(
+						[
+							{
+							ix: 0,
+							iy: 2,
+							kurai1: _Utils_chr('0'),
+							kurai10: _Utils_chr('0')
+						}
+						]),
+					sekigyo: _List_fromArray(
+						[
+							{
+							ix: -2,
+							iy: 1,
+							kurai1: _Utils_chr('1'),
+							kurai10: _Utils_chr('0')
+						},
+							{
+							ix: -1,
+							iy: 1,
+							kurai1: _Utils_chr('0'),
+							kurai10: _Utils_chr('0')
+						}
+						]),
+					sho: {
+						ix: -1,
+						iy: 0,
+						kurai1: _Utils_chr('5'),
+						kurai10: _Utils_chr('0')
+					}
+				},
+					{
+					idx: 1,
+					sagyo: _List_Nil,
+					sekigyo: _List_Nil,
+					sho: {
+						ix: 0,
+						iy: 0,
+						kurai1: _Utils_chr('0'),
+						kurai10: _Utils_chr('0')
+					}
+				}
+				])
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -5088,6 +5170,24 @@ var elm$core$List$drop = F2(
 			}
 		}
 	});
+var elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _n0 = f(mx);
+		if (_n0.$ === 'Just') {
+			var x = _n0.a;
+			return A2(elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
 var elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5107,9 +5207,6 @@ var elm$core$String$dropLeft = F2(
 			elm$core$String$length(string),
 			string);
 	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var elm$core$String$dropRight = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
@@ -5300,6 +5397,32 @@ var elm$random$Random$map2 = F3(
 	});
 var author$project$WarizanH2$update = F2(
 	function (msg, model) {
+		var shutoku = F3(
+			function (ichi, ktxx, sblst) {
+				var sblst1 = A2(
+					elm$core$List$filterMap,
+					function (blk) {
+						var ichiyy = ichi.yy;
+						var ichixx = ichi.xx;
+						if (_Utils_eq(ichi.xx, blk.sho.ix) && _Utils_eq(ichi.yy, blk.sho.iy)) {
+							return elm$core$Maybe$Just(blk.sho.kurai1);
+						} else {
+							var ffsb = function (sj) {
+								return (_Utils_eq(ichi.xx, sj.ix) && _Utils_eq(ichi.yy, sj.iy)) ? (_Utils_eq(ktxx, author$project$WarizanH2$K1) ? elm$core$Maybe$Just(sj.kurai1) : (_Utils_eq(ktxx, author$project$WarizanH2$K10) ? elm$core$Maybe$Just(sj.kurai10) : elm$core$Maybe$Nothing)) : elm$core$Maybe$Nothing;
+							};
+							var saj = elm$core$List$head(
+								A2(elm$core$List$filterMap, ffsb, blk.sagyo));
+							var sekij = elm$core$List$head(
+								A2(elm$core$List$filterMap, ffsb, blk.sekigyo));
+							return _Utils_eq(sekij, elm$core$Maybe$Nothing) ? saj : (_Utils_eq(saj, elm$core$Maybe$Nothing) ? sekij : elm$core$Maybe$Nothing);
+						}
+					},
+					sblst);
+				return A2(
+					elm$core$Maybe$withDefault,
+					_Utils_chr('*'),
+					elm$core$List$head(sblst1));
+			});
 		var sbset = F4(
 			function (ichi, _char, ktx, sblst) {
 				var sblst1 = A2(
@@ -5565,6 +5688,11 @@ var author$project$WarizanH2$update = F2(
 					elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
+				var tsch = A3(
+					shutoku,
+					author$project$WarizanH2$fst(model.currentIchi),
+					author$project$WarizanH2$snd(model.currentIchi),
+					model.sublocklT);
 				var ss = function () {
 					switch (si) {
 						case 10:
@@ -5580,6 +5708,12 @@ var author$project$WarizanH2$update = F2(
 					_Utils_chr('*'),
 					elm$core$List$head(
 						elm$core$String$toList(ss)));
+				var tmpsbl = A4(
+					sbset,
+					author$project$WarizanH2$fst(model.currentIchi),
+					_Utils_eq(tsch, sch) ? sch : _Utils_chr('x'),
+					author$project$WarizanH2$snd(model.currentIchi),
+					model.sublockl);
 				var mans = function () {
 					switch (si) {
 						case 10:
@@ -5603,13 +5737,8 @@ var author$project$WarizanH2$update = F2(
 									function (bl) {
 										return bl.sho.kurai1;
 									},
-									model.sublockl)) : mans,
-							sublockl: A4(
-								sbset,
-								author$project$WarizanH2$fst(model.currentIchi),
-								sch,
-								author$project$WarizanH2$snd(model.currentIchi),
-								model.sublockl)
+									tmpsbl)) : mans,
+							sublockl: tmpsbl
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Btn2':
@@ -5935,8 +6064,8 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 	});
 var author$project$WarizanH2$view = function (model) {
 	var y0 = 80;
-	var x0 = 100;
-	var tatekankaku = 44;
+	var x0 = 70;
+	var tatekankaku = 53;
 	var stextix = F8(
 		function (xx, yy, moji, color, fs, ix, iy, kt) {
 			return A2(
@@ -6026,6 +6155,7 @@ var author$project$WarizanH2$view = function (model) {
 					]),
 				_List_Nil);
 		});
+	var sj0 = 180;
 	var sbutton = function (ii) {
 		return A2(
 			rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6209,8 +6339,8 @@ var author$project$WarizanH2$view = function (model) {
 		function (txx, tyy, tdivx, tdivy, idx, chr) {
 			return A8(
 				stextix,
-				(txx + (((-idx) + tdivx) * tatekankaku)) - 20,
-				(tyy + (tdivy * tatekankaku)) - 22,
+				(txx + (((-idx) + tdivx) * tatekankaku)) - 17,
+				(tyy + (tdivy * tatekankaku)) - 25,
 				elm$core$String$fromChar(chr),
 				'black',
 				'24px',
@@ -6285,9 +6415,9 @@ var author$project$WarizanH2$view = function (model) {
 	var tochukL = F4(
 		function (ii, mnyu, skk, shh) {
 			return _Utils_ap(
-				A5(rsjtext, x0 + 150, y0 - 4, mnyu, (ansL - 1) * (-1), 0),
+				A5(rsjtext, x0 + sj0, y0 - 4, mnyu, (ansL - 1) * (-1), 0),
 				_Utils_ap(
-					A5(sjtext, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+					A5(sjtext, x0 + sj0, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
 					_Utils_ap(
 						_List_fromArray(
 							[
@@ -6295,7 +6425,7 @@ var author$project$WarizanH2$view = function (model) {
 							]),
 						A5(
 							sjtext,
-							x0 + 150,
+							x0 + sj0,
 							y0 + 44,
 							shh,
 							(ii + ((ansL - 1) * (-1))) + optionsu(ii),
@@ -6304,11 +6434,11 @@ var author$project$WarizanH2$view = function (model) {
 	var tochukL2 = F5(
 		function (ii, mnyu, kr10, skk, shh) {
 			return _Utils_ap(
-				A5(rsjtext, x0 + 150, y0 - 4, mnyu, (ansL - 1) * (-1), 0),
+				A5(rsjtext, x0 + sj0, y0 - 4, mnyu, (ansL - 1) * (-1), 0),
 				_Utils_ap(
 					A5(
 						sjtext2,
-						x0 + 150,
+						x0 + sj0,
 						y0 + 44,
 						A2(
 							elm$core$String$dropLeft,
@@ -6317,7 +6447,7 @@ var author$project$WarizanH2$view = function (model) {
 						(ansL - ii) * (-1),
 						(ii * 2) - 1),
 					_Utils_ap(
-						A5(sjtext1, x0 + 150, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
+						A5(sjtext1, x0 + sj0, y0 + 44, skk, (ansL - ii) * (-1), (ii * 2) - 1),
 						_Utils_ap(
 							_List_fromArray(
 								[
@@ -6332,7 +6462,7 @@ var author$project$WarizanH2$view = function (model) {
 								]),
 							A5(
 								sjtext1,
-								x0 + 150,
+								x0 + sj0,
 								y0 + 44,
 								shh,
 								(ii + ((ansL - 1) * (-1))) + optionsu2(ii),
@@ -6394,7 +6524,7 @@ var author$project$WarizanH2$view = function (model) {
 			_Utils_ap(
 				A5(sjtext, x0 - 50, y0 + 44, model.josu, 0, 0),
 				_Utils_ap(
-					A5(sjtext, x0 + 150, y0 + 44, model.hijosu, 0, 0),
+					A5(sjtext, x0 + sj0, y0 + 44, model.hijosu, 0, 0),
 					function () {
 						var _n0 = model.kirikae;
 						switch (_n0) {
