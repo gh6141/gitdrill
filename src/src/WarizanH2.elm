@@ -212,7 +212,7 @@ update msg model =
               iyt=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).iy
               sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd,ix=ixt-1,iy=iyt}::sglt
               hd2=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglx) ).kurai1
-              sgl=if hd2=='0' then (List.drop 1 sglx) else sglx
+              sgl=if (hd2=='0'&&jsolen>1) then (List.drop 1 sglx) else sglx
 
             in
              sgl
@@ -265,8 +265,9 @@ update msg model =
                  ffsb sj = {sj|kurai1= '□'
                               ,kurai10=  if sj.kurai10 /='0' then '□'  else '0'
                            }
+                 --test=Debug.log "sekigyo" blk.sekigyo
                in            
-                 List.map  ffsb  blk.sekigyo
+                  List.map  ffsb  blk.sekigyo
             ,sagyo=
                let
                  ffsbsa sjx = {sjx|kurai1=  '□'  
