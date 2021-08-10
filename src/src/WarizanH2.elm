@@ -533,7 +533,7 @@ view model =
                         else
                          "いいですね"
                      else
-                       (String.fromInt model.renzoku)++"回連続Okです"       
+                       (String.fromInt model.renzoku)++"回連続ノーミス"       
                     )]
        ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
        ,sujibutton 
