@@ -5562,10 +5562,13 @@ var author$project$WarizanH2$update = F2(
 								};
 								var rsx = ruisekix(iix + 1);
 								var ansLx = elm$core$String$length(anso);
+								var hijo = hijos1x((ansLx - iix) - 2);
+								var tmp = elm$core$String$fromInt(hijo - rsx);
+								var saL = elm$core$String$length(tmp);
 								var fff = F2(
 									function (idx, chh) {
 										return {
-											ix: ((iix - ansLx) + idx) + (_Utils_eq(
+											ix: ((((3 - saL) + iix) - ansLx) + idx) + (_Utils_eq(
 												elm$core$String$length(anso),
 												iix + 1) ? 1 : 0),
 											iy: (2 * iix) + 2,
@@ -5573,8 +5576,6 @@ var author$project$WarizanH2$update = F2(
 											kurai10: _Utils_chr('0')
 										};
 									});
-								var hijo = hijos1x((ansLx - iix) - 2);
-								var tmp = elm$core$String$fromInt(hijo - rsx);
 								var sagl = A2(
 									elm$core$List$indexedMap,
 									fff,
