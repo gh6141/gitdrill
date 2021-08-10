@@ -511,7 +511,7 @@ view model =
                   
  in
 
-   table [align "center"]
+   table [align "center",Html.Attributes.title (if model.renzoku==0 then "□をクリックしてから数字をクリックしましょう" else "")]
    [
     tr []
     [
@@ -523,17 +523,17 @@ view model =
    
      td []
      [        
-       div [style "font-size" "20px",style "color" "green"] [text (if ( modBy 20 model.renzoku)==19 then 
+       div [style "font-size" "20px",style "color" "green",title "れんぞく正かい数です"] [text (if ( modBy 20 model.renzoku)==19 then 
                         if model.renzoku> 200 then
-                         "すごいですね。ごうかく！！"
+                         "すごいですね。合かく！！"
                         else if model.renzoku> 100 then
                          "すばらしい！！"
                         else if model.renzoku> 50 then
-                         "そのちょうし！！"
+                         "その調子！！"
                         else
                          "いいですね"
                      else
-                       (String.fromInt model.renzoku)++"回連続ノーミス"       
+                       (String.fromInt model.renzoku)++"回"       
                     )]
        ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
        ,sujibutton 
@@ -542,10 +542,10 @@ view model =
        ]      
        ,div [style "font-size" "40px"] [text (if model.ansdisp then model.ans else "　")]
        ,div [][
-          Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "*/1=4" ]
-         , Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=11,e1= 99 ,s2=11,e2= 99})]] [ text "*/2=2" ]
-         , Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "*/2=3" ]
-       ]
+          Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "レベル1（*/1=4）" ]
+          ]
+       ,div [] [  Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "レベル２(*/2=3)" ]]
+       ,div [] [  Button.button [Button.attrs [style "font-size" "16px"   ,onClick (Btn2 {s1=11,e1= 99 ,s2=11,e2= 99})]] [ text "レベル３(*/2=2)" ]]
        
      ]
     ]

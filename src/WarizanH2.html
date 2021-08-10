@@ -5863,6 +5863,7 @@ var elm$html$Html$Attributes$stringProperty = F2(
 var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$html$Html$Attributes$title = elm$html$Html$Attributes$stringProperty('title');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6566,7 +6567,9 @@ var author$project$WarizanH2$view = function (model) {
 		elm$html$Html$table,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$align('center')
+				elm$html$Html$Attributes$align('center'),
+				elm$html$Html$Attributes$title(
+				(!model.renzoku) ? '□をクリックしてから数字をクリックしましょう' : '')
 			]),
 		_List_fromArray(
 			[
@@ -6590,12 +6593,13 @@ var author$project$WarizanH2$view = function (model) {
 								_List_fromArray(
 									[
 										A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-										A2(elm$html$Html$Attributes$style, 'color', 'green')
+										A2(elm$html$Html$Attributes$style, 'color', 'green'),
+										elm$html$Html$Attributes$title('れんぞく正かい数です')
 									]),
 								_List_fromArray(
 									[
 										elm$html$Html$text(
-										(A2(elm$core$Basics$modBy, 20, model.renzoku) === 19) ? ((model.renzoku > 200) ? 'すごいですね。ごうかく！！' : ((model.renzoku > 100) ? 'すばらしい！！' : ((model.renzoku > 50) ? 'そのちょうし！！' : 'いいですね'))) : (elm$core$String$fromInt(model.renzoku) + '回連続ノーミス'))
+										(A2(elm$core$Basics$modBy, 20, model.renzoku) === 19) ? ((model.renzoku > 200) ? 'すごいですね。合かく！！' : ((model.renzoku > 100) ? 'すばらしい！！' : ((model.renzoku > 50) ? 'その調子！！' : 'いいですね'))) : (elm$core$String$fromInt(model.renzoku) + '回'))
 									])),
 								A2(
 								rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6665,25 +6669,14 @@ var author$project$WarizanH2$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text('*/1=4')
-											])),
-										A2(
-										rundis$elm_bootstrap$Bootstrap$Button$button,
-										_List_fromArray(
-											[
-												rundis$elm_bootstrap$Bootstrap$Button$attrs(
-												_List_fromArray(
-													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
-														elm$html$Html$Events$onClick(
-														author$project$WarizanH2$Btn2(
-															{e1: 99, e2: 99, s1: 11, s2: 11}))
-													]))
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text('*/2=2')
-											])),
+												elm$html$Html$text('レベル1（*/1=4）')
+											]))
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
 										A2(
 										rundis$elm_bootstrap$Bootstrap$Button$button,
 										_List_fromArray(
@@ -6699,7 +6692,30 @@ var author$project$WarizanH2$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												elm$html$Html$text('*/2=3')
+												elm$html$Html$text('レベル２(*/2=3)')
+											]))
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '16px'),
+														elm$html$Html$Events$onClick(
+														author$project$WarizanH2$Btn2(
+															{e1: 99, e2: 99, s1: 11, s2: 11}))
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text('レベル３(*/2=2)')
 											]))
 									]))
 							]))
