@@ -39,6 +39,7 @@ type alias Model =
     ,sublockl:List SuBlock
     ,sublocklT:List SuBlock
     ,currentIchi:(Ichi,Kt)
+    ,renzoku:Int
   }
 
 
@@ -82,7 +83,9 @@ init _ =
   ,sublockl=[ {sho={kurai10='□',kurai1='□',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='□',ix=-2,iy=1},{kurai10='0',kurai1='□',ix=-1,iy=1}],sagyo=[{kurai10='□',kurai1='□',ix=0,iy=2}],idx=1} 
              ,{sho={kurai10='□',kurai1='□',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}]
   ,sublocklT=[ {sho={kurai10='0',kurai1='5',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='1',ix=-2,iy=1},{kurai10='0',kurai1='0',ix=-1,iy=1}],sagyo=[{kurai10='0',kurai1='0',ix=0,iy=2}],idx=1}
-              ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=0,yy=0},K1)}
+              ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=0,yy=0},K1)
+    ,renzoku=0          
+    }
   , Cmd.none
   )
 
@@ -307,8 +310,9 @@ update msg model =
 
 
       sch=Maybe.withDefault '*' (List.head (String.toList ss))
-
       tsch= shutoku (fst model.currentIchi) (snd model.currentIchi) model.sublocklT
+
+      renzokusu= if sch==tsch then (1+model.renzoku)  else  0
       
       tmpsbl=if sch=='*' then
         model.sublockl
@@ -325,6 +329,7 @@ update msg model =
                 , ansdisp=if si==11 then True else model.ansdisp
                -- ,sublockl=model.sublocklT
                 ,sublockl=tmpsbl
+                ,renzoku=renzokusu
                  } ,Cmd.none)
    Btn2 sed ->
           ( {model | seed=sed
@@ -332,6 +337,7 @@ update msg model =
 
    Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"
     ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
+    ,renzoku=0
     },Cmd.none)
 
    Suj tpl ->
@@ -516,10 +522,21 @@ view model =
       ,
    
      td []
-     [
-                Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
-                   ,
-       sujibutton 
+     [        
+       div [style "font-size" "20px",style "color" "green"] [text (if ( modBy 20 model.renzoku)==19 then 
+                        if model.renzoku> 200 then
+                         "すごいですね。ごうかく！！"
+                        else if model.renzoku> 100 then
+                         "すばらしい！！"
+                        else if model.renzoku> 50 then
+                         "そのちょうし！！"
+                        else
+                         "いいですね"
+                     else
+                       (String.fromInt model.renzoku)++"回連続Okです"       
+                    )]
+       ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
+       ,sujibutton 
        ,div [] [
              Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae]] [ text model.kirikae ]
        ]      

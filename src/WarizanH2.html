@@ -4896,6 +4896,7 @@ var author$project$WarizanH2$init = function (_n0) {
 			josu: '2',
 			kirikae: 'AC',
 			nyuryoku: '',
+			renzoku: 0,
 			seed: {e1: 99, e2: 99, s1: 19, s2: 19},
 			sublockl: _List_fromArray(
 				[
@@ -5717,6 +5718,7 @@ var author$project$WarizanH2$update = F2(
 					_Utils_eq(tsch, sch) ? sch : _Utils_chr('x'),
 					author$project$WarizanH2$snd(model.currentIchi),
 					model.sublockl);
+				var renzokusu = _Utils_eq(sch, tsch) ? (1 + model.renzoku) : 0;
 				var mans = function () {
 					switch (si) {
 						case 10:
@@ -5741,6 +5743,7 @@ var author$project$WarizanH2$update = F2(
 										return bl.sho.kurai1;
 									},
 									tmpsbl)) : mans,
+							renzoku: renzokusu,
 							sublockl: tmpsbl
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5757,7 +5760,8 @@ var author$project$WarizanH2$update = F2(
 						model,
 						{
 							kirikae: (model.kirikae === 'AC') ? 'MC' : 'AC',
-							nyuryoku: ((model.nyuryoku === '') && (model.kirikae === 'AC')) ? '?' : ''
+							nyuryoku: ((model.nyuryoku === '') && (model.kirikae === 'AC')) ? '?' : '',
+							renzoku: 0
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
@@ -5815,6 +5819,7 @@ var author$project$WarizanH2$getAtx = F2(
 			return a;
 		}
 	});
+var elm$core$Basics$modBy = _Basics_modBy;
 var elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -6580,6 +6585,18 @@ var author$project$WarizanH2$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+										A2(elm$html$Html$Attributes$style, 'color', 'green')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(
+										(A2(elm$core$Basics$modBy, 20, model.renzoku) === 19) ? ((model.renzoku > 200) ? 'すごいですね' : ((model.renzoku > 100) ? 'すばらしい！！' : ((model.renzoku > 50) ? 'そのちょうし！！' : 'いいですね'))) : (elm$core$String$fromInt(model.renzoku) + '回連続Okです'))
+									])),
 								A2(
 								rundis$elm_bootstrap$Bootstrap$Button$button,
 								_List_fromArray(
