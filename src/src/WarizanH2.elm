@@ -233,7 +233,11 @@ update msg model =
                tmp=(String.fromInt ( hijo - rsx )  )
                saL=String.length tmp
 
-               fff idx chh=  {  kurai10= '0'  ,kurai1=chh ,ix=(3-saL)+iix-ansLx+idx+(if (String.length anso)==(iix+1) then 1 else 0)  ,iy=2* iix+2 } 
+               fff idx chh=  { 
+                  kurai10= '0' 
+                  ,kurai1=chh 
+                  ,ix=iix-ansLx+idx+(if (String.length anso)==(iix+1) then 1 else (3-saL))  
+                  ,iy=2* iix+2 } 
                sagl=List.indexedMap  fff  (String.toList tmp )
             in
              sagl
@@ -331,9 +335,10 @@ update msg model =
 
    Suj tpl ->
     let
-     ichix=fst tpl    
+     ichix= (fst tpl  )  
      kt=snd tpl
      --   ichi de settei       
+
 
     in 
      ({model|  sublockl=sbset ichix '?' kt model.sublockl
