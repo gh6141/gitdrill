@@ -303,8 +303,11 @@ update msg model =
       sch=Maybe.withDefault '*' (List.head (String.toList ss))
 
       tsch= shutoku (fst model.currentIchi) (snd model.currentIchi) model.sublocklT
-
-      tmpsbl=sbset (fst model.currentIchi) (if tsch==sch then sch else 'x')  (snd model.currentIchi) model.sublockl
+      
+      tmpsbl=if sch=='*' then
+        model.sublockl
+       else
+        sbset (fst model.currentIchi) (if tsch==sch then sch else 'x')  (snd model.currentIchi) model.sublockl
 
     in
      ( {model |
@@ -377,7 +380,7 @@ view model =
 
         x0=70
         y0=80
-        hwidth=200
+        hwidth=220
         tatekankaku=53
         sj0=180
 

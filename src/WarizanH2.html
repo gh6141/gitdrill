@@ -5708,7 +5708,9 @@ var author$project$WarizanH2$update = F2(
 					_Utils_chr('*'),
 					elm$core$List$head(
 						elm$core$String$toList(ss)));
-				var tmpsbl = A4(
+				var tmpsbl = _Utils_eq(
+					sch,
+					_Utils_chr('*')) ? model.sublockl : A4(
 					sbset,
 					author$project$WarizanH2$fst(model.currentIchi),
 					_Utils_eq(tsch, sch) ? sch : _Utils_chr('x'),
@@ -6330,7 +6332,7 @@ var author$project$WarizanH2$view = function (model) {
 		return author$project$WarizanH2$toint(model.josu) * author$project$WarizanH2$toint(
 			A2(author$project$WarizanH2$suchushutu, idx - 1, model.nyuryoku));
 	};
-	var hwidth = 200;
+	var hwidth = 220;
 	var hijos1 = function (ke) {
 		return author$project$WarizanH2$toint(
 			(ke < 0) ? (model.hijosu + '0') : A2(elm$core$String$dropRight, ke, model.hijosu));
