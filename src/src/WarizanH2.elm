@@ -313,7 +313,7 @@ update msg model =
 
       ss=
         case si of
-         10 -> "?"  -- Cancel
+         10 -> "□"  -- Cancel
          11 -> "" -- to *  Ans
          _ ->  (String.fromInt si)
 
@@ -324,9 +324,9 @@ update msg model =
       renzokusu= if sch==tsch then (1+model.renzoku)  else  0
       
       tmpsbl=if sch=='*' then
-        model.sublockl
-       else
-        sbset (fst model.currentIchi) (if tsch==sch then sch else 'x')  (snd model.currentIchi) model.sublockl
+              model.sublockl
+             else
+              sbset (fst model.currentIchi) (if (tsch==sch || sch=='□') then sch else 'x')  (snd model.currentIchi) model.sublockl
 
     in
      ( {model |

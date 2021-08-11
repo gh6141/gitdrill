@@ -5705,7 +5705,7 @@ var author$project$WarizanH2$update = F2(
 				var ss = function () {
 					switch (si) {
 						case 10:
-							return '?';
+							return '□';
 						case 11:
 							return '';
 						default:
@@ -5722,7 +5722,9 @@ var author$project$WarizanH2$update = F2(
 					_Utils_chr('*')) ? model.sublockl : A4(
 					sbset,
 					author$project$WarizanH2$fst(model.currentIchi),
-					_Utils_eq(tsch, sch) ? sch : _Utils_chr('x'),
+					(_Utils_eq(tsch, sch) || _Utils_eq(
+						sch,
+						_Utils_chr('□'))) ? sch : _Utils_chr('x'),
 					author$project$WarizanH2$snd(model.currentIchi),
 					model.sublockl);
 				var renzokusu = _Utils_eq(sch, tsch) ? (1 + model.renzoku) : 0;
