@@ -5198,6 +5198,15 @@ var elm$core$List$head = function (list) {
 		return elm$core$Maybe$Nothing;
 	}
 };
+var elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(xs);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
 var elm$core$String$length = _String_length;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
@@ -5611,7 +5620,7 @@ var author$project$WarizanH2$update = F2(
 									},
 									elm$core$List$reverse(
 										A2(elm$core$List$range, 1, jsolen)));
-								var iyt = A2(
+								var hdp = A2(
 									elm$core$Maybe$withDefault,
 									{
 										ix: 0,
@@ -5619,25 +5628,10 @@ var author$project$WarizanH2$update = F2(
 										kurai1: _Utils_chr('0'),
 										kurai10: _Utils_chr('0')
 									},
-									elm$core$List$head(sglt)).iy;
-								var ixt = A2(
-									elm$core$Maybe$withDefault,
-									{
-										ix: 0,
-										iy: 0,
-										kurai1: _Utils_chr('0'),
-										kurai10: _Utils_chr('0')
-									},
-									elm$core$List$head(sglt)).ix;
-								var hd = A2(
-									elm$core$Maybe$withDefault,
-									{
-										ix: 0,
-										iy: 0,
-										kurai1: _Utils_chr('0'),
-										kurai10: _Utils_chr('0')
-									},
-									elm$core$List$head(sglt)).kurai10;
+									elm$core$List$head(sglt));
+								var ixt = hdp.ix;
+								var iyt = hdp.iy;
+								var hd = hdp.kurai10;
 								var sglx = _Utils_eq(
 									hd,
 									_Utils_chr('0')) ? sglt : A2(
@@ -5648,7 +5642,20 @@ var author$project$WarizanH2$update = F2(
 										kurai1: hd,
 										kurai10: _Utils_chr('0')
 									},
-									sglt);
+									function () {
+										var hdp2 = _Utils_update(
+											hdp,
+											{
+												kurai10: _Utils_chr('0')
+											});
+										return A2(
+											elm$core$List$cons,
+											hdp2,
+											A2(
+												elm$core$Maybe$withDefault,
+												sglt,
+												elm$core$List$tail(sglt)));
+									}());
 								var hd2 = A2(
 									elm$core$Maybe$withDefault,
 									{

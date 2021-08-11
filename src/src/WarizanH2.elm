@@ -210,10 +210,19 @@ update msg model =
                              ,iy=2*iix+1
                               }
                              ) ( List.reverse (List.range 1 jsolen ) )
-              hd=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).kurai10
-              ixt=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).ix
-              iyt=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)).iy
-              sglx=if hd=='0' then sglt else {kurai10='0',kurai1=hd,ix=ixt-1,iy=iyt}::sglt
+              hdp= Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglt)
+              hd=hdp.kurai10
+              ixt=hdp.ix
+              iyt=hdp.iy
+              sglx=if hd=='0' then 
+                    sglt 
+                   else
+                    {kurai10='0',kurai1=hd,ix=ixt-1,iy=iyt}::(
+                      let                        
+                        hdp2={hdp|kurai10='0'}     
+                      in
+                         hdp2::( Maybe.withDefault sglt  (List.tail sglt))
+                    )
               hd2=(Maybe.withDefault {kurai10='0',kurai1='0',ix=0,iy=0} (List.head sglx) ).kurai1
               sgl=if (hd2=='0'&&jsolen>1) then (List.drop 1 sglx) else sglx
 
