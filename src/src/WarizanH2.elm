@@ -40,7 +40,7 @@ type alias Model =
     ,sublocklT:List SuBlock
     ,currentIchi:(Ichi,Kt)
     ,renzoku:Int
-    ,junjo:List (Ichi,Kt)
+    ,junjo:(List (Ichi,Kt),List (Ichi,Kt))
     ,jido:String
   }
 
@@ -87,7 +87,7 @@ init _ =
   ,sublocklT=[ {sho={kurai10='0',kurai1='5',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='1',ix=-2,iy=1},{kurai10='0',kurai1='0',ix=-1,iy=1}],sagyo=[{kurai10='0',kurai1='0',ix=0,iy=2}],idx=1}
               ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=0,yy=0},K1)
     ,renzoku=0  
-    ,junjo=[({xx=-1,yy=0},K1),({xx=0,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=2},K1)]    
+    ,junjo=([],[({xx=-1,yy=0},K1),({xx=0,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=2},K1)]    )
     ,jido="Aut"    
     }
   , Cmd.none
@@ -332,7 +332,13 @@ update msg model =
              else
               sbset (fst model.currentIchi) (if (tsch==sch || sch=='□') then sch else 'x')  (snd model.currentIchi) model.sublockl
 
-      
+      nextq ichi kt junjox= 
+        let
+          
+
+
+        in      
+
 
 
     in
