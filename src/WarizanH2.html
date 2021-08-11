@@ -4893,7 +4893,26 @@ var author$project$WarizanH2$init = function (_n0) {
 				{xx: 0, yy: 0},
 				author$project$WarizanH2$K1),
 			hijosu: '100',
+			jido: 'Aut',
 			josu: '2',
+			junjo: _List_fromArray(
+				[
+					_Utils_Tuple2(
+					{xx: -1, yy: 0},
+					author$project$WarizanH2$K1),
+					_Utils_Tuple2(
+					{xx: 0, yy: 0},
+					author$project$WarizanH2$K1),
+					_Utils_Tuple2(
+					{xx: -2, yy: 1},
+					author$project$WarizanH2$K1),
+					_Utils_Tuple2(
+					{xx: -1, yy: 1},
+					author$project$WarizanH2$K1),
+					_Utils_Tuple2(
+					{xx: 0, yy: 2},
+					author$project$WarizanH2$K1)
+				]),
 			kirikae: 'AC',
 			nyuryoku: '',
 			renzoku: 0,
@@ -5773,6 +5792,14 @@ var author$project$WarizanH2$update = F2(
 							renzoku: 0
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Jido':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							jido: (model.jido === 'Aut') ? 'Man' : 'Aut'
+						}),
+					elm$core$Platform$Cmd$none);
 			default:
 				var tpl = msg.a;
 				var kt = author$project$WarizanH2$snd(tpl);
@@ -5798,6 +5825,7 @@ var author$project$WarizanH2$Btn = function (a) {
 var author$project$WarizanH2$Btn2 = function (a) {
 	return {$: 'Btn2', a: a};
 };
+var author$project$WarizanH2$Jido = {$: 'Jido'};
 var author$project$WarizanH2$Kirikae = {$: 'Kirikae'};
 var author$project$WarizanH2$Next = {$: 'Next'};
 var author$project$WarizanH2$Suj = function (a) {
@@ -6653,6 +6681,22 @@ var author$project$WarizanH2$view = function (model) {
 										_List_fromArray(
 											[
 												elm$html$Html$text(model.kirikae)
+											])),
+										A2(
+										rundis$elm_bootstrap$Bootstrap$Button$button,
+										_List_fromArray(
+											[
+												rundis$elm_bootstrap$Bootstrap$Button$attrs(
+												_List_fromArray(
+													[
+														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+														elm$html$Html$Events$onClick(author$project$WarizanH2$Jido),
+														elm$html$Html$Attributes$title('つぎのわくに、いどうする・しないをえらべます')
+													]))
+											]),
+										_List_fromArray(
+											[
+												elm$html$Html$text(model.jido)
 											])),
 										A2(
 										elm$html$Html$span,

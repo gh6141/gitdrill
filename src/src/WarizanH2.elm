@@ -40,6 +40,8 @@ type alias Model =
     ,sublocklT:List SuBlock
     ,currentIchi:(Ichi,Kt)
     ,renzoku:Int
+    ,junjo:List (Ichi,Kt)
+    ,jido:String
   }
 
 
@@ -84,13 +86,15 @@ init _ =
              ,{sho={kurai10='□',kurai1='□',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}]
   ,sublocklT=[ {sho={kurai10='0',kurai1='5',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='1',ix=-2,iy=1},{kurai10='0',kurai1='0',ix=-1,iy=1}],sagyo=[{kurai10='0',kurai1='0',ix=0,iy=2}],idx=1}
               ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=0,yy=0},K1)
-    ,renzoku=0          
+    ,renzoku=0  
+    ,junjo=[({xx=-1,yy=0},K1),({xx=0,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=2},K1)]    
+    ,jido="Aut"    
     }
   , Cmd.none
   )
 
 type Msg
-    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae |Suj (Ichi,Kt)
+    =  Next | Newmon (Int,Int) | Btn Int |Btn2 Sd |Kirikae |Suj (Ichi,Kt) |Jido
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -328,6 +332,9 @@ update msg model =
              else
               sbset (fst model.currentIchi) (if (tsch==sch || sch=='□') then sch else 'x')  (snd model.currentIchi) model.sublockl
 
+      
+
+
     in
      ( {model |
                 nyuryoku= 
@@ -348,6 +355,9 @@ update msg model =
     ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
     ,renzoku=0
     },Cmd.none)
+
+   Jido -> ({model| jido=if model.jido=="Aut" then "Man" else "Aut"   },Cmd.none)
+
 
    Suj tpl ->
     let
@@ -548,6 +558,7 @@ view model =
        ,sujibutton 
        ,div [] [
              Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae,title "計算する・しないをえらべます"]] [ text model.kirikae ]
+             ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Jido,title "つぎのわくに、いどうする・しないをえらべます"]] [ text model.jido ]
             ,span [style "font-size" "40px",style "color" "red"] [text ("\u{00a0}"++(if model.ansdisp then model.ans else "　"))]
        ]      
        ,div [][
