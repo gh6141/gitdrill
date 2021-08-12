@@ -5504,6 +5504,55 @@ var author$project$WarizanH2$update = F2(
 			mhenkan,
 			A2(elm$random$Random$int, model.seed.s1, model.seed.e1),
 			A2(elm$random$Random$int, model.seed.s2, model.seed.e2));
+		var jshutoku = F3(
+			function (ichi, ktxx, sblst) {
+				var sblst1 = A2(
+					elm$core$List$filterMap,
+					function (blk) {
+						if (_Utils_eq(ichi.xx, blk.sho.ix) && _Utils_eq(ichi.yy, blk.sho.iy)) {
+							return elm$core$Maybe$Just(
+								A2(
+									elm$core$Maybe$withDefault,
+									_Utils_Tuple2(
+										{xx: 0, yy: 1},
+										author$project$WarizanH2$K1),
+									elm$core$List$head(
+										elm$core$List$reverse(
+											A2(
+												elm$core$List$map,
+												function (sjx) {
+													return _Utils_Tuple2(
+														{xx: sjx.ix, yy: sjx.iy},
+														_Utils_eq(
+															sjx.kurai10,
+															_Utils_chr('0')) ? author$project$WarizanH2$K1 : author$project$WarizanH2$K10);
+												},
+												blk.sekigyo)))));
+						} else {
+							var ffsb = function (sj) {
+								return (_Utils_eq(ichi.xx, sj.ix) && _Utils_eq(ichi.yy, sj.iy)) ? (_Utils_eq(ktxx, author$project$WarizanH2$K1) ? elm$core$Maybe$Just(
+									_Utils_Tuple2(
+										{xx: sj.ix - 1, yy: sj.iy},
+										author$project$WarizanH2$K1)) : (_Utils_eq(ktxx, author$project$WarizanH2$K10) ? elm$core$Maybe$Just(
+									_Utils_Tuple2(
+										{xx: sj.ix, yy: sj.iy},
+										author$project$WarizanH2$K1)) : elm$core$Maybe$Nothing)) : elm$core$Maybe$Nothing;
+							};
+							var saj = elm$core$List$head(
+								A2(elm$core$List$filterMap, ffsb, blk.sagyo));
+							var sekij = elm$core$List$head(
+								A2(elm$core$List$filterMap, ffsb, blk.sekigyo));
+							return _Utils_eq(sekij, elm$core$Maybe$Nothing) ? saj : (_Utils_eq(saj, elm$core$Maybe$Nothing) ? sekij : elm$core$Maybe$Nothing);
+						}
+					},
+					sblst);
+				return A2(
+					elm$core$Maybe$withDefault,
+					_Utils_Tuple2(
+						{xx: 0, yy: 0},
+						author$project$WarizanH2$K1),
+					elm$core$List$head(sblst1));
+			});
 		switch (msg.$) {
 			case 'Next':
 				return _Utils_Tuple2(
@@ -5736,7 +5785,7 @@ var author$project$WarizanH2$update = F2(
 					_Utils_chr('*'),
 					elm$core$List$head(
 						elm$core$String$toList(ss)));
-				var tmpsbl = _Utils_eq(
+				var tmpsblp = _Utils_eq(
 					sch,
 					_Utils_chr('*')) ? model.sublockl : A4(
 					sbset,
@@ -5747,6 +5796,18 @@ var author$project$WarizanH2$update = F2(
 					author$project$WarizanH2$snd(model.currentIchi),
 					model.sublockl);
 				var renzokusu = _Utils_eq(sch, tsch) ? (1 + model.renzoku) : 0;
+				var nextic = A3(
+					jshutoku,
+					author$project$WarizanH2$fst(model.currentIchi),
+					author$project$WarizanH2$snd(model.currentIchi),
+					model.sublocklT);
+				var nichi = (_Utils_eq(tsch, sch) && (model.jido === 'Man')) ? nextic : model.currentIchi;
+				var tmpsbl = (_Utils_eq(tsch, sch) && (model.jido === 'Man')) ? A4(
+					sbset,
+					author$project$WarizanH2$fst(nextic),
+					_Utils_chr('?'),
+					author$project$WarizanH2$snd(nextic),
+					tmpsblp) : tmpsblp;
 				var mans = function () {
 					switch (si) {
 						case 10:
@@ -5764,6 +5825,7 @@ var author$project$WarizanH2$update = F2(
 						model,
 						{
 							ansdisp: ((si === 11) && (!model.ansdisp)) ? true : false,
+							currentIchi: nichi,
 							nyuryoku: (model.kirikae === 'AC') ? elm$core$String$fromList(
 								A2(
 									elm$core$List$map,

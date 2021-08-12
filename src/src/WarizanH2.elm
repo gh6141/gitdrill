@@ -40,7 +40,7 @@ type alias Model =
     ,sublocklT:List SuBlock
     ,currentIchi:(Ichi,Kt)
     ,renzoku:Int
-    ,junjo:(List (Ichi,Kt),List (Ichi,Kt))
+    ,junjo:List (Ichi,Kt)
     ,jido:String
   }
 
@@ -87,7 +87,7 @@ init _ =
   ,sublocklT=[ {sho={kurai10='0',kurai1='5',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='1',ix=-2,iy=1},{kurai10='0',kurai1='0',ix=-1,iy=1}],sagyo=[{kurai10='0',kurai1='0',ix=0,iy=2}],idx=1}
               ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=0,yy=0},K1)
     ,renzoku=0  
-    ,junjo=([],[({xx=-1,yy=0},K1),({xx=0,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=2},K1)]    )
+    ,junjo=[({xx=-1,yy=0},K1),({xx=0,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=2},K1)]    
     ,jido="Aut"    
     }
   , Cmd.none
@@ -170,6 +170,41 @@ update msg model =
   
        in
              Maybe.withDefault '*'  (List.head  sblst1)
+
+      -- aru ichi,kt no ato wo shutoku
+      jshutoku ichi ktxx sblst=
+       let
+        sblst1=  List.filterMap
+         (\blk-> (
+                 if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then
+                  Just  ( Maybe.withDefault ({xx=0,yy=1} ,K1)  ( List.head  (List.reverse (List.map (\sjx->({xx=sjx.ix,yy=sjx.iy},if (sjx.kurai10=='0') then K1 else K10) ) blk.sekigyo)) ) )
+                 else 
+                    let 
+                      ffsb sj=    if (ichi.xx==sj.ix && ichi.yy==sj.iy ) then
+                           if ktxx==K1 then
+                            Just ({xx=sj.ix-1,yy=sj.iy} ,K1)
+                           else if ktxx==K10 then
+                            Just  ({xx=sj.ix,yy=sj.iy} ,K1) 
+                           else
+                            Nothing
+                         else
+                            Nothing
+
+                      sekij= (List.head  (List.filterMap  ffsb  blk.sekigyo))
+                      saj= (List.head  (List.filterMap  ffsb  blk.sagyo)) 
+
+                     in
+                      if sekij==Nothing then
+                        saj
+                      else if saj==Nothing then
+                        sekij
+                      else
+                        Nothing
+                  )
+          ) sblst
+  
+       in
+             Maybe.withDefault ({xx=0,yy=0} ,K1)  (List.head  sblst1)
        
 
  in
@@ -327,20 +362,16 @@ update msg model =
 
       renzokusu= if sch==tsch then (1+model.renzoku)  else  0
       
-      tmpsbl=if sch=='*' then
+      nextic=jshutoku  (fst model.currentIchi) (snd model.currentIchi) model.sublocklT
+
+      tmpsblp=if sch=='*' then
               model.sublockl
              else
               sbset (fst model.currentIchi) (if (tsch==sch || sch=='□') then sch else 'x')  (snd model.currentIchi) model.sublockl
 
-      nextq ichi kt junjox= 
-        let
-          
 
-
-        in      
-
-
-
+      tmpsbl= if (tsch==sch && model.jido=="Man" ) then (sbset (fst nextic) '?'  (snd nextic) tmpsblp) else tmpsblp
+      nichi= if (tsch==sch && model.jido=="Man" ) then nextic else model.currentIchi
     in
      ( {model |
                 nyuryoku= 
@@ -352,6 +383,7 @@ update msg model =
                -- ,sublockl=model.sublocklT
                 ,sublockl=tmpsbl
                 ,renzoku=renzokusu
+                ,currentIchi=nichi
                  } ,Cmd.none)
    Btn2 sed ->
           ( {model | seed=sed
