@@ -82,13 +82,13 @@ type alias Ichi= {xx:Int,yy:Int}
 init : () -> (Model, Cmd Msg)
 init _ =
   ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"
-  ,sublockl=[ {sho={kurai10='□',kurai1='□',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='□',ix=-2,iy=1},{kurai10='0',kurai1='□',ix=-1,iy=1}],sagyo=[{kurai10='□',kurai1='□',ix=0,iy=2}],idx=1} 
+  ,sublockl=[ {sho={kurai10='□',kurai1='?',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='□',ix=-2,iy=1},{kurai10='0',kurai1='□',ix=-1,iy=1}],sagyo=[{kurai10='□',kurai1='□',ix=0,iy=2}],idx=1} 
              ,{sho={kurai10='□',kurai1='□',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}]
   ,sublocklT=[ {sho={kurai10='0',kurai1='5',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='1',ix=-2,iy=1},{kurai10='0',kurai1='0',ix=-1,iy=1}],sagyo=[{kurai10='0',kurai1='0',ix=0,iy=2}],idx=1}
-              ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=0,yy=0},K1)
+              ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=-1,yy=0},K1)
     ,renzoku=0  
-    ,junjo=[({xx=-1,yy=0},K1),({xx=0,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=2},K1)]    
-    ,jido="Aut"    
+    ,junjo=[({xx=-1,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=0},K1),({xx=0,yy=2},K1)]    
+    ,jido="Man"    
     }
   , Cmd.none
   )
@@ -171,40 +171,60 @@ update msg model =
        in
              Maybe.withDefault '*'  (List.head  sblst1)
 
-      -- aru ichi,kt no ato wo shutoku
-      jshutoku ichi ktxx sblst=
+      zlSakusei sblst =                     --   List (ichi,kt) wo sakusei
        let
-        sblst1=  List.filterMap
-         (\blk-> (
-                 if (ichi.xx==blk.sho.ix && ichi.yy==blk.sho.iy) then
-                  Just  ( Maybe.withDefault ({xx=0,yy=1} ,K1)  ( List.head  (List.reverse (List.map (\sjx->({xx=sjx.ix,yy=sjx.iy},if (sjx.kurai10=='0') then K1 else K10) ) blk.sekigyo)) ) )
-                 else 
-                    let 
-                      ffsb sj=    if (ichi.xx==sj.ix && ichi.yy==sj.iy ) then
-                           if ktxx==K1 then
-                            Just ({xx=sj.ix-1,yy=sj.iy} ,K1)
-                           else if ktxx==K10 then
-                            Just  ({xx=sj.ix,yy=sj.iy} ,K1) 
-                           else
-                            Nothing
-                         else
-                            Nothing
+        sblst1=  List.map (\blk->  
+            let
+              shoichi= ({xx=blk.sho.ix,yy=blk.sho.iy},K1)
+              sekigyoichiLo=  
+               ( List.concat ( List.map  (\sj->                      
+                              if (sj.kurai10=='0' || sj.kurai10=='@') then
+                               [ ({xx=sj.ix ,yy=((if sj.kurai10=='@' then -1 else 1)*sj.iy)},K1)]
+                              else
+                                [({xx=sj.ix ,yy=sj.iy},K10),({xx=sj.ix ,yy=sj.iy},K1)]                  
+                           )      (List.reverse blk.sekigyo)  ) )
 
-                      sekij= (List.head  (List.filterMap  ffsb  blk.sekigyo))
-                      saj= (List.head  (List.filterMap  ffsb  blk.sagyo)) 
 
-                     in
-                      if sekij==Nothing then
-                        saj
-                      else if saj==Nothing then
-                        sekij
-                      else
-                        Nothing
-                  )
-          ) sblst
-  
+              sekigyoichiL=   --最後から２番目に@があるときは、先頭と次のSujiを交換する必要がある  yy<0 でわかるようにしておく
+               let
+                fstSj=   List.head (List.drop ((List.length sekigyoichiLo)-1) sekigyoichiLo)
+                sndSj=   List.head (List.drop ((List.length sekigyoichiLo)-2) sekigyoichiLo)
+                nokoriL= List.take ((List.length sekigyoichiLo)-2) sekigyoichiLo
+               in
+                case (fstSj,sndSj) of
+                  (Just ic1,Just ic2) -> 
+                    if  (fst ic2).yy<0 then
+                     nokoriL++[ic1] ++ [({xx=(fst ic2).xx  ,yy= (abs (fst ic2).yy) },(snd ic2))]
+                    else
+                      sekigyoichiLo                    
+                  _ -> sekigyoichiLo
+              
+              sagyoL=
+               ( List.map  (\sj->  ({xx=sj.ix ,yy=sj.iy},K1)  )  (List.reverse blk.sagyo) )
+               
+              
+            in            
+              shoichi::(sekigyoichiL++sagyoL)  
+               ) (sblst  )
+        in
+         (List.concat sblst1)
+
+
+      
+
+      -- aru ichi,kt no ato wo shutoku
+      jshutoku ichi ktxx ichiZenList=
+       let
+          fncc idx ichx =(idx,ichx)
+          pizlst=List.indexedMap fncc ichiZenList  --List (idx,ichi)
+          --一致する位置さがす
+          tmpsblst= List.filter (\ixichi->(fst (snd ixichi)).xx==ichi.xx  && (fst (snd ixichi)).yy==ichi.yy  && (snd (snd ixichi))==ktxx   ) pizlst
+          tmpd=  Maybe.withDefault (0,({xx=0,yy=0} ,K1))  (List.head  tmpsblst)
+          --次の位置さがす
+          tmpsblst2=  List.filter (\ixichi->  (fst ixichi)==((fst tmpd)+1)   ) pizlst
        in
-             Maybe.withDefault ({xx=0,yy=0} ,K1)  (List.head  sblst1)
+        (snd ( Maybe.withDefault (0, ({xx=1,yy=0} ,K10) ) (List.head  tmpsblst2) )) --該当ないときは、関係ない位置指定
+             
        
 
  in
@@ -258,7 +278,7 @@ update msg model =
                    else
                     {kurai10='0',kurai1=hd,ix=ixt-1,iy=iyt}::(
                       let                        
-                        hdp2={hdp|kurai10='0'}     
+                        hdp2={hdp|kurai10='@'}     
                       in
                          hdp2::( Maybe.withDefault sglt  (List.tail sglt))
                     )
@@ -314,7 +334,7 @@ update msg model =
             ,sekigyo= 
                let    
                  ffsb sj = {sj|kurai1= '□'
-                              ,kurai10=  if sj.kurai10 /='0' then '□'  else '0'
+                              ,kurai10=  if (sj.kurai10 /='0' && sj.kurai10 /='@') then '□'  else '0'
                            }
                  --test=Debug.log "sekigyo" blk.sekigyo
                in            
@@ -330,16 +350,27 @@ update msg model =
         in
           sblst1
 
+       junjod=zlSakusei sbTinit
+       --test =Debug.log "lst:" junjod
 
+       --sbset ichix '?' kt model.sublockl
+       --saishono ?
+       sqicx=Maybe.withDefault ({xx=0,yy=0},K1) (List.head junjod)
+       sbltmp=if model.kirikae=="AC" then 
+                 sbset (fst sqicx) '?' (snd sqicx)   ( kuhaku sbTinit )
+              else
+                 ( kuhaku sbTinit )
 
      in
    
       ( {model |  hijosu = hijosuo,josu=josuo,ans=anso
       ,nyuryoku=if model.kirikae=="AC" then "?" else ""
       ,sublocklT=sbTinit
-      ,sublockl=kuhaku sbTinit    
-       ,ansdisp=False
-
+      ,sublockl=sbltmp  
+      ,currentIchi=sqicx
+      ,ansdisp=False
+      ,junjo =junjod
+     
       }    ,Cmd.none)
   
    Btn si ->
@@ -362,7 +393,7 @@ update msg model =
 
       renzokusu= if sch==tsch then (1+model.renzoku)  else  0
       
-      nextic=jshutoku  (fst model.currentIchi) (snd model.currentIchi) model.sublocklT
+      nextic=jshutoku  (fst model.currentIchi) (snd model.currentIchi) model.junjo --次の位置を、現在の位置から求める
 
       tmpsblp=if sch=='*' then
               model.sublockl
@@ -370,8 +401,9 @@ update msg model =
               sbset (fst model.currentIchi) (if (tsch==sch || sch=='□') then sch else 'x')  (snd model.currentIchi) model.sublockl
 
 
-      tmpsbl= if (tsch==sch && model.jido=="Man" ) then (sbset (fst nextic) '?'  (snd nextic) tmpsblp) else tmpsblp
-      nichi= if (tsch==sch && model.jido=="Man" ) then nextic else model.currentIchi
+      tmpsbl= if (tsch==sch && model.jido=="Man" ) then (sbset (fst nextic) '?'  (snd nextic) tmpsblp) else tmpsblp --正しいなら次の位置に？を表示
+      nichi= if (tsch==sch && model.jido=="Man" ) then nextic else model.currentIchi  --正しいなら、次の数字に位置を設定
+
     in
      ( {model |
                 nyuryoku= 
@@ -568,7 +600,7 @@ view model =
                   
  in
 
-   table [align "center",Html.Attributes.title (if model.renzoku==0 then "□をクリックしてから数字をクリックしましょう" else "")]
+   table [align "center",Html.Attributes.title (if (model.renzoku==0 && model.jido  =="Aut"  )then "□をクリックしてから数字をクリックしましょう" else "")]
    [
     tr []
     [
@@ -580,7 +612,8 @@ view model =
    
      td []
      [        
-       div [style "font-size" "20px",style "color" "green",title "れんぞく正かい数です"] [text (if ( modBy 20 model.renzoku)==19 then 
+       if model.kirikae=="AC" then 
+        div [style "font-size" "20px",style "color" "green",title "れんぞく正かい数です"] [text (if ( modBy 20 model.renzoku)==19 then 
                         if model.renzoku> 200 then
                          "すごいですね。合かく！！"
                         else if model.renzoku> 100 then
@@ -592,6 +625,8 @@ view model =
                      else
                        (String.fromInt model.renzoku)++"回"       
                     )]
+       else
+        div [] []
        ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
        ,sujibutton 
        ,div [] [

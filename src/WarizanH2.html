@@ -4890,10 +4890,10 @@ var author$project$WarizanH2$init = function (_n0) {
 			ans: '50',
 			ansdisp: false,
 			currentIchi: _Utils_Tuple2(
-				{xx: 0, yy: 0},
+				{xx: -1, yy: 0},
 				author$project$WarizanH2$K1),
 			hijosu: '100',
-			jido: 'Aut',
+			jido: 'Man',
 			josu: '2',
 			junjo: _List_fromArray(
 				[
@@ -4901,13 +4901,13 @@ var author$project$WarizanH2$init = function (_n0) {
 					{xx: -1, yy: 0},
 					author$project$WarizanH2$K1),
 					_Utils_Tuple2(
-					{xx: 0, yy: 0},
-					author$project$WarizanH2$K1),
-					_Utils_Tuple2(
 					{xx: -2, yy: 1},
 					author$project$WarizanH2$K1),
 					_Utils_Tuple2(
 					{xx: -1, yy: 1},
+					author$project$WarizanH2$K1),
+					_Utils_Tuple2(
+					{xx: 0, yy: 0},
 					author$project$WarizanH2$K1),
 					_Utils_Tuple2(
 					{xx: 0, yy: 2},
@@ -4948,7 +4948,7 @@ var author$project$WarizanH2$init = function (_n0) {
 					sho: {
 						ix: -1,
 						iy: 0,
-						kurai1: _Utils_chr('□'),
+						kurai1: _Utils_chr('?'),
 						kurai10: _Utils_chr('□')
 					}
 				},
@@ -5168,7 +5168,21 @@ var author$project$WarizanH2$tointc = function (ch) {
 	return author$project$WarizanH2$toint(
 		elm$core$String$fromChar(ch));
 };
+var elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
 var elm$core$Basics$neq = _Utils_notEqual;
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
+};
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5226,6 +5240,132 @@ var elm$core$List$tail = function (list) {
 		return elm$core$Maybe$Nothing;
 	}
 };
+var elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2(elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return elm$core$List$reverse(
+			A3(elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _n0 = _Utils_Tuple2(n, list);
+			_n0$1:
+			while (true) {
+				_n0$5:
+				while (true) {
+					if (!_n0.b.b) {
+						return list;
+					} else {
+						if (_n0.b.b.b) {
+							switch (_n0.a) {
+								case 1:
+									break _n0$1;
+								case 2:
+									var _n2 = _n0.b;
+									var x = _n2.a;
+									var _n3 = _n2.b;
+									var y = _n3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_n0.b.b.b.b) {
+										var _n4 = _n0.b;
+										var x = _n4.a;
+										var _n5 = _n4.b;
+										var y = _n5.a;
+										var _n6 = _n5.b;
+										var z = _n6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _n0$5;
+									}
+								default:
+									if (_n0.b.b.b.b && _n0.b.b.b.b.b) {
+										var _n7 = _n0.b;
+										var x = _n7.a;
+										var _n8 = _n7.b;
+										var y = _n8.a;
+										var _n9 = _n8.b;
+										var z = _n9.a;
+										var _n10 = _n9.b;
+										var w = _n10.a;
+										var tl = _n10.b;
+										return (ctr > 1000) ? A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A2(elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A3(elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _n0$5;
+									}
+							}
+						} else {
+							if (_n0.a === 1) {
+								break _n0$1;
+							} else {
+								break _n0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _n1 = _n0.b;
+			var x = _n1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var elm$core$List$take = F2(
+	function (n, list) {
+		return A3(elm$core$List$takeFast, 0, n, list);
+	});
 var elm$core$String$length = _String_length;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
@@ -5426,6 +5566,96 @@ var elm$random$Random$map2 = F3(
 	});
 var author$project$WarizanH2$update = F2(
 	function (msg, model) {
+		var zlSakusei = function (sblst) {
+			var sblst1 = A2(
+				elm$core$List$map,
+				function (blk) {
+					var shoichi = _Utils_Tuple2(
+						{xx: blk.sho.ix, yy: blk.sho.iy},
+						author$project$WarizanH2$K1);
+					var sekigyoichiLo = elm$core$List$concat(
+						A2(
+							elm$core$List$map,
+							function (sj) {
+								return (_Utils_eq(
+									sj.kurai10,
+									_Utils_chr('0')) || _Utils_eq(
+									sj.kurai10,
+									_Utils_chr('@'))) ? _List_fromArray(
+									[
+										_Utils_Tuple2(
+										{
+											xx: sj.ix,
+											yy: (_Utils_eq(
+												sj.kurai10,
+												_Utils_chr('@')) ? (-1) : 1) * sj.iy
+										},
+										author$project$WarizanH2$K1)
+									]) : _List_fromArray(
+									[
+										_Utils_Tuple2(
+										{xx: sj.ix, yy: sj.iy},
+										author$project$WarizanH2$K10),
+										_Utils_Tuple2(
+										{xx: sj.ix, yy: sj.iy},
+										author$project$WarizanH2$K1)
+									]);
+							},
+							elm$core$List$reverse(blk.sekigyo)));
+					var sekigyoichiL = function () {
+						var sndSj = elm$core$List$head(
+							A2(
+								elm$core$List$drop,
+								elm$core$List$length(sekigyoichiLo) - 2,
+								sekigyoichiLo));
+						var nokoriL = A2(
+							elm$core$List$take,
+							elm$core$List$length(sekigyoichiLo) - 2,
+							sekigyoichiLo);
+						var fstSj = elm$core$List$head(
+							A2(
+								elm$core$List$drop,
+								elm$core$List$length(sekigyoichiLo) - 1,
+								sekigyoichiLo));
+						var _n3 = _Utils_Tuple2(fstSj, sndSj);
+						if ((_n3.a.$ === 'Just') && (_n3.b.$ === 'Just')) {
+							var ic1 = _n3.a.a;
+							var ic2 = _n3.b.a;
+							return (author$project$WarizanH2$fst(ic2).yy < 0) ? _Utils_ap(
+								nokoriL,
+								_Utils_ap(
+									_List_fromArray(
+										[ic1]),
+									_List_fromArray(
+										[
+											_Utils_Tuple2(
+											{
+												xx: author$project$WarizanH2$fst(ic2).xx,
+												yy: elm$core$Basics$abs(
+													author$project$WarizanH2$fst(ic2).yy)
+											},
+											author$project$WarizanH2$snd(ic2))
+										]))) : sekigyoichiLo;
+						} else {
+							return sekigyoichiLo;
+						}
+					}();
+					var sagyoL = A2(
+						elm$core$List$map,
+						function (sj) {
+							return _Utils_Tuple2(
+								{xx: sj.ix, yy: sj.iy},
+								author$project$WarizanH2$K1);
+						},
+						elm$core$List$reverse(blk.sagyo));
+					return A2(
+						elm$core$List$cons,
+						shoichi,
+						_Utils_ap(sekigyoichiL, sagyoL));
+				},
+				sblst);
+			return elm$core$List$concat(sblst1);
+		};
 		var shutoku = F3(
 			function (ichi, ktxx, sblst) {
 				var sblst1 = A2(
@@ -5505,53 +5735,52 @@ var author$project$WarizanH2$update = F2(
 			A2(elm$random$Random$int, model.seed.s1, model.seed.e1),
 			A2(elm$random$Random$int, model.seed.s2, model.seed.e2));
 		var jshutoku = F3(
-			function (ichi, ktxx, sblst) {
-				var sblst1 = A2(
-					elm$core$List$filterMap,
-					function (blk) {
-						if (_Utils_eq(ichi.xx, blk.sho.ix) && _Utils_eq(ichi.yy, blk.sho.iy)) {
-							return elm$core$Maybe$Just(
-								A2(
-									elm$core$Maybe$withDefault,
-									_Utils_Tuple2(
-										{xx: 0, yy: 1},
-										author$project$WarizanH2$K1),
-									elm$core$List$head(
-										elm$core$List$reverse(
-											A2(
-												elm$core$List$map,
-												function (sjx) {
-													return _Utils_Tuple2(
-														{xx: sjx.ix, yy: sjx.iy},
-														_Utils_eq(
-															sjx.kurai10,
-															_Utils_chr('0')) ? author$project$WarizanH2$K1 : author$project$WarizanH2$K10);
-												},
-												blk.sekigyo)))));
-						} else {
-							var ffsb = function (sj) {
-								return (_Utils_eq(ichi.xx, sj.ix) && _Utils_eq(ichi.yy, sj.iy)) ? (_Utils_eq(ktxx, author$project$WarizanH2$K1) ? elm$core$Maybe$Just(
-									_Utils_Tuple2(
-										{xx: sj.ix - 1, yy: sj.iy},
-										author$project$WarizanH2$K1)) : (_Utils_eq(ktxx, author$project$WarizanH2$K10) ? elm$core$Maybe$Just(
-									_Utils_Tuple2(
-										{xx: sj.ix, yy: sj.iy},
-										author$project$WarizanH2$K1)) : elm$core$Maybe$Nothing)) : elm$core$Maybe$Nothing;
-							};
-							var saj = elm$core$List$head(
-								A2(elm$core$List$filterMap, ffsb, blk.sagyo));
-							var sekij = elm$core$List$head(
-								A2(elm$core$List$filterMap, ffsb, blk.sekigyo));
-							return _Utils_eq(sekij, elm$core$Maybe$Nothing) ? saj : (_Utils_eq(saj, elm$core$Maybe$Nothing) ? sekij : elm$core$Maybe$Nothing);
-						}
+			function (ichi, ktxx, ichiZenList) {
+				var fncc = F2(
+					function (idx, ichx) {
+						return _Utils_Tuple2(idx, ichx);
+					});
+				var pizlst = A2(elm$core$List$indexedMap, fncc, ichiZenList);
+				var tmpsblst = A2(
+					elm$core$List$filter,
+					function (ixichi) {
+						return _Utils_eq(
+							author$project$WarizanH2$fst(
+								author$project$WarizanH2$snd(ixichi)).xx,
+							ichi.xx) && (_Utils_eq(
+							author$project$WarizanH2$fst(
+								author$project$WarizanH2$snd(ixichi)).yy,
+							ichi.yy) && _Utils_eq(
+							author$project$WarizanH2$snd(
+								author$project$WarizanH2$snd(ixichi)),
+							ktxx));
 					},
-					sblst);
-				return A2(
+					pizlst);
+				var tmpd = A2(
 					elm$core$Maybe$withDefault,
 					_Utils_Tuple2(
-						{xx: 0, yy: 0},
-						author$project$WarizanH2$K1),
-					elm$core$List$head(sblst1));
+						0,
+						_Utils_Tuple2(
+							{xx: 0, yy: 0},
+							author$project$WarizanH2$K1)),
+					elm$core$List$head(tmpsblst));
+				var tmpsblst2 = A2(
+					elm$core$List$filter,
+					function (ixichi) {
+						return _Utils_eq(
+							author$project$WarizanH2$fst(ixichi),
+							author$project$WarizanH2$fst(tmpd) + 1);
+					},
+					pizlst);
+				return author$project$WarizanH2$snd(
+					A2(
+						elm$core$Maybe$withDefault,
+						_Utils_Tuple2(
+							0,
+							_Utils_Tuple2(
+								{xx: 1, yy: 0},
+								author$project$WarizanH2$K10)),
+						elm$core$List$head(tmpsblst2)));
 			});
 		switch (msg.$) {
 			case 'Next':
@@ -5588,9 +5817,11 @@ var author$project$WarizanH2$update = F2(
 												sj,
 												{
 													kurai1: _Utils_chr('□'),
-													kurai10: (!_Utils_eq(
+													kurai10: ((!_Utils_eq(
 														sj.kurai10,
-														_Utils_chr('0'))) ? _Utils_chr('□') : _Utils_chr('0')
+														_Utils_chr('0'))) && (!_Utils_eq(
+														sj.kurai10,
+														_Utils_chr('@')))) ? _Utils_chr('□') : _Utils_chr('0')
 												});
 										};
 										return A2(elm$core$List$map, ffsb, blk.sekigyo);
@@ -5714,7 +5945,7 @@ var author$project$WarizanH2$update = F2(
 										var hdp2 = _Utils_update(
 											hdp,
 											{
-												kurai10: _Utils_chr('0')
+												kurai10: _Utils_chr('@')
 											});
 										return A2(
 											elm$core$List$cons,
@@ -5750,16 +5981,31 @@ var author$project$WarizanH2$update = F2(
 					elm$core$List$indexedMap,
 					fnChrToSbc,
 					elm$core$String$toList(anso));
+				var junjod = zlSakusei(sbTinit);
+				var sqicx = A2(
+					elm$core$Maybe$withDefault,
+					_Utils_Tuple2(
+						{xx: 0, yy: 0},
+						author$project$WarizanH2$K1),
+					elm$core$List$head(junjod));
+				var sbltmp = (model.kirikae === 'AC') ? A4(
+					sbset,
+					author$project$WarizanH2$fst(sqicx),
+					_Utils_chr('?'),
+					author$project$WarizanH2$snd(sqicx),
+					kuhaku(sbTinit)) : kuhaku(sbTinit);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							ans: anso,
 							ansdisp: false,
+							currentIchi: sqicx,
 							hijosu: hijosuo,
 							josu: josuo,
+							junjo: junjod,
 							nyuryoku: (model.kirikae === 'AC') ? '?' : '',
-							sublockl: kuhaku(sbTinit),
+							sublockl: sbltmp,
 							sublocklT: sbTinit
 						}),
 					elm$core$Platform$Cmd$none);
@@ -5800,7 +6046,7 @@ var author$project$WarizanH2$update = F2(
 					jshutoku,
 					author$project$WarizanH2$fst(model.currentIchi),
 					author$project$WarizanH2$snd(model.currentIchi),
-					model.sublocklT);
+					model.junjo);
 				var nichi = (_Utils_eq(tsch, sch) && (model.jido === 'Man')) ? nextic : model.currentIchi;
 				var tmpsbl = (_Utils_eq(tsch, sch) && (model.jido === 'Man')) ? A4(
 					sbset,
@@ -5919,17 +6165,6 @@ var author$project$WarizanH2$getAtx = F2(
 		}
 	});
 var elm$core$Basics$modBy = _Basics_modBy;
-var elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
-		}
-	});
-var elm$core$List$concat = function (lists) {
-	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
-};
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -6675,7 +6910,7 @@ var author$project$WarizanH2$view = function (model) {
 			[
 				elm$html$Html$Attributes$align('center'),
 				elm$html$Html$Attributes$title(
-				(!model.renzoku) ? '□をクリックしてから数字をクリックしましょう' : '')
+				((!model.renzoku) && (model.jido === 'Aut')) ? '□をクリックしてから数字をクリックしましょう' : '')
 			]),
 		_List_fromArray(
 			[
@@ -6694,7 +6929,7 @@ var author$project$WarizanH2$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								A2(
+								(model.kirikae === 'AC') ? A2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
@@ -6706,7 +6941,7 @@ var author$project$WarizanH2$view = function (model) {
 									[
 										elm$html$Html$text(
 										(A2(elm$core$Basics$modBy, 20, model.renzoku) === 19) ? ((model.renzoku > 200) ? 'すごいですね。合かく！！' : ((model.renzoku > 100) ? 'すばらしい！！' : ((model.renzoku > 50) ? 'その調子！！' : 'いいですね'))) : (elm$core$String$fromInt(model.renzoku) + '回'))
-									])),
+									])) : A2(elm$html$Html$div, _List_Nil, _List_Nil),
 								A2(
 								rundis$elm_bootstrap$Bootstrap$Button$button,
 								_List_fromArray(
