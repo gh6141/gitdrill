@@ -4893,7 +4893,7 @@ var author$project$WarizanH2$init = function (_n0) {
 				{xx: -1, yy: 0},
 				author$project$WarizanH2$K1),
 			hijosu: '100',
-			jido: 'Man',
+			jido: 'ナビなし',
 			josu: '2',
 			junjo: _List_fromArray(
 				[
@@ -4913,7 +4913,7 @@ var author$project$WarizanH2$init = function (_n0) {
 					{xx: 0, yy: 2},
 					author$project$WarizanH2$K1)
 				]),
-			kirikae: 'AC',
+			kirikae: '商をたてる',
 			nyuryoku: '',
 			renzoku: 0,
 			seed: {e1: 99, e2: 99, s1: 19, s2: 19},
@@ -5988,7 +5988,7 @@ var author$project$WarizanH2$update = F2(
 						{xx: 0, yy: 0},
 						author$project$WarizanH2$K1),
 					elm$core$List$head(junjod));
-				var sbltmp = (model.kirikae === 'AC') ? A4(
+				var sbltmp = (model.kirikae === '商をたてる') ? A4(
 					sbset,
 					author$project$WarizanH2$fst(sqicx),
 					_Utils_chr('?'),
@@ -6004,7 +6004,7 @@ var author$project$WarizanH2$update = F2(
 							hijosu: hijosuo,
 							josu: josuo,
 							junjo: junjod,
-							nyuryoku: (model.kirikae === 'AC') ? '?' : '',
+							nyuryoku: (model.kirikae === '商をたてる') ? '?' : '',
 							sublockl: sbltmp,
 							sublocklT: sbTinit
 						}),
@@ -6047,8 +6047,8 @@ var author$project$WarizanH2$update = F2(
 					author$project$WarizanH2$fst(model.currentIchi),
 					author$project$WarizanH2$snd(model.currentIchi),
 					model.junjo);
-				var nichi = (_Utils_eq(tsch, sch) && (model.jido === 'Man')) ? nextic : model.currentIchi;
-				var tmpsbl = (_Utils_eq(tsch, sch) && (model.jido === 'Man')) ? A4(
+				var nichi = (_Utils_eq(tsch, sch) && (model.jido === 'ナビなし')) ? nextic : model.currentIchi;
+				var tmpsbl = (_Utils_eq(tsch, sch) && (model.jido === 'ナビなし')) ? A4(
 					sbset,
 					author$project$WarizanH2$fst(nextic),
 					_Utils_chr('?'),
@@ -6072,7 +6072,7 @@ var author$project$WarizanH2$update = F2(
 						{
 							ansdisp: ((si === 11) && (!model.ansdisp)) ? true : false,
 							currentIchi: nichi,
-							nyuryoku: (model.kirikae === 'AC') ? elm$core$String$fromList(
+							nyuryoku: (model.kirikae === '商をたてる') ? elm$core$String$fromList(
 								A2(
 									elm$core$List$map,
 									function (bl) {
@@ -6095,8 +6095,8 @@ var author$project$WarizanH2$update = F2(
 					_Utils_update(
 						model,
 						{
-							kirikae: (model.kirikae === 'AC') ? 'MC' : 'AC',
-							nyuryoku: ((model.nyuryoku === '') && (model.kirikae === 'AC')) ? '?' : '',
+							kirikae: (model.kirikae === '商をたてる') ? 'すべて計算' : '商をたてる',
+							nyuryoku: ((model.nyuryoku === '') && (model.kirikae === '商をたてる')) ? '?' : '',
 							renzoku: 0
 						}),
 					elm$core$Platform$Cmd$none);
@@ -6105,7 +6105,7 @@ var author$project$WarizanH2$update = F2(
 					_Utils_update(
 						model,
 						{
-							jido: (model.jido === 'Aut') ? 'Man' : 'Aut'
+							jido: (model.jido === 'ナビ') ? 'ナビなし' : 'ナビ'
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
@@ -6878,7 +6878,7 @@ var author$project$WarizanH2$view = function (model) {
 					function () {
 						var _n0 = model.kirikae;
 						switch (_n0) {
-							case 'MC':
+							case 'すべて計算':
 								return elm$core$List$concat(
 									A2(
 										elm$core$List$map,
@@ -6889,7 +6889,7 @@ var author$project$WarizanH2$view = function (model) {
 											elm$core$List$range,
 											1,
 											elm$core$String$length(model.nyuryoku))));
-							case 'AC':
+							case '商をたてる':
 								return mcList;
 							default:
 								return elm$core$List$concat(
@@ -6910,7 +6910,7 @@ var author$project$WarizanH2$view = function (model) {
 			[
 				elm$html$Html$Attributes$align('center'),
 				elm$html$Html$Attributes$title(
-				((!model.renzoku) && (model.jido === 'Aut')) ? '□をクリックしてから数字をクリックしましょう' : '')
+				((!model.renzoku) && (model.jido === 'ナビ')) ? '□をクリックしてから数字をクリックしましょう' : '')
 			]),
 		_List_fromArray(
 			[
@@ -6929,18 +6929,18 @@ var author$project$WarizanH2$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								(model.kirikae === 'AC') ? A2(
+								(model.kirikae === '商をたてる') ? A2(
 								elm$html$Html$div,
 								_List_fromArray(
 									[
 										A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
 										A2(elm$html$Html$Attributes$style, 'color', 'green'),
-										elm$html$Html$Attributes$title('れんぞく正かい数です')
+										elm$html$Html$Attributes$title('まちがうと、０ポイントにもどります')
 									]),
 								_List_fromArray(
 									[
 										elm$html$Html$text(
-										(A2(elm$core$Basics$modBy, 20, model.renzoku) === 19) ? ((model.renzoku > 200) ? 'すごいですね。合かく！！' : ((model.renzoku > 100) ? 'すばらしい！！' : ((model.renzoku > 50) ? 'その調子！！' : 'いいですね'))) : (elm$core$String$fromInt(model.renzoku) + '回'))
+										(A2(elm$core$Basics$modBy, 20, model.renzoku) === 19) ? ((model.renzoku > 200) ? 'すごいですね。合かく！！' : ((model.renzoku > 100) ? 'すばらしい！！' : ((model.renzoku > 50) ? 'その調子！！' : 'いいですね'))) : (elm$core$String$fromInt(model.renzoku) + 'ポイント'))
 									])) : A2(elm$html$Html$div, _List_Nil, _List_Nil),
 								A2(
 								rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6970,7 +6970,7 @@ var author$project$WarizanH2$view = function (model) {
 												rundis$elm_bootstrap$Bootstrap$Button$attrs(
 												_List_fromArray(
 													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+														A2(elm$html$Html$Attributes$style, 'font-size', '14px'),
 														elm$html$Html$Events$onClick(author$project$WarizanH2$Kirikae),
 														elm$html$Html$Attributes$title('計算する・しないをえらべます')
 													]))
@@ -6986,7 +6986,7 @@ var author$project$WarizanH2$view = function (model) {
 												rundis$elm_bootstrap$Bootstrap$Button$attrs(
 												_List_fromArray(
 													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+														A2(elm$html$Html$Attributes$style, 'font-size', '14px'),
 														elm$html$Html$Events$onClick(author$project$WarizanH2$Jido),
 														elm$html$Html$Attributes$title('つぎのわくに、いどうする・しないをえらべます')
 													]))

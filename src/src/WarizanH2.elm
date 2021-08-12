@@ -81,14 +81,14 @@ type alias Ichi= {xx:Int,yy:Int}
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="AC"
+  ( {hijosu="100",josu="2",ans="50",nyuryoku="",ansdisp=False,seed={s1=19,e1=99,s2=19,e2=99},kirikae="商をたてる"
   ,sublockl=[ {sho={kurai10='□',kurai1='?',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='□',ix=-2,iy=1},{kurai10='0',kurai1='□',ix=-1,iy=1}],sagyo=[{kurai10='□',kurai1='□',ix=0,iy=2}],idx=1} 
              ,{sho={kurai10='□',kurai1='□',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}]
   ,sublocklT=[ {sho={kurai10='0',kurai1='5',ix=-1,iy=0},sekigyo=[{kurai10='0',kurai1='1',ix=-2,iy=1},{kurai10='0',kurai1='0',ix=-1,iy=1}],sagyo=[{kurai10='0',kurai1='0',ix=0,iy=2}],idx=1}
               ,{sho={kurai10='0',kurai1='0',ix=0,iy=0},sekigyo=[],sagyo=[],idx=1}],currentIchi=({xx=-1,yy=0},K1)
     ,renzoku=0  
     ,junjo=[({xx=-1,yy=0},K1),({xx=-2,yy=1},K1),({xx=-1,yy=1},K1),({xx=0,yy=0},K1),({xx=0,yy=2},K1)]    
-    ,jido="Man"    
+    ,jido="ナビなし"    
     }
   , Cmd.none
   )
@@ -356,7 +356,7 @@ update msg model =
        --sbset ichix '?' kt model.sublockl
        --saishono ?
        sqicx=Maybe.withDefault ({xx=0,yy=0},K1) (List.head junjod)
-       sbltmp=if model.kirikae=="AC" then 
+       sbltmp=if model.kirikae=="商をたてる" then 
                  sbset (fst sqicx) '?' (snd sqicx)   ( kuhaku sbTinit )
               else
                  ( kuhaku sbTinit )
@@ -364,7 +364,7 @@ update msg model =
      in
    
       ( {model |  hijosu = hijosuo,josu=josuo,ans=anso
-      ,nyuryoku=if model.kirikae=="AC" then "?" else ""
+      ,nyuryoku=if model.kirikae=="商をたてる" then "?" else ""
       ,sublocklT=sbTinit
       ,sublockl=sbltmp  
       ,currentIchi=sqicx
@@ -401,13 +401,13 @@ update msg model =
               sbset (fst model.currentIchi) (if (tsch==sch || sch=='□') then sch else 'x')  (snd model.currentIchi) model.sublockl
 
 
-      tmpsbl= if (tsch==sch && model.jido=="Man" ) then (sbset (fst nextic) '?'  (snd nextic) tmpsblp) else tmpsblp --正しいなら次の位置に？を表示
-      nichi= if (tsch==sch && model.jido=="Man" ) then nextic else model.currentIchi  --正しいなら、次の数字に位置を設定
+      tmpsbl= if (tsch==sch && model.jido=="ナビなし" ) then (sbset (fst nextic) '?'  (snd nextic) tmpsblp) else tmpsblp --正しいなら次の位置に？を表示
+      nichi= if (tsch==sch && model.jido=="ナビなし" ) then nextic else model.currentIchi  --正しいなら、次の数字に位置を設定
 
     in
      ( {model |
                 nyuryoku= 
-                 if model.kirikae=="AC" then
+                 if model.kirikae=="商をたてる" then
                   String.fromList  ( List.map (\bl-> bl.sho.kurai1  ) tmpsbl)
                  else
                   mans
@@ -421,12 +421,12 @@ update msg model =
           ( {model | seed=sed
                  } ,Cmd.none)
 
-   Kirikae -> ({model|kirikae=if model.kirikae=="AC" then "MC" else "AC"
-    ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="AC") then "?" else ""
+   Kirikae -> ({model|kirikae=if model.kirikae=="商をたてる" then "すべて計算" else "商をたてる"
+    ,nyuryoku=if (model.nyuryoku=="" && model.kirikae=="商をたてる") then "?" else ""
     ,renzoku=0
     },Cmd.none)
 
-   Jido -> ({model| jido=if model.jido=="Aut" then "Man" else "Aut"   },Cmd.none)
+   Jido -> ({model| jido=if model.jido=="ナビ" then "ナビなし" else "ナビ"   },Cmd.none)
 
 
    Suj tpl ->
@@ -538,9 +538,9 @@ view model =
            ++ 
             (
               case model.kirikae of
-               --"MC" -> (rsjtext (x0+sj0) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) ++ (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
-               "MC" -> List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku)))
-               "AC" -> mcList 
+               --"すべて計算" -> (rsjtext (x0+sj0) (y0-4) model.nyuryoku ((ansL-1)*(-1)) 0) ++ (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
+               "すべて計算" -> List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku)))
+               "商をたてる" -> mcList 
                _ -> (List.concat ( List.map (\xi-> tochukeisanL xi )  (List.range 1 (String.length model.nyuryoku))  )) 
 
             )
@@ -600,7 +600,7 @@ view model =
                   
  in
 
-   table [align "center",Html.Attributes.title (if (model.renzoku==0 && model.jido  =="Aut"  )then "□をクリックしてから数字をクリックしましょう" else "")]
+   table [align "center",Html.Attributes.title (if (model.renzoku==0 && model.jido  =="ナビ"  )then "□をクリックしてから数字をクリックしましょう" else "")]
    [
     tr []
     [
@@ -612,8 +612,8 @@ view model =
    
      td []
      [        
-       if model.kirikae=="AC" then 
-        div [style "font-size" "20px",style "color" "green",title "れんぞく正かい数です"] [text (if ( modBy 20 model.renzoku)==19 then 
+       if model.kirikae=="商をたてる" then 
+        div [style "font-size" "20px",style "color" "green",title "まちがうと、０ポイントにもどります"] [text (if ( modBy 20 model.renzoku)==19 then 
                         if model.renzoku> 200 then
                          "すごいですね。合かく！！"
                         else if model.renzoku> 100 then
@@ -623,15 +623,15 @@ view model =
                         else
                          "いいですね"
                      else
-                       (String.fromInt model.renzoku)++"回"       
+                       (String.fromInt model.renzoku)++"ポイント"       
                     )]
        else
         div [] []
        ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Next]] [ text "つぎへ" ]
        ,sujibutton 
        ,div [] [
-             Button.button [Button.attrs [style "font-size" "30px"   ,onClick Kirikae,title "計算する・しないをえらべます"]] [ text model.kirikae ]
-             ,Button.button [Button.attrs [style "font-size" "30px"   ,onClick Jido,title "つぎのわくに、いどうする・しないをえらべます"]] [ text model.jido ]
+             Button.button [Button.attrs [style "font-size" "14px"   ,onClick Kirikae,title "計算する・しないをえらべます"]] [ text model.kirikae ]
+             ,Button.button [Button.attrs [style "font-size" "14px"   ,onClick Jido,title "つぎのわくに、いどうする・しないをえらべます"]] [ text model.jido ]
             ,span [style "font-size" "40px",style "color" "red"] [text ("\u{00a0}"++(if model.ansdisp then model.ans else "　"))]
        ]      
        ,div [][
