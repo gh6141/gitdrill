@@ -226,6 +226,8 @@ update msg model =
           tmpsblst2=  List.filter (\ixichi->  (fst ixichi)==((fst tmpd)+1)   ) pizlst
        in
         (snd ( Maybe.withDefault (0, ({xx=1,yy=0} ,K10) ) (List.head  tmpsblst2) )) --該当ないときは、関係ない位置指定
+
+
              
        
 
@@ -551,7 +553,7 @@ view model =
            [
           sline x0 y0 (x0+hwidth) y0 3 "black" 
           ,stext x0 (y0+40) ")" "black" "50px"
-          ,stext (x0+0) (y0+120) (if (model.ans==model.nyuryoku) then "◎" else "　") "red" "300px"
+          ,stext (x0+0) (y0+120) ( if ((model.ans==model.nyuryoku) && (model.kirikae=="すべて計算") || (kakuSujiCheck model.sublockl) && (model.kirikae=="商をたてる") ) then "◎" else "　") "red" "300px"
            ]++(sjtext (x0-50) (y0+44) model.josu 0 0)
            ++(sjtext (x0+sj0) (y0+44) model.hijosu 0 0)
 
@@ -616,7 +618,16 @@ view model =
         rfunc txx tyy tdivx tdivy idx chr = stextix (txx+(idx+tdivx)*tatekankaku)   (tyy+tdivy*tatekankaku)  (String.fromChar chr) "black" "46px" (idx+tdivx) tdivy K1
         rsjtext xx yy moji divx divy =
           List.indexedMap (rfunc xx yy divx divy)  (String.toList moji)
-          
+        
+              -- kaku suji check without sho
+        kakuSujiCheck sblst =
+         let
+          funckh :SuBlock -> List Suji
+          funckh sb = (sb.sekigyo ++ sb.sagyo)
+          funckh2 :Suji -> Bool
+          funckh2 sj=  sj.kurai1=='□' || sj.kurai10=='□' ||sj.kurai1=='x' || sj.kurai10=='x' ||sj.kurai1=='?' || sj.kurai10=='?' 
+         in
+          not (List.any  funckh2  (List.concat (List.map  funckh  sblst)) )
                   
  in
 

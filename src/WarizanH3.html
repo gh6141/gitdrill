@@ -6200,6 +6200,28 @@ var author$project$WarizanH3$getAtx = F2(
 		}
 	});
 var elm$core$Basics$modBy = _Basics_modBy;
+var elm$core$Basics$not = _Basics_not;
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -6711,6 +6733,31 @@ var author$project$WarizanH3$view = function (model) {
 			ii,
 			elm$core$String$length(model.ans)) ? (-1) : 0;
 	};
+	var kakuSujiCheck = function (sblst) {
+		var funckh2 = function (sj) {
+			return _Utils_eq(
+				sj.kurai1,
+				_Utils_chr('□')) || (_Utils_eq(
+				sj.kurai10,
+				_Utils_chr('□')) || (_Utils_eq(
+				sj.kurai1,
+				_Utils_chr('x')) || (_Utils_eq(
+				sj.kurai10,
+				_Utils_chr('x')) || (_Utils_eq(
+				sj.kurai1,
+				_Utils_chr('?')) || _Utils_eq(
+				sj.kurai10,
+				_Utils_chr('?'))))));
+		};
+		var funckh = function (sb) {
+			return _Utils_ap(sb.sekigyo, sb.sagyo);
+		};
+		return !A2(
+			elm$core$List$any,
+			funckh2,
+			elm$core$List$concat(
+				A2(elm$core$List$map, funckh, sblst)));
+	};
 	var kake = function (idx) {
 		return author$project$WarizanH3$toint(model.josu) * author$project$WarizanH3$toint(
 			A2(author$project$WarizanH3$suchushutu, idx - 1, model.nyuryoku));
@@ -6902,7 +6949,7 @@ var author$project$WarizanH3$view = function (model) {
 					stext,
 					x0 + 0,
 					y0 + 120,
-					_Utils_eq(model.ans, model.nyuryoku) ? '◎' : '　',
+					((_Utils_eq(model.ans, model.nyuryoku) && (model.kirikae === 'すべて計算')) || (kakuSujiCheck(model.sublockl) && (model.kirikae === '商をたてる'))) ? '◎' : '　',
 					'red',
 					'300px')
 				]),
