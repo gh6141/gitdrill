@@ -666,9 +666,10 @@ view model =
              ,Button.button [Button.attrs [style "font-size" "14px"  ,onClick Amarif,title "あまりあり・なしをえらべます" ]] [text (if model.amariflg then "あまりなし" else "あまりあり")]
              ,span [style "font-size" "40px",style "color" "red"] [text ("\u{00a0}"++(if model.ansdisp then model.ans else "　"))]
        ]      
-       ,div [][
-          Button.button [Button.attrs [title "１けたの数でわります",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "レベル1のもんだい" ]
-          ]
+       ,div [][Button.button [Button.attrs [title "１けたの数でわり、答えも１けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 9,s2= 2,e2= 9})]] [ text "レベル0のもんだい" ]]
+       ,div [][Button.button [Button.attrs [title "１けたの数でわり、答えは２けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 99,s2= 2,e2= 9})]] [ text "レベル0aのもんだい" ]]
+       ,div [][Button.button [Button.attrs [title "１けたの数でわり、答えは３けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 999,s2= 2,e2= 9})]] [ text "レベル0bのもんだい" ]]
+       ,div [][Button.button [Button.attrs [title "１けたの数でわります",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "レベル1のもんだい" ]]
        ,div [] [  Button.button [Button.attrs [title "２けたの数でわり、答えは３けたです",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "レベル2のもんだい" ]]
        ,div [] [  Button.button [Button.attrs [title "２けたの数でわり、答えは２けたです",style "font-size" "16px"   ,onClick (Btn2 {s1=11,e1= 99 ,s2=11,e2= 99})]] [ text "レベル3のもんだい" ]]
        
