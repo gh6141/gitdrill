@@ -40,16 +40,18 @@ type alias Model =
     ,pattern:Int
     ,ans:String
     ,dispans:Bool
-    ,hundisp:Bool
+    ,hundisp:Hun
     ,jidisp:Bool
     ,maru :Bool
     ,fmin:Int
     
   }
 
+type Hun= Five |Ten | All | None
+
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=True,jidisp=True,maru=False,fmin=1}
+  ( {ji=10,hun=10,pattern=1,ans="",dispans=False,hundisp=All,jidisp=True,maru=False,fmin=2}
   , Cmd.none
   )
 
@@ -60,7 +62,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
        mhenkan :Int -> Int -> Int -> Model
-       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=True,hundisp=True,maru=False,fmin=1} 
+       mhenkan i1 i2 k1 = {ji=i1,hun= i2,pattern=k1,ans="",dispans=False,jidisp=model.jidisp,hundisp=model.hundisp,maru=False,fmin=1} 
 
        monGenerator : Random.Generator Model   
        monGenerator = Random.map3  mhenkan (Random.int 1 12 ) (Random.int 0  59 ) (Random.int 1 1) 
@@ -85,8 +87,8 @@ update msg model =
              "5分" -> ""
              "C" -> String.dropRight 1 model.ans
              "答" -> ""
-             "Lv1" -> ""
-             "Lv2" -> ""
+             "長針" -> ""
+             "短針" -> ""
              _  -> model.ans++(
                  case si of
                   12 -> "時"
@@ -97,10 +99,31 @@ update msg model =
      in
 
       ( {model |  dispans=if si==14 then True else model.dispans
-                  ,hundisp=if si==15 then False else model.hundisp
-                  ,jidisp=if si==16 then False else model.jidisp
+                  ,
+                   hundisp=
+                    if si==15 then
+                    (case model.hundisp of
+                     Five -> Ten
+                     Ten -> None
+                     All -> Five
+                     None -> All )
+                    else
+                     model.hundisp
+
+                  ,jidisp=if si==16 && model.jidisp then 
+                             False 
+                            else if si==16 && (not model.jidisp) then
+                             True
+                            else 
+                             model.jidisp
+
                   ,ans=suji
-                  ,fmin=if (buttoncaption si)=="5分" then 2 else 1
+                  ,fmin=if (buttoncaption si)=="5分" && model.fmin==1 then 
+                          2 
+                        else if (buttoncaption si)=="5分" && model.fmin==2 then 
+                          1
+                        else 
+                          model.fmin
                  } ,Cmd.none)
   
  
@@ -150,17 +173,24 @@ view model =
          , Svg.Attributes.height "400"
          ]
           ([
-           scircle 125 165 150
+           scircle 140 165 150
            ,chosin ji hun
            ,tansin ji hun
            , if maruflg then scircleMaru else (stext  0 0 "")
 
  
-          ]++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/6) 140.0 150.0 "black" 3) )  (List.range 0 11)) 
-           ++(List.map (\n-> (shankei 125 165 ((toFloat n)*pi/30) 147.0 150.0 "black" 3) )  (List.range 0 59)) 
-           ++(List.map (\n-> (tmoji 125 165 n 120.0))  (List.range 1 12))
-           ++(if jidisp then (List.map (\n-> (tmojim 125 165 n 120.0))  (List.range 1 12)) else [])
-           ++(if hundisp then (List.map (\n-> (tmoji2 125 165 n 160.0))  (List.range 0 59)) else [])
+          ]++(List.map (\n-> (shankei 140 165 ((toFloat n)*pi/6) 140.0 150.0 "black" 3) )  (List.range 0 11)) 
+           ++(List.map (\n-> (shankei 140 165 ((toFloat n)*pi/30) 147.0 150.0 "black" 3) )  (List.range 0 59)) 
+           ++(List.map (\n-> (tmoji 140 165 n 120.0))  (List.range 1 12))
+           ++(if jidisp then (List.map (\n-> (tmojim 140 165 n 120.0))  (List.range 1 12)) else [])
+           ++(
+              case hundisp of
+               Five ->  List.map (\n-> (tmoji3 135 165 n 170.0))  (List.range 1 11)
+               Ten ->  List.map (\n-> (tmoji4 135 165 n 170.0))  (List.range 1 5)
+               All -> List.map (\n-> (tmoji2 140 165 n 165.0))  (List.range 1 59)
+               None -> []            
+             
+             )
     
           )
 
@@ -175,15 +205,46 @@ view model =
           ((round (rr*(-1*sin (-((toFloat nn)+0.5)*pi/6+pi/2)))) +yy+10)
            (String.fromInt nn)
         
-        tmoji2 xx yy nn rr = stext2 ((round (rr*(cos (-(toFloat nn)*pi/30+pi/2))))+xx-5)
-          ((round (rr*(-1*sin (-(toFloat nn)*pi/30+pi/2)))) +yy+5)
-           (String.fromInt nn)
+        tmoji2 xx yy nn rr = stext3 ((round (rr*(cos (-(toFloat nn)*pi/30+pi/2))))+xx-5)
+           ((round (rr*(-1*sin (-(toFloat nn)*pi/30+pi/2)))) +yy+5)  
+           (String.fromInt nn) 
+           (
+             case (modBy 10 nn ) of
+             5 -> "14"
+             0 -> "18"
+             _ -> "10"
 
-        tansin jix hunx = shankei 125 165 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80 "red" 8
-        chosin jix hunx = shankei 125 165 ((toFloat hunx)/60.0*2.0*pi)  0 110 "green" 8
+           )
+
+        tmoji3 xx yy nn rr = stext3 ((round (rr*(cos (-(toFloat nn)*pi/6+pi/2))))+xx-5)
+          ((round (rr*(-1*sin (-(toFloat nn)*pi/6+pi/2)))) +yy+5)
+           (String.fromInt (nn*5))
+            (
+             case (modBy 10 (nn*5) ) of
+             5 -> "15"
+             0 -> "20"
+             _ -> "10"
+
+           )
+
+
+        tmoji4 xx yy nn rr = stext3 ((round (rr*(cos (-(toFloat nn)*pi/3+pi/2))))+xx-5)
+          ((round (rr*(-1*sin (-(toFloat nn)*pi/3+pi/2)))) +yy+5)
+           (String.fromInt (nn*10))
+            (
+             case (modBy 10 (nn*10) ) of
+             5 -> "15"
+             0 -> "20"
+             _ -> "10"
+
+           )
+
+
+        tansin jix hunx = shankei 140 165 ((toFloat jix)/12.0*2.0*pi+(toFloat hunx)/60.0/12.0*2.0*pi) 0 80 "red" 8
+        chosin jix hunx = shankei 140 165 ((toFloat hunx)/60.0*2.0*pi)  0 120 "green" 8
         
         scircle xx yy radius = scircleorg xx yy radius "black"
-        scircleMaru = scircleorg 50 50 50 "red"
+        scircleMaru = scircleorg 70 70 68 "red"
 
         scircleorg xx yy radius color = Svg.circle [ 
           Svg.Attributes.cx (String.fromInt xx)
@@ -191,7 +252,7 @@ view model =
           , Svg.Attributes.r (String.fromInt radius) 
           , Svg.Attributes.fill "white"
           , Svg.Attributes.stroke color
-          , Svg.Attributes.strokeWidth "3"] []
+          , Svg.Attributes.strokeWidth "5"] []
          
         stext xx yy moji = Svg.text_
          [ Svg.Attributes.x (String.fromInt xx)
@@ -211,11 +272,13 @@ view model =
          [ Svg.text moji
          ]
 
-        stext2 xx yy moji = Svg.text_
+        stext2 xx yy moji = stext3 xx yy moji "9"
+
+        stext3 xx yy moji fxz=  Svg.text_
          [ Svg.Attributes.x (String.fromInt xx)
          , Svg.Attributes.y (String.fromInt yy)
          , Svg.Attributes.fill "green"   
-         ,Svg.Attributes.fontSize "10"       
+         ,Svg.Attributes.fontSize fxz
          ]
          [ Svg.text moji
          ]
@@ -309,6 +372,6 @@ buttoncaption ii =
     12 -> "時"
     13 -> "分"    
     14 -> "答"
-    15 -> "Lv1"
-    16 -> "Lv2"
+    15 -> "長針"
+    16 -> "短針"
     _  -> String.fromInt ii
