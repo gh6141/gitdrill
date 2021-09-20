@@ -300,7 +300,7 @@ view model =
     tr []
     [
      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
-      tr [] [td [] [span [Html.Attributes.style "font-size" "30px"] [text ("　"++model.ans)]]]
+      tr [] [td [] [span [Html.Attributes.style "font-size" "30px"] [text ("　 "++model.ans)]]]
       ,tr [] [td [] [ tokei model.ji model.hun model.jidisp model.hundisp (model.ans==((String.fromInt model.ji)++"時"++(String.fromInt model.hun)++"分"))
 
       
