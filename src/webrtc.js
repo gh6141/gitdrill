@@ -1,13 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Tokei</title>
-</head>
-
-<body>
-<div id="elm-f0111bc4e658d0f98db96260c16f7e49"></div>
-<script>
 (function(scope){
 'use strict';
 
@@ -2324,89 +2314,6 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 
 
 
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
-
-
-
-function _Time_now(millisToPosix)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(millisToPosix(Date.now())));
-	});
-}
-
-var _Time_setInterval = F2(function(interval, task)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
-		return function() { clearInterval(id); };
-	});
-});
-
-function _Time_here()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(
-			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
-		));
-	});
-}
-
-
-function _Time_getZoneName()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		try
-		{
-			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
-		}
-		catch (e)
-		{
-			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
-		}
-		callback(_Scheduler_succeed(name));
-	});
-}
-
-
-
 
 // HELPERS
 
@@ -4403,16 +4310,17 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Tokei$All = {$: 'All'};
-var elm$core$Basics$False = {$: 'False'};
-var elm$core$Basics$True = {$: 'True'};
-var elm$core$Result$isOk = function (result) {
-	if (result.$ === 'Ok') {
-		return true;
-	} else {
-		return false;
-	}
+var author$project$Main$LinkClicked = function (a) {
+	return {$: 'LinkClicked', a: a};
 };
+var author$project$Main$UrlChanged = function (a) {
+	return {$: 'UrlChanged', a: a};
+};
+var elm$core$Array$branchFactor = 32;
+var elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
+	});
 var elm$core$Basics$EQ = {$: 'EQ'};
 var elm$core$Basics$GT = {$: 'GT'};
 var elm$core$Basics$LT = {$: 'LT'};
@@ -4493,11 +4401,6 @@ var elm$core$Array$foldr = F3(
 var elm$core$Array$toList = function (array) {
 	return A3(elm$core$Array$foldr, elm$core$List$cons, _List_Nil, array);
 };
-var elm$core$Array$branchFactor = 32;
-var elm$core$Array$Array_elm_builtin = F4(
-	function (a, b, c, d) {
-		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
-	});
 var elm$core$Basics$ceiling = _Basics_ceiling;
 var elm$core$Basics$fdiv = _Basics_fdiv;
 var elm$core$Basics$logBase = F2(
@@ -4622,6 +4525,7 @@ var elm$core$Array$builderToArray = F2(
 				builder.tail);
 		}
 	});
+var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$idiv = _Basics_idiv;
 var elm$core$Basics$lt = _Utils_lt;
 var elm$core$Elm$JsArray$initialize = _JsArray_initialize;
@@ -4673,6 +4577,14 @@ var elm$core$Result$Err = function (a) {
 };
 var elm$core$Result$Ok = function (a) {
 	return {$: 'Ok', a: a};
+};
+var elm$core$Basics$True = {$: 'True'};
+var elm$core$Result$isOk = function (result) {
+	if (result.$ === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
 };
 var elm$json$Json$Decode$Failure = F2(
 	function (a, b) {
@@ -4879,321 +4791,45 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 			}
 		}
 	});
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Tokei$init = function (_n0) {
-	return _Utils_Tuple2(
-		{ans: '', dispans: false, fmin: 2, hun: 10, hundisp: author$project$Tokei$All, ji: 10, jidisp: true, maru: false, pattern: 1},
-		elm$core$Platform$Cmd$none);
-};
+var elm$json$Json$Encode$string = _Json_wrap;
+var author$project$Main$readyForLocalStream = _Platform_outgoingPort('readyForLocalStream', elm$json$Json$Encode$string);
+var author$project$Main$init = F3(
+	function (flags, url, key) {
+		return _Utils_Tuple2(
+			{key: key, url: url},
+			author$project$Main$readyForLocalStream('localVideo'));
+	});
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$Tokei$subscriptions = function (model) {
+var author$project$Main$subscriptions = function (_n0) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Tokei$Five = {$: 'Five'};
-var author$project$Tokei$Newmon = function (a) {
-	return {$: 'Newmon', a: a};
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
 };
-var author$project$Tokei$None = {$: 'None'};
-var author$project$Tokei$Ten = {$: 'Ten'};
-var author$project$Tokei$buttoncaption = function (ii) {
-	switch (ii) {
-		case 10:
-			return '5分';
-		case 11:
-			return 'C';
-		case 12:
-			return '時';
-		case 13:
-			return '分';
-		case 14:
-			return '答';
-		case 15:
-			return '長針';
-		case 16:
-			return '短針';
-		default:
-			return elm$core$String$fromInt(ii);
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
 	}
 };
-var elm$core$Basics$modBy = _Basics_modBy;
-var elm$core$Basics$neq = _Utils_notEqual;
-var elm$core$Basics$not = _Basics_not;
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var elm$core$String$slice = _String_slice;
-var elm$core$String$dropRight = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
-	});
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
-var elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
+var elm$core$Task$Perform = function (a) {
+	return {$: 'Perform', a: a};
 };
-var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$succeed = _Scheduler_succeed;
-var elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
-	});
-var elm$random$Random$next = function (_n0) {
-	var state0 = _n0.a;
-	var incr = _n0.b;
-	return A2(elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var elm$random$Random$initialSeed = function (x) {
-	var _n0 = elm$random$Random$next(
-		A2(elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _n0.a;
-	var incr = _n0.b;
-	var state2 = (state1 + x) >>> 0;
-	return elm$random$Random$next(
-		A2(elm$random$Random$Seed, state2, incr));
-};
-var elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var elm$time$Time$customZone = elm$time$Time$Zone;
-var elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var elm$time$Time$millisToPosix = elm$time$Time$Posix;
-var elm$time$Time$now = _Time_now(elm$time$Time$millisToPosix);
-var elm$time$Time$posixToMillis = function (_n0) {
-	var millis = _n0.a;
-	return millis;
-};
-var elm$random$Random$init = A2(
-	elm$core$Task$andThen,
-	function (time) {
-		return elm$core$Task$succeed(
-			elm$random$Random$initialSeed(
-				elm$time$Time$posixToMillis(time)));
-	},
-	elm$time$Time$now);
-var elm$core$Platform$sendToApp = _Platform_sendToApp;
-var elm$random$Random$step = F2(
-	function (_n0, seed) {
-		var generator = _n0.a;
-		return generator(seed);
-	});
-var elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _n1 = A2(elm$random$Random$step, generator, seed);
-			var value = _n1.a;
-			var newSeed = _n1.b;
-			return A2(
-				elm$core$Task$andThen,
-				function (_n2) {
-					return A3(elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2(elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var elm$random$Random$onSelfMsg = F3(
-	function (_n0, _n1, seed) {
-		return elm$core$Task$succeed(seed);
-	});
-var elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var elm$random$Random$map = F2(
-	function (func, _n0) {
-		var genA = _n0.a;
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n1 = genA(seed0);
-				var a = _n1.a;
-				var seed1 = _n1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var elm$random$Random$cmdMap = F2(
-	function (func, _n0) {
-		var generator = _n0.a;
-		return elm$random$Random$Generate(
-			A2(elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager(elm$random$Random$init, elm$random$Random$onEffects, elm$random$Random$onSelfMsg, elm$random$Random$cmdMap);
-var elm$random$Random$command = _Platform_leaf('Random');
-var elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return elm$random$Random$command(
-			elm$random$Random$Generate(
-				A2(elm$random$Random$map, tagger, generator)));
-	});
-var elm$core$Bitwise$and = _Bitwise_and;
-var elm$core$Bitwise$xor = _Bitwise_xor;
-var elm$random$Random$peel = function (_n0) {
-	var state = _n0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var elm$random$Random$int = F2(
-	function (a, b) {
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-				var lo = _n0.a;
-				var hi = _n0.b;
-				var range = (hi - lo) + 1;
-				if (!((range - 1) & range)) {
-					return _Utils_Tuple2(
-						(((range - 1) & elm$random$Random$peel(seed0)) >>> 0) + lo,
-						elm$random$Random$next(seed0));
-				} else {
-					var threshhold = (((-range) >>> 0) % range) >>> 0;
-					var accountForBias = function (seed) {
-						accountForBias:
-						while (true) {
-							var x = elm$random$Random$peel(seed);
-							var seedN = elm$random$Random$next(seed);
-							if (_Utils_cmp(x, threshhold) < 0) {
-								var $temp$seed = seedN;
-								seed = $temp$seed;
-								continue accountForBias;
-							} else {
-								return _Utils_Tuple2((x % range) + lo, seedN);
-							}
-						}
-					};
-					return accountForBias(seed0);
-				}
-			});
-	});
-var elm$random$Random$map3 = F4(
-	function (func, _n0, _n1, _n2) {
-		var genA = _n0.a;
-		var genB = _n1.a;
-		var genC = _n2.a;
-		return elm$random$Random$Generator(
-			function (seed0) {
-				var _n3 = genA(seed0);
-				var a = _n3.a;
-				var seed1 = _n3.b;
-				var _n4 = genB(seed1);
-				var b = _n4.a;
-				var seed2 = _n4.b;
-				var _n5 = genC(seed2);
-				var c = _n5.a;
-				var seed3 = _n5.b;
-				return _Utils_Tuple2(
-					A3(func, a, b, c),
-					seed3);
-			});
-	});
-var author$project$Tokei$update = F2(
-	function (msg, model) {
-		var mhenkan = F3(
-			function (i1, i2, k1) {
-				return {ans: '', dispans: false, fmin: 1, hun: i2, hundisp: model.hundisp, ji: i1, jidisp: model.jidisp, maru: false, pattern: k1};
-			});
-		var monGenerator = A4(
-			elm$random$Random$map3,
-			mhenkan,
-			A2(elm$random$Random$int, 1, 12),
-			A2(elm$random$Random$int, 0, 59),
-			A2(elm$random$Random$int, 1, 1));
-		switch (msg.$) {
-			case 'Next':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{ans: '', dispans: false}),
-					A2(elm$random$Random$generate, author$project$Tokei$Newmon, monGenerator));
-			case 'Newmon':
-				var mdl = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{dispans: false, hun: mdl.hun, ji: mdl.ji, maru: false, pattern: mdl.pattern}),
-					((model.fmin === 2) && A2(elm$core$Basics$modBy, 5, mdl.hun)) ? A2(elm$random$Random$generate, author$project$Tokei$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
-			default:
-				var si = msg.a;
-				var suji = function () {
-					var _n2 = author$project$Tokei$buttoncaption(si);
-					switch (_n2) {
-						case '5分':
-							return '';
-						case 'C':
-							return A2(elm$core$String$dropRight, 1, model.ans);
-						case '答':
-							return '';
-						case '長針':
-							return '';
-						case '短針':
-							return '';
-						default:
-							return _Utils_ap(
-								model.ans,
-								function () {
-									switch (si) {
-										case 12:
-											return '時';
-										case 13:
-											return '分';
-										default:
-											return elm$core$String$fromInt(si);
-									}
-								}());
-					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							ans: suji,
-							dispans: (si === 14) ? true : model.dispans,
-							fmin: ((author$project$Tokei$buttoncaption(si) === '5分') && (model.fmin === 1)) ? 2 : (((author$project$Tokei$buttoncaption(si) === '5分') && (model.fmin === 2)) ? 1 : model.fmin),
-							hundisp: function () {
-								if (si === 15) {
-									var _n1 = model.hundisp;
-									switch (_n1.$) {
-										case 'Five':
-											return author$project$Tokei$Ten;
-										case 'Ten':
-											return author$project$Tokei$None;
-										case 'All':
-											return author$project$Tokei$Five;
-										default:
-											return author$project$Tokei$All;
-									}
-								} else {
-									return model.hundisp;
-								}
-							}(),
-							jidisp: ((si === 16) && model.jidisp) ? false : (((si === 16) && (!model.jidisp)) ? true : model.jidisp)
-						}),
-					elm$core$Platform$Cmd$none);
-		}
-	});
-var author$project$Tokei$Btn = function (a) {
-	return {$: 'Btn', a: a};
-};
-var author$project$Tokei$Next = {$: 'Next'};
-var elm$core$Basics$cos = _Basics_cos;
-var elm$core$Basics$pi = _Basics_pi;
-var elm$core$Basics$round = _Basics_round;
-var elm$core$Basics$sin = _Basics_sin;
+var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5263,878 +4899,7 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$json$Json$Decode$map2 = _Json_map2;
-var elm$json$Json$Decode$succeed = _Json_succeed;
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
-var elm$html$Html$span = _VirtualDom_node('span');
-var elm$html$Html$table = _VirtualDom_node('table');
-var elm$html$Html$td = _VirtualDom_node('td');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$html$Html$tr = _VirtualDom_node('tr');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$align = elm$html$Html$Attributes$stringProperty('align');
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
-var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
-var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
-	return {$: 'Attrs', a: a};
-};
-var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
-	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
-};
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
-var elm$html$Html$Attributes$classList = function (classes) {
-	return elm$html$Html$Attributes$class(
-		A2(
-			elm$core$String$join,
-			' ',
-			A2(
-				elm$core$List$map,
-				elm$core$Tuple$first,
-				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
-};
-var elm$json$Json$Encode$bool = _Json_wrap;
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
-	});
-var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
-var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
-	switch (size.$) {
-		case 'XS':
-			return elm$core$Maybe$Nothing;
-		case 'SM':
-			return elm$core$Maybe$Just('sm');
-		case 'MD':
-			return elm$core$Maybe$Just('md');
-		case 'LG':
-			return elm$core$Maybe$Just('lg');
-		default:
-			return elm$core$Maybe$Just('xl');
-	}
-};
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
-	function (modifier, options) {
-		switch (modifier.$) {
-			case 'Size':
-				var size = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						size: elm$core$Maybe$Just(size)
-					});
-			case 'Coloring':
-				var coloring = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						coloring: elm$core$Maybe$Just(coloring)
-					});
-			case 'Block':
-				return _Utils_update(
-					options,
-					{block: true});
-			case 'Disabled':
-				var val = modifier.a;
-				return _Utils_update(
-					options,
-					{disabled: val});
-			default:
-				var attrs = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						attributes: _Utils_ap(options.attributes, attrs)
-					});
-		}
-	});
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions = {attributes: _List_Nil, block: false, coloring: elm$core$Maybe$Nothing, disabled: false, size: elm$core$Maybe$Nothing};
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass = function (role) {
-	switch (role.$) {
-		case 'Primary':
-			return 'primary';
-		case 'Secondary':
-			return 'secondary';
-		case 'Success':
-			return 'success';
-		case 'Info':
-			return 'info';
-		case 'Warning':
-			return 'warning';
-		case 'Danger':
-			return 'danger';
-		case 'Dark':
-			return 'dark';
-		case 'Light':
-			return 'light';
-		default:
-			return 'link';
-	}
-};
-var rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes = function (modifiers) {
-	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier, rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions, modifiers);
-	return _Utils_ap(
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$classList(
-				_List_fromArray(
-					[
-						_Utils_Tuple2('btn', true),
-						_Utils_Tuple2('btn-block', options.block),
-						_Utils_Tuple2('disabled', options.disabled)
-					])),
-				elm$html$Html$Attributes$disabled(options.disabled)
-			]),
-		_Utils_ap(
-			function () {
-				var _n0 = A2(elm$core$Maybe$andThen, rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption, options.size);
-				if (_n0.$ === 'Just') {
-					var s = _n0.a;
-					return _List_fromArray(
-						[
-							elm$html$Html$Attributes$class('btn-' + s)
-						]);
-				} else {
-					return _List_Nil;
-				}
-			}(),
-			_Utils_ap(
-				function () {
-					var _n1 = options.coloring;
-					if (_n1.$ === 'Just') {
-						if (_n1.a.$ === 'Roled') {
-							var role = _n1.a.a;
-							return _List_fromArray(
-								[
-									elm$html$Html$Attributes$class(
-									'btn-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
-								]);
-						} else {
-							var role = _n1.a.a;
-							return _List_fromArray(
-								[
-									elm$html$Html$Attributes$class(
-									'btn-outline-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
-								]);
-						}
-					} else {
-						return _List_Nil;
-					}
-				}(),
-				options.attributes)));
-};
-var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
-	function (options, children) {
-		return A2(
-			elm$html$Html$button,
-			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
-			children);
-	});
-var author$project$Tokei$view = function (model) {
-	var stextm = F3(
-		function (xx, yy, moji) {
-			return A2(
-				elm$svg$Svg$text_,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x(
-						elm$core$String$fromInt(xx)),
-						elm$svg$Svg$Attributes$y(
-						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$fill('red'),
-						elm$svg$Svg$Attributes$fontSize('14')
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text(moji)
-					]));
-		});
-	var tmojim = F4(
-		function (xx, yy, nn, rr) {
-			return A3(
-				stextm,
-				((elm$core$Basics$round(
-					rr * elm$core$Basics$cos((((-(nn + 0.5)) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2))) + xx) - 10) + ((nn === 12) ? (-5) : 0),
-				(elm$core$Basics$round(
-					rr * ((-1) * elm$core$Basics$sin((((-(nn + 0.5)) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2)))) + yy) + 10,
-				elm$core$String$fromInt(nn));
-		});
-	var stext3 = F4(
-		function (xx, yy, moji, fxz) {
-			return A2(
-				elm$svg$Svg$text_,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x(
-						elm$core$String$fromInt(xx)),
-						elm$svg$Svg$Attributes$y(
-						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$fill('green'),
-						elm$svg$Svg$Attributes$fontSize(fxz)
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text(moji)
-					]));
-		});
-	var tmoji2 = F4(
-		function (xx, yy, nn, rr) {
-			return A4(
-				stext3,
-				(elm$core$Basics$round(
-					rr * elm$core$Basics$cos((((-nn) * elm$core$Basics$pi) / 30) + (elm$core$Basics$pi / 2))) + xx) - 5,
-				(elm$core$Basics$round(
-					rr * ((-1) * elm$core$Basics$sin((((-nn) * elm$core$Basics$pi) / 30) + (elm$core$Basics$pi / 2)))) + yy) + 5,
-				elm$core$String$fromInt(nn),
-				function () {
-					var _n3 = A2(elm$core$Basics$modBy, 10, nn);
-					switch (_n3) {
-						case 5:
-							return '14';
-						case 0:
-							return '18';
-						default:
-							return '10';
-					}
-				}());
-		});
-	var tmoji3 = F4(
-		function (xx, yy, nn, rr) {
-			return A4(
-				stext3,
-				(elm$core$Basics$round(
-					rr * elm$core$Basics$cos((((-nn) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2))) + xx) - 5,
-				(elm$core$Basics$round(
-					rr * ((-1) * elm$core$Basics$sin((((-nn) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2)))) + yy) + 5,
-				elm$core$String$fromInt(nn * 5),
-				function () {
-					var _n2 = A2(elm$core$Basics$modBy, 10, nn * 5);
-					switch (_n2) {
-						case 5:
-							return '15';
-						case 0:
-							return '20';
-						default:
-							return '10';
-					}
-				}());
-		});
-	var tmoji4 = F4(
-		function (xx, yy, nn, rr) {
-			return A4(
-				stext3,
-				(elm$core$Basics$round(
-					rr * elm$core$Basics$cos((((-nn) * elm$core$Basics$pi) / 3) + (elm$core$Basics$pi / 2))) + xx) - 5,
-				(elm$core$Basics$round(
-					rr * ((-1) * elm$core$Basics$sin((((-nn) * elm$core$Basics$pi) / 3) + (elm$core$Basics$pi / 2)))) + yy) + 5,
-				elm$core$String$fromInt(nn * 10),
-				function () {
-					var _n1 = A2(elm$core$Basics$modBy, 10, nn * 10);
-					switch (_n1) {
-						case 5:
-							return '15';
-						case 0:
-							return '20';
-						default:
-							return '10';
-					}
-				}());
-		});
-	var stext2 = F3(
-		function (xx, yy, moji) {
-			return A4(stext3, xx, yy, moji, '9');
-		});
-	var stext = F3(
-		function (xx, yy, moji) {
-			return A2(
-				elm$svg$Svg$text_,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x(
-						elm$core$String$fromInt(xx)),
-						elm$svg$Svg$Attributes$y(
-						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$fill('black'),
-						elm$svg$Svg$Attributes$fontSize('26')
-					]),
-				_List_fromArray(
-					[
-						elm$svg$Svg$text(moji)
-					]));
-		});
-	var tmoji = F4(
-		function (xx, yy, nn, rr) {
-			return A3(
-				stext,
-				((elm$core$Basics$round(
-					rr * elm$core$Basics$cos((((-nn) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2))) + xx) - 10) + ((nn === 12) ? (-5) : 0),
-				(elm$core$Basics$round(
-					rr * ((-1) * elm$core$Basics$sin((((-nn) * elm$core$Basics$pi) / 6) + (elm$core$Basics$pi / 2)))) + yy) + 10,
-				elm$core$String$fromInt(nn));
-		});
-	var sline = F6(
-		function (x1, y1, x2, y2, wd, color) {
-			return A2(
-				elm$svg$Svg$line,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x1(
-						elm$core$String$fromInt(x1)),
-						elm$svg$Svg$Attributes$y1(
-						elm$core$String$fromInt(y1)),
-						elm$svg$Svg$Attributes$x2(
-						elm$core$String$fromInt(x2)),
-						elm$svg$Svg$Attributes$y2(
-						elm$core$String$fromInt(y2)),
-						elm$svg$Svg$Attributes$stroke(color),
-						elm$svg$Svg$Attributes$strokeWidth(
-						elm$core$String$fromInt(wd)),
-						elm$svg$Svg$Attributes$strokeLinecap('round')
-					]),
-				_List_Nil);
-		});
-	var shankei = F7(
-		function (xx, yy, th, str, enr, color, width) {
-			return A6(
-				sline,
-				elm$core$Basics$round(
-					str * elm$core$Basics$cos((-th) + (elm$core$Basics$pi / 2))) + xx,
-				elm$core$Basics$round(
-					str * ((-1) * elm$core$Basics$sin((-th) + (elm$core$Basics$pi / 2)))) + yy,
-				elm$core$Basics$round(
-					enr * elm$core$Basics$cos((-th) + (elm$core$Basics$pi / 2))) + xx,
-				elm$core$Basics$round(
-					enr * ((-1) * elm$core$Basics$sin((-th) + (elm$core$Basics$pi / 2)))) + yy,
-				width,
-				color);
-		});
-	var tansin = F2(
-		function (jix, hunx) {
-			return A7(shankei, 140, 165, (((jix / 12.0) * 2.0) * elm$core$Basics$pi) + ((((hunx / 60.0) / 12.0) * 2.0) * elm$core$Basics$pi), 0, 80, 'red', 8);
-		});
-	var scircleorg = F4(
-		function (xx, yy, radius, color) {
-			return A2(
-				elm$svg$Svg$circle,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$cx(
-						elm$core$String$fromInt(xx)),
-						elm$svg$Svg$Attributes$cy(
-						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$r(
-						elm$core$String$fromInt(radius)),
-						elm$svg$Svg$Attributes$fill('white'),
-						elm$svg$Svg$Attributes$stroke(color),
-						elm$svg$Svg$Attributes$strokeWidth('5')
-					]),
-				_List_Nil);
-		});
-	var scircleMaru = A4(scircleorg, 70, 70, 68, 'red');
-	var scircle = F3(
-		function (xx, yy, radius) {
-			return A4(scircleorg, xx, yy, radius, 'black');
-		});
-	var sbutton = function (ii) {
-		return A2(
-			rundis$elm_bootstrap$Bootstrap$Button$button,
-			_List_fromArray(
-				[
-					rundis$elm_bootstrap$Bootstrap$Button$attrs(
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-							elm$html$Html$Events$onClick(
-							author$project$Tokei$Btn(ii))
-						]))
-				]),
-			_List_fromArray(
-				[
-					elm$html$Html$text(
-					' ' + (author$project$Tokei$buttoncaption(ii) + ' '))
-				]));
-	};
-	var sujibutton = A2(
-		elm$html$Html$table,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(7)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(8)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(9)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(12)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(4)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(5)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(6)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(13)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(1)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(2)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(3)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(14)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(0)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(11)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(15)
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(16)
-							]))
-					])),
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$td, _List_Nil, _List_Nil),
-						A2(elm$html$Html$td, _List_Nil, _List_Nil),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								sbutton(10)
-							]))
-					]))
-			]));
-	var chosin = F2(
-		function (jix, hunx) {
-			return A7(shankei, 140, 165, ((hunx / 60.0) * 2.0) * elm$core$Basics$pi, 0, 120, 'green', 8);
-		});
-	var tokei = F5(
-		function (ji, hun, jidisp, hundisp, maruflg) {
-			return A2(
-				elm$svg$Svg$svg,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$viewBox('0 0 400 400'),
-						elm$svg$Svg$Attributes$width('480'),
-						elm$svg$Svg$Attributes$height('400')
-					]),
-				_Utils_ap(
-					_List_fromArray(
-						[
-							A3(scircle, 140, 165, 150),
-							A2(chosin, ji, hun),
-							A2(tansin, ji, hun),
-							maruflg ? scircleMaru : A3(stext, 0, 0, '')
-						]),
-					_Utils_ap(
-						A2(
-							elm$core$List$map,
-							function (n) {
-								return A7(shankei, 140, 165, (n * elm$core$Basics$pi) / 6, 140.0, 150.0, 'black', 3);
-							},
-							A2(elm$core$List$range, 0, 11)),
-						_Utils_ap(
-							A2(
-								elm$core$List$map,
-								function (n) {
-									return A7(shankei, 140, 165, (n * elm$core$Basics$pi) / 30, 147.0, 150.0, 'black', 3);
-								},
-								A2(elm$core$List$range, 0, 59)),
-							_Utils_ap(
-								A2(
-									elm$core$List$map,
-									function (n) {
-										return A4(tmoji, 140, 165, n, 120.0);
-									},
-									A2(elm$core$List$range, 1, 12)),
-								_Utils_ap(
-									jidisp ? A2(
-										elm$core$List$map,
-										function (n) {
-											return A4(tmojim, 140, 165, n, 120.0);
-										},
-										A2(elm$core$List$range, 1, 12)) : _List_Nil,
-									function () {
-										switch (hundisp.$) {
-											case 'Five':
-												return A2(
-													elm$core$List$map,
-													function (n) {
-														return A4(tmoji3, 135, 165, n, 170.0);
-													},
-													A2(elm$core$List$range, 1, 11));
-											case 'Ten':
-												return A2(
-													elm$core$List$map,
-													function (n) {
-														return A4(tmoji4, 135, 165, n, 170.0);
-													},
-													A2(elm$core$List$range, 1, 5));
-											case 'All':
-												return A2(
-													elm$core$List$map,
-													function (n) {
-														return A4(tmoji2, 140, 165, n, 165.0);
-													},
-													A2(elm$core$List$range, 1, 59));
-											default:
-												return _List_Nil;
-										}
-									}()))))));
-		});
-	return A2(
-		elm$html$Html$table,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$align('center'),
-				A2(elm$html$Html$Attributes$style, 'width', '80%')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$td,
-						_List_fromArray(
-							[
-								A2(elm$html$Html$Attributes$style, 'position', 'relative'),
-								A2(elm$html$Html$Attributes$style, 'padding', '3em')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_fromArray(
-													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '30px')
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text('　 ' + model.ans)
-													]))
-											]))
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A5(
-												tokei,
-												model.ji,
-												model.hun,
-												model.jidisp,
-												model.hundisp,
-												_Utils_eq(
-													model.ans,
-													elm$core$String$fromInt(model.ji) + ('時' + (elm$core$String$fromInt(model.hun) + '分'))))
-											]))
-									]))
-							])),
-						A2(
-						elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2(
-												rundis$elm_bootstrap$Bootstrap$Button$button,
-												_List_fromArray(
-													[
-														rundis$elm_bootstrap$Bootstrap$Button$attrs(
-														_List_fromArray(
-															[
-																A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-																elm$html$Html$Events$onClick(author$project$Tokei$Next)
-															]))
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text('つぎへ')
-													]))
-											]))
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[sujibutton]))
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_fromArray(
-													[
-														A2(elm$html$Html$Attributes$style, 'font-size', '30px')
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text(
-														model.dispans ? (elm$core$String$fromInt(model.ji) + ('時' + (elm$core$String$fromInt(model.hun) + '分'))) : '')
-													]))
-											]))
-									]))
-							]))
-					]))
-			]));
-};
-var elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0.a;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
-	}
-};
-var elm$core$Task$Perform = function (a) {
-	return {$: 'Perform', a: a};
-};
-var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
+var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$map = F2(
 	function (func, taskA) {
 		return A2(
@@ -6167,6 +4932,7 @@ var elm$core$Task$sequence = function (tasks) {
 		elm$core$Task$succeed(_List_Nil),
 		tasks);
 };
+var elm$core$Platform$sendToApp = _Platform_sendToApp;
 var elm$core$Task$spawnCmd = F2(
 	function (router, _n0) {
 		var task = _n0.a;
@@ -6207,7 +4973,23 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$map2 = _Json_map2;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
 var elm$core$String$length = _String_length;
+var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
@@ -6335,17 +5117,117 @@ var elm$url$Url$fromString = function (str) {
 		elm$url$Url$Https,
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
-var elm$browser$Browser$element = _Browser_element;
-var author$project$Tokei$main = elm$browser$Browser$element(
-	{init: author$project$Tokei$init, subscriptions: author$project$Tokei$subscriptions, update: author$project$Tokei$update, view: author$project$Tokei$view});
-_Platform_export({'Tokei':{'init':author$project$Tokei$main(
+var elm$browser$Browser$Navigation$load = _Browser_load;
+var elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 'Nothing') {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + elm$core$String$fromInt(port_));
+		}
+	});
+var elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 'Nothing') {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _n0 = url.protocol;
+		if (_n0.$ === 'Http') {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		elm$url$Url$addPrefixed,
+		'#',
+		url.fragment,
+		A3(
+			elm$url$Url$addPrefixed,
+			'?',
+			url.query,
+			_Utils_ap(
+				A2(
+					elm$url$Url$addPort,
+					url.port_,
+					_Utils_ap(http, url.host)),
+				url.path)));
+};
+var author$project$Main$update = F2(
+	function (msg, model) {
+		if (msg.$ === 'LinkClicked') {
+			var urlRequest = msg.a;
+			if (urlRequest.$ === 'Internal') {
+				var url = urlRequest.a;
+				return _Utils_Tuple2(
+					model,
+					A2(
+						elm$browser$Browser$Navigation$pushUrl,
+						model.key,
+						elm$url$Url$toString(url)));
+			} else {
+				var href = urlRequest.a;
+				return _Utils_Tuple2(
+					model,
+					elm$browser$Browser$Navigation$load(href));
+			}
+		} else {
+			var url = msg.a;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{url: url}),
+				elm$core$Platform$Cmd$none);
+		}
+	});
+var elm$html$Html$h1 = _VirtualDom_node('h1');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$html$Html$video = _VirtualDom_node('video');
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
+var author$project$Main$view = function (model) {
+	return {
+		body: _List_fromArray(
+			[
+				A2(
+				elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('WebRTC サンプル')
+					])),
+				A2(
+				elm$html$Html$video,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$id('localVideo')
+					]),
+				_List_Nil)
+			]),
+		title: 'WebRTC サンプル'
+	};
+};
+var elm$browser$Browser$application = _Browser_application;
+var author$project$Main$main = elm$browser$Browser$application(
+	{init: author$project$Main$init, onUrlChange: author$project$Main$UrlChanged, onUrlRequest: author$project$Main$LinkClicked, subscriptions: author$project$Main$subscriptions, update: author$project$Main$update, view: author$project$Main$view});
+_Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
-
-var app = Elm.Tokei.init({ node: document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49") });
-if (document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49"))
-{
-  document.getElementById("elm-f0111bc4e658d0f98db96260c16f7e49").innerText = 'This is a headless program, meaning there is nothing to show here.\n\nI started the program anyway though, and you can access it as `app` in the developer console.';
-}
-</script>
-</body>
-</html>
