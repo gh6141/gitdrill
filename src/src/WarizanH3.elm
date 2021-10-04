@@ -668,7 +668,7 @@ view model =
        ]      
        ,div [][Button.button [Button.attrs [title "１けたの数でわり、答えも１けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 9,s2= 2,e2= 9})]] [ text "レベル0のもんだい" ]]
        ,div [][Button.button [Button.attrs [title "１けたの数でわり、答えは２けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 99,s2= 2,e2= 9})]] [ text "レベル0aのもんだい" ]]
-              ,div [][Button.button [Button.attrs [title "2けたの数でわり、答えは1けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 9,s2= 2,e2= 99})]] [ text "2桁÷2桁" ]]
+              ,div [][Button.button [Button.attrs [title "2けたの数でわり、答えは1けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 9,s2= 11,e2= 49})]] [ text "÷2桁" ]]
        ,div [][Button.button [Button.attrs [title "１けたの数でわり、答えは３けた",style "font-size" "16px"   ,onClick (Btn2 {s1=2,e1= 999,s2= 2,e2= 9})]] [ text "レベル0bのもんだい" ]]
        ,div [][Button.button [Button.attrs [title "１けたの数でわります",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 1499,s2= 2,e2= 5})]] [ text "レベル1のもんだい" ]]
        ,div [] [  Button.button [Button.attrs [title "２けたの数でわり、答えは３けたです",style "font-size" "16px"   ,onClick (Btn2 {s1=111,e1= 299,s2= 11,e2= 29})]] [ text "レベル2のもんだい" ]]
