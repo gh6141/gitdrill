@@ -4823,6 +4823,16 @@ var author$project$Jukeizu$Fot = {$: 'Fot'};
 var author$project$Jukeizu$Fst = {$: 'Fst'};
 var author$project$Jukeizu$Snd = {$: 'Snd'};
 var author$project$Jukeizu$Thd = {$: 'Thd'};
+var author$project$Jukeizu$fstf = function (tuple) {
+	var _n0 = tuple;
+	var value1 = _n0.a;
+	return value1;
+};
+var author$project$Jukeizu$sndf = function (tuple) {
+	var _n0 = tuple;
+	var value2 = _n0.b;
+	return value2;
+};
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4897,6 +4907,10 @@ var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
+var elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
 var author$project$Jukeizu$update = F2(
 	function (msg, model) {
 		var chikanx = F3(
@@ -4916,9 +4930,9 @@ var author$project$Jukeizu$update = F2(
 									return clx.fot;
 							}
 						}();
-						return _Utils_eq(x, cjj) ? cjj : x;
+						return (((author$project$Jukeizu$fstf(x) === 1) && _Utils_eq(junjo, author$project$Jukeizu$Fst)) || (((author$project$Jukeizu$fstf(x) === 2) && _Utils_eq(junjo, author$project$Jukeizu$Snd)) || (((author$project$Jukeizu$fstf(x) === 3) && _Utils_eq(junjo, author$project$Jukeizu$Thd)) || ((author$project$Jukeizu$fstf(x) === 4) && _Utils_eq(junjo, author$project$Jukeizu$Fot))))) ? cjj : author$project$Jukeizu$sndf(x);
 					},
-					lst);
+					A2(elm$core$List$indexedMap, elm$core$Tuple$pair, lst));
 			});
 		var chikan = F2(
 			function (lst, src) {

@@ -43,17 +43,18 @@ update msg model =
       chikan lst src = List.map (\x-> (if x==src then ("*"++x) else x))  lst
 
        --?のときは、現在のmodel.listを参考に、復活させる
-      chikanx lst junjo clx=  List.map (\x-> 
-       
+
+      
+
+      chikanx lst junjo clx=  List.map (\x->        
        let 
         cjj= case junjo of
           Fst -> clx.fst
           Snd -> clx.snd
           Thd -> clx.thd
           Fot -> clx.fot   
-
        in      
-         if x== cjj  then cjj else x )  lst
+         if ((fstf x)==1 && junjo==Fst) || ((fstf x)==2 && junjo==Snd) || ((fstf x)==3 && junjo==Thd) || ((fstf x)==4 && junjo==Fot)  then cjj else (sndf x) )  (List.indexedMap Tuple.pair lst)
 
 
       dlcreate  clstx junjo stx= 
@@ -143,13 +144,13 @@ onChange handler =
 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
 
-fst tuple =
+fstf tuple =
     let
         (value1, _) = tuple
     in
     value1
 
-snd tuple =
+sndf tuple =
     let
         (_, value2) = tuple
     in
