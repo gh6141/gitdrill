@@ -4800,18 +4800,17 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Jukeizu$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
-			dlist: _List_fromArray(
-				['?', 'あ', 'い', 'う', 'え']),
-			dlist1: _List_fromArray(
-				['?', 'あ', 'い', 'う', 'え']),
-			dlist2: _List_fromArray(
-				['?', 'あ', 'い', 'う', 'え']),
-			dlist3: _List_fromArray(
-				['?', 'あ', 'い', 'う', 'え']),
-			stage: '?',
-			stage1: '?',
-			stage2: '?',
-			stage3: '?'
+			clist: {fot: '?', fst: '?', snd: '?', thd: '?'},
+			dlst: {
+				fot: _List_fromArray(
+					['?', 'あ', 'い', 'う', 'え']),
+				fst: _List_fromArray(
+					['?', 'あ', 'い', 'う', 'え']),
+				snd: _List_fromArray(
+					['?', 'あ', 'い', 'う', 'え']),
+				thd: _List_fromArray(
+					['?', 'あ', 'い', 'う', 'え'])
+			}
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -4820,7 +4819,10 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Jukeizu$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
-var elm$core$Basics$neq = _Utils_notEqual;
+var author$project$Jukeizu$Fot = {$: 'Fot'};
+var author$project$Jukeizu$Fst = {$: 'Fst'};
+var author$project$Jukeizu$Snd = {$: 'Snd'};
+var author$project$Jukeizu$Thd = {$: 'Thd'};
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4890,61 +4892,169 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
+var elm$core$String$slice = _String_slice;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
 var author$project$Jukeizu$update = F2(
 	function (msg, model) {
+		var chikanx = F3(
+			function (lst, junjo, clx) {
+				return A2(
+					elm$core$List$map,
+					function (x) {
+						var cjj = function () {
+							switch (junjo.$) {
+								case 'Fst':
+									return clx.fst;
+								case 'Snd':
+									return clx.snd;
+								case 'Thd':
+									return clx.thd;
+								default:
+									return clx.fot;
+							}
+						}();
+						return _Utils_eq(x, cjj) ? cjj : x;
+					},
+					lst);
+			});
 		var chikan = F2(
 			function (lst, src) {
 				return A2(
 					elm$core$List$map,
 					function (x) {
-						return (_Utils_eq(x, src) && (src !== '?')) ? ('*' + x) : x;
+						return _Utils_eq(x, src) ? ('*' + x) : x;
 					},
 					lst);
+			});
+		var dlcreate = F3(
+			function (clstx, junjo, stx) {
+				if (stx === '?') {
+					switch (junjo.$) {
+						case 'Fst':
+							return {
+								fot: A3(chikanx, model.dlst.fot, junjo, clstx),
+								fst: model.dlst.fst,
+								snd: A3(chikanx, model.dlst.snd, junjo, clstx),
+								thd: A3(chikanx, model.dlst.thd, junjo, clstx)
+							};
+						case 'Snd':
+							return {
+								fot: A3(chikanx, model.dlst.fot, junjo, clstx),
+								fst: A3(chikanx, model.dlst.fst, junjo, clstx),
+								snd: model.dlst.snd,
+								thd: A3(chikanx, model.dlst.thd, junjo, clstx)
+							};
+						case 'Thd':
+							return {
+								fot: A3(chikanx, model.dlst.fot, junjo, clstx),
+								fst: A3(chikanx, model.dlst.fst, junjo, clstx),
+								snd: A3(chikanx, model.dlst.snd, junjo, clstx),
+								thd: model.dlst.thd
+							};
+						default:
+							return {
+								fot: model.dlst.fot,
+								fst: A3(chikanx, model.dlst.fst, junjo, clstx),
+								snd: A3(chikanx, model.dlst.snd, junjo, clstx),
+								thd: A3(chikanx, model.dlst.thd, junjo, clstx)
+							};
+					}
+				} else {
+					switch (junjo.$) {
+						case 'Fst':
+							return {
+								fot: A2(chikan, model.dlst.fot, stx),
+								fst: model.dlst.fst,
+								snd: A2(chikan, model.dlst.snd, stx),
+								thd: A2(chikan, model.dlst.thd, stx)
+							};
+						case 'Snd':
+							return {
+								fot: A2(chikan, model.dlst.fot, stx),
+								fst: A2(chikan, model.dlst.fst, stx),
+								snd: model.dlst.snd,
+								thd: A2(chikan, model.dlst.thd, stx)
+							};
+						case 'Thd':
+							return {
+								fot: A2(chikan, model.dlst.fot, stx),
+								fst: A2(chikan, model.dlst.fst, stx),
+								snd: A2(chikan, model.dlst.snd, stx),
+								thd: model.dlst.thd
+							};
+						default:
+							return {
+								fot: model.dlst.fot,
+								fst: A2(chikan, model.dlst.fst, stx),
+								snd: A2(chikan, model.dlst.snd, stx),
+								thd: A2(chikan, model.dlst.thd, stx)
+							};
+					}
+				}
 			});
 		switch (msg.$) {
 			case 'Change':
 				var st = msg.a;
-				var dlt3 = A2(chikan, model.dlist3, st);
-				var dlt2 = A2(chikan, model.dlist2, st);
-				var dlt1 = A2(chikan, model.dlist1, st);
-				var dlt = model.dlist;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{dlist: dlt, dlist1: dlt1, dlist2: dlt2, dlist3: dlt3, stage: st}),
+						{
+							clist: {
+								fot: model.clist.fot,
+								fst: (A2(elm$core$String$left, 1, st) === '*') ? '?' : st,
+								snd: model.clist.snd,
+								thd: model.clist.thd
+							},
+							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Fst, st)
+						}),
 					elm$core$Platform$Cmd$none);
 			case 'Change1':
 				var st = msg.a;
-				var dlt3 = A2(chikan, model.dlist3, st);
-				var dlt2 = A2(chikan, model.dlist2, st);
-				var dlt1 = model.dlist1;
-				var dlt = A2(chikan, model.dlist, st);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{dlist: dlt, dlist1: dlt1, dlist2: dlt2, dlist3: dlt3, stage1: st}),
+						{
+							clist: {
+								fot: model.clist.fot,
+								fst: model.clist.fst,
+								snd: (A2(elm$core$String$left, 1, st) === '*') ? '?' : st,
+								thd: model.clist.thd
+							},
+							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Snd, st)
+						}),
 					elm$core$Platform$Cmd$none);
 			case 'Change2':
 				var st = msg.a;
-				var dlt3 = A2(chikan, model.dlist3, st);
-				var dlt2 = model.dlist2;
-				var dlt1 = A2(chikan, model.dlist1, st);
-				var dlt = A2(chikan, model.dlist, st);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{dlist: dlt, dlist1: dlt1, dlist2: dlt2, dlist3: dlt3, stage2: st}),
+						{
+							clist: {
+								fot: model.clist.fot,
+								fst: model.clist.fst,
+								snd: model.clist.snd,
+								thd: (A2(elm$core$String$left, 1, st) === '*') ? '?' : st
+							},
+							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Thd, st)
+						}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var st = msg.a;
-				var dlt3 = model.dlist3;
-				var dlt2 = A2(chikan, model.dlist2, st);
-				var dlt1 = A2(chikan, model.dlist1, st);
-				var dlt = A2(chikan, model.dlist, st);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{dlist: dlt, dlist1: dlt1, dlist2: dlt2, dlist3: dlt3, stage3: st}),
+						{
+							clist: {
+								fot: (A2(elm$core$String$left, 1, st) === '*') ? '?' : st,
+								fst: model.clist.fst,
+								snd: model.clist.snd,
+								thd: model.clist.thd
+							},
+							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Fot, st)
+						}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5006,11 +5116,6 @@ var author$project$Jukeizu$onChange = function (handler) {
 		'change',
 		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
 };
-var elm$core$String$slice = _String_slice;
-var elm$core$String$left = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
-	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
@@ -5088,7 +5193,7 @@ var author$project$Jukeizu$view = function (model) {
 											_List_fromArray(
 												[
 													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.stage)),
+													_Utils_eq(s, model.clist.fst)),
 													elm$html$Html$Attributes$value(s)
 												]),
 											_List_fromArray(
@@ -5097,7 +5202,7 @@ var author$project$Jukeizu$view = function (model) {
 													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
 												]));
 									},
-									model.dlist)),
+									model.dlst.fst)),
 								A2(
 								elm$html$Html$select,
 								_List_fromArray(
@@ -5113,7 +5218,7 @@ var author$project$Jukeizu$view = function (model) {
 											_List_fromArray(
 												[
 													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.stage1)),
+													_Utils_eq(s, model.clist.snd)),
 													elm$html$Html$Attributes$value(s)
 												]),
 											_List_fromArray(
@@ -5122,7 +5227,7 @@ var author$project$Jukeizu$view = function (model) {
 													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
 												]));
 									},
-									model.dlist1)),
+									model.dlst.snd)),
 								A2(
 								elm$html$Html$select,
 								_List_fromArray(
@@ -5138,7 +5243,7 @@ var author$project$Jukeizu$view = function (model) {
 											_List_fromArray(
 												[
 													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.stage2)),
+													_Utils_eq(s, model.clist.thd)),
 													elm$html$Html$Attributes$value(s)
 												]),
 											_List_fromArray(
@@ -5147,7 +5252,7 @@ var author$project$Jukeizu$view = function (model) {
 													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
 												]));
 									},
-									model.dlist2)),
+									model.dlst.thd)),
 								A2(
 								elm$html$Html$select,
 								_List_fromArray(
@@ -5163,7 +5268,7 @@ var author$project$Jukeizu$view = function (model) {
 											_List_fromArray(
 												[
 													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.stage3)),
+													_Utils_eq(s, model.clist.fot)),
 													elm$html$Html$Attributes$value(s)
 												]),
 											_List_fromArray(
@@ -5172,7 +5277,7 @@ var author$project$Jukeizu$view = function (model) {
 													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
 												]));
 									},
-									model.dlist3))
+									model.dlst.fot))
 							]))
 					])),
 				A2(
@@ -5182,10 +5287,10 @@ var author$project$Jukeizu$view = function (model) {
 					[
 						elm$html$Html$text(
 						_Utils_ap(
-							model.stage,
+							model.clist.fst,
 							_Utils_ap(
-								model.stage1,
-								_Utils_ap(model.stage2, model.stage3))))
+								model.clist.snd,
+								_Utils_ap(model.clist.thd, model.clist.fot))))
 					]))
 			]));
 };
