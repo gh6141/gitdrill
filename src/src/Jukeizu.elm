@@ -25,6 +25,7 @@ type alias Model =
   { 
     dlst:{fst:List String,snd:List String,thd:List String,fot:List String}
     ,clist:{fst:String,snd:String,thd:String,fot:String}
+    ,rlist:List String
   }
 
 type Junjo= Fst | Snd | Thd | Fot
@@ -34,10 +35,10 @@ smojil=["?","あ","い","う","え"]
 init : () -> (Model, Cmd Msg)
 init _ =
   ({dlst={fst=smojil,snd=smojil,thd=smojil,fot=smojil}
-    ,clist={fst="?",snd="?",thd="?",fot="?"}},Cmd.none)
+    ,clist={fst="?",snd="?",thd="?",fot="?"},rlist=[]},Cmd.none)
 
 type Msg
-    = Change String |Change1 String |Change2 String |Change3 String
+    = Change String |Change1 String |Change2 String |Change3 String |Add
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -80,6 +81,8 @@ update msg model =
      ( { model |dlst= dlcreate  model.clist Fot st  ,clist={fst=model.clist.fst  ,snd=model.clist.snd,thd=model.clist.thd,fot=(if (String.left 1 st)=="*" then "?" else st)}}
      , Cmd.none
      )
+   Add ->
+    ({model |rlist=(model.clist.fst++model.clist.snd++model.clist.thd++model.clist.fot)::model.rlist},Cmd.none)
   
 
 view : Model -> Html Msg
@@ -111,7 +114,7 @@ view model =
       ]
       ,
       div []
-      [text (model.clist.fst++model.clist.snd++model.clist.thd++model.clist.fot)]
+      (List.map (\s->(div [] [text s] )) model.rlist)
     ]
     
 

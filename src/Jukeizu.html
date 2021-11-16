@@ -4803,7 +4803,8 @@ var author$project$Jukeizu$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
 			clist: {fot: '?', fst: '?', snd: '?', thd: '?'},
-			dlst: {fot: author$project$Jukeizu$smojil, fst: author$project$Jukeizu$smojil, snd: author$project$Jukeizu$smojil, thd: author$project$Jukeizu$smojil}
+			dlst: {fot: author$project$Jukeizu$smojil, fst: author$project$Jukeizu$smojil, snd: author$project$Jukeizu$smojil, thd: author$project$Jukeizu$smojil},
+			rlist: _List_Nil
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -4980,7 +4981,7 @@ var author$project$Jukeizu$update = F2(
 							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Thd, st)
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'Change3':
 				var st = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -4993,6 +4994,21 @@ var author$project$Jukeizu$update = F2(
 								thd: model.clist.thd
 							},
 							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Fot, st)
+						}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							rlist: A2(
+								elm$core$List$cons,
+								_Utils_ap(
+									model.clist.fst,
+									_Utils_ap(
+										model.clist.snd,
+										_Utils_ap(model.clist.thd, model.clist.fot))),
+								model.rlist)
 						}),
 					elm$core$Platform$Cmd$none);
 		}
@@ -5222,15 +5238,18 @@ var author$project$Jukeizu$view = function (model) {
 				A2(
 				elm$html$Html$div,
 				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						_Utils_ap(
-							model.clist.fst,
-							_Utils_ap(
-								model.clist.snd,
-								_Utils_ap(model.clist.thd, model.clist.fot))))
-					]))
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(s)
+								]));
+					},
+					model.rlist))
 			]));
 };
 var elm$browser$Browser$External = function (a) {
