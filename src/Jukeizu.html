@@ -4930,7 +4930,16 @@ var author$project$Jukeizu$update = F2(
 									return clx.fot;
 							}
 						}();
-						return (((author$project$Jukeizu$fstf(x) === 1) && _Utils_eq(junjo, author$project$Jukeizu$Fst)) || (((author$project$Jukeizu$fstf(x) === 2) && _Utils_eq(junjo, author$project$Jukeizu$Snd)) || (((author$project$Jukeizu$fstf(x) === 3) && _Utils_eq(junjo, author$project$Jukeizu$Thd)) || ((author$project$Jukeizu$fstf(x) === 4) && _Utils_eq(junjo, author$project$Jukeizu$Fot))))) ? cjj : author$project$Jukeizu$sndf(x);
+						switch (junjo.$) {
+							case 'Fst':
+								return (author$project$Jukeizu$fstf(x) === 1) ? cjj : author$project$Jukeizu$sndf(x);
+							case 'Snd':
+								return (author$project$Jukeizu$fstf(x) === 2) ? cjj : author$project$Jukeizu$sndf(x);
+							case 'Thd':
+								return (author$project$Jukeizu$fstf(x) === 3) ? cjj : author$project$Jukeizu$sndf(x);
+							default:
+								return (author$project$Jukeizu$fstf(x) === 4) ? cjj : author$project$Jukeizu$sndf(x);
+						}
 					},
 					A2(elm$core$List$indexedMap, elm$core$Tuple$pair, lst));
 			});
