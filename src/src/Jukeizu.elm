@@ -48,45 +48,8 @@ update msg model =
 
       
 
-      chikanx lst junjo clx=  List.map (\x->        
-       let 
-        cjj= case junjo of
-          1 -> clx.fst
-          2 -> clx.snd
-          3 -> clx.thd
-          4 -> clx.fot   
-       in    
-        case junjo of
-         1 -> if (fstf x)==1 then cjj else (sndf x)
-         2 -> if (fstf x)==2 then cjj else (sndf x)
-         3 -> if (fstf x)==3 then cjj else (sndf x)
-         4 -> if (fstf x)==4 then cjj else (sndf x)
-
-       )  (List.indexedMap Tuple.pair lst)
-
-
       dlcreate  clstx junjox stx= 
-       case stx of
-        "?" ->
-          let
-           --junjox から　clstxのjunjox番目の文字を求める　、求めた文字が、当初の文字リストの何番目かもとめる
-             
-             moji=  case junjox of
-                Fst -> Maybe.withDefault "" clstx.fst
-                Snd -> Maybe.withDefault "" clstx.snd
-                Thd -> Maybe.withDefault "" clstx.thd
-                Fot -> Maybe.withDefault "" clstx.fot
-             junjo = Maybe.withDefault 0 (List.head (String.indexes moji (String.concat smojil)))
-                
-
-          in
-          case junjox of
-           Fst -> {fst=model.dlst.fst,snd=chikanx model.dlst.snd junjo clstx,thd=chikanx model.dlst.thd junjo clstx,fot=chikanx model.dlst.fot junjo clstx}
-           Snd -> {fst=chikanx model.dlst.fst junjo clstx,snd=model.dlst.snd ,thd=chikanx model.dlst.thd junjo clstx,fot=chikanx model.dlst.fot junjo clstx}
-           Thd -> {fst=chikanx model.dlst.fst junjo clstx,snd=chikanx model.dlst.snd junjo clstx,thd=model.dlst.thd ,fot=chikanx model.dlst.fot junjo clstx}
-           Fot -> {fst=chikanx model.dlst.fst junjo clstx,snd=chikanx model.dlst.snd junjo clstx,thd=chikanx model.dlst.thd junjo clstx,fot=model.dlst.fot}
-
-        _ ->
+     
           case junjox of
            Fst -> {fst=model.dlst.fst,snd=chikan model.dlst.snd stx,thd=chikan model.dlst.thd stx,fot=chikan model.dlst.fot stx}
            Snd -> {fst=chikan model.dlst.fst stx ,snd=model.dlst.snd ,thd=chikan model.dlst.thd stx,fot=chikan model.dlst.fot stx}
