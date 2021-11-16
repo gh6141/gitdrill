@@ -47,7 +47,7 @@ type Msg
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
    let
-      chikan lst src = List.map (\x-> (if x==src then ("*"++x) else (if (String.left 1 x)=="*"  then (String.right 1 x) else x))  ) lst
+      chikan lst src = List.map (\x-> (if x==src && src/="?" then ("*"++x) else x))  lst
 
    in
   case msg of

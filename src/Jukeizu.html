@@ -4820,6 +4820,7 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Jukeizu$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4889,23 +4890,6 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$core$String$slice = _String_slice;
-var elm$core$String$left = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
-	});
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var elm$core$String$length = _String_length;
-var elm$core$String$right = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(
-			elm$core$String$slice,
-			-n,
-			elm$core$String$length(string),
-			string);
-	});
 var author$project$Jukeizu$update = F2(
 	function (msg, model) {
 		var chikan = F2(
@@ -4913,7 +4897,7 @@ var author$project$Jukeizu$update = F2(
 				return A2(
 					elm$core$List$map,
 					function (x) {
-						return _Utils_eq(x, src) ? ('*' + x) : ((A2(elm$core$String$left, 1, x) === '*') ? A2(elm$core$String$right, 1, x) : x);
+						return (_Utils_eq(x, src) && (src !== '?')) ? ('*' + x) : x;
 					},
 					lst);
 			});
@@ -5022,6 +5006,11 @@ var author$project$Jukeizu$onChange = function (handler) {
 		'change',
 		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
 };
+var elm$core$String$slice = _String_slice;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
@@ -5297,6 +5286,7 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
+var elm$core$String$length = _String_length;
 var elm$core$String$dropLeft = F2(
 	function (n, string) {
 		return (n < 1) ? string : A3(
