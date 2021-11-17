@@ -4895,6 +4895,17 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5032,6 +5043,13 @@ var author$project$Jukeizu$update = F2(
 						return _Utils_eq(komoku, ss);
 					},
 					model.rlist);
+				var arlistx = A2(
+					elm$core$List$filter,
+					function (km) {
+						return A2(elm$core$String$left, 1, km) === 'あ';
+					},
+					rlistx);
+				var seikaix = (elm$core$List$length(rlistx) === 24) ? '２４とおりすべて完成！！よくできました。' : ((elm$core$List$length(arlistx) === 6) ? '１番目が「あ」の場合は６とおり、できましたね！！' : '');
 				return ((model.clist.fst === '?') || ((model.clist.snd === '?') || ((model.clist.thd === '?') || (model.clist.fot === '?')))) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5047,7 +5065,8 @@ var author$project$Jukeizu$update = F2(
 							clist: {fot: '?', fst: '?', snd: '?', thd: '?'},
 							dlst: {fot: author$project$Jukeizu$smojil, fst: author$project$Jukeizu$smojil, snd: author$project$Jukeizu$smojil, thd: author$project$Jukeizu$smojil},
 							msg: '',
-							rlist: rlistx
+							rlist: rlistx,
+							seikai: seikaix
 						}),
 					elm$core$Platform$Cmd$none));
 			default:
@@ -5122,12 +5141,162 @@ var author$project$Jukeizu$onChange = function (handler) {
 		'change',
 		A2(elm$json$Json$Decode$map, handler, elm$html$Html$Events$targetValue));
 };
+var elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2(elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return elm$core$List$reverse(
+			A3(elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _n0 = _Utils_Tuple2(n, list);
+			_n0$1:
+			while (true) {
+				_n0$5:
+				while (true) {
+					if (!_n0.b.b) {
+						return list;
+					} else {
+						if (_n0.b.b.b) {
+							switch (_n0.a) {
+								case 1:
+									break _n0$1;
+								case 2:
+									var _n2 = _n0.b;
+									var x = _n2.a;
+									var _n3 = _n2.b;
+									var y = _n3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_n0.b.b.b.b) {
+										var _n4 = _n0.b;
+										var x = _n4.a;
+										var _n5 = _n4.b;
+										var y = _n5.a;
+										var _n6 = _n5.b;
+										var z = _n6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _n0$5;
+									}
+								default:
+									if (_n0.b.b.b.b && _n0.b.b.b.b.b) {
+										var _n7 = _n0.b;
+										var x = _n7.a;
+										var _n8 = _n7.b;
+										var y = _n8.a;
+										var _n9 = _n8.b;
+										var z = _n9.a;
+										var _n10 = _n9.b;
+										var w = _n10.a;
+										var tl = _n10.b;
+										return (ctr > 1000) ? A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A2(elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A3(elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _n0$5;
+									}
+							}
+						} else {
+							if (_n0.a === 1) {
+								break _n0$1;
+							} else {
+								break _n0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _n1 = _n0.b;
+			var x = _n1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var elm$core$List$take = F2(
+	function (n, list) {
+		return A3(elm$core$List$takeFast, 0, n, list);
+	});
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$select = _VirtualDom_node('select');
 var elm$html$Html$span = _VirtualDom_node('span');
+var elm$html$Html$table = _VirtualDom_node('table');
+var elm$html$Html$td = _VirtualDom_node('td');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$html$Html$tr = _VirtualDom_node('tr');
 var elm$json$Json$Encode$bool = _Json_wrap;
 var elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -5148,6 +5317,12 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Attributes$width = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'width',
+		elm$core$String$fromInt(n));
+};
 var elm$html$Html$Events$onClick = function (msg) {
 	return A2(
 		elm$html$Html$Events$on,
@@ -5171,17 +5346,6 @@ var elm$core$Maybe$andThen = F2(
 		}
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var elm$core$Tuple$second = function (_n0) {
 	var y = _n0.b;
 	return y;
@@ -5350,11 +5514,11 @@ var author$project$Jukeizu$view = function (model) {
 				elm$html$Html$span,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+						A2(elm$html$Html$Attributes$style, 'font-size', '12px')
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text('ならべかたは？')
+						elm$html$Html$text('ならべかたは？(まず先頭が「あ」の場合から始めよう）')
 					])),
 				A2(
 				elm$html$Html$select,
@@ -5517,25 +5681,108 @@ var author$project$Jukeizu$view = function (model) {
 					[
 						elm$html$Html$text(model.seikai)
 					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '40px'),
-						A2(elm$html$Html$Attributes$style, 'margin', '2px')
-					]),
-				A2(
-					elm$core$List$map,
-					function (s) {
-						return A2(
-							elm$html$Html$div,
-							_List_Nil,
+				function () {
+				var lst1r = A2(
+					elm$core$List$drop,
+					6,
+					elm$core$List$reverse(model.rlist));
+				var lst2 = A2(elm$core$List$take, 6, lst1r);
+				var lst2r = A2(elm$core$List$drop, 6, lst1r);
+				var lst3 = A2(elm$core$List$take, 6, lst2r);
+				var lst3r = A2(elm$core$List$drop, 6, lst2r);
+				var lst4 = lst3r;
+				var lst1 = A2(
+					elm$core$List$take,
+					6,
+					elm$core$List$reverse(model.rlist));
+				return A2(
+					elm$html$Html$table,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$tr,
 							_List_fromArray(
 								[
-									elm$html$Html$text(s)
-								]));
-					},
-					elm$core$List$reverse(model.rlist)))
+									A2(elm$html$Html$Attributes$style, 'font-size', '40px')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$td,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$width(200)
+										]),
+									A2(
+										elm$core$List$map,
+										function (s) {
+											return A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text(s)
+													]));
+										},
+										lst1)),
+									A2(
+									elm$html$Html$td,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$width(200)
+										]),
+									A2(
+										elm$core$List$map,
+										function (s) {
+											return A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text(s)
+													]));
+										},
+										lst2)),
+									A2(
+									elm$html$Html$td,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$width(200)
+										]),
+									A2(
+										elm$core$List$map,
+										function (s) {
+											return A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text(s)
+													]));
+										},
+										lst3)),
+									A2(
+									elm$html$Html$td,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$width(200)
+										]),
+									A2(
+										elm$core$List$map,
+										function (s) {
+											return A2(
+												elm$html$Html$div,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text(s)
+													]));
+										},
+										lst4))
+								]))
+						]));
+			}()
 			]));
 };
 var elm$browser$Browser$External = function (a) {

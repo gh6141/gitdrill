@@ -88,10 +88,16 @@ update msg model =
       komoku=model.clist.fst++model.clist.snd++model.clist.thd++model.clist.fot
       daburiflg=List.any  (\ss -> komoku==ss   ) model.rlist
 
-      --１番目が「あ」のみか、すべてかで　チェック方法をわける
       rlistx=(komoku)::model.rlist
+      arlistx= List.filter (\km -> (String.left 1 km) =="あ"   ) rlistx
 
-
+      seikaix=if (List.length rlistx)==24 then 
+                "２４とおりすべて完成！！よくできました。"             
+              else if (List.length arlistx)==6 then
+                "１番目が「あ」の場合は６とおり、できましたね！！"
+              else
+                ""
+      
 
     in
 
@@ -102,7 +108,7 @@ update msg model =
      else
       ({model | dlst={fst=smojil,snd=smojil,thd=smojil,fot=smojil}
       ,clist={fst="?",snd="?",thd="?",fot="?"},msg=""
-      ,rlist=rlistx},Cmd.none)
+      ,rlist=rlistx,seikai=seikaix},Cmd.none)
 
    Del ->
            ({model | dlst={fst=smojil,snd=smojil,thd=smojil,fot=smojil}
@@ -132,7 +138,7 @@ view model =
 
   div []
     [
-      span [style "font-size" "20px"] [text ("ならべかたは？")]
+      span [style "font-size" "12px"] [text ("ならべかたは？(まず先頭が「あ」の場合から始めよう）")]
       ,select [style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.clist.fst),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.fst))
       ,select [style "font-size" "50px" ,onChange handler1 ] (List.map (\s -> Html.option [selected (s==model.clist.snd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.snd))
       ,select [style "font-size" "50px" ,onChange handler2 ] (List.map (\s -> Html.option [selected (s==model.clist.thd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.thd))
@@ -142,9 +148,29 @@ view model =
       ,Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Del]] [ Html.text "けす" ]
       ,span [style "font-size" "20px"] [text model.msg]
       ,div  [style "color" "red",style "font-size" "40px"] [text (model.seikai)] 
-      ,div [style "font-size" "40px",style "margin" "2px"]
-      (List.map (\s->(div [] [text s] )) (List.reverse model.rlist))
-    ]
+      ,
+       let
+         lst1=List.take 6 (List.reverse model.rlist)
+         lst1r=List.drop 6 (List.reverse model.rlist)
+         lst2=List.take 6 lst1r
+         lst2r=List.drop 6 lst1r
+         lst3=List.take 6 lst2r
+         lst3r=List.drop 6 lst2r
+         lst4=lst3r
+
+       in
+      
+       table [] [
+        tr [style "font-size" "40px"] [
+          td [Html.Attributes.width 200] (List.map (\s->(div [] [text s] ))  lst1)
+          ,td [Html.Attributes.width 200] (List.map (\s->(div [] [text s] )) lst2)
+          ,td [Html.Attributes.width 200] (List.map (\s->(div [] [text s] )) lst3)
+          ,td [Html.Attributes.width 200] (List.map (\s->(div [] [text s] )) lst4)
+        ]
+       ]
+
+      ]
+
     
 
 subscriptions : Model -> Sub Msg
