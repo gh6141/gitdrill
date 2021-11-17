@@ -143,7 +143,7 @@ view model =
       ,select [style "font-size" "50px" ,onChange handler1 ] (List.map (\s -> Html.option [selected (s==model.clist.snd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.snd))
       ,select [style "font-size" "50px" ,onChange handler2 ] (List.map (\s -> Html.option [selected (s==model.clist.thd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.thd))
       ,select [style "font-size" "50px" ,onChange handler3 ] (List.map (\s -> Html.option [selected (s==model.clist.fot),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.fot))
-      ,Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Add]] [ Html.text "←ついか" ]
+      ,Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Add]] [ Html.text "リストへ" ]
       ,span [style "font-size" "20px"] [text "　"]
       ,Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Del]] [ Html.text "けす" ]
       ,span [style "font-size" "20px"] [text model.msg]
