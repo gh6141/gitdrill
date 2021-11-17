@@ -138,7 +138,7 @@ view model =
 
   div []
     [
-      span [style "font-size" "12px"] [text ("ならべかたは？(まず先頭が「あ」の場合から始めよう）")]
+      span [style "font-size" "12px"] [text ("ならべかたは？(まず先頭が「ア」の場合から始めよう）")]
       ,select [style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.clist.fst),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.fst))
       ,select [style "font-size" "50px" ,onChange handler1 ] (List.map (\s -> Html.option [selected (s==model.clist.snd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.snd))
       ,select [style "font-size" "50px" ,onChange handler2 ] (List.map (\s -> Html.option [selected (s==model.clist.thd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.thd))
