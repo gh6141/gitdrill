@@ -26,6 +26,8 @@ type alias Model =
     dlst:{fst:List String,snd:List String,thd:List String,fot:List String}
     ,clist:{fst:String,snd:String,thd:String,fot:String}
     ,rlist:List String
+    ,msg:String
+    ,seikai:String
   }
 
 type Junjo= Fst | Snd | Thd | Fot
@@ -35,10 +37,10 @@ smojil=["?","あ","い","う","え"]
 init : () -> (Model, Cmd Msg)
 init _ =
   ({dlst={fst=smojil,snd=smojil,thd=smojil,fot=smojil}
-    ,clist={fst="?",snd="?",thd="?",fot="?"},rlist=[]},Cmd.none)
+    ,clist={fst="?",snd="?",thd="?",fot="?"},rlist=[],msg="",seikai=""},Cmd.none)
 
 type Msg
-    = Change String |Change1 String |Change2 String |Change3 String |Add
+    = Change String |Change1 String |Change2 String |Change3 String |Add |Del 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -82,7 +84,34 @@ update msg model =
      , Cmd.none
      )
    Add ->
-    ({model |rlist=(model.clist.fst++model.clist.snd++model.clist.thd++model.clist.fot)::model.rlist},Cmd.none)
+    let
+      komoku=model.clist.fst++model.clist.snd++model.clist.thd++model.clist.fot
+      daburiflg=List.any  (\ss -> komoku==ss   ) model.rlist
+
+      --１番目が「あ」のみか、すべてかで　チェック方法をわける
+      rlistx=(komoku)::model.rlist
+
+
+
+    in
+
+     if model.clist.fst=="?" || model.clist.snd=="?" || model.clist.thd=="?" || model.clist.fot=="?" then
+        ({model | msg="ぜんぶの順番をきめよう"},Cmd.none)
+     else if daburiflg then
+        ({model | msg="だぶりをチェックしよう"},Cmd.none)
+     else
+      ({model | dlst={fst=smojil,snd=smojil,thd=smojil,fot=smojil}
+      ,clist={fst="?",snd="?",thd="?",fot="?"},msg=""
+      ,rlist=rlistx},Cmd.none)
+
+   Del ->
+           ({model | dlst={fst=smojil,snd=smojil,thd=smojil,fot=smojil}
+      ,clist={fst="?",snd="?",thd="?",fot="?"},msg=""
+      },Cmd.none)
+
+
+
+
   
 
 view : Model -> Html Msg
@@ -101,20 +130,20 @@ view model =
 
   in
 
-  div [style "font-size" "70px",style "margin" "10px"]
+  div []
     [
-      div []
-      [span [style "font-size" "20px"] [text ("どんな並べ方がある？")
+      span [style "font-size" "20px"] [text ("ならべかたは？")]
       ,select [style "font-size" "50px" ,onChange handler ] (List.map (\s -> Html.option [selected (s==model.clist.fst),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.fst))
       ,select [style "font-size" "50px" ,onChange handler1 ] (List.map (\s -> Html.option [selected (s==model.clist.snd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.snd))
       ,select [style "font-size" "50px" ,onChange handler2 ] (List.map (\s -> Html.option [selected (s==model.clist.thd),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.thd))
       ,select [style "font-size" "50px" ,onChange handler3 ] (List.map (\s -> Html.option [selected (s==model.clist.fot),value s][text (if ((String.left 1 s)=="*") then "　" else s)]) (model.dlst.fot))
-      ]
-       
-      ]
-      ,
-      div []
-      (List.map (\s->(div [] [text s] )) model.rlist)
+      ,Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Add]] [ Html.text "←ついか" ]
+      ,span [style "font-size" "20px"] [text "　"]
+      ,Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Del]] [ Html.text "けす" ]
+      ,span [style "font-size" "20px"] [text model.msg]
+      ,div  [style "color" "red",style "font-size" "40px"] [text (model.seikai)] 
+      ,div [style "font-size" "40px",style "margin" "2px"]
+      (List.map (\s->(div [] [text s] )) (List.reverse model.rlist))
     ]
     
 
@@ -149,3 +178,7 @@ getAt idx xs =
 
     else
         List.head <| List.drop idx xs
+
+
+   
+

@@ -4804,7 +4804,9 @@ var author$project$Jukeizu$init = function (_n0) {
 		{
 			clist: {fot: '?', fst: '?', snd: '?', thd: '?'},
 			dlst: {fot: author$project$Jukeizu$smojil, fst: author$project$Jukeizu$smojil, snd: author$project$Jukeizu$smojil, thd: author$project$Jukeizu$smojil},
-			rlist: _List_Nil
+			msg: '',
+			rlist: _List_Nil,
+			seikai: ''
 		},
 		elm$core$Platform$Cmd$none);
 };
@@ -4817,6 +4819,27 @@ var author$project$Jukeizu$Fot = {$: 'Fot'};
 var author$project$Jukeizu$Fst = {$: 'Fst'};
 var author$project$Jukeizu$Snd = {$: 'Snd'};
 var author$project$Jukeizu$Thd = {$: 'Thd'};
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -4996,23 +5019,50 @@ var author$project$Jukeizu$update = F2(
 							dlst: A3(dlcreate, model.clist, author$project$Jukeizu$Fot, st)
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Add':
+				var komoku = _Utils_ap(
+					model.clist.fst,
+					_Utils_ap(
+						model.clist.snd,
+						_Utils_ap(model.clist.thd, model.clist.fot)));
+				var rlistx = A2(elm$core$List$cons, komoku, model.rlist);
+				var daburiflg = A2(
+					elm$core$List$any,
+					function (ss) {
+						return _Utils_eq(komoku, ss);
+					},
+					model.rlist);
+				return ((model.clist.fst === '?') || ((model.clist.snd === '?') || ((model.clist.thd === '?') || (model.clist.fot === '?')))) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{msg: 'ぜんぶの順番をきめよう'}),
+					elm$core$Platform$Cmd$none) : (daburiflg ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{msg: 'だぶりをチェックしよう'}),
+					elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							clist: {fot: '?', fst: '?', snd: '?', thd: '?'},
+							dlst: {fot: author$project$Jukeizu$smojil, fst: author$project$Jukeizu$smojil, snd: author$project$Jukeizu$smojil, thd: author$project$Jukeizu$smojil},
+							msg: '',
+							rlist: rlistx
+						}),
+					elm$core$Platform$Cmd$none));
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							rlist: A2(
-								elm$core$List$cons,
-								_Utils_ap(
-									model.clist.fst,
-									_Utils_ap(
-										model.clist.snd,
-										_Utils_ap(model.clist.thd, model.clist.fot))),
-								model.rlist)
+							clist: {fot: '?', fst: '?', snd: '?', thd: '?'},
+							dlst: {fot: author$project$Jukeizu$smojil, fst: author$project$Jukeizu$smojil, snd: author$project$Jukeizu$smojil, thd: author$project$Jukeizu$smojil},
+							msg: ''
 						}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
+var author$project$Jukeizu$Add = {$: 'Add'};
 var author$project$Jukeizu$Change = function (a) {
 	return {$: 'Change', a: a};
 };
@@ -5025,6 +5075,7 @@ var author$project$Jukeizu$Change2 = function (a) {
 var author$project$Jukeizu$Change3 = function (a) {
 	return {$: 'Change3', a: a};
 };
+var author$project$Jukeizu$Del = {$: 'Del'};
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5097,6 +5148,186 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
+	return rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
+};
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var elm$html$Html$Attributes$classList = function (classes) {
+	return elm$html$Html$Attributes$class(
+		A2(
+			elm$core$String$join,
+			' ',
+			A2(
+				elm$core$List$map,
+				elm$core$Tuple$first,
+				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
+};
+var elm$html$Html$Attributes$disabled = elm$html$Html$Attributes$boolProperty('disabled');
+var rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
+	switch (size.$) {
+		case 'XS':
+			return elm$core$Maybe$Nothing;
+		case 'SM':
+			return elm$core$Maybe$Just('sm');
+		case 'MD':
+			return elm$core$Maybe$Just('md');
+		case 'LG':
+			return elm$core$Maybe$Just('lg');
+		default:
+			return elm$core$Maybe$Just('xl');
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: elm$core$Maybe$Just(size)
+					});
+			case 'Coloring':
+				var coloring = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						coloring: elm$core$Maybe$Just(coloring)
+					});
+			case 'Block':
+				return _Utils_update(
+					options,
+					{block: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			default:
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+		}
+	});
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions = {attributes: _List_Nil, block: false, coloring: elm$core$Maybe$Nothing, disabled: false, size: elm$core$Maybe$Nothing};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass = function (role) {
+	switch (role.$) {
+		case 'Primary':
+			return 'primary';
+		case 'Secondary':
+			return 'secondary';
+		case 'Success':
+			return 'success';
+		case 'Info':
+			return 'info';
+		case 'Warning':
+			return 'warning';
+		case 'Danger':
+			return 'danger';
+		case 'Dark':
+			return 'dark';
+		case 'Light':
+			return 'light';
+		default:
+			return 'link';
+	}
+};
+var rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes = function (modifiers) {
+	var options = A3(elm$core$List$foldl, rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier, rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('btn', true),
+						_Utils_Tuple2('btn-block', options.block),
+						_Utils_Tuple2('disabled', options.disabled)
+					])),
+				elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			function () {
+				var _n0 = A2(elm$core$Maybe$andThen, rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption, options.size);
+				if (_n0.$ === 'Just') {
+					var s = _n0.a;
+					return _List_fromArray(
+						[
+							elm$html$Html$Attributes$class('btn-' + s)
+						]);
+				} else {
+					return _List_Nil;
+				}
+			}(),
+			_Utils_ap(
+				function () {
+					var _n1 = options.coloring;
+					if (_n1.$ === 'Just') {
+						if (_n1.a.$ === 'Roled') {
+							var role = _n1.a.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$class(
+									'btn-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						} else {
+							var role = _n1.a.a;
+							return _List_fromArray(
+								[
+									elm$html$Html$Attributes$class(
+									'btn-outline-' + rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						}
+					} else {
+						return _List_Nil;
+					}
+				}(),
+				options.attributes)));
+};
+var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
+	function (options, children) {
+		return A2(
+			elm$html$Html$button,
+			rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
+			children);
+	});
 var author$project$Jukeizu$view = function (model) {
 	var handler3 = function (selectedText) {
 		return author$project$Jukeizu$Change3(selectedText);
@@ -5112,132 +5343,187 @@ var author$project$Jukeizu$view = function (model) {
 	};
 	return A2(
 		elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$style, 'font-size', '70px'),
-				A2(elm$html$Html$Attributes$style, 'margin', '10px')
-			]),
+		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$div,
-				_List_Nil,
+				elm$html$Html$span,
 				_List_fromArray(
 					[
-						A2(
-						elm$html$Html$span,
+						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('ならべかたは？')
+					])),
+				A2(
+				elm$html$Html$select,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+						author$project$Jukeizu$onChange(handler)
+					]),
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$option,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$selected(
+									_Utils_eq(s, model.clist.fst)),
+									elm$html$Html$Attributes$value(s)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
+								]));
+					},
+					model.dlst.fst)),
+				A2(
+				elm$html$Html$select,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+						author$project$Jukeizu$onChange(handler1)
+					]),
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$option,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$selected(
+									_Utils_eq(s, model.clist.snd)),
+									elm$html$Html$Attributes$value(s)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
+								]));
+					},
+					model.dlst.snd)),
+				A2(
+				elm$html$Html$select,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+						author$project$Jukeizu$onChange(handler2)
+					]),
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$option,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$selected(
+									_Utils_eq(s, model.clist.thd)),
+									elm$html$Html$Attributes$value(s)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
+								]));
+					},
+					model.dlst.thd)),
+				A2(
+				elm$html$Html$select,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
+						author$project$Jukeizu$onChange(handler3)
+					]),
+				A2(
+					elm$core$List$map,
+					function (s) {
+						return A2(
+							elm$html$Html$option,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$selected(
+									_Utils_eq(s, model.clist.fot)),
+									elm$html$Html$Attributes$value(s)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(
+									(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
+								]));
+					},
+					model.dlst.fot)),
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						rundis$elm_bootstrap$Bootstrap$Button$attrs(
 						_List_fromArray(
 							[
-								A2(elm$html$Html$Attributes$style, 'font-size', '20px')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('どんな並べ方がある？'),
-								A2(
-								elm$html$Html$select,
-								_List_fromArray(
-									[
-										A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
-										author$project$Jukeizu$onChange(handler)
-									]),
-								A2(
-									elm$core$List$map,
-									function (s) {
-										return A2(
-											elm$html$Html$option,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.clist.fst)),
-													elm$html$Html$Attributes$value(s)
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text(
-													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
-												]));
-									},
-									model.dlst.fst)),
-								A2(
-								elm$html$Html$select,
-								_List_fromArray(
-									[
-										A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
-										author$project$Jukeizu$onChange(handler1)
-									]),
-								A2(
-									elm$core$List$map,
-									function (s) {
-										return A2(
-											elm$html$Html$option,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.clist.snd)),
-													elm$html$Html$Attributes$value(s)
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text(
-													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
-												]));
-									},
-									model.dlst.snd)),
-								A2(
-								elm$html$Html$select,
-								_List_fromArray(
-									[
-										A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
-										author$project$Jukeizu$onChange(handler2)
-									]),
-								A2(
-									elm$core$List$map,
-									function (s) {
-										return A2(
-											elm$html$Html$option,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.clist.thd)),
-													elm$html$Html$Attributes$value(s)
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text(
-													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
-												]));
-									},
-									model.dlst.thd)),
-								A2(
-								elm$html$Html$select,
-								_List_fromArray(
-									[
-										A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
-										author$project$Jukeizu$onChange(handler3)
-									]),
-								A2(
-									elm$core$List$map,
-									function (s) {
-										return A2(
-											elm$html$Html$option,
-											_List_fromArray(
-												[
-													elm$html$Html$Attributes$selected(
-													_Utils_eq(s, model.clist.fot)),
-													elm$html$Html$Attributes$value(s)
-												]),
-											_List_fromArray(
-												[
-													elm$html$Html$text(
-													(A2(elm$core$String$left, 1, s) === '*') ? '　' : s)
-												]));
-									},
-									model.dlst.fot))
+								A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+								elm$html$Html$Events$onClick(author$project$Jukeizu$Add)
 							]))
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('←ついか')
+					])),
+				A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('　')
+					])),
+				A2(
+				rundis$elm_bootstrap$Bootstrap$Button$button,
+				_List_fromArray(
+					[
+						rundis$elm_bootstrap$Bootstrap$Button$attrs(
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+								elm$html$Html$Events$onClick(author$project$Jukeizu$Del)
+							]))
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text('けす')
+					])),
+				A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '20px')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(model.msg)
 					])),
 				A2(
 				elm$html$Html$div,
-				_List_Nil,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'color', 'red'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '40px')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(model.seikai)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-size', '40px'),
+						A2(elm$html$Html$Attributes$style, 'margin', '2px')
+					]),
 				A2(
 					elm$core$List$map,
 					function (s) {
@@ -5249,7 +5535,7 @@ var author$project$Jukeizu$view = function (model) {
 									elm$html$Html$text(s)
 								]));
 					},
-					model.rlist))
+					elm$core$List$reverse(model.rlist)))
 			]));
 };
 var elm$browser$Browser$External = function (a) {
