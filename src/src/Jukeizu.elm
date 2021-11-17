@@ -32,7 +32,7 @@ type alias Model =
 
 type Junjo= Fst | Snd | Thd | Fot
 
-smojil=["?","あ","い","う","え"]
+smojil=["?","ア","イ","ウ","エ"]
 
 init : () -> (Model, Cmd Msg)
 init _ =
@@ -89,7 +89,7 @@ update msg model =
       daburiflg=List.any  (\ss -> komoku==ss   ) model.rlist
 
       rlistx=(komoku)::model.rlist
-      arlistx= List.filter (\km -> (String.left 1 km) =="あ"   ) rlistx
+      arlistx= List.filter (\km -> (String.left 1 km) =="ア"   ) rlistx
 
       seikaix=if (List.length rlistx)==24 then 
                 "２４とおりすべて完成！！よくできました。"             
