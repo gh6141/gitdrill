@@ -63,14 +63,14 @@ type alias Yurisu =
    ,katex:String
   }
 
-type Enzan = Waru | Kakeru | Sento |Eq
+type Enzan = Hiku | Tasu | Sento |Eq
 
 ysCreate ax = 
        let
            enzant=
-              case [String.contains "×" ax,String.contains "÷" ax,String.contains "=" ax] of
-               [True,False,False] -> Kakeru
-               [False,True,False] -> Waru
+              case [String.contains "+" ax,String.contains "-" ax,String.contains "=" ax] of
+               [True,False,False] -> Tasu
+               [False,True,False] -> Hiku
                [False,False,True] -> Eq
                _ -> Sento
 
@@ -82,9 +82,9 @@ ysCreate ax =
              bsi= Maybe.withDefault "1" (List.head (List.reverse bL))
              bbot= Maybe.withDefault "1" (List.head bL)
              (ktx,bbot2)=
-              case [String.contains "×" bbot,String.contains "÷" bbot,String.contains "=" bbot] of
-               [True,False,False] -> ("×\\dfrac{"++bsi++"}{"++(String.replace "×" "" bbot)++"}",String.replace "×" "" bbot)
-               [False,True,False] -> ("÷\\dfrac{"++bsi++"}{"++(String.replace "÷" "" bbot)++"}",String.replace "÷" "" bbot)
+              case [String.contains "+" bbot,String.contains "-" bbot,String.contains "=" bbot] of
+               [True,False,False] -> ("+\\dfrac{"++bsi++"}{"++(String.replace "+" "" bbot)++"}",String.replace "+" "" bbot)
+               [False,True,False] -> ("-\\dfrac{"++bsi++"}{"++(String.replace "-" "" bbot)++"}",String.replace "-" "" bbot)
                [False,False,True] -> ("=\\dfrac{"++bsi++"}{"++(String.replace "=" "" bbot)++"}",String.replace "=" "" bbot)
                _ -> ("\\dfrac{"++bsi++"}{"++bbot++"}",bbot)
 
@@ -93,15 +93,15 @@ ysCreate ax =
            in
             { bunsi=toint bsi,bunbo=toint bbot2,enzan=enzant,katex=ktx  }
         else
-          {bunsi=toint (String.replace "=" "" (String.replace "÷" "" (String.replace "×" "" ax))),bunbo=1,enzan=enzant,katex=ax}
+          {bunsi=toint (String.replace "=" "" (String.replace "-" "" (String.replace "+" "" ax))),bunbo=1,enzan=enzant,katex=ax}
 
 yLCreate gyo= 
  let
 
-     xlist=String.split "×" gyo
-     xlistx=List.indexedMap  (sento "×") xlist
+     xlist=String.split "+" gyo
+     xlistx=List.indexedMap  (sento "+") xlist
  in
-   List.concat (List.map (\ss->  ( List.indexedMap (sento "÷")    (String.split "÷" ss)    ) )  xlistx)
+   List.concat (List.map (\ss->  ( List.indexedMap (sento "-")    (String.split "-" ss)    ) )  xlistx)
 
 sento moji idx ss=    
       if (idx==0) then
@@ -175,8 +175,8 @@ yuriKeisanL ans =
         ysi=if yu.bunsi==0 then 1 else yu.bunsi
         ybo=if yu.bunbo==0 then 1 else yu.bunbo 
         
-        acbs= if yu.enzan==Waru then (ybo*yuacl.bunsi) else (ysi*yuacl.bunsi)
-        acbb= if yu.enzan==Waru then (ysi*yuacl.bunbo) else (ybo*yuacl.bunbo)
+        acbs= if yu.enzan==Hiku then (ybo*yuacl.bunsi) else (ysi*yuacl.bunsi)
+        acbb= if yu.enzan==Hiku then (ysi*yuacl.bunbo) else (ybo*yuacl.bunbo)
        in
         {bunsi= acbs ,bunbo=acbb  ,enzan=Sento,katex="\\dfrac{"++(String.fromInt acbs)++"}{"++(String.fromInt acbb)++"}"}
     in

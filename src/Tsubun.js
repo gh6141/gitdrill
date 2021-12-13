@@ -5463,10 +5463,10 @@ var elm$core$List$concat = function (lists) {
 	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
 };
 var author$project$BunsuBai$yLCreate = function (gyo) {
-	var xlist = A2(elm$core$String$split, '×', gyo);
+	var xlist = A2(elm$core$String$split, '+', gyo);
 	var xlistx = A2(
 		elm$core$List$indexedMap,
-		author$project$BunsuBai$sento('×'),
+		author$project$BunsuBai$sento('+'),
 		xlist);
 	return elm$core$List$concat(
 		A2(
@@ -5474,14 +5474,14 @@ var author$project$BunsuBai$yLCreate = function (gyo) {
 			function (ss) {
 				return A2(
 					elm$core$List$indexedMap,
-					author$project$BunsuBai$sento('÷'),
-					A2(elm$core$String$split, '÷', ss));
+					author$project$BunsuBai$sento('-'),
+					A2(elm$core$String$split, '-', ss));
 			},
 			xlistx));
 };
 var author$project$BunsuBai$Eq = {$: 'Eq'};
-var author$project$BunsuBai$Kakeru = {$: 'Kakeru'};
-var author$project$BunsuBai$Waru = {$: 'Waru'};
+var author$project$BunsuBai$Hiku = {$: 'Hiku'};
+var author$project$BunsuBai$Tasu = {$: 'Tasu'};
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5519,8 +5519,8 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 	var enzant = function () {
 		var _n8 = _List_fromArray(
 			[
-				A2(elm$core$String$contains, '×', ax),
-				A2(elm$core$String$contains, '÷', ax),
+				A2(elm$core$String$contains, '+', ax),
+				A2(elm$core$String$contains, '-', ax),
 				A2(elm$core$String$contains, '=', ax)
 			]);
 		_n8$3:
@@ -5530,7 +5530,7 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 					if ((((_n8.b.b && (!_n8.b.a)) && _n8.b.b.b) && (!_n8.b.b.a)) && (!_n8.b.b.b.b)) {
 						var _n9 = _n8.b;
 						var _n10 = _n9.b;
-						return author$project$BunsuBai$Kakeru;
+						return author$project$BunsuBai$Tasu;
 					} else {
 						break _n8$3;
 					}
@@ -5540,7 +5540,7 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 							if ((_n8.b.b.b && (!_n8.b.b.a)) && (!_n8.b.b.b.b)) {
 								var _n11 = _n8.b;
 								var _n12 = _n11.b;
-								return author$project$BunsuBai$Waru;
+								return author$project$BunsuBai$Hiku;
 							} else {
 								break _n8$3;
 							}
@@ -5577,8 +5577,8 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 		var _n0 = function () {
 			var _n1 = _List_fromArray(
 				[
-					A2(elm$core$String$contains, '×', bbot),
-					A2(elm$core$String$contains, '÷', bbot),
+					A2(elm$core$String$contains, '+', bbot),
+					A2(elm$core$String$contains, '-', bbot),
 					A2(elm$core$String$contains, '=', bbot)
 				]);
 			_n1$3:
@@ -5589,8 +5589,8 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 							var _n2 = _n1.b;
 							var _n3 = _n2.b;
 							return _Utils_Tuple2(
-								'×\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '×', '', bbot) + '}'))),
-								A3(elm$core$String$replace, '×', '', bbot));
+								'+\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '+', '', bbot) + '}'))),
+								A3(elm$core$String$replace, '+', '', bbot));
 						} else {
 							break _n1$3;
 						}
@@ -5601,8 +5601,8 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 									var _n4 = _n1.b;
 									var _n5 = _n4.b;
 									return _Utils_Tuple2(
-										'÷\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '÷', '', bbot) + '}'))),
-										A3(elm$core$String$replace, '÷', '', bbot));
+										'-\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '-', '', bbot) + '}'))),
+										A3(elm$core$String$replace, '-', '', bbot));
 								} else {
 									break _n1$3;
 								}
@@ -5645,9 +5645,9 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 					'',
 					A3(
 						elm$core$String$replace,
-						'÷',
+						'-',
 						'',
-						A3(elm$core$String$replace, '×', '', ax)))),
+						A3(elm$core$String$replace, '+', '', ax)))),
 			enzan: enzant,
 			katex: ax
 		};
