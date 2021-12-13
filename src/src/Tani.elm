@@ -247,17 +247,17 @@ view model =
         ,div[style "position" "absolute", style "top" "200px", style "left" "100px"][sujibutton]
         ,div[style "position" "absolute", style "top" "240px", style "left" "550px"][button [ style "font-size" "50px",onClick (Change "")][text "つぎへ"]]
 
-        ,div[style "position" "absolute", style "top" "280px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange MtoKm)][text "m => km"]]
-        ,div[style "position" "absolute", style "top" "320px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange KmtoM)][text "km => m"]]
-        ,div[style "position" "absolute", style "top" "360px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange CmtoM)][text "cm => m"]]
-        ,div[style "position" "absolute", style "top" "400px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange MtoCm)][text "m => cm"]]
+        ,div[style "position" "absolute", style "top" "280px", style "left" "750px"][button [ style "font-size" "12px",onClick (KChange MtoKm)][text "m => km"]]
+        ,div[style "position" "absolute", style "top" "320px", style "left" "750px"][button [ style "font-size" "12px",onClick (KChange KmtoM)][text "km => m"]]
+        ,div[style "position" "absolute", style "top" "360px", style "left" "750px"][button [ style "font-size" "12px",onClick (KChange CmtoM)][text "cm => m"]]
+        ,div[style "position" "absolute", style "top" "400px", style "left" "750px"][button [ style "font-size" "12px",onClick (KChange MtoCm)][text "m => cm"]]
 
-        ,div[style "position" "absolute", style "top" "280px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange MmtoCm)][text "mm => cm"]]
-        ,div[style "position" "absolute", style "top" "320px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange CmtoMm)][text "cm => mm"]]
-        ,div[style "position" "absolute", style "top" "360px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange MltoL)][text "mL => L"]]
-        ,div[style "position" "absolute", style "top" "400px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange LtoMl)][text "L => mL"]]
-        ,div[style "position" "absolute", style "top" "440px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange GtoKg)][text "g => kg"]]
-        ,div[style "position" "absolute", style "top" "480px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange KgtoG)][text "kg => g"]]
+        ,div[style "position" "absolute", style "top" "280px", style "left" "850px"][button [ style "font-size" "12px",onClick (KChange MmtoCm)][text "mm => cm"]]
+        ,div[style "position" "absolute", style "top" "320px", style "left" "850px"][button [ style "font-size" "12px",onClick (KChange CmtoMm)][text "cm => mm"]]
+        ,div[style "position" "absolute", style "top" "360px", style "left" "850px"][button [ style "font-size" "12px",onClick (KChange MltoL)][text "mL => L"]]
+        ,div[style "position" "absolute", style "top" "400px", style "left" "850px"][button [ style "font-size" "12px",onClick (KChange LtoMl)][text "L => mL"]]
+        ,div[style "position" "absolute", style "top" "440px", style "left" "850px"][button [ style "font-size" "12px",onClick (KChange GtoKg)][text "g => kg"]]
+        ,div[style "position" "absolute", style "top" "480px", style "left" "850px"][button [ style "font-size" "12px",onClick (KChange KgtoG)][text "kg => g"]]
 
 
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
