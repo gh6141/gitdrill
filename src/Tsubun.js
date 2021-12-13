@@ -4937,316 +4937,6 @@ var author$project$BunsuBai$bunsu = F2(
 		var aa = (a / ww) | 0;
 		return (bb === 1) ? elm$core$String$fromInt(aa) : ('\\dfrac{' + (elm$core$String$fromInt(aa) + ('}{' + (elm$core$String$fromInt(bb) + '}'))));
 	});
-var author$project$BunsuBai$sento = F3(
-	function (moji, idx, ss) {
-		return (!idx) ? ss : _Utils_ap(moji, ss);
-	});
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
-		}
-	});
-var elm$core$List$concat = function (lists) {
-	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
-};
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var author$project$BunsuBai$yLCreate = function (gyo) {
-	var xlist = A2(elm$core$String$split, '×', gyo);
-	var xlistx = A2(
-		elm$core$List$indexedMap,
-		author$project$BunsuBai$sento('×'),
-		xlist);
-	return elm$core$List$concat(
-		A2(
-			elm$core$List$map,
-			function (ss) {
-				return A2(
-					elm$core$List$indexedMap,
-					author$project$BunsuBai$sento('÷'),
-					A2(elm$core$String$split, '÷', ss));
-			},
-			xlistx));
-};
-var author$project$BunsuBai$Eq = {$: 'Eq'};
-var author$project$BunsuBai$Kakeru = {$: 'Kakeru'};
-var author$project$BunsuBai$Waru = {$: 'Waru'};
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var elm$core$String$toInt = _String_toInt;
-var author$project$BunsuBai$toint = function (st) {
-	return A2(
-		elm$core$Maybe$withDefault,
-		0,
-		elm$core$String$toInt(st));
-};
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$String$contains = _String_contains;
-var elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			elm$core$String$join,
-			after,
-			A2(elm$core$String$split, before, string));
-	});
-var author$project$BunsuBai$ysCreate = function (ax) {
-	var enzant = function () {
-		var _n8 = _List_fromArray(
-			[
-				A2(elm$core$String$contains, '×', ax),
-				A2(elm$core$String$contains, '÷', ax),
-				A2(elm$core$String$contains, '=', ax)
-			]);
-		_n8$3:
-		while (true) {
-			if (_n8.b) {
-				if (_n8.a) {
-					if ((((_n8.b.b && (!_n8.b.a)) && _n8.b.b.b) && (!_n8.b.b.a)) && (!_n8.b.b.b.b)) {
-						var _n9 = _n8.b;
-						var _n10 = _n9.b;
-						return author$project$BunsuBai$Kakeru;
-					} else {
-						break _n8$3;
-					}
-				} else {
-					if (_n8.b.b) {
-						if (_n8.b.a) {
-							if ((_n8.b.b.b && (!_n8.b.b.a)) && (!_n8.b.b.b.b)) {
-								var _n11 = _n8.b;
-								var _n12 = _n11.b;
-								return author$project$BunsuBai$Waru;
-							} else {
-								break _n8$3;
-							}
-						} else {
-							if ((_n8.b.b.b && _n8.b.b.a) && (!_n8.b.b.b.b)) {
-								var _n13 = _n8.b;
-								var _n14 = _n13.b;
-								return author$project$BunsuBai$Eq;
-							} else {
-								break _n8$3;
-							}
-						}
-					} else {
-						break _n8$3;
-					}
-				}
-			} else {
-				break _n8$3;
-			}
-		}
-		return author$project$BunsuBai$Sento;
-	}();
-	if (A2(elm$core$String$contains, '分の', ax)) {
-		var bL = A2(elm$core$String$split, '分の', ax);
-		var bbot = A2(
-			elm$core$Maybe$withDefault,
-			'1',
-			elm$core$List$head(bL));
-		var bsi = A2(
-			elm$core$Maybe$withDefault,
-			'1',
-			elm$core$List$head(
-				elm$core$List$reverse(bL)));
-		var _n0 = function () {
-			var _n1 = _List_fromArray(
-				[
-					A2(elm$core$String$contains, '×', bbot),
-					A2(elm$core$String$contains, '÷', bbot),
-					A2(elm$core$String$contains, '=', bbot)
-				]);
-			_n1$3:
-			while (true) {
-				if (_n1.b) {
-					if (_n1.a) {
-						if ((((_n1.b.b && (!_n1.b.a)) && _n1.b.b.b) && (!_n1.b.b.a)) && (!_n1.b.b.b.b)) {
-							var _n2 = _n1.b;
-							var _n3 = _n2.b;
-							return _Utils_Tuple2(
-								'×\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '×', '', bbot) + '}'))),
-								A3(elm$core$String$replace, '×', '', bbot));
-						} else {
-							break _n1$3;
-						}
-					} else {
-						if (_n1.b.b) {
-							if (_n1.b.a) {
-								if ((_n1.b.b.b && (!_n1.b.b.a)) && (!_n1.b.b.b.b)) {
-									var _n4 = _n1.b;
-									var _n5 = _n4.b;
-									return _Utils_Tuple2(
-										'÷\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '÷', '', bbot) + '}'))),
-										A3(elm$core$String$replace, '÷', '', bbot));
-								} else {
-									break _n1$3;
-								}
-							} else {
-								if ((_n1.b.b.b && _n1.b.b.a) && (!_n1.b.b.b.b)) {
-									var _n6 = _n1.b;
-									var _n7 = _n6.b;
-									return _Utils_Tuple2(
-										'=\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '=', '', bbot) + '}'))),
-										A3(elm$core$String$replace, '=', '', bbot));
-								} else {
-									break _n1$3;
-								}
-							}
-						} else {
-							break _n1$3;
-						}
-					}
-				} else {
-					break _n1$3;
-				}
-			}
-			return _Utils_Tuple2('\\dfrac{' + (bsi + ('}{' + (bbot + '}'))), bbot);
-		}();
-		var ktx = _n0.a;
-		var bbot2 = _n0.b;
-		return {
-			bunbo: author$project$BunsuBai$toint(bbot2),
-			bunsi: author$project$BunsuBai$toint(bsi),
-			enzan: enzant,
-			katex: ktx
-		};
-	} else {
-		return {
-			bunbo: 1,
-			bunsi: author$project$BunsuBai$toint(
-				A3(
-					elm$core$String$replace,
-					'=',
-					'',
-					A3(
-						elm$core$String$replace,
-						'÷',
-						'',
-						A3(elm$core$String$replace, '×', '', ax)))),
-			enzan: enzant,
-			katex: ax
-		};
-	}
-};
-var author$project$BunsuBai$yuriL = function (ans) {
-	var ansL = A2(
-		elm$core$List$indexedMap,
-		author$project$BunsuBai$sento('='),
-		A2(elm$core$String$split, '=', ans));
-	var kl = A2(
-		elm$core$List$map,
-		function (gyo) {
-			return elm$core$List$map(
-				function (ax) {
-					return author$project$BunsuBai$ysCreate(ax);
-				})(
-				author$project$BunsuBai$yLCreate(gyo));
-		},
-		ansL);
-	return kl;
-};
-var author$project$BunsuBai$seikaiDisp = F2(
-	function (ans, yuseikai) {
-		var mll = author$project$BunsuBai$yuriL(ans);
-		var yusul = A2(
-			elm$core$Maybe$withDefault,
-			_List_fromArray(
-				[
-					{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''}
-				]),
-			elm$core$List$head(
-				elm$core$List$reverse(mll)));
-		var yusu = A2(
-			elm$core$Maybe$withDefault,
-			{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
-			elm$core$List$head(
-				elm$core$List$reverse(yusul)));
-		return _Utils_eq(yusu.bunsi, yuseikai.bunsi) && _Utils_eq(yusu.bunbo, yuseikai.bunbo);
-	});
 var author$project$BunsuBai$yakubun = function (ysu) {
 	var ww = ((!ysu.bunsi) || (!ysu.bunbo)) ? 1 : A2(author$project$BunsuBai$gcm, ysu.bunsi, ysu.bunbo);
 	var bs = (ysu.bunsi / ww) | 0;
@@ -5453,7 +5143,7 @@ var author$project$BunsuBai$update = F2(
 					bo3: model.mondai.bo3,
 					pattern: i4,
 					seikai: function () {
-						var _n4 = function () {
+						var _n1 = function () {
 							switch (i4) {
 								case 1:
 									return _Utils_Tuple2(i2 * model.mondai.bo1, i1 * model.mondai.bo2);
@@ -5465,8 +5155,8 @@ var author$project$BunsuBai$update = F2(
 									return _Utils_Tuple2(1, 1);
 							}
 						}();
-						var kaisi = _n4.a;
-						var kaibo = _n4.b;
+						var kaisi = _n1.a;
+						var kaibo = _n1.b;
 						return author$project$BunsuBai$yakubun(
 							{
 								bunbo: kaibo,
@@ -5507,89 +5197,23 @@ var author$project$BunsuBai$update = F2(
 				var mans = (si === 'C') ? A2(elm$core$String$dropRight, 1, model.ans) : _Utils_ap(
 					model.ans,
 					(si === '答') ? '' : si);
-				var r1 = ((model.mondai.pattern === 1) && A2(author$project$BunsuBai$seikaiDisp, mans, model.mondai.seikai)) ? (model.rireki1 + 1) : model.rireki1;
-				var r2 = ((model.mondai.pattern === 2) && A2(author$project$BunsuBai$seikaiDisp, mans, model.mondai.seikai)) ? (model.rireki2 + 1) : model.rireki2;
-				var r3 = ((model.mondai.pattern === 3) && A2(author$project$BunsuBai$seikaiDisp, mans, model.mondai.seikai)) ? (model.rireki3 + 1) : model.rireki3;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							ans: mans,
 							ansdisp: (si === '答') ? true : model.ansdisp,
-							rireki1: r1,
-							rireki2: r2,
-							rireki3: r3,
 							tmpans: tans
 						}),
 					elm$core$Platform$Cmd$none);
-			case 'Kmotome':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 'Lu':
-				var lut = function () {
-					var _n1 = model.mondai.pattern;
-					switch (_n1) {
-						case 1:
-							return model.bun1;
-						case 2:
-							return '?';
-						case 3:
-							return model.bun1;
-						default:
-							return '*';
-					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{lu: lut, luflg: true}),
-					elm$core$Platform$Cmd$none);
-			case 'Ru':
-				var rut = function () {
-					var _n2 = model.mondai.pattern;
-					switch (_n2) {
-						case 1:
-							return model.bun2;
-						case 2:
-							return model.bun2;
-						case 3:
-							return '?';
-						default:
-							return '*';
-					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{ru: rut, ruflg: true}),
-					elm$core$Platform$Cmd$none);
 			default:
-				var rdt = function () {
-					var _n3 = model.mondai.pattern;
-					switch (_n3) {
-						case 1:
-							return '?';
-						case 2:
-							return model.bun1;
-						case 3:
-							return model.bun2;
-						default:
-							return '*';
-					}
-				}();
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{rd: rdt, rdflg: true}),
-					elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$BunsuBai$Btn = function (a) {
 	return {$: 'Btn', a: a};
 };
-var author$project$BunsuBai$Lu = {$: 'Lu'};
 var author$project$BunsuBai$Next = {$: 'Next'};
-var author$project$BunsuBai$Rd = {$: 'Rd'};
-var author$project$BunsuBai$Ru = {$: 'Ru'};
 var author$project$BunsuBai$btnLabel = function (xi) {
 	switch (xi) {
 		case 12:
@@ -5604,6 +5228,10 @@ var author$project$BunsuBai$btnLabel = function (xi) {
 			return '÷';
 		case 17:
 			return '答';
+		case 18:
+			return '+';
+		case 19:
+			return '-';
 		default:
 			return elm$core$String$fromInt(xi);
 	}
@@ -5679,6 +5307,75 @@ var author$project$BunsuBai$htmlGenerator = F2(
 					]));
 		}
 	});
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
 var yotamDvir$elm_katex$Katex$Configs$generate = F4(
 	function (g, m, h, latex) {
 		var g_ = A2(g, m, h);
@@ -5750,6 +5447,212 @@ var author$project$BunsuBai$spankatex = function (siki) {
 				yotamDvir$elm_katex$Katex$inline(siki))
 			]));
 };
+var author$project$BunsuBai$sento = F3(
+	function (moji, idx, ss) {
+		return (!idx) ? ss : _Utils_ap(moji, ss);
+	});
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
+};
+var author$project$BunsuBai$yLCreate = function (gyo) {
+	var xlist = A2(elm$core$String$split, '×', gyo);
+	var xlistx = A2(
+		elm$core$List$indexedMap,
+		author$project$BunsuBai$sento('×'),
+		xlist);
+	return elm$core$List$concat(
+		A2(
+			elm$core$List$map,
+			function (ss) {
+				return A2(
+					elm$core$List$indexedMap,
+					author$project$BunsuBai$sento('÷'),
+					A2(elm$core$String$split, '÷', ss));
+			},
+			xlistx));
+};
+var author$project$BunsuBai$Eq = {$: 'Eq'};
+var author$project$BunsuBai$Kakeru = {$: 'Kakeru'};
+var author$project$BunsuBai$Waru = {$: 'Waru'};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var elm$core$String$toInt = _String_toInt;
+var author$project$BunsuBai$toint = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toInt(st));
+};
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$String$contains = _String_contains;
+var elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			elm$core$String$join,
+			after,
+			A2(elm$core$String$split, before, string));
+	});
+var author$project$BunsuBai$ysCreate = function (ax) {
+	var enzant = function () {
+		var _n8 = _List_fromArray(
+			[
+				A2(elm$core$String$contains, '×', ax),
+				A2(elm$core$String$contains, '÷', ax),
+				A2(elm$core$String$contains, '=', ax)
+			]);
+		_n8$3:
+		while (true) {
+			if (_n8.b) {
+				if (_n8.a) {
+					if ((((_n8.b.b && (!_n8.b.a)) && _n8.b.b.b) && (!_n8.b.b.a)) && (!_n8.b.b.b.b)) {
+						var _n9 = _n8.b;
+						var _n10 = _n9.b;
+						return author$project$BunsuBai$Kakeru;
+					} else {
+						break _n8$3;
+					}
+				} else {
+					if (_n8.b.b) {
+						if (_n8.b.a) {
+							if ((_n8.b.b.b && (!_n8.b.b.a)) && (!_n8.b.b.b.b)) {
+								var _n11 = _n8.b;
+								var _n12 = _n11.b;
+								return author$project$BunsuBai$Waru;
+							} else {
+								break _n8$3;
+							}
+						} else {
+							if ((_n8.b.b.b && _n8.b.b.a) && (!_n8.b.b.b.b)) {
+								var _n13 = _n8.b;
+								var _n14 = _n13.b;
+								return author$project$BunsuBai$Eq;
+							} else {
+								break _n8$3;
+							}
+						}
+					} else {
+						break _n8$3;
+					}
+				}
+			} else {
+				break _n8$3;
+			}
+		}
+		return author$project$BunsuBai$Sento;
+	}();
+	if (A2(elm$core$String$contains, '分の', ax)) {
+		var bL = A2(elm$core$String$split, '分の', ax);
+		var bbot = A2(
+			elm$core$Maybe$withDefault,
+			'1',
+			elm$core$List$head(bL));
+		var bsi = A2(
+			elm$core$Maybe$withDefault,
+			'1',
+			elm$core$List$head(
+				elm$core$List$reverse(bL)));
+		var _n0 = function () {
+			var _n1 = _List_fromArray(
+				[
+					A2(elm$core$String$contains, '×', bbot),
+					A2(elm$core$String$contains, '÷', bbot),
+					A2(elm$core$String$contains, '=', bbot)
+				]);
+			_n1$3:
+			while (true) {
+				if (_n1.b) {
+					if (_n1.a) {
+						if ((((_n1.b.b && (!_n1.b.a)) && _n1.b.b.b) && (!_n1.b.b.a)) && (!_n1.b.b.b.b)) {
+							var _n2 = _n1.b;
+							var _n3 = _n2.b;
+							return _Utils_Tuple2(
+								'×\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '×', '', bbot) + '}'))),
+								A3(elm$core$String$replace, '×', '', bbot));
+						} else {
+							break _n1$3;
+						}
+					} else {
+						if (_n1.b.b) {
+							if (_n1.b.a) {
+								if ((_n1.b.b.b && (!_n1.b.b.a)) && (!_n1.b.b.b.b)) {
+									var _n4 = _n1.b;
+									var _n5 = _n4.b;
+									return _Utils_Tuple2(
+										'÷\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '÷', '', bbot) + '}'))),
+										A3(elm$core$String$replace, '÷', '', bbot));
+								} else {
+									break _n1$3;
+								}
+							} else {
+								if ((_n1.b.b.b && _n1.b.b.a) && (!_n1.b.b.b.b)) {
+									var _n6 = _n1.b;
+									var _n7 = _n6.b;
+									return _Utils_Tuple2(
+										'=\\dfrac{' + (bsi + ('}{' + (A3(elm$core$String$replace, '=', '', bbot) + '}'))),
+										A3(elm$core$String$replace, '=', '', bbot));
+								} else {
+									break _n1$3;
+								}
+							}
+						} else {
+							break _n1$3;
+						}
+					}
+				} else {
+					break _n1$3;
+				}
+			}
+			return _Utils_Tuple2('\\dfrac{' + (bsi + ('}{' + (bbot + '}'))), bbot);
+		}();
+		var ktx = _n0.a;
+		var bbot2 = _n0.b;
+		return {
+			bunbo: author$project$BunsuBai$toint(bbot2),
+			bunsi: author$project$BunsuBai$toint(bsi),
+			enzan: enzant,
+			katex: ktx
+		};
+	} else {
+		return {
+			bunbo: 1,
+			bunsi: author$project$BunsuBai$toint(
+				A3(
+					elm$core$String$replace,
+					'=',
+					'',
+					A3(
+						elm$core$String$replace,
+						'÷',
+						'',
+						A3(elm$core$String$replace, '×', '', ax)))),
+			enzan: enzant,
+			katex: ax
+		};
+	}
+};
 var author$project$BunsuBai$viewCreate = function (ans) {
 	var ansL = A2(
 		elm$core$List$indexedMap,
@@ -5774,71 +5677,6 @@ var author$project$BunsuBai$viewCreate = function (ans) {
 		ansL);
 	return gl;
 };
-var author$project$BunsuBai$hikaku = F2(
-	function (ysu1, ysu2) {
-		var y2 = author$project$BunsuBai$yakubun(ysu2);
-		var y1 = author$project$BunsuBai$yakubun(ysu1);
-		return _Utils_eq(y1.bunsi, y2.bunsi) && _Utils_eq(y1.bunbo, y2.bunbo);
-	});
-var author$project$BunsuBai$yuriKeisanL = function (ans) {
-	var yl = author$project$BunsuBai$yuriL(ans);
-	var ykl = function () {
-		var func = F2(
-			function (yu, yuacl) {
-				var ysi = (!yu.bunsi) ? 1 : yu.bunsi;
-				var ybo = (!yu.bunbo) ? 1 : yu.bunbo;
-				var acbs = _Utils_eq(yu.enzan, author$project$BunsuBai$Waru) ? (ybo * yuacl.bunsi) : (ysi * yuacl.bunsi);
-				var acbb = _Utils_eq(yu.enzan, author$project$BunsuBai$Waru) ? (ysi * yuacl.bunbo) : (ybo * yuacl.bunbo);
-				return {
-					bunbo: acbb,
-					bunsi: acbs,
-					enzan: author$project$BunsuBai$Sento,
-					katex: '\\dfrac{' + (elm$core$String$fromInt(acbs) + ('}{' + (elm$core$String$fromInt(acbb) + '}')))
-				};
-			});
-		return A2(
-			elm$core$List$map,
-			function (ylst) {
-				return A3(
-					elm$core$List$foldl,
-					func,
-					{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
-					ylst);
-			},
-			yl);
-	}();
-	return ykl;
-};
-var author$project$BunsuBai$yuriCheck = F2(
-	function (ans, yuans) {
-		var ykL = author$project$BunsuBai$yuriKeisanL(ans);
-		return A2(
-			elm$core$List$map,
-			function (yus) {
-				return A2(author$project$BunsuBai$hikaku, yus, yuans);
-			},
-			ykL);
-	});
-var author$project$BunsuBai$viewCreateMaru = F2(
-	function (ans, yuseikai) {
-		var ml = A2(
-			elm$core$List$map,
-			function (flg) {
-				return A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'margin', '20px')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							flg ? 'Ok' : '*')
-						]));
-			},
-			A2(author$project$BunsuBai$yuriCheck, ans, yuseikai));
-		return ml;
-	});
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
@@ -5867,24 +5705,12 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
 var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$text_ = elm$svg$Svg$trustedNode('text');
 var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
 var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
 var rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 	return {$: 'Attrs', a: a};
 };
@@ -6088,27 +5914,6 @@ var author$project$BunsuBai$view = function (model) {
 						elm$svg$Svg$text(moji)
 					]));
 		});
-	var sline = F5(
-		function (x1, y1, x2, y2, wd) {
-			return A2(
-				elm$svg$Svg$line,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x1(
-						elm$core$String$fromInt(x1)),
-						elm$svg$Svg$Attributes$y1(
-						elm$core$String$fromInt(y1)),
-						elm$svg$Svg$Attributes$x2(
-						elm$core$String$fromInt(x2)),
-						elm$svg$Svg$Attributes$y2(
-						elm$core$String$fromInt(y2)),
-						elm$svg$Svg$Attributes$stroke('blue'),
-						elm$svg$Svg$Attributes$strokeWidth(
-						elm$core$String$fromInt(wd)),
-						elm$svg$Svg$Attributes$strokeLinecap('round')
-					]),
-				_List_Nil);
-		});
 	var sbutton = function (ii) {
 		return A2(
 			elm$html$Html$button,
@@ -6195,7 +6000,7 @@ var author$project$BunsuBai$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								sbutton(15)
+								sbutton(18)
 							]))
 					])),
 				A2(
@@ -6229,7 +6034,7 @@ var author$project$BunsuBai$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								sbutton(16)
+								sbutton(19)
 							]))
 					])),
 				A2(
@@ -6265,7 +6070,8 @@ var author$project$BunsuBai$view = function (model) {
 							[
 								sbutton(17)
 							]))
-					]))
+					])),
+				A2(elm$html$Html$tr, _List_Nil, _List_Nil)
 			]));
 	var msg = function () {
 		var _n1 = (model.rireki1 * model.rireki2) * model.rireki3;
@@ -6286,28 +6092,6 @@ var author$project$BunsuBai$view = function (model) {
 			[
 				elm$html$Html$text('Ok')
 			]));
-	var linex = A2(
-		elm$svg$Svg$svg,
-		_List_fromArray(
-			[
-				elm$svg$Svg$Attributes$viewBox('0 0 400 400'),
-				elm$svg$Svg$Attributes$width('480'),
-				elm$svg$Svg$Attributes$height('400')
-			]),
-		_List_fromArray(
-			[
-				A5(sline, 20, 120, 400, 120, 3),
-				A5(sline, 20, 150, 400, 150, 3),
-				A5(sline, 20 + 100, 115, 20 + 100, 125, 2),
-				A5(sline, 300, 115, 300, 125, 2),
-				A5(sline, 20 + 100, 145, 20 + 100, 155, 2),
-				A5(sline, 300, 145, 300, 155, 2),
-				A5(sline, 20, 115, 20, 155, 1),
-				A3(stext, 15, 110, '0'),
-				A3(stext, 15, 170, '0'),
-				A3(stext, 400, 110, '(m)'),
-				A3(stext, 400, 170, '(倍)')
-			]));
 	var katexl = function () {
 		var _n0 = model.mondai.pattern;
 		switch (_n0) {
@@ -6315,31 +6099,25 @@ var author$project$BunsuBai$view = function (model) {
 				return author$project$BunsuBai$divkatex(
 					_List_fromArray(
 						[
-							yotamDvir$elm_katex$Katex$human('(1) 赤リボンの長さが'),
 							yotamDvir$elm_katex$Katex$inline(model.bun1),
-							yotamDvir$elm_katex$Katex$human('mです。青リボンの長さは'),
-							yotamDvir$elm_katex$Katex$inline(model.bun2),
-							yotamDvir$elm_katex$Katex$human('mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?')
+							yotamDvir$elm_katex$Katex$human('+'),
+							yotamDvir$elm_katex$Katex$inline(model.bun2)
 						]));
 			case 2:
 				return author$project$BunsuBai$divkatex(
 					_List_fromArray(
 						[
-							yotamDvir$elm_katex$Katex$human('(2) 青リボンの長さは赤リボンの'),
 							yotamDvir$elm_katex$Katex$inline(model.bun1),
-							yotamDvir$elm_katex$Katex$human('倍です。青リボンは'),
-							yotamDvir$elm_katex$Katex$inline(model.bun2),
-							yotamDvir$elm_katex$Katex$human('mです。赤リボンは何m?')
+							yotamDvir$elm_katex$Katex$human('+'),
+							yotamDvir$elm_katex$Katex$inline(model.bun2)
 						]));
 			case 3:
 				return author$project$BunsuBai$divkatex(
 					_List_fromArray(
 						[
-							yotamDvir$elm_katex$Katex$human('(3) 赤リボンの長さが'),
 							yotamDvir$elm_katex$Katex$inline(model.bun1),
-							yotamDvir$elm_katex$Katex$human('mです。青リボンの長さは赤リボンの'),
-							yotamDvir$elm_katex$Katex$inline(model.bun2),
-							yotamDvir$elm_katex$Katex$human('倍です。青リボンの長さは?')
+							yotamDvir$elm_katex$Katex$human('-'),
+							yotamDvir$elm_katex$Katex$inline(model.bun2)
 						]));
 			default:
 				return author$project$BunsuBai$divkatex(
@@ -6447,82 +6225,10 @@ var author$project$BunsuBai$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								linex,
-								A3(
-								dcbx,
-								190,
-								80,
-								A2(
-									rundis$elm_bootstrap$Bootstrap$Button$button,
-									_List_fromArray(
-										[
-											rundis$elm_bootstrap$Bootstrap$Button$attrs(
-											_List_fromArray(
-												[
-													A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-													elm$html$Html$Events$onClick(author$project$BunsuBai$Lu)
-												]))
-										]),
-									_List_fromArray(
-										[
-											model.luflg ? author$project$BunsuBai$spankatex(model.lu) : elm$html$Html$text('?')
-										]))),
-								A3(
-								dcbx,
-								200,
-								220,
-								A2(
-									elm$html$Html$span,
-									_List_fromArray(
-										[
-											A2(elm$html$Html$Attributes$style, 'font-size', '30px')
-										]),
-									_List_fromArray(
-										[
-											elm$html$Html$text('1')
-										]))),
-								A3(
-								dcbx,
-								350,
-								80,
-								A2(
-									rundis$elm_bootstrap$Bootstrap$Button$button,
-									_List_fromArray(
-										[
-											rundis$elm_bootstrap$Bootstrap$Button$attrs(
-											_List_fromArray(
-												[
-													A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-													elm$html$Html$Events$onClick(author$project$BunsuBai$Ru)
-												]))
-										]),
-									_List_fromArray(
-										[
-											model.ruflg ? author$project$BunsuBai$spankatex(model.ru) : elm$html$Html$text('?')
-										]))),
-								A3(
-								dcbx,
-								350,
-								220,
-								A2(
-									rundis$elm_bootstrap$Bootstrap$Button$button,
-									_List_fromArray(
-										[
-											rundis$elm_bootstrap$Bootstrap$Button$attrs(
-											_List_fromArray(
-												[
-													A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-													elm$html$Html$Events$onClick(author$project$BunsuBai$Rd)
-												]))
-										]),
-									_List_fromArray(
-										[
-											model.rdflg ? author$project$BunsuBai$spankatex(model.rd) : elm$html$Html$text('?')
-										]))),
 								A3(
 								dcbx,
 								20,
-								300,
+								20,
 								A2(
 									elm$html$Html$span,
 									_List_fromArray(
@@ -6532,42 +6238,7 @@ var author$project$BunsuBai$view = function (model) {
 									function () {
 										var siki = model.ans;
 										return author$project$BunsuBai$viewCreate(siki);
-									}())),
-								A3(
-								dcbx,
-								0,
-								300,
-								A2(
-									elm$html$Html$span,
-									_List_fromArray(
-										[
-											A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
-											A2(elm$html$Html$Attributes$style, 'color', 'red')
-										]),
-									A2(author$project$BunsuBai$viewCreateMaru, model.ans, model.mondai.seikai))),
-								model.ansdisp ? author$project$BunsuBai$spankatex(model.mondai.seikai.katex) : A2(
-								elm$html$Html$span,
-								_List_Nil,
-								_List_fromArray(
-									[
-										elm$html$Html$text('')
-									])),
-								A3(
-								dcbx,
-								20,
-								380,
-								A2(
-									elm$html$Html$span,
-									_List_fromArray(
-										[
-											A2(elm$html$Html$Attributes$style, 'font-size', '200px'),
-											A2(elm$html$Html$Attributes$style, 'color', 'red')
-										]),
-									_List_fromArray(
-										[
-											elm$html$Html$text(
-											A2(author$project$BunsuBai$seikaiDisp, model.ans, model.mondai.seikai) ? '〇' : '')
-										])))
+									}()))
 							])),
 						A2(
 						elm$html$Html$td,
@@ -6583,32 +6254,13 @@ var author$project$BunsuBai$view = function (model) {
 										elm$html$Html$td,
 										_List_fromArray(
 											[
+												elm$html$Html$Attributes$colspan(2),
 												A2(elm$html$Html$Attributes$style, 'font-size', '25px'),
 												A2(elm$html$Html$Attributes$style, 'color', 'blue')
 											]),
 										_List_fromArray(
 											[
 												elm$html$Html$text(msg)
-											]))
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text(
-														'正解数 <1>:' + (elm$core$String$fromInt(model.rireki1) + (' <2>:' + (elm$core$String$fromInt(model.rireki2) + (' <3>:' + elm$core$String$fromInt(model.rireki3))))))
-													]))
 											]))
 									])),
 								A2(
@@ -6635,33 +6287,9 @@ var author$project$BunsuBai$view = function (model) {
 												_List_fromArray(
 													[
 														elm$html$Html$text('つぎへ')
-													]))
+													])),
+												sujibutton
 											]))
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_fromArray(
-											[
-												A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-												A2(elm$html$Html$Attributes$style, 'color', 'red')
-											]),
-										_List_Nil)
-									])),
-								A2(
-								elm$html$Html$tr,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$td,
-										_List_Nil,
-										_List_fromArray(
-											[sujibutton]))
 									]))
 							]))
 					]))

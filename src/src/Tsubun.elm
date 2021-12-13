@@ -32,14 +32,7 @@ import Bootstrap.Button as Button
 import Debug
 
 
---opassage : List Latex
---opassage =
- --   [ human "等式の変形 "
- --   , inline "s=\\dfrac{a}{b}"
- --   , human " *** "
- --   , display "s=\\dfrac{a}{b}"
 
- --   ]
 
 
 main =
@@ -259,7 +252,7 @@ init _ =
   , Cmd.none
   )
 
-type Msg    =  Next | Newmon Mondai | Btn String |Kmotome |Lu |Ru |Rd
+type Msg    =  Next | Newmon Mondai | Btn String |Kmotome 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -328,61 +321,17 @@ update msg model =
         mans=if si=="C" then (String.dropRight 1 model.ans ) else (model.ans++(if si=="答" then "" else si))
 
 
-        r1=if (model.mondai.pattern==1 && ( seikaiDisp mans model.mondai.seikai)) then 
-           model.rireki1+1
-         else
-           model.rireki1
-
-        r2=if (model.mondai.pattern==2 && ( seikaiDisp mans model.mondai.seikai)) then 
-           model.rireki2+1
-         else
-           model.rireki2
-        r3=if (model.mondai.pattern==3 && ( seikaiDisp mans model.mondai.seikai)) then 
-           model.rireki3+1
-         else
-           model.rireki3
+    
 
 
      in
 
       ( {model | ans= mans ,tmpans=tans ,ansdisp=if si=="答" then True else model.ansdisp
-                ,rireki1=  r1  ,rireki2=   r2 ,rireki3=r3
-                 } ,Cmd.none)
+                       } ,Cmd.none)
 
    Kmotome ->
       
             ( model ,Cmd.none)
-   Lu -> 
-     let
-      lut= case model.mondai.pattern of
-       1 -> model.bun1
-       2 -> "?"
-       3 -> model.bun1
-       _ -> "*"
-     in
-      ({model|lu= lut ,luflg=True},Cmd.none)
-   Ru ->
-    let
-      rut= case model.mondai.pattern of
-       1 -> model.bun2
-       2 -> model.bun2
-       3 -> "?"
-       _ -> "*"
-    in
-      ({model|ru= rut ,ruflg=True},Cmd.none)
-   Rd ->
-    let
-      rdt= case model.mondai.pattern of
-       1 -> "?"
-       2 -> model.bun1
-       3 -> model.bun2
-       _ -> "*"
-    in
-      ({model|rd= rdt ,rdflg=True},Cmd.none)
-
-
-  
- 
  
 
 
@@ -405,13 +354,13 @@ view model =
                td [] [sbutton 4]
                ,td [] [sbutton 5]
                ,td [] [sbutton 6]
-               ,td [] [sbutton 15]
+               ,td [] [sbutton 18]
              ]
              ,tr [] [
                td [] [sbutton 1]
                ,td [] [sbutton 2]
                ,td [] [sbutton 3]
-               ,td [] [sbutton 16]
+               ,td [] [sbutton 19]
              ]
              ,tr [] [
                td [] [sbutton 0]
@@ -419,13 +368,13 @@ view model =
                ,td [] [sbutton 12]
                ,td [] [sbutton 17]
              ]
+             ,tr [] [
+               --  td [] [sbutton 15]
+               -- , td [] [sbutton 16]
+             ]
             
             ]
-
-
-
    
-      
         cboxlu flg km =button [style "font-size" "20px" ,onClick km] [ spankatex "\\dfrac{a}{b}" ]
       
         cboxez flg km=button [style "font-size" "30px" ,onClick km ]  [ spankatex "\\dfrac{a}{b}" ]
@@ -437,32 +386,8 @@ view model =
 
         maruspan=(span [style "color" "red",style "font-size" "30px"] [text "Ok"])
 
-
         greenans=span [Html.Attributes.style "font-size" "30px",style "color" "green"] [text  model.ans]
-
-        linex =Svg.svg 
-         [ Svg.Attributes.viewBox "0 0 400 400"
-         , Svg.Attributes.width "480"
-         , Svg.Attributes.height "400"
-         ]
-          [
-              sline 20 120 400 120 3 
-              ,sline 20 150 400 150 3 
-
-              ,sline (20+100) 115 (20+100) 125 2 
-              ,sline 300 115 300 125 2
-              ,sline (20+100) 145 (20+100) 155 2 
-              ,sline 300 145 300 155 2 
-
-              ,sline 20 115 20 155 1 
-              ,stext 15 110 "0"
-              ,stext 15 170 "0"
-              ,stext 400 110 "(m)"
-              ,stext 400 170 "(倍)"
-
-              
-          ]
-         
+   
         stext xx yy moji = Svg.text_
          [ Svg.Attributes.x (String.fromInt xx)
          , Svg.Attributes.y (String.fromInt yy)
@@ -470,22 +395,12 @@ view model =
          ]
          [ Svg.text moji
          ]
-        
-        sline x1 y1 x2 y2 wd =Svg.line
-          [ Svg.Attributes.x1 (String.fromInt x1)
-         , Svg.Attributes.y1 (String.fromInt y1)
-         , Svg.Attributes.x2 (String.fromInt x2)
-         , Svg.Attributes.y2 (String.fromInt y2)
-         , Svg.Attributes.stroke "blue"
-         , Svg.Attributes.strokeWidth (String.fromInt wd)
-         , Svg.Attributes.strokeLinecap "round"
-          ] []
                   
 
         katexl=case model.mondai.pattern of
-         1 -> divkatex [human "(1) 赤リボンの長さが",inline model.bun1,human "mです。青リボンの長さは", inline model.bun2,human "mです。赤リボンの長さをもと（１）にすると、青リボンの長さは何倍?" ]
-         2 -> divkatex [human "(2) 青リボンの長さは赤リボンの",inline model.bun1,human "倍です。青リボンは",inline model.bun2,human "mです。赤リボンは何m?"]
-         3 -> divkatex [human "(3) 赤リボンの長さが",inline model.bun1 ,human "mです。青リボンの長さは赤リボンの",inline model.bun2,human "倍です。青リボンの長さは?"]
+         1 -> divkatex [ inline model.bun1,human "+", inline model.bun2 ]
+         2 -> divkatex [ inline model.bun1,human "+",inline model.bun2]
+         3 -> divkatex [ inline model.bun1 ,human "-",inline model.bun2]
          _ -> divkatex [human ""] 
 
         msg=
@@ -498,56 +413,32 @@ view model =
    table [align "center",style "width" "80%"]
    [
     tr [] [    
-       td [colspan 2,style "font-size" "30px" ] [katexl]       
-      
-      
+       td [colspan 2,style "font-size" "30px" ] [katexl]   
     ]
 
     ,tr []
-    [
-     td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
-       linex
-       ,dcbx  190 80  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Lu]] [  (if model.luflg then (spankatex model.lu) else (text "?")) ])
-       ,dcbx  200 220 (span [Html.Attributes.style "font-size" "30px"] [text "1"])
-       ,dcbx  350 80  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Ru]] [  (if model.ruflg then (spankatex model.ru) else (text "?")) ])
-       ,dcbx  350 220  (Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Rd]] [  (if model.rdflg then (spankatex model.rd) else (text "?")) ])
-       ,dcbx  20 300 (span [Html.Attributes.style "font-size" "30px"]
-        (
-         let
-          siki=model.ans
-         in
-          viewCreate siki          
-        )
-       )
-       ,dcbx  0 300 (span [Html.Attributes.style "font-size" "30px",style "color" "red"]        
-         ( viewCreateMaru model.ans model.mondai.seikai )           
-         -- (viewCreateSiki model.ans)
-       )
-       ,if model.ansdisp then (spankatex model.mondai.seikai.katex) else (span [] [text ""])
-       ,dcbx 20 380 (span  [Html.Attributes.style "font-size" "200px",style "color" "red"]  
-            [text (if (seikaiDisp model.ans model.mondai.seikai) then "〇" else "")]
-         )
-  
-      ]   
-     ,td [] [
+    [     
+      td [Html.Attributes.style "position" "relative",Html.Attributes.style "padding" "3em"] [
+          dcbx  20 20 (span [Html.Attributes.style "font-size" "30px"]
+          (
+           let
+            siki=model.ans
+           in
+            viewCreate siki          
+           )
+          )  
+         ]   
+       ,
+     td [] [
        tr [] [
-        td [Html.Attributes.style "font-size" "25px",style "color" "blue"] [text msg  ]
+        td [colspan 2,Html.Attributes.style "font-size" "25px",style "color" "blue"] [text msg  ]
        ]
-       ,tr [] [
-        td [] [span [] [text ("正解数 <1>:"++(String.fromInt model.rireki1)++" <2>:"++(String.fromInt model.rireki2)++" <3>:"++(String.fromInt model.rireki3))]]
-       ]
-      ,tr [] [
-       td [] [Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ] ]
-       
-      ]
-
-      ,tr [] [td [Html.Attributes.style "font-size" "20px",style "color" "red" ] [
-        
-      ]]
-  
+     
       , tr [] [
+  
          td [] [
-           sujibutton
+             Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ] 
+           ,sujibutton
 
          ]
        ]
@@ -603,6 +494,8 @@ btnLabel xi = case xi of
                15 -> "×"
                16 -> "÷"
                17 -> "答"
+               18 -> "+"
+               19 -> "-"
                _  -> String.fromInt xi
 
 
