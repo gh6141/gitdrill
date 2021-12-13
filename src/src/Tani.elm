@@ -29,6 +29,9 @@ type alias Model =
   { maru : Bool
    ,toi:Mondai
    ,inp:String
+   ,knzn:Kanzan
+   ,fromT:String
+   ,toT:String
    ,s20:Int
    ,kekkal:List (String,String)
    ,gokaku:Bool
@@ -39,14 +42,16 @@ type alias Model =
  
 init : () -> (Model,Cmd Msg)
 init _ =
-  ( { maru=False,toi={sa="4",sb="5"},inp="?",s20=999,kekkal=[],gokaku=False,msg=False,missl=[]} , Cmd.none )
+  ( { maru=False,toi={sa="4",sb="5"},inp="?",knzn=MtoKm,fromT="m",toT="km",s20=4999,kekkal=[],gokaku=False,msg=False,missl=[]} , Cmd.none )
 
 
 -- UPDATE
 
+type Kanzan = MtoKm | KmtoM | CmtoM | MtoCm | MmtoCm | CmtoMm | MltoL | LtoMl | GtoKg | KgtoG
+
 
 type Msg
-  = Change String | NewAns Mondai | Btn String | S05 
+  = Change String | NewAns Mondai | Btn String | KChange Kanzan 
 
 btnLabel : Int -> String
 btnLabel xi = case xi of
@@ -87,15 +92,27 @@ update msg model =
         
 
 
+
+
       in
-      ( {model | maru=False,toi=mnd ,inp="?",gokaku=(not endflg),msg=False
+      ( {model | maru=False,toi=
+          {sa=
+          case model.knzn of
+           KmtoM -> String.fromFloat ((tofloat mnd.sa)/1000.0)
+           MtoCm -> String.fromFloat ((tofloat mnd.sa)/100.0)
+           CmtoMm -> String.fromFloat ((tofloat mnd.sa)/10.0)
+           LtoMl -> String.fromFloat ((tofloat mnd.sa)/1000.0)
+           KgtoG -> String.fromFloat ((tofloat mnd.sa)/1000.0)
+           _ -> mnd.sa      
+         ,sb=mnd.sb}
+       ,inp="?",gokaku=(not endflg),msg=False
         },if gnflg then (Random.generate NewAns ansGenerator) else  Cmd.none )
        --  }, Cmd.none )
 
     Btn si -> 
      let
        
-        seikais=String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  )  
+        seikais=henkan model.toi.sa model.knzn
         kotaes=String.replace "?" "" (model.inp++si)  --? 除外
 
         --正解と答えの桁数が一致しているか　チェック ?除外
@@ -109,9 +126,10 @@ update msg model =
 
         inpx=((if model.inp=="?" then "" else model.inp )++si)
 
-        marux=((toint model.toi.sa)+(toint model.toi.sb))
-                      ==
-                     ( toint inpx)
+        --  marux=((toint model.toi.sa)+(toint model.toi.sb))
+        --              ==
+          --           ( toint inpx)
+        marux = ((henkan model.toi.sa model.knzn) == inpx  )
         
      in
       ({model| 
@@ -129,14 +147,28 @@ update msg model =
                  else
                    model.missl
               } ,Cmd.none)
-    S05 ->
-      ({model|s20=5,gokaku=False},Cmd.none    )
+    KChange knzn ->
+      let
+       (fromS,toS)=
+         case knzn of
+           MtoKm -> ("m","km")
+           KmtoM -> ("km","m")
+           CmtoM -> ("cm","m")
+           MtoCm -> ("m","cm")
+           MmtoCm -> ("mm","cm")
+           CmtoMm -> ("cm","mm")
+           MltoL -> ("mL","L")
+           LtoMl -> ("L","mL")
+           GtoKg -> ("g","kg")
+           KgtoG -> ("kg","g")
+
+      in
+      ({model|knzn=knzn,fromT=fromS ,toT=toS, gokaku=False},Cmd.none    )
     
-    
-
-
-
+ 
 toint st=  Maybe.withDefault 0 (String.toInt st) 
+tofloat st=  Maybe.withDefault 0 (String.toFloat st) 
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -207,16 +239,25 @@ view model =
         --,smoji "260" "10" b10x
         --,smoji "340" "10" b1
         --,smoji "410" "10" "="
-        stxt "100" "10" model.toi.sa "70"
-        ,stxt "300" "10" "であらわすと→" "40"
-        ,stxt "630" "10" model.inp "70"
-        
-   
-    
+        stxt "100" "10" (model.toi.sa++model.fromT) "60"
+        ,stxt "400" "10" (model.toT++"であらわすと→") "20"
+        ,stxt "640" "10" (model.inp++model.toT) "60"
+         
       
         ,div[style "position" "absolute", style "top" "200px", style "left" "100px"][sujibutton]
         ,div[style "position" "absolute", style "top" "240px", style "left" "550px"][button [ style "font-size" "50px",onClick (Change "")][text "つぎへ"]]
-        ,div[style "position" "absolute", style "top" "380px", style "left" "750px"][button [ style "font-size" "20px",onClick S05][text "m => km"]]
+
+        ,div[style "position" "absolute", style "top" "280px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange MtoKm)][text "m => km"]]
+        ,div[style "position" "absolute", style "top" "320px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange KmtoM)][text "km => m"]]
+        ,div[style "position" "absolute", style "top" "360px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange CmtoM)][text "cm => m"]]
+        ,div[style "position" "absolute", style "top" "400px", style "left" "750px"][button [ style "font-size" "20px",onClick (KChange MtoCm)][text "m => cm"]]
+
+        ,div[style "position" "absolute", style "top" "280px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange MmtoCm)][text "mm => cm"]]
+        ,div[style "position" "absolute", style "top" "320px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange CmtoMm)][text "cm => mm"]]
+        ,div[style "position" "absolute", style "top" "360px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange MltoL)][text "mL => L"]]
+        ,div[style "position" "absolute", style "top" "400px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange LtoMl)][text "L => mL"]]
+        ,div[style "position" "absolute", style "top" "440px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange GtoKg)][text "g => kg"]]
+        ,div[style "position" "absolute", style "top" "480px", style "left" "850px"][button [ style "font-size" "20px",onClick (KChange KgtoG)][text "kg => g"]]
 
 
         ,div[style "position" "absolute", style "top" "40px", style "left" "650px",style "color" "red",style "font-size" "100px"][text (if model.maru then "〇" else "")]
@@ -238,7 +279,9 @@ view model =
                 )
                
             ]
-        ,div[style "position" "absolute", style "top" "160px", style "left" "250px",style "color" "green",style "font-size" "30px"][text (if model.msg then ("答えは"++String.fromInt ((toint model.toi.sa)+(toint model.toi.sb)  ) ++"です") else "")]
+        ,div[style "position" "absolute", style "top" "160px", style "left" "250px",style "color" "green",style "font-size" "30px"][text (if model.msg then ("答えは"++(henkan model.toi.sa model.knzn)++model.toT++"です") else "")]
+
+   
     ]
 
     --     ****************:
@@ -254,3 +297,22 @@ getAt idx xs =
 
     else
         List.head <| List.drop idx xs
+
+henkan : String -> Kanzan -> String
+henkan src knzn =
+  let
+    isrc=toint src
+    fsrc=tofloat src    
+  in
+   case knzn of 
+    MtoKm -> String.fromFloat (fsrc/1000.0)
+    KmtoM -> String.fromFloat (fsrc*1000.0)
+    CmtoM -> String.fromFloat (fsrc/100.0)
+    MtoCm -> String.fromFloat (fsrc*100.0)
+    MmtoCm -> String.fromFloat (fsrc/10.0)
+    CmtoMm -> String.fromFloat (fsrc*10.0)
+    MltoL -> String.fromFloat (fsrc/1000.0)
+    LtoMl -> String.fromFloat (fsrc*1000.0)
+    GtoKg -> String.fromFloat (fsrc/1000.0)
+    KgtoG -> String.fromFloat (fsrc*1000.0)
+

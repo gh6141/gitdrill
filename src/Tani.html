@@ -4403,6 +4403,7 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$Main$MtoKm = {$: 'MtoKm'};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4883,13 +4884,16 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
 		{
+			fromT: 'm',
 			gokaku: false,
 			inp: '?',
 			kekkal: _List_Nil,
+			knzn: author$project$Main$MtoKm,
 			maru: false,
 			missl: _List_Nil,
 			msg: false,
-			s20: 999,
+			s20: 4999,
+			toT: 'km',
 			toi: {sa: '4', sb: '5'}
 		},
 		elm$core$Platform$Cmd$none);
@@ -4911,6 +4915,13 @@ var elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
+var elm$core$String$toFloat = _String_toFloat;
+var author$project$Main$tofloat = function (st) {
+	return A2(
+		elm$core$Maybe$withDefault,
+		0,
+		elm$core$String$toFloat(st));
+};
 var elm$core$String$toInt = _String_toInt;
 var author$project$Main$toint = function (st) {
 	return A2(
@@ -4918,6 +4929,34 @@ var author$project$Main$toint = function (st) {
 		0,
 		elm$core$String$toInt(st));
 };
+var elm$core$String$fromFloat = _String_fromNumber;
+var author$project$Main$henkan = F2(
+	function (src, knzn) {
+		var isrc = author$project$Main$toint(src);
+		var fsrc = author$project$Main$tofloat(src);
+		switch (knzn.$) {
+			case 'MtoKm':
+				return elm$core$String$fromFloat(fsrc / 1000.0);
+			case 'KmtoM':
+				return elm$core$String$fromFloat(fsrc * 1000.0);
+			case 'CmtoM':
+				return elm$core$String$fromFloat(fsrc / 100.0);
+			case 'MtoCm':
+				return elm$core$String$fromFloat(fsrc * 100.0);
+			case 'MmtoCm':
+				return elm$core$String$fromFloat(fsrc / 10.0);
+			case 'CmtoMm':
+				return elm$core$String$fromFloat(fsrc * 10.0);
+			case 'MltoL':
+				return elm$core$String$fromFloat(fsrc / 1000.0);
+			case 'LtoMl':
+				return elm$core$String$fromFloat(fsrc * 1000.0);
+			case 'GtoKg':
+				return elm$core$String$fromFloat(fsrc / 1000.0);
+			default:
+				return elm$core$String$fromFloat(fsrc * 1000.0);
+		}
+	});
 var elm$core$Basics$not = _Basics_not;
 var elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -5155,9 +5194,9 @@ var author$project$Main$update = F2(
 				var mnd = msg.a;
 				var gnflg2 = A2(
 					elm$core$List$any,
-					function (_n1) {
-						var sa = _n1.a;
-						var sb = _n1.b;
+					function (_n2) {
+						var sa = _n2.a;
+						var sb = _n2.b;
 						return _Utils_eq(mnd.sa, sa) && _Utils_eq(mnd.sb, sb);
 					},
 					model.kekkal);
@@ -5171,12 +5210,41 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{gokaku: !endflg, inp: '?', maru: false, msg: false, toi: mnd}),
+						{
+							gokaku: !endflg,
+							inp: '?',
+							maru: false,
+							msg: false,
+							toi: {
+								sa: function () {
+									var _n1 = model.knzn;
+									switch (_n1.$) {
+										case 'KmtoM':
+											return elm$core$String$fromFloat(
+												author$project$Main$tofloat(mnd.sa) / 1000.0);
+										case 'MtoCm':
+											return elm$core$String$fromFloat(
+												author$project$Main$tofloat(mnd.sa) / 100.0);
+										case 'CmtoMm':
+											return elm$core$String$fromFloat(
+												author$project$Main$tofloat(mnd.sa) / 10.0);
+										case 'LtoMl':
+											return elm$core$String$fromFloat(
+												author$project$Main$tofloat(mnd.sa) / 1000.0);
+										case 'KgtoG':
+											return elm$core$String$fromFloat(
+												author$project$Main$tofloat(mnd.sa) / 1000.0);
+										default:
+											return mnd.sa;
+									}
+								}(),
+								sb: mnd.sb
+							}
+						}),
 					gnflg ? A2(elm$random$Random$generate, author$project$Main$NewAns, ansGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
-				var seikais = elm$core$String$fromInt(
-					author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb));
+				var seikais = A2(author$project$Main$henkan, model.toi.sa, model.knzn);
 				var kuriagari = (author$project$Main$toint(
 					A2(elm$core$String$right, 1, model.toi.sa)) + author$project$Main$toint(
 					A2(elm$core$String$right, 1, model.toi.sb))) > 9;
@@ -5193,8 +5261,8 @@ var author$project$Main$update = F2(
 					(model.inp === '?') ? '' : model.inp,
 					si);
 				var marux = _Utils_eq(
-					author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb),
-					author$project$Main$toint(inpx));
+					A2(author$project$Main$henkan, model.toi.sa, model.knzn),
+					inpx);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5212,29 +5280,38 @@ var author$project$Main$update = F2(
 							msg: machigai
 						}),
 					elm$core$Platform$Cmd$none);
-			case 'S05':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{gokaku: false, s20: 5}),
-					elm$core$Platform$Cmd$none);
-			case 'S09':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{gokaku: false, s20: 9}),
-					elm$core$Platform$Cmd$none);
-			case 'S20':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{gokaku: false, s20: 20}),
-					elm$core$Platform$Cmd$none);
 			default:
+				var knzn = msg.a;
+				var _n3 = function () {
+					switch (knzn.$) {
+						case 'MtoKm':
+							return _Utils_Tuple2('m', 'km');
+						case 'KmtoM':
+							return _Utils_Tuple2('km', 'm');
+						case 'CmtoM':
+							return _Utils_Tuple2('cm', 'm');
+						case 'MtoCm':
+							return _Utils_Tuple2('m', 'cm');
+						case 'MmtoCm':
+							return _Utils_Tuple2('mm', 'cm');
+						case 'CmtoMm':
+							return _Utils_Tuple2('cm', 'mm');
+						case 'MltoL':
+							return _Utils_Tuple2('mL', 'L');
+						case 'LtoMl':
+							return _Utils_Tuple2('L', 'mL');
+						case 'GtoKg':
+							return _Utils_Tuple2('g', 'kg');
+						default:
+							return _Utils_Tuple2('kg', 'g');
+					}
+				}();
+				var fromS = _n3.a;
+				var toS = _n3.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{gokaku: false, s20: 99}),
+						{fromT: fromS, gokaku: false, knzn: knzn, toT: toS}),
 					elm$core$Platform$Cmd$none);
 		}
 	});
@@ -5244,7 +5321,18 @@ var author$project$Main$Btn = function (a) {
 var author$project$Main$Change = function (a) {
 	return {$: 'Change', a: a};
 };
-var author$project$Main$S05 = {$: 'S05'};
+var author$project$Main$CmtoM = {$: 'CmtoM'};
+var author$project$Main$CmtoMm = {$: 'CmtoMm'};
+var author$project$Main$GtoKg = {$: 'GtoKg'};
+var author$project$Main$KChange = function (a) {
+	return {$: 'KChange', a: a};
+};
+var author$project$Main$KgtoG = {$: 'KgtoG'};
+var author$project$Main$KmtoM = {$: 'KmtoM'};
+var author$project$Main$LtoMl = {$: 'LtoMl'};
+var author$project$Main$MltoL = {$: 'MltoL'};
+var author$project$Main$MmtoCm = {$: 'MmtoCm'};
+var author$project$Main$MtoCm = {$: 'MtoCm'};
 var author$project$Main$btnLabel = function (xi) {
 	switch (xi) {
 		case 10:
@@ -5746,9 +5834,19 @@ var author$project$Main$view = function (model) {
 			]),
 		_List_fromArray(
 			[
-				A4(stxt, '100', '10', model.toi.sa, '70'),
-				A4(stxt, '300', '10', 'であらわすと→', '40'),
-				A4(stxt, '630', '10', model.inp, '70'),
+				A4(
+				stxt,
+				'100',
+				'10',
+				_Utils_ap(model.toi.sa, model.fromT),
+				'60'),
+				A4(stxt, '400', '10', model.toT + 'であらわすと→', '20'),
+				A4(
+				stxt,
+				'640',
+				'10',
+				_Utils_ap(model.inp, model.toT),
+				'60'),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -5787,7 +5885,7 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(elm$html$Html$Attributes$style, 'top', '380px'),
+						A2(elm$html$Html$Attributes$style, 'top', '280px'),
 						A2(elm$html$Html$Attributes$style, 'left', '750px')
 					]),
 				_List_fromArray(
@@ -5797,11 +5895,219 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
-								elm$html$Html$Events$onClick(author$project$Main$S05)
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$MtoKm))
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('答<=5')
+								elm$html$Html$text('m => km')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '320px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$KmtoM))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('km => m')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '360px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$CmtoM))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('cm => m')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '400px'),
+						A2(elm$html$Html$Attributes$style, 'left', '750px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$MtoCm))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('m => cm')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '280px'),
+						A2(elm$html$Html$Attributes$style, 'left', '850px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$MmtoCm))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('mm => cm')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '320px'),
+						A2(elm$html$Html$Attributes$style, 'left', '850px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$CmtoMm))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('cm => mm')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '360px'),
+						A2(elm$html$Html$Attributes$style, 'left', '850px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$MltoL))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('mL => L')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '400px'),
+						A2(elm$html$Html$Attributes$style, 'left', '850px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$LtoMl))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('L => mL')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '440px'),
+						A2(elm$html$Html$Attributes$style, 'left', '850px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$GtoKg))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('g => kg')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2(elm$html$Html$Attributes$style, 'top', '480px'),
+						A2(elm$html$Html$Attributes$style, 'left', '850px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-size', '20px'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$KChange(author$project$Main$KgtoG))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('kg => g')
 							]))
 					])),
 				A2(
@@ -5868,8 +6174,7 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						model.msg ? ('答えは' + (elm$core$String$fromInt(
-							author$project$Main$toint(model.toi.sa) + author$project$Main$toint(model.toi.sb)) + 'です')) : '')
+						model.msg ? ('答えは' + (A2(author$project$Main$henkan, model.toi.sa, model.knzn) + (model.toT + 'です'))) : '')
 					]))
 			]));
 };
