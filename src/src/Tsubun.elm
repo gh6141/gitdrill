@@ -171,10 +171,10 @@ yuriKeisanL ans =  --ここで、１行の式の計算(+-)を行って、分数�
         ysi=if yu.bunsi==0 then 1 else yu.bunsi
         ybo=if yu.bunbo==0 then 1 else yu.bunbo 
         
-        acbs= if yu.enzan==Hiku then (ybo*yuacl.bunsi) else (ysi*yuacl.bunsi)
-       -- acbs = if yu.enzan==Hiku then (-ysi*yuacl.bunbo+ybo*yuacl.bunsi) else (ysi*yuacl.bunbo+ybo*yuacl.bunsi)
-        acbb= if yu.enzan==Hiku then (ysi*yuacl.bunbo) else (ybo*yuacl.bunbo)
-       --  acbb =
+       -- acbs= if yu.enzan==Hiku then (ybo*yuacl.bunsi) else (ysi*yuacl.bunsi)
+        acbs = if yu.enzan==Hiku then (-ysi*yuacl.bunbo+ybo*yuacl.bunsi) else (ysi*yuacl.bunbo+ybo*yuacl.bunsi)
+       -- acbb= if yu.enzan==Hiku then (ysi*yuacl.bunbo) else (ybo*yuacl.bunbo)
+        acbb = ybo*yuacl.bunbo
        in
         {bunsi= acbs ,bunbo=acbb  ,enzan=Sento,katex="\\dfrac{"++(String.fromInt acbs)++"}{"++(String.fromInt acbb)++"}"}
     in
@@ -259,13 +259,9 @@ update msg model =
        mhenkan i1 i2 i3 i4 = {si1=i1,si2= i2,si3=i3,bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,pattern=i4
         ,seikai=
           let
-          -- (kaisi,kaibo) = case i4 of
-          --  1 -> (i2*model.mondai.bo1,i1*model.mondai.bo2)
-          --  2 -> (i2*model.mondai.bo1,i1*model.mondai.bo2)
-          --  3 -> (i1*i2,model.mondai.bo1*model.mondai.bo2)
-          --  _ -> (1,1)
+
              (kaisi,kaibo) = case i4 of
-                3 -> (-i2*model.mondai.bo1 + i1*model.mondai.bo2   , model.mondai.bo1*model.mondai.bo2        )
+                3 -> (i2*model.mondai.bo1 + i1*model.mondai.bo2   , model.mondai.bo1*model.mondai.bo2        )
                 _ ->  (i2*model.mondai.bo1 + i1*model.mondai.bo2  , model.mondai.bo1*model.mondai.bo2        )
        
           in

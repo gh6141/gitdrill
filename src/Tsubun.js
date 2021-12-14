@@ -5145,7 +5145,7 @@ var author$project$BunsuBai$update = F2(
 					seikai: function () {
 						var _n1 = function () {
 							if (i4 === 3) {
-								return _Utils_Tuple2(((-i2) * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
+								return _Utils_Tuple2((i2 * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
 							} else {
 								return _Utils_Tuple2((i2 * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
 							}
