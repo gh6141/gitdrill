@@ -169,11 +169,9 @@ yuriKeisanL ans =  --ここで、１行の式の計算(+-)を行って、分数�
       func yu yuacl = 
        let
         ysi=if yu.bunsi==0 then 1 else yu.bunsi
-        ybo=if yu.bunbo==0 then 1 else yu.bunbo 
-        
-       -- acbs= if yu.enzan==Hiku then (ybo*yuacl.bunsi) else (ysi*yuacl.bunsi)
-        acbs = if yu.enzan==Hiku then (-ysi*yuacl.bunbo+ybo*yuacl.bunsi) else (ysi*yuacl.bunbo+ybo*yuacl.bunsi)
-       -- acbb= if yu.enzan==Hiku then (ysi*yuacl.bunbo) else (ybo*yuacl.bunbo)
+        ybo=if yu.bunbo==0 then 1 else yu.bunbo         
+
+        acbs = if yu.enzan==Hiku then (abs (-ysi*yuacl.bunbo+ybo*yuacl.bunsi)) else (ysi*yuacl.bunbo+ybo*yuacl.bunsi)
         acbb = ybo*yuacl.bunbo
        in
         {bunsi= acbs ,bunbo=acbb  ,enzan=Sento,katex="\\dfrac{"++(String.fromInt acbs)++"}{"++(String.fromInt acbb)++"}"}
@@ -245,7 +243,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=4,si2=1,bo2=3,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="つぎへをクリック",tmpans="",bun1="\\frac{1}{2}",bun2="1"
+  ( {mondai={si1=1,bo1=3,si2=1,bo2=4,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="つぎへをクリック",tmpans="",bun1="\\frac{1}{2}",bun2="1"
      ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd="",ansdisp=False,rireki1=0,rireki2=0,rireki3=0}
   , Cmd.none
   )
@@ -256,13 +254,13 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
  let
        mhenkan :Int -> Int -> Int -> Int -> Mondai
-       mhenkan i1 i2 i3 i4 = {si1=i1,si2= i2,si3=i3,bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,pattern=i4
+       mhenkan i1 i2 i3 i4 = {si1=i1,si2= i2,si3=i3,bo1=model.mondai.bo1,bo2=model.mondai.bo2,bo3=model.mondai.bo3,pattern=i4      
         ,seikai=
           let
 
              (kaisi,kaibo) = case i4 of
-                3 -> (i2*model.mondai.bo1 + i1*model.mondai.bo2   , model.mondai.bo1*model.mondai.bo2        )
-                _ ->  (i2*model.mondai.bo1 + i1*model.mondai.bo2  , model.mondai.bo1*model.mondai.bo2        )
+                3 -> ( abs (-i2*model.mondai.bo1+ i1*model.mondai.bo2)   , model.mondai.bo1*model.mondai.bo2        )
+                _ ->  (i2*model.mondai.bo1 + i1*model.mondai.bo2  , model.mondai.bo1*model.mondai.bo2       )
        
           in
            yakubun  {
@@ -306,7 +304,7 @@ update msg model =
          || mnd.seikai.bunsi < mnd.seikai.bunbo
          || mnd.si1<mnd.bo1
          || mnd.si2<mnd.bo2
-         
+         || (abs (mnd.si1*mnd.bo2)) < (abs (mnd.si2*mnd.bo1))
         ) then
            Random.generate Newmon monGenerator
         else

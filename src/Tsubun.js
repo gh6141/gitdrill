@@ -4882,8 +4882,8 @@ var author$project$BunsuBai$init = function (_n0) {
 			ludIchi: 1,
 			luflg: false,
 			mondai: {
-				bo1: 4,
-				bo2: 3,
+				bo1: 3,
+				bo2: 4,
 				bo3: 1,
 				pattern: 1,
 				seikai: {bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
@@ -4950,6 +4950,9 @@ var author$project$BunsuBai$yakubun = function (ysu) {
 };
 var elm$core$Basics$negate = function (n) {
 	return -n;
+};
+var elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
 };
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropRight = F2(
@@ -5145,7 +5148,9 @@ var author$project$BunsuBai$update = F2(
 					seikai: function () {
 						var _n1 = function () {
 							if (i4 === 3) {
-								return _Utils_Tuple2((i2 * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
+								return _Utils_Tuple2(
+									elm$core$Basics$abs(((-i2) * model.mondai.bo1) + (i1 * model.mondai.bo2)),
+									model.mondai.bo1 * model.mondai.bo2);
 							} else {
 								return _Utils_Tuple2((i2 * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
 							}
@@ -5185,7 +5190,9 @@ var author$project$BunsuBai$update = F2(
 					_Utils_update(
 						model,
 						{ans: '', ansdisp: false, bun1: xbun1, bun2: xbun2, luflg: false, mondai: mnd, rdflg: false, ruflg: false, tmpans: ''}),
-					(_Utils_eq(mnd.si1, mnd.bo1) || (_Utils_eq(mnd.si2, mnd.bo2) || (_Utils_eq(mnd.seikai.bunsi, mnd.seikai.bunbo) || ((mnd.seikai.bunbo === 1) || ((_Utils_cmp(mnd.seikai.bunsi, mnd.seikai.bunbo) < 0) || ((_Utils_cmp(mnd.si1, mnd.bo1) < 0) || (_Utils_cmp(mnd.si2, mnd.bo2) < 0))))))) ? A2(elm$random$Random$generate, author$project$BunsuBai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
+					(_Utils_eq(mnd.si1, mnd.bo1) || (_Utils_eq(mnd.si2, mnd.bo2) || (_Utils_eq(mnd.seikai.bunsi, mnd.seikai.bunbo) || ((mnd.seikai.bunbo === 1) || ((_Utils_cmp(mnd.seikai.bunsi, mnd.seikai.bunbo) < 0) || ((_Utils_cmp(mnd.si1, mnd.bo1) < 0) || ((_Utils_cmp(mnd.si2, mnd.bo2) < 0) || (_Utils_cmp(
+						elm$core$Basics$abs(mnd.si1 * mnd.bo2),
+						elm$core$Basics$abs(mnd.si2 * mnd.bo1)) < 0)))))))) ? A2(elm$random$Random$generate, author$project$BunsuBai$Newmon, monGenerator) : elm$core$Platform$Cmd$none);
 			case 'Btn':
 				var si = msg.a;
 				var tans = (si === '=') ? model.ans : model.tmpans;
