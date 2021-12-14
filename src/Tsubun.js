@@ -5144,15 +5144,10 @@ var author$project$BunsuBai$update = F2(
 					pattern: i4,
 					seikai: function () {
 						var _n1 = function () {
-							switch (i4) {
-								case 1:
-									return _Utils_Tuple2(i2 * model.mondai.bo1, i1 * model.mondai.bo2);
-								case 2:
-									return _Utils_Tuple2(i2 * model.mondai.bo1, i1 * model.mondai.bo2);
-								case 3:
-									return _Utils_Tuple2(i1 * i2, model.mondai.bo1 * model.mondai.bo2);
-								default:
-									return _Utils_Tuple2(1, 1);
+							if (i4 === 3) {
+								return _Utils_Tuple2(((-i2) * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
+							} else {
+								return _Utils_Tuple2((i2 * model.mondai.bo1) + (i1 * model.mondai.bo2), model.mondai.bo1 * model.mondai.bo2);
 							}
 						}();
 						var kaisi = _n1.a;
@@ -6288,7 +6283,14 @@ var author$project$BunsuBai$view = function (model) {
 													[
 														elm$html$Html$text('つぎへ')
 													])),
-												sujibutton
+												sujibutton,
+												model.ansdisp ? author$project$BunsuBai$spankatex(model.mondai.seikai.katex) : A2(
+												elm$html$Html$span,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text('')
+													]))
 											]))
 									]))
 							]))
