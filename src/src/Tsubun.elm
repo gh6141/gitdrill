@@ -433,7 +433,9 @@ view model =
              Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ] 
            ,sujibutton
            , if model.ansdisp then (spankatex model.mondai.seikai.katex) else (span [] [text ""])
-
+            ,dcbx 20 380 (span  [Html.Attributes.style "font-size" "200px",style "color" "red"]  
+            [text (if (seikaiDisp model.ans model.mondai.seikai) then "〇" else "")]
+            )
          ]
        ]
     

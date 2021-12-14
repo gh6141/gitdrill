@@ -5419,36 +5419,6 @@ var author$project$BunsuBai$divkatex = function (lstkatex) {
 			yotamDvir$elm_katex$Katex$generate(author$project$BunsuBai$htmlGenerator),
 			lstkatex));
 };
-var elm$core$Basics$always = F2(
-	function (a, _n0) {
-		return a;
-	});
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var yotamDvir$elm_katex$Katex$Configs$Math = F2(
-	function (a, b) {
-		return {$: 'Math', a: a, b: b};
-	});
-var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
-var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
-var author$project$BunsuBai$spankatex = function (siki) {
-	return A2(
-		elm$html$Html$span,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('katexl')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				yotamDvir$elm_katex$Katex$generate,
-				author$project$BunsuBai$htmlGenerator,
-				yotamDvir$elm_katex$Katex$inline(siki))
-			]));
-};
 var author$project$BunsuBai$sento = F3(
 	function (moji, idx, ss) {
 		return (!idx) ? ss : _Utils_ap(moji, ss);
@@ -5654,6 +5624,71 @@ var author$project$BunsuBai$ysCreate = function (ax) {
 			katex: ax
 		};
 	}
+};
+var author$project$BunsuBai$yuriL = function (ans) {
+	var ansL = A2(
+		elm$core$List$indexedMap,
+		author$project$BunsuBai$sento('='),
+		A2(elm$core$String$split, '=', ans));
+	var kl = A2(
+		elm$core$List$map,
+		function (gyo) {
+			return elm$core$List$map(
+				function (ax) {
+					return author$project$BunsuBai$ysCreate(ax);
+				})(
+				author$project$BunsuBai$yLCreate(gyo));
+		},
+		ansL);
+	return kl;
+};
+var author$project$BunsuBai$seikaiDisp = F2(
+	function (ans, yuseikai) {
+		var mll = author$project$BunsuBai$yuriL(ans);
+		var yusul = A2(
+			elm$core$Maybe$withDefault,
+			_List_fromArray(
+				[
+					{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''}
+				]),
+			elm$core$List$head(
+				elm$core$List$reverse(mll)));
+		var yusu = A2(
+			elm$core$Maybe$withDefault,
+			{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
+			elm$core$List$head(
+				elm$core$List$reverse(yusul)));
+		return _Utils_eq(yusu.bunsi, yuseikai.bunsi) && _Utils_eq(yusu.bunbo, yuseikai.bunbo);
+	});
+var elm$core$Basics$always = F2(
+	function (a, _n0) {
+		return a;
+	});
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var yotamDvir$elm_katex$Katex$Configs$Math = F2(
+	function (a, b) {
+		return {$: 'Math', a: a, b: b};
+	});
+var yotamDvir$elm_katex$Katex$Configs$inline = yotamDvir$elm_katex$Katex$Configs$Math(false);
+var yotamDvir$elm_katex$Katex$inline = A2(elm$core$Basics$composeL, yotamDvir$elm_katex$Katex$Configs$inline, elm$core$Basics$always);
+var author$project$BunsuBai$spankatex = function (siki) {
+	return A2(
+		elm$html$Html$span,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('katexl')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				yotamDvir$elm_katex$Katex$generate,
+				author$project$BunsuBai$htmlGenerator,
+				yotamDvir$elm_katex$Katex$inline(siki))
+			]));
 };
 var author$project$BunsuBai$viewCreate = function (ans) {
 	var ansL = A2(
@@ -6297,7 +6332,23 @@ var author$project$BunsuBai$view = function (model) {
 												_List_fromArray(
 													[
 														elm$html$Html$text('')
-													]))
+													])),
+												A3(
+												dcbx,
+												20,
+												380,
+												A2(
+													elm$html$Html$span,
+													_List_fromArray(
+														[
+															A2(elm$html$Html$Attributes$style, 'font-size', '200px'),
+															A2(elm$html$Html$Attributes$style, 'color', 'red')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(
+															A2(author$project$BunsuBai$seikaiDisp, model.ans, model.mondai.seikai) ? '〇' : '')
+														])))
 											]))
 									]))
 							]))
