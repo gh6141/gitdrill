@@ -32,9 +32,6 @@ import Bootstrap.Button as Button
 import Debug
 
 
-
-
-
 main =
   Browser.element
     { init = init
@@ -65,7 +62,7 @@ type alias Yurisu =
 
 type Enzan = Hiku | Tasu | Sento |Eq
 
-ysCreate ax = 
+ysCreate ax = -- Busu object sakusei
        let
            enzant=
               case [String.contains "+" ax,String.contains "-" ax,String.contains "=" ax] of
@@ -95,7 +92,7 @@ ysCreate ax =
         else
           {bunsi=toint (String.replace "=" "" (String.replace "-" "" (String.replace "+" "" ax))),bunbo=1,enzan=enzant,katex=ax}
 
-yLCreate gyo= 
+yLCreate gyo=   -- + で分数をsplit
  let
 
      xlist=String.split "+" gyo
@@ -153,7 +150,7 @@ viewCreateSiki ans
      ml
       
 
-yuriL ans =  
+yuriL ans =  -- 各行に　分割
  let  
      ansL=List.indexedMap (sento "=")  (String.split "=" ans)
      kl=  List.map (\gyo->  
@@ -165,9 +162,9 @@ yuriL ans =
   in
       kl
 
-yuriKeisanL ans =
+yuriKeisanL ans =  --ここで、１行の式の計算(+-)を行って、分数オブジェクトを作成
  let
-   yl= (yuriL ans)
+   yl= (yuriL ans)  -- gyo ni bunkatu
    ykl= 
     let
       func yu yuacl = 
