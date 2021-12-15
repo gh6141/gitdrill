@@ -128,7 +128,7 @@ viewCreate ans=
 viewCreateMaru ans yuseikai
   =
    let
-     ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "Ok" else "*")]   )    ( yuriCheck ans yuseikai)
+     ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "Ok" else "")]   )    ( yuriCheck ans yuseikai)
    in
      ml
 
@@ -420,6 +420,11 @@ view model =
             viewCreate siki          
            )
           )  
+          ,
+          dcbx  0 20 (span [Html.Attributes.style "font-size" "30px",style "color" "red"]        
+         ( viewCreateMaru model.ans model.mondai.seikai )           
+         -- (viewCreateSiki model.ans)
+       )
          ]   
        ,
      td [] [

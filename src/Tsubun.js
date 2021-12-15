@@ -5714,6 +5714,71 @@ var author$project$BunsuBai$viewCreate = function (ans) {
 		ansL);
 	return gl;
 };
+var author$project$BunsuBai$hikaku = F2(
+	function (ysu1, ysu2) {
+		var y2 = author$project$BunsuBai$yakubun(ysu2);
+		var y1 = author$project$BunsuBai$yakubun(ysu1);
+		return _Utils_eq(y1.bunsi, y2.bunsi) && _Utils_eq(y1.bunbo, y2.bunbo);
+	});
+var author$project$BunsuBai$yuriKeisanL = function (ans) {
+	var yl = author$project$BunsuBai$yuriL(ans);
+	var ykl = function () {
+		var func = F2(
+			function (yu, yuacl) {
+				var ysi = (!yu.bunsi) ? 1 : yu.bunsi;
+				var ybo = (!yu.bunbo) ? 1 : yu.bunbo;
+				var acbs = _Utils_eq(yu.enzan, author$project$BunsuBai$Hiku) ? elm$core$Basics$abs(((-ysi) * yuacl.bunbo) + (ybo * yuacl.bunsi)) : ((ysi * yuacl.bunbo) + (ybo * yuacl.bunsi));
+				var acbb = ybo * yuacl.bunbo;
+				return {
+					bunbo: acbb,
+					bunsi: acbs,
+					enzan: author$project$BunsuBai$Sento,
+					katex: '\\dfrac{' + (elm$core$String$fromInt(acbs) + ('}{' + (elm$core$String$fromInt(acbb) + '}')))
+				};
+			});
+		return A2(
+			elm$core$List$map,
+			function (ylst) {
+				return A3(
+					elm$core$List$foldl,
+					func,
+					{bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
+					ylst);
+			},
+			yl);
+	}();
+	return ykl;
+};
+var author$project$BunsuBai$yuriCheck = F2(
+	function (ans, yuans) {
+		var ykL = author$project$BunsuBai$yuriKeisanL(ans);
+		return A2(
+			elm$core$List$map,
+			function (yus) {
+				return A2(author$project$BunsuBai$hikaku, yus, yuans);
+			},
+			ykL);
+	});
+var author$project$BunsuBai$viewCreateMaru = F2(
+	function (ans, yuseikai) {
+		var ml = A2(
+			elm$core$List$map,
+			function (flg) {
+				return A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'margin', '20px')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(
+							flg ? 'Ok' : '*')
+						]));
+			},
+			A2(author$project$BunsuBai$yuriCheck, ans, yuseikai));
+		return ml;
+	});
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$td = _VirtualDom_node('td');
@@ -6275,7 +6340,19 @@ var author$project$BunsuBai$view = function (model) {
 									function () {
 										var siki = model.ans;
 										return author$project$BunsuBai$viewCreate(siki);
-									}()))
+									}())),
+								A3(
+								dcbx,
+								0,
+								20,
+								A2(
+									elm$html$Html$span,
+									_List_fromArray(
+										[
+											A2(elm$html$Html$Attributes$style, 'font-size', '30px'),
+											A2(elm$html$Html$Attributes$style, 'color', 'red')
+										]),
+									A2(author$project$BunsuBai$viewCreateMaru, model.ans, model.mondai.seikai)))
 							])),
 						A2(
 						elm$html$Html$td,
