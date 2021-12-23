@@ -4882,8 +4882,8 @@ var author$project$BunsuBai$init = function (_n0) {
 			ludIchi: 1,
 			luflg: false,
 			mondai: {
-				bo1: 3,
-				bo2: 4,
+				bo1: 6,
+				bo2: 8,
 				bo3: 1,
 				pattern: 1,
 				seikai: {bunbo: 1, bunsi: 1, enzan: author$project$BunsuBai$Sento, katex: ''},
@@ -5174,7 +5174,7 @@ var author$project$BunsuBai$update = F2(
 			elm$random$Random$map4,
 			mhenkan,
 			A2(elm$random$Random$int, 1, 9),
-			A2(elm$random$Random$int, 1, 9),
+			A2(elm$random$Random$int, 1, 19),
 			A2(elm$random$Random$int, 1, 9),
 			A2(elm$random$Random$int, 1, 3));
 		switch (msg.$) {
@@ -5727,7 +5727,7 @@ var author$project$BunsuBai$yuriKeisanL = function (ans) {
 			function (yu, yuacl) {
 				var ysi = (!yu.bunsi) ? 1 : yu.bunsi;
 				var ybo = (!yu.bunbo) ? 1 : yu.bunbo;
-				var acbs = _Utils_eq(yu.enzan, author$project$BunsuBai$Hiku) ? elm$core$Basics$abs(((-ysi) * yuacl.bunbo) + (ybo * yuacl.bunsi)) : ((ysi * yuacl.bunbo) + (ybo * yuacl.bunsi));
+				var acbs = _Utils_eq(yu.enzan, author$project$BunsuBai$Hiku) ? elm$core$Basics$abs((ysi * yuacl.bunbo) - (ybo * yuacl.bunsi)) : ((ysi * yuacl.bunbo) + (ybo * yuacl.bunsi));
 				var acbb = ybo * yuacl.bunbo;
 				return {
 					bunbo: acbb,
@@ -5773,7 +5773,7 @@ var author$project$BunsuBai$viewCreateMaru = F2(
 					_List_fromArray(
 						[
 							elm$html$Html$text(
-							flg ? 'Ok' : '*')
+							flg ? '' : '')
 						]));
 			},
 			A2(author$project$BunsuBai$yuriCheck, ans, yuseikai));
@@ -6413,7 +6413,7 @@ var author$project$BunsuBai$view = function (model) {
 												A3(
 												dcbx,
 												20,
-												380,
+												200,
 												A2(
 													elm$html$Html$span,
 													_List_fromArray(

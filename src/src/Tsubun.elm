@@ -1,5 +1,7 @@
 module BunsuBai exposing (..)
 
+import Debug
+
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -128,7 +130,9 @@ viewCreate ans=
 viewCreateMaru ans yuseikai
   =
    let
-     ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "Ok" else "")]   )    ( yuriCheck ans yuseikai)
+   --  ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "Ok" else "")]   )    ( yuriCheck ans yuseikai)
+    ml=List.map (\flg ->  div [style "margin" "20px"]  [text (if flg then "" else "")]   )    ( yuriCheck ans yuseikai)
+     
    in
      ml
 
@@ -171,7 +175,7 @@ yuriKeisanL ans =  --ここで、１行の式の計算(+-)を行って、分数�
         ysi=if yu.bunsi==0 then 1 else yu.bunsi
         ybo=if yu.bunbo==0 then 1 else yu.bunbo         
 
-        acbs = if yu.enzan==Hiku then (abs (-ysi*yuacl.bunbo+ybo*yuacl.bunsi)) else (ysi*yuacl.bunbo+ybo*yuacl.bunsi)
+        acbs = if yu.enzan==Hiku then (abs (ysi*yuacl.bunbo-ybo*yuacl.bunsi)) else (ysi*yuacl.bunbo+ybo*yuacl.bunsi)
         acbb = ybo*yuacl.bunbo
        in
         {bunsi= acbs ,bunbo=acbb  ,enzan=Sento,katex="\\dfrac{"++(String.fromInt acbs)++"}{"++(String.fromInt acbb)++"}"}
@@ -184,7 +188,7 @@ yuriKeisanL ans =  --ここで、１行の式の計算(+-)を行って、分数�
 
 yuriCheck ans yuans=
  let
-   ykL=yuriKeisanL ans 
+   ykL= yuriKeisanL ans 
 
  in
    List.map (\yus->   ( hikaku yus yuans)   )   ykL
@@ -243,7 +247,7 @@ type alias Model =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( {mondai={si1=1,bo1=3,si2=1,bo2=4,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="つぎへをクリック",tmpans="",bun1="\\frac{1}{2}",bun2="1"
+  ( {mondai={si1=1,bo1=6,si2=1,bo2=8,si3=1,bo3=1,pattern=1,seikai={bunsi=1,bunbo=1,enzan=Sento,katex=""}},ludIchi=1,ans="つぎへをクリック",tmpans="",bun1="\\frac{1}{2}",bun2="1"
      ,luflg=False,lu="",ruflg=False,ru="",rdflg=False,rd="",ansdisp=False,rireki1=0,rireki2=0,rireki3=0}
   , Cmd.none
   )
@@ -272,7 +276,7 @@ update msg model =
         } 
 
        monGenerator : Random.Generator Mondai   
-       monGenerator = Random.map4  mhenkan (Random.int 1 9 ) (Random.int 1  9 ) (Random.int 1 9) (Random.int 1 3)
+       monGenerator = Random.map4  mhenkan (Random.int 1 9 ) (Random.int 1  19 ) (Random.int 1 9) (Random.int 1 3)
   
 
  in
@@ -438,7 +442,7 @@ view model =
              Button.button [Button.attrs [Html.Attributes.style "font-size" "30px" ,onClick Next]] [ Html.text "つぎへ" ] 
            ,sujibutton
            , if model.ansdisp then (spankatex model.mondai.seikai.katex) else (span [] [text ""])
-            ,dcbx 20 380 (span  [Html.Attributes.style "font-size" "200px",style "color" "red"]  
+            ,dcbx 20 200 (span  [Html.Attributes.style "font-size" "200px",style "color" "red"]  
             [text (if (seikaiDisp model.ans model.mondai.seikai) then "〇" else "")]
             )
          ]
