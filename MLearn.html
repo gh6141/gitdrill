@@ -1,57 +1,109 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script>
-$(function() {
-  
-  var ctx = new AudioContext();
-  
-  var bufferSize = 1024;
-  var numberOfInputChannels = 1;
-  var numberOfOutputChannels = 1;
-  var node = ctx.createScriptProcessor(bufferSize, numberOfInputChannels, numberOfOutputChannels);
-  
-  var gainNode = ctx.createGain();
-  gainNode.gain.value = document.getElementById('vol').value;
-  
-  var step = 0.0;
-  var frequency = 0;
-  
-  node.onaudioprocess = function(e) {
-    var data = e.outputBuffer.getChannelData(0);
-    
-    for(var i = 0; i < data.length; i++) {
-      data[i] = Math.sin(2 * Math.PI * step);
-      step += frequency / ctx.sampleRate;
-    }
-  }
-  
-  $("#play").click(function() {
-    frequency = document.getElementById('freq').value;
-    node.connect(gainNode);
-    gainNode.connect(ctx.destination);
- 
-  });
-  
-  $("#stop").click(function() {
-    node.disconnect();
-  });
-  
-  $("#vol").change(function(e) {
-    gainNode.gain.value = this.value;
-  });
-  
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Audio Beep Morse Code</title>
+    <style>
+
+*, ::before, ::after { box-sizing: border-box; }
+html { font-family: sans-serif; }
+
+    </style>
+    <script>
+
+const beep = options => new Promise(resolve => {
+  // Options
+  options         = options           || {};
+  const type      = options.type      == null ? 'sine' : options.type;
+  const frequency = options.frequency == null ? 440    : options.frequency;
+  const time      = options.time      == null ? 0.1    : options.time;
+  const volume    = options.volume    == null ? 0.1    : options.volume;
+  // Create
+  const audioContext = new window.AudioContext();
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  // Set Options
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  gain.gain.value = volume;
+  // Start
+  oscillator.onended = () => {
+    gain.disconnect(audioContext.destination);
+    oscillator.disconnect(gain);
+    resolve();
+  };
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + time);  // Stop Timing
 });
-</script>
-</head>
-<body>
-周波数: <input id="freq" type="number" style="width:50px" min="20" max="20000" value="440" step="1" required>Hz
-<br>
-音量: <input id="vol" type="range" min="0" max="1" step="0.01" value="0.5">
-<br>
-<button id="play">play</button>
-<button id="stop">stop</button>
-</body>
+
+const dit = () => beep({ time: .1 });  // Short Mark・Dot・1 Units Long
+const dah = () => beep({ time: .3 });  // Long Mark・Dash・3 Units Long
+const interGap  = () => beep({ volume: 0, time: .1 });  // Between Characters・1 Units Long
+const shortGap  = () => beep({ volume: 0, time: .3 });  // Between Letters・3 Units Long
+const mediumGap = () => beep({ volume: 0, time: .7 });  // Between Words・7 Units Long
+
+const sos1 = () => Promise.resolve(console.log('SOS : Start'))
+  .then(dit).then(interGap).then(dit).then(interGap).then(dit)
+  .then(shortGap)
+  .then(dah).then(interGap).then(dah).then(interGap).then(dah)
+  .then(shortGap)
+  .then(dit).then(interGap).then(dit).then(interGap).then(dit)
+  .then(mediumGap)
+  .then(() => console.log('SOS : End'));
+
+  const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+
+  const ch2= (moji,t1,t2)=> Promise.resolve().then(t1).then(interGap).then(t2).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+  che=()=>ch1("ヘ",dit);
+  cmu=()=>ch1("ム",dah);
+  ci=()=> ch2("イ",dit,dah);
+  cta=() => ch2("タ",dah,dit);
+  cda=()=>ch2("\"",dit,dit);
+  cyo=()=>ch2("ヨ",dah,dah);
+  const ch3= (moji,t1,t2,t3)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+  cra=()=>ch3("ラ",dit,dit,dit);
+  cu=()=>ch3("ウ",dit,dit,dah);
+  cya=()=>ch3("ヤ",dit,dah,dah);
+  cwa=()=>ch3("ワ",dah,dit,dah);
+  cna=()=>ch3("ナ",dit,dah,dit);
+  cri=()=>ch3("リ",dah,dah,dit);
+  cre=()=>ch3("レ",dah,dah,dah);
+  cho=()=>ch3("ホ",dah,dit,dit);
+
+
+
+
+  // const sos=() => Promise.resolve().then(ci).then(cta).then(cda).then(cyo)
+  const sos=() => Promise.resolve().then(cwa).then(che).then(cmu).then(ci).then(cra).then(cu).then(cna).then(cri).then(cre).then(cho).then(ci).then(cta).then(cda).then(cyo).then();
+
+    </script>
+  </head>
+  <body>
+
+<h1>Web Audio Beep Morse Code</h1>
+
+<p>
+  <input type="button" value="Dit" onclick="dit();" accesskey="t">
+  <input type="button" value="Dah" onclick="dah();" accesskey="h">
+  <input type="button" value="和文練習" onclick="sos();">
+</p>
+
+<textarea id="texta"></textarea>
+
+  </body>
 </html>
+© 2022 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
