@@ -10,126 +10,7 @@
 html { font-family: sans-serif; }
 
     </style>
-    <script>
-  var audioContext = new window.AudioContext();
-
-const beep = options => new Promise(resolve => {
-  // Options
-  options         = options           || {};
-  const type      = options.type      == null ? 'sine' : options.type;
-  const frequency = options.frequency == null ? 603    : options.frequency;
-  const time      = options.time      == null ? 0.1    : options.time;
-  const volume    = options.volume    == null ? 0.8    : options.volume;
-  var speed=1;
-  // Create
-
-  const oscillator = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-  // Set Options
-  oscillator.type = type;
-  oscillator.frequency.value = frequency;
-  gain.gain.value = volume;
-  // Start
-  oscillator.onended = () => {
-    gain.disconnect(audioContext.destination);
-    oscillator.disconnect(gain);
-    resolve();
-  };
-  oscillator.start(audioContext.currentTime);
-  oscillator.stop(audioContext.currentTime + time);  // Stop Timing
- // audioContext.close();
-});
-
-const textbox = document.getElementById("speed")
-speed= textbox.value
-
-const dit = () => beep({ time: .1*speed });  // Short Mark・Dot・1 Units Long
-const dah = () => beep({ time: .3*speed });  // Long Mark・Dash・3 Units Long
-const interGap  = () => beep({ volume: 0, time: .1*speed });  // Between Characters・1 Units Long
-const shortGap  = () => beep({ volume: 0, time: .3*speed });  // Between Letters・3 Units Long
-const mediumGap = () => beep({ volume: 0, time: .7*speed });  // Between Words・7 Units Long
-
-
-  const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-
-  const ch2= (moji,t1,t2)=> Promise.resolve().then(t1).then(interGap).then(t2).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-  che=()=>ch1("ヘ",dit);
-  cmu=()=>ch1("ム",dah);
-  ci=()=> ch2("イ",dit,dah);
-  cta=() => ch2("タ",dah,dit);
-  cda=()=>ch2("\"",dit,dit);
-  cyo=()=>ch2("ヨ",dah,dah);
-  const ch3= (moji,t1,t2,t3)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-  cra=()=>ch3("ラ",dit,dit,dit);
-  cu=()=>ch3("ウ",dit,dit,dah);
-  cya=()=>ch3("ヤ",dit,dah,dah);
-  cwa=()=>ch3("ワ",dah,dit,dah);
-  cna=()=>ch3("ナ",dit,dah,dit);
-  cri=()=>ch3("リ",dah,dah,dit);
-  cre=()=>ch3("レ",dah,dah,dah);
-  cho=()=>ch3("ホ",dah,dit,dit);
-  
-  const w1=() => Promise.resolve().then(cwa).then(che).then(cmu).then(ci).then(cra).then(cu).then(cna).then(cri).then(cre);
-  const w2=()=>Promise.resolve().then(cho).then(ci).then(cta).then(cda).then(cyo).then();
-
-  const ch4= (moji,t1,t2,t3,t4)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-  cko=()=>ch4("コ",dah,dah,dah,dah);
-  cwo=()=>ch4("ヲ",dit,dah,dah,dah);
-  cno=()=>ch4("ノ",dit,dit,dah,dah);
-  cku=()=>ch4("ク",dit,dit,dit,dah);
-  cnu=()=>ch4("ヌ",dit,dit,dit,dit);
-
-  cma=()=>ch4("マ",dah,dit,dit,dah);
-  cha=()=>ch4("ハ",dah,dit,dit,dit);
-  cne=()=>ch4("ネ",dah,dah,dit,dah);
-  chu=()=>ch4("フ",dah,dah,dit,dit);
-  cso=()=>ch4("ソ",dah,dah,dah,dit);
-
-  cke=()=>ch4("ケ",dah,dit,dah,dah);
-  ctu=()=>ch4("ツ",dit,dah,dah,dit);
-  cni=()=>ch4("ニ",dah,dit,dah,dit);
-  cro=()=>ch4("ロ",dit,dah,dit,dah);
-  cka=()=>ch4("カ",dit,dah,dit,dit);
-  cti=()=>ch4("チ",dit,dit,dah,dit);
-  
-  const w3=()=>Promise.resolve().then(cko).then(cwo).then(cno).then(cku).then(cnu);
-  const w4=()=>Promise.resolve().then(cma).then(cha).then(cne).then(chu).then(cso);
-  const w5=()=>Promise.resolve().then(cke).then(ctu).then(cni).then(cro).then(cka).then(cti);
-
-  const ch5= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-  csa=()=>ch5("サ",dah,dit,dah,dit,dah);
-  csi=()=>ch5("シ",dah,dah,dit,dah,dit);
-  csu=()=>ch5("ス",dah,dah,dah,dit,dah);
-  cse=()=>ch5("セ",dit,dah,dah,dah,dit);
-  cru=()=>ch5("ル",dah,dit,dah,dah,dit);
-
-  ca=()=>ch5("ア",dah,dah,dit,dah,dah);
-  ce=()=>ch5("エ",dah,dit,dah,dah,dah);
-  co=()=>ch5("オ",dit,dah,dit,dit,dit);
-  chi=()=>ch5("ヒ",dah,dah,dit,dit,dah);
-  cyu=()=>ch5("ユ",dah,dit,dit,dah,dah);
-  cki=()=>ch5("キ",dah,dit,dah,dit,dit);
-
-  cmi=()=>ch5("ミ",dit,dit,dah,dit,dah);
-  cn=()=>ch5("ン",dit,dah,dit,dah,dit);
-  cte=()=>ch5("テ",dit,dah,dit,dah,dah);
-  cmo=()=>ch5("モ",dah,dit,dit,dah,dit);
-  cme=()=>ch5("メ",dah,dit,dit,dit,dah);
-
-  const w6=()=>Promise.resolve().then(csa).then(csi).then(csu).then(cse).then(cru);
-  const w7=()=>Promise.resolve().then(ca).then(ce).then(co).then(chi).then(cyu).then(cki);
-  const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo).then(cme);
-
-
-  openc=()=>{ audioContext.close();   audioContext = new window.AudioContext();}
-  const wabun=() => Promise.resolve().then(w1).then(openc).then(w2).then(openc).then(w3).then(openc).then(w4).then(openc).then(w5)
-  .then(openc).then(w6).then(openc).then(w7).then(openc).then(w8);
-
-  
-
-    </script>
+ 
   </head>
   <body>
 
@@ -139,12 +20,138 @@ const mediumGap = () => beep({ volume: 0, time: .7*speed });  // Between Words�
   <input type="button" value="Dit" onclick="dit();" accesskey="t">
   <input type="button" value="Dah" onclick="dah();" accesskey="h">
   <input type="button" value="和文練習" onclick="wabun();">
-  <label for="speed">Speed (4 to 8 characters):</label><input type="text" id="speed" name="speed"  size="10">
+  <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="1">
 </p>
 
 <textarea id="texta" cols=80 rows=3></textarea><br>
 参照させていただいたサイト:<a href="https://neos21.net/blog/2021/03/30-01.html">https://neos21.net/blog/2021/03/30-01.html</a>
   </body>
+
+  <script>
+    var audioContext = new window.AudioContext();
+  
+  const beep = options => new Promise(resolve => {
+    // Options
+    options         = options           || {};
+    const type      = options.type      == null ? 'sine' : options.type;
+    const frequency = options.frequency == null ? 603    : options.frequency;
+    const time      = options.time      == null ? 0.1    : options.time;
+    const volume    = options.volume    == null ? 0.8    : options.volume;
+    const speed=1;
+    // Create
+  
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    // Set Options
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+    gain.gain.value = volume;
+    // Start
+    oscillator.onended = () => {
+      gain.disconnect(audioContext.destination);
+      oscillator.disconnect(gain);
+      resolve();
+    };
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + time);  // Stop Timing
+   // audioContext.close();
+  });
+  
+
+  
+  const dit = () => beep({ time: .1*speed });  // Short Mark・Dot・1 Units Long
+  const dah = () => beep({ time: .3*speed });  // Long Mark・Dash・3 Units Long
+  const interGap  = () => beep({ volume: 0, time: .1*speed });  // Between Characters・1 Units Long
+  const shortGap  = () => beep({ volume: 0, time: .3*speed });  // Between Letters・3 Units Long
+  const mediumGap = () => beep({ volume: 0, time: .7*speed });  // Between Words・7 Units Long
+  
+  
+    const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+  
+    const ch2= (moji,t1,t2)=> Promise.resolve().then(t1).then(interGap).then(t2).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+    che=()=>ch1("ヘ",dit);
+    cmu=()=>ch1("ム",dah);
+    ci=()=> ch2("イ",dit,dah);
+    cta=() => ch2("タ",dah,dit);
+    cda=()=>ch2("\"",dit,dit);
+    cyo=()=>ch2("ヨ",dah,dah);
+    const ch3= (moji,t1,t2,t3)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+    cra=()=>ch3("ラ",dit,dit,dit);
+    cu=()=>ch3("ウ",dit,dit,dah);
+    cya=()=>ch3("ヤ",dit,dah,dah);
+    cwa=()=>ch3("ワ",dah,dit,dah);
+    cna=()=>ch3("ナ",dit,dah,dit);
+    cri=()=>ch3("リ",dah,dah,dit);
+    cre=()=>ch3("レ",dah,dah,dah);
+    cho=()=>ch3("ホ",dah,dit,dit);
+    
+    const w1=() => Promise.resolve().then(cwa).then(che).then(cmu).then(ci).then(cra).then(cu).then(cna).then(cri).then(cre);
+    const w2=()=>Promise.resolve().then(cho).then(ci).then(cta).then(cda).then(cyo).then();
+  
+    const ch4= (moji,t1,t2,t3,t4)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+    cko=()=>ch4("コ",dah,dah,dah,dah);
+    cwo=()=>ch4("ヲ",dit,dah,dah,dah);
+    cno=()=>ch4("ノ",dit,dit,dah,dah);
+    cku=()=>ch4("ク",dit,dit,dit,dah);
+    cnu=()=>ch4("ヌ",dit,dit,dit,dit);
+  
+    cma=()=>ch4("マ",dah,dit,dit,dah);
+    cha=()=>ch4("ハ",dah,dit,dit,dit);
+    cne=()=>ch4("ネ",dah,dah,dit,dah);
+    chu=()=>ch4("フ",dah,dah,dit,dit);
+    cso=()=>ch4("ソ",dah,dah,dah,dit);
+  
+    cke=()=>ch4("ケ",dah,dit,dah,dah);
+    ctu=()=>ch4("ツ",dit,dah,dah,dit);
+    cni=()=>ch4("ニ",dah,dit,dah,dit);
+    cro=()=>ch4("ロ",dit,dah,dit,dah);
+    cka=()=>ch4("カ",dit,dah,dit,dit);
+    cti=()=>ch4("チ",dit,dit,dah,dit);
+    
+    const w3=()=>Promise.resolve().then(cko).then(cwo).then(cno).then(cku).then(cnu);
+    const w4=()=>Promise.resolve().then(cma).then(cha).then(cne).then(chu).then(cso);
+    const w5=()=>Promise.resolve().then(cke).then(ctu).then(cni).then(cro).then(cka).then(cti);
+  
+    const ch5= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+    csa=()=>ch5("サ",dah,dit,dah,dit,dah);
+    csi=()=>ch5("シ",dah,dah,dit,dah,dit);
+    csu=()=>ch5("ス",dah,dah,dah,dit,dah);
+    cse=()=>ch5("セ",dit,dah,dah,dah,dit);
+    cru=()=>ch5("ル",dah,dit,dah,dah,dit);
+  
+    ca=()=>ch5("ア",dah,dah,dit,dah,dah);
+    ce=()=>ch5("エ",dah,dit,dah,dah,dah);
+    co=()=>ch5("オ",dit,dah,dit,dit,dit);
+    chi=()=>ch5("ヒ",dah,dah,dit,dit,dah);
+    cyu=()=>ch5("ユ",dah,dit,dit,dah,dah);
+    cki=()=>ch5("キ",dah,dit,dah,dit,dit);
+  
+    cmi=()=>ch5("ミ",dit,dit,dah,dit,dah);
+    cn=()=>ch5("ン",dit,dah,dit,dah,dit);
+    cte=()=>ch5("テ",dit,dah,dit,dah,dah);
+    cmo=()=>ch5("モ",dah,dit,dit,dah,dit);
+    cme=()=>ch5("メ",dah,dit,dit,dit,dah);
+  
+    const w6=()=>Promise.resolve().then(csa).then(csi).then(csu).then(cse).then(cru);
+    const w7=()=>Promise.resolve().then(ca).then(ce).then(co).then(chi).then(cyu).then(cki);
+    const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo).then(cme);
+  
+  
+    openc=()=>{ audioContext.close();   audioContext = new window.AudioContext();}
+    const wabun=() =>{
+      const textbox = document.getElementById("speed");
+      speed = textbox.value;
+      Promise.resolve().then(w1).then(openc).then(w2).then(openc).then(w3).then(openc).then(w4).then(openc).then(w5)
+    .then(openc).then(w6).then(openc).then(w7).then(openc).then(w8);
+
+    } 
+  
+    
+  
+      </script>
+
 </html>
 © 2022 GitHub, Inc.
 Terms
