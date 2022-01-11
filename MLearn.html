@@ -20,6 +20,7 @@ const beep = options => new Promise(resolve => {
   const frequency = options.frequency == null ? 603    : options.frequency;
   const time      = options.time      == null ? 0.1    : options.time;
   const volume    = options.volume    == null ? 0.8    : options.volume;
+  var speed=1;
   // Create
 
   const oscillator = audioContext.createOscillator();
@@ -41,11 +42,14 @@ const beep = options => new Promise(resolve => {
  // audioContext.close();
 });
 
-const dit = () => beep({ time: .1 });  // Short Mark・Dot・1 Units Long
-const dah = () => beep({ time: .3 });  // Long Mark・Dash・3 Units Long
-const interGap  = () => beep({ volume: 0, time: .1 });  // Between Characters・1 Units Long
-const shortGap  = () => beep({ volume: 0, time: .3 });  // Between Letters・3 Units Long
-const mediumGap = () => beep({ volume: 0, time: .7 });  // Between Words・7 Units Long
+const textbox = document.getElementById("speed")
+speed= textbox.value
+
+const dit = () => beep({ time: .1*speed });  // Short Mark・Dot・1 Units Long
+const dah = () => beep({ time: .3*speed });  // Long Mark・Dash・3 Units Long
+const interGap  = () => beep({ volume: 0, time: .1*speed });  // Between Characters・1 Units Long
+const shortGap  = () => beep({ volume: 0, time: .3*speed });  // Between Letters・3 Units Long
+const mediumGap = () => beep({ volume: 0, time: .7*speed });  // Between Words・7 Units Long
 
 
   const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
@@ -135,6 +139,7 @@ const mediumGap = () => beep({ volume: 0, time: .7 });  // Between Words・7 Uni
   <input type="button" value="Dit" onclick="dit();" accesskey="t">
   <input type="button" value="Dah" onclick="dah();" accesskey="h">
   <input type="button" value="和文練習" onclick="wabun();">
+  <label for="speed">Speed (4 to 8 characters):</label><input type="text" id="speed" name="speed"  size="10">
 </p>
 
 <textarea id="texta" cols=80 rows=3></textarea><br>
