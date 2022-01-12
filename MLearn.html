@@ -14,17 +14,18 @@ html { font-family: sans-serif; }
   </head>
   <body>
 
-<h1>Web Audio Beep Morse Code</h1>
+<h1>Morse Code</h1>
 
 <p>
   <input type="button" value="Dit" onclick="dit();" accesskey="t">
   <input type="button" value="Dah" onclick="dah();" accesskey="h">
-  <input type="button" value="和文練習" onclick="wabun();">
-  <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="1">
+  <input type="button" value="和文" onclick="wabun();">
+  <input type="button" value="記号数字" onclick="kigo();">
+  <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="0.8">
 </p>
 
 <textarea id="texta" cols=80 rows=3></textarea><br>
-参照させていただいたサイト:<a href="https://neos21.net/blog/2021/03/30-01.html">https://neos21.net/blog/2021/03/30-01.html</a>
+参照させていただいたサイト:<a href="https://neos21.net/blog/2021/03/30-01.html">https://neos21.net/blog/2021/03/30-01.html</a><br>
   </body>
 
   <script>
@@ -133,11 +134,30 @@ html { font-family: sans-serif; }
     cte=()=>ch5("テ",dit,dah,dit,dah,dah);
     cmo=()=>ch5("モ",dah,dit,dit,dah,dit);
     cme=()=>ch5("メ",dah,dit,dit,dit,dah);
-  
+   
     const w6=()=>Promise.resolve().then(csa).then(csi).then(csu).then(cse).then(cru);
     const w7=()=>Promise.resolve().then(ca).then(ce).then(co).then(chi).then(cyu).then(cki);
     const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo).then(cme);
+
+    const ch6= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+    cdan=()=>ch6("」",dit,dah,dit,dah,dit,dit);
+    cten=()=>ch6("、",dit,dah,dit,dah,dit,dah);
+    ckas=()=>ch6("（",dah,dit,dah,dah,dit,dah);
+    ckae=()=>ch6("）",dit,dah,dit,dit,dah,dit);
+    cq=()=>ch6("?",dit,dit,dah,dah,dit,dit);
+    cat= ()=>ch6("@",dit,dah,dah,dit,dah,dit);
+    
+    cii= ()=>ch5("ヰ",dit,dah,dit,dit,dah);
+    cee= ()=>ch5("ヱ",dit,dah,dah,dit,dit);
+    cp=()=>ch5("°",dit,dit,dah,dah,dit);
+    cd=()=>ch5("ー",dit,dah,dah,dit,dah);
   
+
+    const w9=()=>Promise.resolve().then(cdan).then(cten).then(ckas).then(ckae).then(cq);
+    const w10=()=>Promise.resolve().then(cat).then(cii).then(cee).then(c5).then(c3).then(cii);
+    const w11=()=>Promise.resolve().then(c8).then(c9).then(c0).then(c2).then(c4).then(cd);
+    const w12=()=>Promise.resolve().then(c6).then(c1).then(c7).then(chi).then(cp).then(cee);
+ 
   
     openc=()=>{ audioContext.close();   audioContext = new window.AudioContext();}
     const wabun=() =>{
@@ -147,13 +167,20 @@ html { font-family: sans-serif; }
     .then(openc).then(w6).then(openc).then(w7).then(openc).then(w8);
 
     } 
+
+    const kigo=() =>{
+      const textbox = document.getElementById("speed");
+      speed = textbox.value;
+      Promise.resolve().then(w9).then(openc).then(w10).then(openc).then(w11).then(openc).then(w12);
+
+    } 
   
     
   
       </script>
 
 </html>
-© 2022 GitHub, Inc.
+refer:© 2022 GitHub, Inc.
 Terms
 Privacy
 Security
