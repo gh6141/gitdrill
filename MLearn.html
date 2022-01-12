@@ -139,7 +139,7 @@ html { font-family: sans-serif; }
     const w7=()=>Promise.resolve().then(ca).then(ce).then(co).then(chi).then(cyu).then(cki);
     const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo).then(cme);
 
-    const ch6= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
+    const ch6= (moji,t1,t2,t3,t4,t5,t6)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(interGap).then(t6).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
     cdan=()=>ch6("」",dit,dah,dit,dah,dit,dit);
     cten=()=>ch6("、",dit,dah,dit,dah,dit,dah);
     ckas=()=>ch6("（",dah,dit,dah,dah,dit,dah);
@@ -151,12 +151,25 @@ html { font-family: sans-serif; }
     cee= ()=>ch5("ヱ",dit,dah,dah,dit,dit);
     cp=()=>ch5("°",dit,dit,dah,dah,dit);
     cd=()=>ch5("ー",dit,dah,dah,dit,dah);
+    
+    c1=()=>ch5("1",dit,dah,dah,dah,dah);
+    c2=()=>ch5("2",dit,dit,dah,dah,dah);
+    c3=()=>ch5("3",dit,dit,dit,dah,dah);
+    c4=()=>ch5("4",dit,dit,dit,dit,dah);
+    c5=()=>ch5("5",dit,dit,dit,dit,dit);
+    c6=()=>ch5("6",dah,dit,dit,dit,dit);
+    c7=()=>ch5("7",dah,dah,dit,dit,dit);
+    c8=()=>ch5("8",dah,dah,dah,dit,dit);
+    c9=()=>ch5("9",dah,dah,dah,dah,dit);
+    c0=()=>ch5("0",dah,dah,dah,dah,dah);
+    
+    
   
 
     const w9=()=>Promise.resolve().then(cdan).then(cten).then(ckas).then(ckae).then(cq);
-    const w10=()=>Promise.resolve().then(cat).then(cii).then(cee).then(c5).then(c3).then(cii);
+    const w10=()=>Promise.resolve().then(cat).then(cii).then(cee).then(c5).then(c3);
     const w11=()=>Promise.resolve().then(c8).then(c9).then(c0).then(c2).then(c4).then(cd);
-    const w12=()=>Promise.resolve().then(c6).then(c1).then(c7).then(chi).then(cp).then(cee);
+    const w12=()=>Promise.resolve().then(c6).then(c1).then(c7).then(chi).then(cp);
  
   
     openc=()=>{ audioContext.close();   audioContext = new window.AudioContext();}
