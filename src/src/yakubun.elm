@@ -78,7 +78,20 @@ view model =
          , Svg.Attributes.strokeWidth (String.fromInt wd)
          , Svg.Attributes.strokeLinecap "round"
           ] []
+    srect xx yy wd ht rxx ryy fcolor scolor op= Svg.rect
+        [ Svg.Attributes.x (String.fromInt xx)
+        , Svg.Attributes.y (String.fromInt yy)
+        , Svg.Attributes.width (String.fromInt wd)
+        , Svg.Attributes.height (String.fromInt ht)
+        , Svg.Attributes.rx (String.fromInt rxx)
+        , Svg.Attributes.ry (String.fromInt rxx)
+        , Svg.Attributes.fill fcolor
+        , Svg.Attributes.stroke scolor
+        ,Svg.Attributes.fillOpacity op
+        ]
+        []
 
+    srectl bunkatu color= List.map (\su ->(srect ((600//bunkatu)*(su-1)) 0 (600//bunkatu) 100 5 5 "white" color "0.4" )) (List.range 1 bunkatu ) 
 
   in
  
@@ -105,12 +118,24 @@ view model =
 
     ]
     ,tr [] [
-      td [] [ Button.button [Button.attrs [style "font-size" "24px"   ,onClick Ba]] [ text "倍分" ] ],
+      td [] [ ],
     
-     td [] [Button.button [Button.attrs [style "font-size" "24px"   ,onClick Ya]] [ text "約分" ] ]
+     td [] [ Button.button [Button.attrs [style "font-size" "24px"   ,onClick Ba]] [ text "倍分" ]
+            ,Button.button [Button.attrs [style "font-size" "24px"   ,onClick Ya]] [ text "約分" ] ]
 
     ]
-    ,tr [] [ sline 1 1 5000 5000 4 "red"]
+
+    ,tr [] [td[colspan 2] [Svg.svg [width 800] ([ 
+      srect 0 0 600 100 5 5 "white" "black" "1.0"--sotowaku
+      ,srect 2 2 ((600*model.bunsi)//model.bunbo) 100 5 5 "red" "black" "0.7"  --nakami
+     -- ,srect 0 0 30 80 5 5 "white" "black" "0.4" --kugiri 
+     -- ,srect 0 0 30 80 5 5 "white" "black" "0.4"--baibun kugiri
+      ]
+      ++ (srectl model.bunbo  "black")
+      ++ (srectl (model.bunbo*model.baisu) "red") )
+      
+      ]
+    ]
 
    ]
 
