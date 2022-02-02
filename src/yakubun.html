@@ -4807,22 +4807,48 @@ var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var author$project$Yakubun$subscriptions = function (model) {
 	return elm$core$Platform$Sub$none;
 };
+var elm$core$Basics$modBy = _Basics_modBy;
+var author$project$Yakubun$gcm = F2(
+	function (a, b) {
+		gcm:
+		while (true) {
+			var _n0 = (_Utils_cmp(a, b) > 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+			var dai = _n0.a;
+			var sho = _n0.b;
+			var r = A2(elm$core$Basics$modBy, sho, dai);
+			if (!r) {
+				return sho;
+			} else {
+				var $temp$a = sho,
+					$temp$b = r;
+				a = $temp$a;
+				b = $temp$b;
+				continue gcm;
+			}
+		}
+	});
+var author$project$Yakubun$mgcm = function (mdl) {
+	var gc = A2(author$project$Yakubun$gcm, mdl.bunbo * mdl.baisu, mdl.bunsi * mdl.baisu);
+	return {baisu: gc, bunbo: ((mdl.bunbo * mdl.baisu) / gc) | 0, bunsi: ((mdl.bunsi * mdl.baisu) / gc) | 0};
+};
 var author$project$Yakubun$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'Pl':
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{bunbo: model.bunbo + 1}),
+					author$project$Yakubun$mgcm(
+						_Utils_update(
+							model,
+							{bunbo: model.bunbo + 1})),
 					elm$core$Platform$Cmd$none);
 			case 'Mi':
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							bunbo: (model.bunbo > 2) ? (model.bunbo - 1) : model.bunbo
-						}),
+					author$project$Yakubun$mgcm(
+						_Utils_update(
+							model,
+							{
+								bunbo: (model.bunbo > 2) ? (model.bunbo - 1) : model.bunbo
+							})),
 					elm$core$Platform$Cmd$none);
 			case 'Pls':
 				return _Utils_Tuple2(
@@ -4834,29 +4860,38 @@ var author$project$Yakubun$update = F2(
 					elm$core$Platform$Cmd$none);
 			case 'Mis':
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							bunsi: (model.bunsi > 1) ? (model.bunsi - 1) : model.bunsi
-						}),
+					author$project$Yakubun$mgcm(
+						_Utils_update(
+							model,
+							{
+								bunsi: (model.bunsi > 1) ? (model.bunsi - 1) : model.bunsi
+							})),
 					elm$core$Platform$Cmd$none);
-			case 'Ba':
+			case 'Ya':
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{baisu: model.baisu + 1}),
+					author$project$Yakubun$mgcm(
+						_Utils_update(
+							model,
+							{baisu: 1})),
+					elm$core$Platform$Cmd$none);
+			case 'B2':
+				return _Utils_Tuple2(
+					author$project$Yakubun$mgcm(
+						_Utils_update(
+							model,
+							{baisu: 2})),
 					elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							baisu: (model.baisu > 1) ? (model.baisu - 1) : model.baisu
-						}),
+					author$project$Yakubun$mgcm(
+						_Utils_update(
+							model,
+							{baisu: 3})),
 					elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$Yakubun$Ba = {$: 'Ba'};
+var author$project$Yakubun$B2 = {$: 'B2'};
+var author$project$Yakubun$B3 = {$: 'B3'};
 var author$project$Yakubun$Mi = {$: 'Mi'};
 var author$project$Yakubun$Mis = {$: 'Mis'};
 var author$project$Yakubun$Pl = {$: 'Pl'};
@@ -5197,36 +5232,55 @@ var rundis$elm_bootstrap$Bootstrap$Button$button = F2(
 			children);
 	});
 var author$project$Yakubun$view = function (model) {
-	var srect = F9(
-		function (xx, yy, wd, ht, rxx, ryy, fcolor, scolor, op) {
-			return A2(
-				elm$svg$Svg$rect,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$x(
-						elm$core$String$fromInt(xx)),
-						elm$svg$Svg$Attributes$y(
-						elm$core$String$fromInt(yy)),
-						elm$svg$Svg$Attributes$width(
-						elm$core$String$fromInt(wd)),
-						elm$svg$Svg$Attributes$height(
-						elm$core$String$fromInt(ht)),
-						elm$svg$Svg$Attributes$rx(
-						elm$core$String$fromInt(rxx)),
-						elm$svg$Svg$Attributes$ry(
-						elm$core$String$fromInt(rxx)),
-						elm$svg$Svg$Attributes$fill(fcolor),
-						elm$svg$Svg$Attributes$stroke(scolor),
-						elm$svg$Svg$Attributes$fillOpacity(op)
-					]),
-				_List_Nil);
-		});
-	var srectl = F2(
-		function (bunkatu, color) {
+	var srect = function (xx) {
+		return function (yy) {
+			return function (wd) {
+				return function (ht) {
+					return function (rxx) {
+						return function (ryy) {
+							return function (fcolor) {
+								return function (scolor) {
+									return function (op) {
+										return function (wdx) {
+											return A2(
+												elm$svg$Svg$rect,
+												_List_fromArray(
+													[
+														elm$svg$Svg$Attributes$x(
+														elm$core$String$fromInt(xx)),
+														elm$svg$Svg$Attributes$y(
+														elm$core$String$fromInt(yy)),
+														elm$svg$Svg$Attributes$width(
+														elm$core$String$fromInt(wd)),
+														elm$svg$Svg$Attributes$height(
+														elm$core$String$fromInt(ht)),
+														elm$svg$Svg$Attributes$rx(
+														elm$core$String$fromInt(rxx)),
+														elm$svg$Svg$Attributes$ry(
+														elm$core$String$fromInt(rxx)),
+														elm$svg$Svg$Attributes$fill(fcolor),
+														elm$svg$Svg$Attributes$stroke(scolor),
+														elm$svg$Svg$Attributes$fillOpacity(op),
+														elm$svg$Svg$Attributes$strokeWidth(
+														elm$core$String$fromInt(wdx))
+													]),
+												_List_Nil);
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+	var srectl = F3(
+		function (bunkatu, color, wd) {
 			return A2(
 				elm$core$List$map,
 				function (su) {
-					return A9(srect, ((600 / bunkatu) | 0) * (su - 1), 0, (600 / bunkatu) | 0, 100, 5, 5, 'white', color, '0.4');
+					return srect(((600 / bunkatu) | 0) * (su - 1))(0)((600 / bunkatu) | 0)(100)(5)(5)('white')(color)('0.4')(wd);
 				},
 				A2(elm$core$List$range, 1, bunkatu));
 		});
@@ -5438,12 +5492,27 @@ var author$project$Yakubun$view = function (model) {
 										_List_fromArray(
 											[
 												A2(elm$html$Html$Attributes$style, 'font-size', '24px'),
-												elm$html$Html$Events$onClick(author$project$Yakubun$Ba)
+												elm$html$Html$Events$onClick(author$project$Yakubun$B2)
 											]))
 									]),
 								_List_fromArray(
 									[
-										elm$html$Html$text('倍分')
+										elm$html$Html$text('2で倍分')
+									])),
+								A2(
+								rundis$elm_bootstrap$Bootstrap$Button$button,
+								_List_fromArray(
+									[
+										rundis$elm_bootstrap$Bootstrap$Button$attrs(
+										_List_fromArray(
+											[
+												A2(elm$html$Html$Attributes$style, 'font-size', '24px'),
+												elm$html$Html$Events$onClick(author$project$Yakubun$B3)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('3で倍分')
 									])),
 								A2(
 								rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -5484,12 +5553,12 @@ var author$project$Yakubun$view = function (model) {
 								_Utils_ap(
 									_List_fromArray(
 										[
-											A9(srect, 0, 0, 600, 100, 5, 5, 'white', 'black', '1.0'),
-											A9(srect, 2, 2, ((600 * model.bunsi) / model.bunbo) | 0, 100, 5, 5, 'red', 'black', '0.7')
+											srect(0)(0)(600)(100)(5)(5)('white')('black')('1.0')(3),
+											srect(2)(2)(((600 * model.bunsi) / model.bunbo) | 0)(100)(5)(5)('red')('black')('0.7')(2)
 										]),
 									_Utils_ap(
-										A2(srectl, model.bunbo, 'black'),
-										A2(srectl, model.bunbo * model.baisu, 'red'))))
+										A3(srectl, model.bunbo, 'black', 4),
+										A3(srectl, model.bunbo * model.baisu, 'red', 1))))
 							]))
 					]))
 			]));

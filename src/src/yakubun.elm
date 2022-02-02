@@ -44,25 +44,27 @@ init _ =
   )
 
 type Msg
-    =   Pl | Mi | Pls| Mis |Ba |Ya
+    =   Pl | Mi | Pls| Mis |Ya |B2 |B3
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
- 
+
   case msg of 
    
   Pl ->
-       ( {model|bunbo=model.bunbo+1},Cmd.none)
+       ( (mgcm {model|bunbo=model.bunbo+1}),Cmd.none)
   Mi ->
-       ( {model|bunbo=if model.bunbo>2 then model.bunbo-1  else model.bunbo },Cmd.none)
+       ( (mgcm {model|bunbo=if model.bunbo>2 then model.bunbo-1  else model.bunbo }),Cmd.none)
   Pls ->
-       ( {model|bunsi=if model.bunsi<model.bunbo then model.bunsi+1 else model.bunsi},Cmd.none)
+       ( ( {model|bunsi=if model.bunsi<model.bunbo then model.bunsi+1 else model.bunsi}),Cmd.none)
   Mis ->
-       ( {model|bunsi=if model.bunsi>1 then model.bunsi-1  else model.bunsi },Cmd.none)
-  Ba ->
-       ( {model|baisu=model.baisu+1 },Cmd.none)
+       ( (mgcm {model|bunsi=if model.bunsi>1 then model.bunsi-1  else model.bunsi }),Cmd.none)
   Ya ->
-       ( {model|baisu=if model.baisu>1 then model.baisu-1 else model.baisu},Cmd.none)
+       ( (mgcm {model|baisu=1}),Cmd.none)
+  B2 ->
+       ( (mgcm {model|baisu=2}),Cmd.none)
+  B3 ->
+       ( (mgcm {model|baisu=3}),Cmd.none)
 
 
 view : Model -> Html Msg
@@ -78,7 +80,7 @@ view model =
          , Svg.Attributes.strokeWidth (String.fromInt wd)
          , Svg.Attributes.strokeLinecap "round"
           ] []
-    srect xx yy wd ht rxx ryy fcolor scolor op= Svg.rect
+    srect xx yy wd ht rxx ryy fcolor scolor op wdx= Svg.rect
         [ Svg.Attributes.x (String.fromInt xx)
         , Svg.Attributes.y (String.fromInt yy)
         , Svg.Attributes.width (String.fromInt wd)
@@ -88,10 +90,11 @@ view model =
         , Svg.Attributes.fill fcolor
         , Svg.Attributes.stroke scolor
         ,Svg.Attributes.fillOpacity op
+        , Svg.Attributes.strokeWidth (String.fromInt wdx)
         ]
         []
 
-    srectl bunkatu color= List.map (\su ->(srect ((600//bunkatu)*(su-1)) 0 (600//bunkatu) 100 5 5 "white" color "0.4" )) (List.range 1 bunkatu ) 
+    srectl bunkatu color wd= List.map (\su ->(srect ((600//bunkatu)*(su-1)) 0 (600//bunkatu) 100 5 5 "white" color "0.4" wd)) (List.range 1 bunkatu ) 
 
   in
  
@@ -120,19 +123,20 @@ view model =
     ,tr [] [
       td [] [ ],
     
-     td [] [ Button.button [Button.attrs [style "font-size" "24px"   ,onClick Ba]] [ text "倍分" ]
+     td [] [ Button.button [Button.attrs [style "font-size" "24px"   ,onClick B2]] [ text "2で倍分" ]
+            , Button.button [Button.attrs [style "font-size" "24px"   ,onClick B3]] [ text "3で倍分" ]
             ,Button.button [Button.attrs [style "font-size" "24px"   ,onClick Ya]] [ text "約分" ] ]
 
     ]
 
     ,tr [] [td[colspan 2] [Svg.svg [width 800] ([ 
-      srect 0 0 600 100 5 5 "white" "black" "1.0"--sotowaku
-      ,srect 2 2 ((600*model.bunsi)//model.bunbo) 100 5 5 "red" "black" "0.7"  --nakami
+      srect 0 0 600 100 5 5 "white" "black" "1.0" 3--sotowaku
+      ,srect 2 2 ((600*model.bunsi)//model.bunbo) 100 5 5 "red" "black" "0.7" 2 --nakami
      -- ,srect 0 0 30 80 5 5 "white" "black" "0.4" --kugiri 
      -- ,srect 0 0 30 80 5 5 "white" "black" "0.4"--baibun kugiri
       ]
-      ++ (srectl model.bunbo  "black")
-      ++ (srectl (model.bunbo*model.baisu) "red") )
+      ++ (srectl model.bunbo  "black" 4)
+      ++ (srectl (model.bunbo*model.baisu) "red" 1) )
       
       ]
     ]
@@ -161,4 +165,23 @@ snd tuple =
         (_, value2) = tuple
     in
     value2
+
+
+gcm a b =
+  let
+   (dai,sho)=  if a>b then (a,b) else (b,a)
+   r=modBy sho dai
+  in
+   if r==0 then sho else (gcm sho r)
+
+mgcm mdl= 
+          let
+           gc=gcm (mdl.bunbo*mdl.baisu) (mdl.bunsi*mdl.baisu)
+
+          in
+          {
+           bunsi= mdl.bunsi*mdl.baisu//gc
+          ,bunbo= mdl.bunbo*mdl.baisu//gc
+          ,baisu= gc
+          }
 
