@@ -134,10 +134,12 @@ html { font-family: sans-serif; }
     cte=()=>ch5("テ",dit,dah,dit,dah,dah);
     cmo=()=>ch5("モ",dah,dit,dit,dah,dit);
     cme=()=>ch5("メ",dah,dit,dit,dit,dah);
+    cto=()=>ch5("ト",dit,dit,dah,dit,dit);
    
     const w6=()=>Promise.resolve().then(csa).then(csi).then(csu).then(cse).then(cru);
     const w7=()=>Promise.resolve().then(ca).then(ce).then(co).then(chi).then(cyu).then(cki);
-    const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo).then(cme);
+    const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo);
+    const w8a=()=>Promise.resolve().then(cme).then(cto);
 
     const ch6= (moji,t1,t2,t3,t4,t5,t6)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(interGap).then(t6).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
     cdan=()=>ch6("」",dit,dah,dit,dah,dit,dit);
@@ -177,7 +179,7 @@ html { font-family: sans-serif; }
       const textbox = document.getElementById("speed");
       speed = textbox.value;
       Promise.resolve().then(w1).then(openc).then(w2).then(openc).then(w3).then(openc).then(w4).then(openc).then(w5)
-    .then(openc).then(w6).then(openc).then(w7).then(openc).then(w8);
+    .then(openc).then(w6).then(openc).then(w7).then(openc).then(w8).then(openc).then(w8a);
 
     } 
 
