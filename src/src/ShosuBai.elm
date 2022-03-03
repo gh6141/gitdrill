@@ -276,8 +276,8 @@ view model =
               ,sline 20 115 20 155 1 
               ,stext 15 110 "0"
               ,stext 15 170 "0"
-              ,stext 400 110 "(km)"
-              ,stext 400 170 "(L)"
+              ,stext 400 110 "(m)"
+              ,stext 400 170 "(倍)"
 
           ]
          
@@ -306,9 +306,9 @@ view model =
     tr [] [
       td [colspan 2,style "font-size" "30px" ] [text (
        case model.mondai.pattern of
-         1 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"km走るためには何L使いますか?"
-         2 -> (tenmjo model.mondai.sb)++"Lのガソリンで"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"km走る自動車があります。1Lのガソリンで何km走りますか?"
-         3 -> "1Lのガソリンで"++(tenmjo model.mondai.sa)++"km走る自動車があります。"++(tenmjo model.mondai.sb) ++"Lでは何km走れますか?"
+         1 -> "赤テープの長さ"++(tenmjo model.mondai.sa)++"ｍをもとにすると、青テープ"++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"ｍは、赤の何倍ですか?"
+         2 -> (tenmjo model.mondai.sb)++"倍すると"++(tenmjo2 model.mondai.sa model.mondai.sb) ++"mのテープがあります。もとのテープは何mでしょう?"
+         3 -> "もとの赤テープが"++(tenmjo model.mondai.sa)++"mです。"++(tenmjo model.mondai.sb) ++"倍の青テープがあります。青テープは何mですか?"
          _ -> ""
       )]
     ]
@@ -336,9 +336,9 @@ view model =
          let
           shint =
            case model.mondai.pattern of
-            1 -> (tenmjo model.mondai.sa)++"×□="++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"(km)"
-            2 -> "□×"++(tenmjo model.mondai.sb)++"="++(tenmjo2 model.mondai.sa model.mondai.sb) ++"(km)"
-            3 -> (tenmjo model.mondai.sa)++"kmの"++(tenmjo model.mondai.sb) ++"倍は？"
+            1 -> (tenmjo model.mondai.sa)++"×□="++(tenmjo2 model.mondai.sa model.mondai.sb ) ++"(m)"
+            2 -> "□×"++(tenmjo model.mondai.sb)++"="++(tenmjo2 model.mondai.sa model.mondai.sb) ++"(m)"
+            3 -> (tenmjo model.mondai.sa)++"mの"++(tenmjo model.mondai.sb) ++"倍は？"
             _ -> ""
          in
           text (if model.hintDisp then shint else "")
@@ -347,9 +347,9 @@ view model =
       , tr [] [
          td [] [
            
-             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ Html.text "Stage1(km)" ]
-           ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Lmotome]] [ Html.text "Stage2(L)" ]
-           ,   Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick AKmotome]] [ Html.text "Statge3(Lあたり)" ]          
+             Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Kmotome]] [ Html.text "Stage1(m)" ]
+           ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Lmotome]] [ Html.text "Stage2(倍)" ]
+           ,   Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick AKmotome]] [ Html.text "Statge3(あたり)" ]          
            ,  Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick Matome]] [ Html.text "Stage4(まとめ)" ]
            ,Button.button [Button.attrs [Html.Attributes.style "font-size" "20px" ,onClick IchiIka]] [ Html.text "Stage5(1以下)" ]
 

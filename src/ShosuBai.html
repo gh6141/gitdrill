@@ -6490,8 +6490,8 @@ var author$project$Subunkai$view = function (model) {
 				A5(sline, 20, 115, 20, 155, 1),
 				A3(stext, 15, 110, '0'),
 				A3(stext, 15, 170, '0'),
-				A3(stext, 400, 110, '(km)'),
-				A3(stext, 400, 170, '(L)')
+				A3(stext, 400, 110, '(m)'),
+				A3(stext, 400, 170, '(倍)')
 			]));
 	var greenans = A2(
 		elm$html$Html$span,
@@ -6699,11 +6699,11 @@ var author$project$Subunkai$view = function (model) {
 									var _n0 = model.mondai.pattern;
 									switch (_n0) {
 										case 1:
-											return '1Lのガソリンで' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('km走る自動車があります。' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走るためには何L使いますか?')));
+											return '赤テープの長さ' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('ｍをもとにすると、青テープ' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'ｍは、赤の何倍ですか?')));
 										case 2:
-											return author$project$Subunkai$tenmjo(model.mondai.sb) + ('Lのガソリンで' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'km走る自動車があります。1Lのガソリンで何km走りますか?'));
+											return author$project$Subunkai$tenmjo(model.mondai.sb) + ('倍すると' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + 'mのテープがあります。もとのテープは何mでしょう?'));
 										case 3:
-											return '1Lのガソリンで' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('km走る自動車があります。' + (author$project$Subunkai$tenmjo(model.mondai.sb) + 'Lでは何km走れますか?')));
+											return 'もとの赤テープが' + (author$project$Subunkai$tenmjo(model.mondai.sa) + ('mです。' + (author$project$Subunkai$tenmjo(model.mondai.sb) + '倍の青テープがあります。青テープは何mですか?')));
 										default:
 											return '';
 									}
@@ -6872,11 +6872,11 @@ var author$project$Subunkai$view = function (model) {
 													var _n1 = model.mondai.pattern;
 													switch (_n1) {
 														case 1:
-															return author$project$Subunkai$tenmjo(model.mondai.sa) + ('×□=' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + '(km)'));
+															return author$project$Subunkai$tenmjo(model.mondai.sa) + ('×□=' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + '(m)'));
 														case 2:
-															return '□×' + (author$project$Subunkai$tenmjo(model.mondai.sb) + ('=' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + '(km)')));
+															return '□×' + (author$project$Subunkai$tenmjo(model.mondai.sb) + ('=' + (A2(author$project$Subunkai$tenmjo2, model.mondai.sa, model.mondai.sb) + '(m)')));
 														case 3:
-															return author$project$Subunkai$tenmjo(model.mondai.sa) + ('kmの' + (author$project$Subunkai$tenmjo(model.mondai.sb) + '倍は？'));
+															return author$project$Subunkai$tenmjo(model.mondai.sa) + ('mの' + (author$project$Subunkai$tenmjo(model.mondai.sb) + '倍は？'));
 														default:
 															return '';
 													}
@@ -6916,7 +6916,7 @@ var author$project$Subunkai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('Stage1(km)')
+														elm$html$Html$text('Stage1(m)')
 													])),
 												A2(
 												rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6931,7 +6931,7 @@ var author$project$Subunkai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('Stage2(L)')
+														elm$html$Html$text('Stage2(倍)')
 													])),
 												A2(
 												rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -6946,7 +6946,7 @@ var author$project$Subunkai$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														elm$html$Html$text('Statge3(Lあたり)')
+														elm$html$Html$text('Statge3(あたり)')
 													])),
 												A2(
 												rundis$elm_bootstrap$Bootstrap$Button$button,
