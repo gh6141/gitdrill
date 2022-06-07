@@ -93,6 +93,7 @@ type alias Model =
     ,user:String
     ,zone : Time.Zone
     ,posix : Time.Posix
+    
     }
  
 type MaruBatu 
@@ -141,7 +142,7 @@ shutudai num model=  case num of
                        Nothing -> 0
                         )
                     ,url=mond.url,maru=None}
-                   Nothing -> {model | mondai=hyoka model,ans=["","",""],ansn=0,url="",maru=None}
+                   Nothing -> {model | mondai=(hyoka model)++"<a href='https://rasp.cld9.work/py/Dlabo_Youtube.mp4'>動画をみよう</a>",ans=["","",""],ansn=0,url="",maru=None}
               
                )
 
