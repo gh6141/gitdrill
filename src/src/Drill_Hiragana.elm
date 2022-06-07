@@ -161,20 +161,20 @@ hyoka model =
     seikai=List.length (List.filter (\bl->if bl==Maru then True else False) model.marubatul)
  in   
     if kei==seikai && kei>0 then
-     "全問正解！！すばらしい"
+     "ぜんもんせいかい！！すばらしい"
     else if (toFloat seikai+1)/(toFloat kei+1) > 0.7 then
      (
       if (List.length model.missl)>0  then
-       "よくできています。あと少しで全問正解です。　<b>もう一度確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
+       "よくできています。あと少しでぜんぶできますね。　<b>もういっかいやってみよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
       else
-       "よくできています。あと少しで全問正解です。"
+       "よくできています。あとすこしです。"
      )
     else 
      (
          if (List.length model.missl)>0 then
-          "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ <b>再確認しよう↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
+          "またやてみよう！ <b>たしかめてね↓<b><br>"++(String.join "<br>" (List.reverse model.missl))
          else
-           "繰り返すことで正答率がアップします。「出題」をクリックし再トライ！ "
+           "もういっかいやってみよう！ "
       )
 
 
@@ -295,7 +295,7 @@ update msg ({num,marubatul,selected} as model) =
       )
       ,missl=(
           let
-            cl=(model.mondai++"<font color='green'>(正解："++(Maybe.withDefault "" (getAt model.ansn model.ans))++")</font>")
+            cl=(model.mondai++"<font color='green'>(いいね！："++(Maybe.withDefault "" (getAt model.ansn model.ans))++")</font>")
             btf =  not  (List.member cl model.missl)
               
           in                
@@ -387,8 +387,8 @@ view model =
             ]
     dmsg = case model.userState of
            -- Init ->  [div [] [text ""]]
-            Init ->  [div [] [text "問題を選んでください"]]
-            Waiting ->  [div [] [text "しばらくお待ちください..."]]
+            Init ->  [div [] [text "もんだいをえらんでね"]]
+            Waiting ->  [div [] [text "ちょっとまってね..."]]
             Loaded mondl ->
                ( case mondl of
                    mond::tail -> [dmon,dansl]
