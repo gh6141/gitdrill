@@ -1,4 +1,4 @@
-port module Main exposing (..)
+port module AudioP exposing (..)
 
 import Audio exposing (Audio, AudioCmd, AudioData)
 import Duration
@@ -43,7 +43,7 @@ init _ =
     , Cmd.none
     , Audio.loadAudio
         SoundLoaded
-        "https://gh6141.github.io/gitdrill/src/py/akushuosiyo.mp3"
+        "py/akushuosiyo.mp3"
     )
 
 
