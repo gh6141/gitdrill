@@ -43,7 +43,7 @@ init _ =
     , Cmd.none
     , Audio.loadAudio
         SoundLoaded
-        "py/akushuosiyo.mp3"
+        "https://gh6141.github.io/gitdrill/src/py/akushuosiyo.mp3"
     )
 
 

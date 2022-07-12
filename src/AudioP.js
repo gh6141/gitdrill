@@ -7121,7 +7121,7 @@ var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple3(
 		author$project$Main$LoadingModel,
 		elm$core$Platform$Cmd$none,
-		A2(MartinSStewart$elm_audio$Audio$loadAudio, author$project$Main$SoundLoaded, 'py/akushuosiyo.mp3'));
+		A2(MartinSStewart$elm_audio$Audio$loadAudio, author$project$Main$SoundLoaded, 'https://gh6141.github.io/gitdrill/src/py/akushuosiyo.mp3'));
 };
 var MartinSStewart$elm_audio$Audio$AudioCmdGroup = function (a) {
 	return {$: 'AudioCmdGroup', a: a};
