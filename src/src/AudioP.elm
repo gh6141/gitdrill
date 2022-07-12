@@ -43,7 +43,7 @@ init _ =
     , Cmd.none
     , Audio.loadAudio
         SoundLoaded
-        "https://rasp.cld9.work/py/akushuosiyo.mp3"
+        "py/akushuosiyo.mp3"
     )
 
 
