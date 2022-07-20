@@ -7,7 +7,7 @@
     <script src="AudioP.js" async></script>
     <script defer>
         window.addEventListener('load', () => {
-            const app = Elm.Main.init({ node: document.getElementById('target') })
+            const app = Elm.AudioP.init({ node: document.getElementById('target') })
 
             const audio = document.getElementById('audio')
             app.ports.startSound.subscribe(() => {

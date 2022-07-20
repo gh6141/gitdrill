@@ -1,4 +1,4 @@
-port module Main exposing (main)
+port module AudioP exposing (main)
 
 import Browser
 import Html.Attributes
@@ -312,7 +312,8 @@ update msg ({num,marubatul,selected} as model) =
       
       )}
       ,
-       Cmd.none
+       --Cmd.none
+       (if (model.ansn==numi) then (startSound()) else (startSound2()))
     
       )
     Input newInput ->
@@ -432,7 +433,7 @@ view model =
         [Row.middleMd]
         [ Grid.col
             [ Col.md7 ]
-            [ (div [] dmsg) ,(button[onClick StartSound] [text "maru!"]),(button[onClick StartSound2] [text "batu!"])]
+            [ (div [] dmsg) ]
         , Grid.col
             [ Col.md4 ]
             [  if model.url /= "" && model.url /="http://"  then   
