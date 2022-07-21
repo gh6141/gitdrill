@@ -115,7 +115,7 @@ init _ = ( minit
          ,Cmd.batch [ 
                 Http.get
                  { --url = "https://safe-wave-89074.herokuapp.com/list"
-                    url = "/list"
+                    url = "https://rasp.cld9.work/list"
                  , expect = Http.expectString Receive2
                    --Http.expectJson Receive mondlDecoder
                  }
@@ -210,7 +210,7 @@ update msg ({num,marubatul,selected} as model) =
      }, 
      Http.post
                 {
-                  url = "/disp2/read"
+                  url = "https://rasp.cld9.work/disp2/read"
                 , body =  Http.stringBody "application/x-www-form-urlencoded"
                         (
                         --  "mondaimei="++ (Maybe.withDefault "" (urlEncode model.selected))
@@ -250,7 +250,7 @@ update msg ({num,marubatul,selected} as model) =
                 { 
                   -- url = "/hyoka"
                   url = --"https://safe-wave-89074.herokuapp.com/hyoka"
-                          "/hyoka"
+                          "https://rasp.cld9.work/hyoka"
                   ,body= Http.multipartBody
                          [ Http.stringPart "hyoka" ((seikairitu model)++"\n"++(String.join "\n" (List.reverse model.missl)))
                           , Http.stringPart "fname"  ((Maybe.withDefault "" (urlEncode model.selected))++"_"++(model.user))]
@@ -325,7 +325,7 @@ update msg ({num,marubatul,selected} as model) =
               }
             , Http.post
                 { --url = "/disp2/"++(Maybe.withDefault "" (urlEncode model.selected) )
-                  url = "/disp2/read"
+                  url = "https://rasp.cld9.work/disp2/read"
                   --url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
                 , body =  Http.stringBody "application/x-www-form-urlencoded"
                         (
