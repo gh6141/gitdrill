@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block main %}
+
+<script src="py/Mcsiine.js" async></script>
+<script defer>
+    window.addEventListener('load', () => {
+        const app = Elm.McsIine.init({ node: document.getElementById('target') })
+
+        const audio = document.getElementById('audio')
+        app.ports.startSound.subscribe(() => {
+            audio.currentTime = 0;
+            audio.play()
+        })
+
+        const audio2 = document.getElementById('audio2')
+        app.ports.startSound2.subscribe(() => {
+            audio2.currentTime = 0;
+            audio2.play()
+        })
+
+
+        setTimeout(() => {
+            app.ports.handleMsg.send('(o・∇・o) < Hello!!!')
+        }, 3000)
+    }, false)
+</script>
+
+
+
+{% if user.username == request.user.username %}
+<h2>プロファイルの編集 {{ user.username }}</h2>
+<div class="snippet-date">
+    登録日: {{ user.created_at|date:"DATETIME_FORMAT" }}    
+    <a href="{% url 'profile_edit' user.id %}">編集</a>   
+</div>
+{% endif %}
+
+
+<div class="source-code">
+    {{ user.nickname }}
+</div>
+
+<p>
+{% if prof.profile_photo1 %}
+<img src="{{ prof.profile_photo1.url }}" height : 40vw ;>
+{% else %}
+
+<img src="{% static 'img/kkrn_icon_user_12.png' %}" alt="Unsaved" style=' height : 40vh ; '>
+{% endif %}      
+</p>
+
+<p>
+    <a class="btn btn-primary" href="{% url 'matching_create' %}">いいね</a>
+</p>
+
+
+<div id="target"></div>
+<audio id="audio" src="https://rasp.cld9.work/py/seikai.mp3"></audio>
+<audio id="audio2" src="https://rasp.cld9.work/py/machigai.mp3"></audio>
+
+{% endblock %}
+
+
