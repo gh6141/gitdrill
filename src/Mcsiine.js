@@ -5337,18 +5337,14 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$index = _Json_decodeIndex;
 var $author$project$McsIine$Init = {$: 'Init'};
-var $author$project$McsIine$Model = F7(
-	function (sendMlist, receiveMlist, selected, userState, msg, sendid, receiveid) {
-		return {msg: msg, receiveMlist: receiveMlist, receiveid: receiveid, selected: selected, sendMlist: sendMlist, sendid: sendid, userState: userState};
+var $author$project$McsIine$Model = F8(
+	function (sendM, receiveM, selected, userState, msg, sendid, receiveid, buttonhyoji) {
+		return {buttonhyoji: buttonhyoji, msg: msg, receiveM: receiveM, receiveid: receiveid, selected: selected, sendM: sendM, sendid: sendid, userState: userState};
 	});
 var $author$project$McsIine$Receive2 = function (a) {
 	return {$: 'Receive2', a: a};
 };
-var $author$project$McsIine$Receive3 = function (a) {
-	return {$: 'Receive3', a: a};
-};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
 		return {$: 'BadStatus_', a: a, b: b};
@@ -5904,17 +5900,6 @@ var $elm$http$Http$expectStringResponse = F2(
 			$elm$core$Basics$identity,
 			A2($elm$core$Basics$composeR, toResult, toMsg));
 	});
-var $elm$core$Result$mapError = F2(
-	function (f, result) {
-		if (result.$ === 'Ok') {
-			var v = result.a;
-			return $elm$core$Result$Ok(v);
-		} else {
-			var e = result.a;
-			return $elm$core$Result$Err(
-				f(e));
-		}
-	});
 var $elm$http$Http$BadBody = function (a) {
 	return {$: 'BadBody', a: a};
 };
@@ -5926,6 +5911,17 @@ var $elm$http$Http$BadUrl = function (a) {
 };
 var $elm$http$Http$NetworkError = {$: 'NetworkError'};
 var $elm$http$Http$Timeout = {$: 'Timeout'};
+var $elm$core$Result$mapError = F2(
+	function (f, result) {
+		if (result.$ === 'Ok') {
+			var v = result.a;
+			return $elm$core$Result$Ok(v);
+		} else {
+			var e = result.a;
+			return $elm$core$Result$Err(
+				f(e));
+		}
+	});
 var $elm$http$Http$resolve = F2(
 	function (toResult, response) {
 		switch (response.$) {
@@ -5949,19 +5945,12 @@ var $elm$http$Http$resolve = F2(
 					toResult(body));
 		}
 	});
-var $elm$http$Http$expectJson = F2(
-	function (toMsg, decoder) {
-		return A2(
-			$elm$http$Http$expectStringResponse,
-			toMsg,
-			$elm$http$Http$resolve(
-				function (string) {
-					return A2(
-						$elm$core$Result$mapError,
-						$elm$json$Json$Decode$errorToString,
-						A2($elm$json$Json$Decode$decodeString, decoder, string));
-				}));
-	});
+var $elm$http$Http$expectString = function (toMsg) {
+	return A2(
+		$elm$http$Http$expectStringResponse,
+		toMsg,
+		$elm$http$Http$resolve($elm$core$Result$Ok));
+};
 var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
@@ -6135,87 +6124,49 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $elm$json$Json$Decode$list = _Json_decodeList;
-var $author$project$McsIine$Match = F4(
-	function (approaching, approached, approved, craated_at) {
-		return {approached: approached, approaching: approaching, approved: approved, craated_at: craated_at};
-	});
-var $elm$json$Json$Decode$bool = _Json_decodeBool;
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$map4 = _Json_map4;
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$McsIine$matchDecoder = A5(
-	$elm$json$Json$Decode$map4,
-	$author$project$McsIine$Match,
-	A2($elm$json$Json$Decode$field, 'approaching', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'approached', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'approved', $elm$json$Json$Decode$bool),
-	A2($elm$json$Json$Decode$field, 'created_at', $elm$json$Json$Decode$string));
-var $author$project$McsIine$matchlDecoder = $elm$json$Json$Decode$list($author$project$McsIine$matchDecoder);
 var $author$project$McsIine$init = function (_v0) {
 	var sendid = _v0.a;
 	var receiveid = _v0.b;
 	return _Utils_Tuple2(
-		A7($author$project$McsIine$Model, _List_Nil, _List_Nil, $elm$core$Maybe$Nothing, $author$project$McsIine$Init, '', sendid, receiveid),
+		A8(
+			$author$project$McsIine$Model,
+			{approached: '0', approaching: '0', approved: false},
+			{approached: '0', approaching: '0', approved: false},
+			$elm$core$Maybe$Nothing,
+			$author$project$McsIine$Init,
+			'',
+			sendid,
+			receiveid,
+			true),
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
 					$elm$http$Http$get(
 					{
-						expect: A2($elm$http$Http$expectJson, $author$project$McsIine$Receive2, $author$project$McsIine$matchlDecoder),
-						url: '/api/matching_new/'
-					}),
-					$elm$http$Http$get(
-					{
-						expect: A2($elm$http$Http$expectJson, $author$project$McsIine$Receive3, $author$project$McsIine$matchlDecoder),
-						url: '/api/matching_new/'
+						expect: $elm$http$Http$expectString($author$project$McsIine$Receive2),
+						url: '/accounts/matching_exist/' + (sendid + ('/' + receiveid))
 					})
 				])));
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$McsIine$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
-var $author$project$McsIine$Receive = function (a) {
-	return {$: 'Receive', a: a};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
 };
-var $elm$http$Http$expectString = function (toMsg) {
-	return A2(
-		$elm$http$Http$expectStringResponse,
-		toMsg,
-		$elm$http$Http$resolve($elm$core$Result$Ok));
-};
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
+var $elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3($elm$core$String$slice, 0, -n, string);
+	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$http$Http$post = function (r) {
-	return $elm$http$Http$request(
-		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
-};
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$McsIine$startSound = _Platform_outgoingPort(
 	'startSound',
 	function ($) {
 		return $elm$json$Json$Encode$null;
-	});
-var $elm$http$Http$stringBody = _Http_pair;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
 	});
 var $author$project$McsIine$update = F2(
 	function (msg, model) {
@@ -6223,19 +6174,18 @@ var $author$project$McsIine$update = F2(
 			case 'Send':
 				return _Utils_Tuple2(
 					model,
-					$elm$http$Http$post(
+					$elm$http$Http$get(
 						{
-							body: A2($elm$http$Http$stringBody, 'application/json', 'data={approaching:' + (model.sendid + (',approached:' + (model.receiveid + '}')))),
-							expect: $elm$http$Http$expectString($author$project$McsIine$Receive),
-							url: '/api/matching_new/'
+							expect: $elm$http$Http$expectString($author$project$McsIine$Receive2),
+							url: '/accounts/matching_save/' + (model.sendid + ('/' + model.receiveid))
 						}));
 			case 'Receive':
 				if (msg.a.$ === 'Ok') {
-					var st = msg.a.a;
+					var mch = msg.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{msg: st}),
+							{msg: model.receiveid + ('受け取り　hozon zumi==>jusin data==' + mch.approached)}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var e = msg.a.a;
@@ -6249,16 +6199,16 @@ var $author$project$McsIine$update = F2(
 				}
 			case 'Receive2':
 				if (msg.a.$ === 'Ok') {
-					var matchl = msg.a.a;
+					var st = msg.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								msg: (A2(
-									$elm$core$Maybe$withDefault,
-									{approached: 0, approaching: 0, approved: false, craated_at: ''},
-									$elm$core$List$head(matchl)).approached > 0) ? '相手の方に「いいね」を送っています。' : '',
-								sendMlist: matchl
+								buttonhyoji: A2($elm$core$String$contains, '送ります', st) ? true : false,
+								msg: '**' + (A2(
+									$elm$core$String$dropRight,
+									1,
+									A2($elm$core$String$dropLeft, 1, st)) + '**')
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -6267,30 +6217,7 @@ var $author$project$McsIine$update = F2(
 						_Utils_update(
 							model,
 							{
-								userState: $author$project$McsIine$Failed(e)
-							}),
-						$elm$core$Platform$Cmd$none);
-				}
-			case 'Receive3':
-				if (msg.a.$ === 'Ok') {
-					var matchl = msg.a.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								msg: (A2(
-									$elm$core$Maybe$withDefault,
-									{approached: 0, approaching: 0, approved: false, craated_at: ''},
-									$elm$core$List$head(matchl)).approached > 0) ? '相手の方から「いいね」を受け取っています。' : '',
-								receiveMlist: matchl
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					var e = msg.a.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
+								msg: 'err recv2',
 								userState: $author$project$McsIine$Failed(e)
 							}),
 						$elm$core$Platform$Cmd$none);
@@ -6872,6 +6799,15 @@ var $elm$core$Maybe$map = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass = function (_v0) {
 	var screenSize = _v0.screenSize;
 	var columnCount = _v0.columnCount;
@@ -7372,6 +7308,7 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -7408,7 +7345,7 @@ var $author$project$McsIine$view = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text(model.msg + (' state：' + (model.sendid + model.receiveid)))
+								$elm$html$Html$text(model.msg)
 							]))
 					]);
 			case 'Waiting':
@@ -7422,33 +7359,6 @@ var $author$project$McsIine$view = function (model) {
 								$elm$html$Html$text('waiting..')
 							]))
 					]);
-			case 'Loaded':
-				var mondl = _v0.a;
-				if (mondl.b) {
-					var mond = mondl.a;
-					var tail = mondl.b;
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('ok')
-								]))
-						]);
-				} else {
-					return _List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('error')
-								]))
-						]);
-				}
 			default:
 				var e = _v0.a;
 				return _List_fromArray(
@@ -7459,12 +7369,14 @@ var $author$project$McsIine$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								$elm$core$Debug$toString(e))
+								_Utils_ap(
+									model.msg,
+									$elm$core$Debug$toString(e)))
 							]))
 					]);
 		}
 	}();
-	var btn1 = A2(
+	var btn1 = model.buttonhyoji ? A2(
 		$rundis$elm_bootstrap$Bootstrap$Button$button,
 		_List_fromArray(
 			[
@@ -7480,7 +7392,7 @@ var $author$project$McsIine$view = function (model) {
 		_List_fromArray(
 			[
 				$elm$html$Html$text('いいね')
-			]));
+			])) : A2($elm$html$Html$span, _List_Nil, _List_Nil);
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Grid$container,
 		_List_fromArray(

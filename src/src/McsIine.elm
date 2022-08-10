@@ -25,6 +25,38 @@ urlEncode ma =
      Just a -> Just (Url.percentEncode a)
 
 
+
+customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
+customDecoder d f =
+    let
+        resultDecoder x =
+            case x of
+                Ok a ->
+                    Json.Decode.succeed a
+
+                Err e ->
+                    Json.Decode.fail e
+    in
+    Json.Decode.map f d |> Json.Decode.andThen resultDecoder
+
+{-| String or empty target value.
+-}
+targetValueMaybe : Decoder (Maybe String)
+targetValueMaybe =
+    customDecoder targetValue
+        (\s ->
+            Ok <|
+                if s == "" then
+                    Nothing
+
+                else
+                    Just s
+        )
+
+
+
+
+
 getAt : Int -> List a -> Maybe a
 getAt idx xs =
     if idx < 0 then
@@ -42,47 +74,41 @@ main =
         , subscriptions = \_ -> Sub.none
         }
         
-type alias Match={approaching:Int,approached:Int,approved:Bool,craated_at:String}
+type alias Match={approaching:String,approached:String,approved:Bool}
 -- MODEL
 type alias Model =
-    { sendMlist:List Match
-      ,receiveMlist:List Match
+    { sendM:Match
+    ,receiveM:Match
       ,selected : Maybe String
     , userState : UserState
     ,msg:String
     ,sendid:String
     ,receiveid:String
+    ,buttonhyoji:Bool
+ 
     }
  
 type UserState
     = Init
     | Waiting
-    | Loaded Matchl
     | Failed Http.Error
 
 init : (String,String) -> ( Model, Cmd Msg )
-init (sendid,receiveid) = ( Model [][] Nothing Init "" sendid receiveid 
+init (sendid,receiveid) = ( Model {approaching="0",approached="0",approved=False}
+                                   {approaching="0",approached="0",approved=False} Nothing Init "" sendid receiveid True
          ,Cmd.batch [ 
                 Http.get
-                 { url = "/api/matching_new/"
-                   -- url = "https://rasp.cld9.work/list"
-                 , --expect = Http.expectString Receive2
-                   expect= Http.expectJson Receive2 matchlDecoder
-                 }
-                ,Http.get
-                 { url = "/api/matching_new/"
-                   -- url = "https://rasp.cld9.work/list"
-                 , --expect = Http.expectString Receive2
-                   expect= Http.expectJson Receive3 matchlDecoder
-                 }
+                 { url = "/accounts/matching_exist/"++ (sendid) ++ "/" ++  (receiveid )
+                  ,    expect= Http.expectString Receive2
+                 }        
                ]    
     )
 
 
 type Msg =   Send
-    | Receive (Result Http.Error String) 
-    | Receive2 (Result Http.Error Matchl) 
-    | Receive3 (Result Http.Error Matchl) 
+    | Receive (Result Http.Error Match) 
+    | Receive2 (Result Http.Error String) 
+
     | StartSound 
 
 
@@ -96,40 +122,40 @@ update msg model=
     
     Send ->
             ( model
-            , Http.post
-                { --url = "/disp2/"++(Maybe.withDefault "" (urlEncode model.selected) )
-                  url = "/api/matching_new/"
-                  --url = "https://safe-wave-89074.herokuapp.com/disp2/"++(Maybe.withDefault "" model.selected)
-                , body =  Http.stringBody "application/json"    ( "data={approaching:"++model.sendid++",approached:"++  model.receiveid ++"}") 
-        
-               -- ,        body=        Http.jsonBody   (Json.Encode.object   [ ( "approaching", Json.Encode.string  model.sendid )  , ( "approached", Json.Encode.string model.receiveid ) ])
-                , expect = Http.expectString Receive
-         
-                 --Http.expectJson Receive mondlDecoder
-                }
+            , 
+                 Http.get
+                 { url = "/accounts/matching_save/"++( model.sendid )++ "/" ++ ( model.receiveid )
+                  ,    expect= Http.expectString Receive2
+                 }        
+                
             )
 
-    Receive (Ok st) ->
-            (  {model |msg=st}  , Cmd.none )
+    Receive (Ok mch) ->
+            ( { model |  msg = (model.receiveid)++"受け取り　hozon zumi==>jusin data=="++mch.approached
+                   -- , url =  (Maybe.withDefault mdinit (List.head mondl)).url
+           }
+                   
+            , Cmd.none )
 
     Receive (Err e) ->
             ( { model | userState = Failed e }, Cmd.none )
-    
-    Receive2 (Ok matchl) ->
-            ({model|sendMlist=matchl
-             ,msg=(if ((Maybe.withDefault {approaching=0,approached=0,approved=False,craated_at=""} (List.head matchl)).approached)>0 
-                  then "相手の方に「いいね」を送っています。" else "")} 
+
+
+    Receive2 (Ok st) ->
+            ({model|
+             msg="**"++(String.dropRight 1 (String.dropLeft 1 st))++"**"
+             --msg=st
+             ,buttonhyoji=if (String.contains "送ります" st) then True else False
+             
+             } 
               ,Cmd.none)
     Receive2 (Err e) ->
-            ( { model | userState = Failed e }, Cmd.none )
-    Receive3 (Ok matchl) ->
-            ({model|receiveMlist=matchl
-             ,msg=(if ((Maybe.withDefault {approaching=0,approached=0,approved=False,craated_at=""} (List.head matchl)).approached)>0 
-                   then "相手の方から「いいね」を受け取っています。" else "")} ,Cmd.none)
-    Receive3 (Err e) ->
-            ( { model | userState = Failed e }, Cmd.none )
+            ( { model | userState = Failed e ,msg="err recv2"}, Cmd.none )
+
             
     StartSound -> (model,startSound())   
+
+
 
 
 -- VIEW
@@ -138,16 +164,15 @@ view : Model -> Html Msg
 view model =
    let
     dmsg = case model.userState of
-           -- Init ->  [div [] [text ""]]
-            Init ->  [div [] [text (model.msg++" state："++model.sendid++model.receiveid)]]
+            Init ->  [div [] [text model.msg]]
             Waiting ->  [div [] [text "waiting.."]]
-            Loaded mondl ->
-               ( case mondl of
-                   mond::tail -> [div [] [text "ok"]]
-                   _ -> [div [] [text "error"]]  )     
-            Failed e -> [div [] [text (Debug.toString e)]]
+   
+            Failed e -> [div [] [text (model.msg++(Debug.toString e))]]
 
-    btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Send]] [ text "いいね" ]
+    btn1=if model.buttonhyoji then
+          Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Send]] [ text "いいね" ]
+         else
+          span [] []
     in     
     Grid.container [Spacing.mt4Md]
     [ CDN.stylesheet 
@@ -164,17 +189,21 @@ view model =
 
 
 
-type alias Matchl=List Match
-matchDecoder : Decoder Match
-matchDecoder =
-    Json.Decode.map4 Match
-        (Json.Decode.field "approaching" Json.Decode.int)
-        (Json.Decode.field "approached" Json.Decode.int)
+--type alias Matchl=List Match
+
+
+--Helpers
+
+mDecoder : Decoder Match
+mDecoder =
+    Json.Decode.map3 Match
+        (Json.Decode.field "approaching" Json.Decode.string)
+        (Json.Decode.field "approached" Json.Decode.string)
         (Json.Decode.field "approved" Json.Decode.bool)
-        (Json.Decode.field "created_at" Json.Decode.string)
 
-matchlDecoder=Json.Decode.list matchDecoder
 
-   
+
+
+
 
 
