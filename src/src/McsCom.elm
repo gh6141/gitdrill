@@ -1,4 +1,5 @@
-port module McsIine exposing (main)
+port module McsCom exposing (main)
+
 
 import Browser
 import Html.Attributes
@@ -17,8 +18,6 @@ import Bootstrap.Utilities.Spacing as Spacing
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
-
-
 
 urlEncode:Maybe String -> Maybe String
 urlEncode ma =
@@ -100,14 +99,14 @@ init (sendid,receiveid) = ( Model {approaching="0",approached="0",approved=False
                                    {approaching="0",approached="0",approved=False} Nothing Init "" sendid receiveid True
          ,Cmd.batch [ 
                 Http.get
-                 { url = "/accounts/matching_exist/"++ (sendid) ++ "/" ++  (receiveid )
+                 { url = "/accounts/community_exist/"++ (sendid) ++ "/" ++  (receiveid )
                   ,    expect= Http.expectString Receive2
                  }        
                ]    
     )
 
 
-type Msg =   Send
+type Msg =   Send | Send2
     | Receive (Result Http.Error Match) 
     | Receive2 (Result Http.Error String) 
 
@@ -126,7 +125,17 @@ update msg model=
             ( model
             , 
                  Http.get
-                 { url = "/accounts/matching_save/"++( model.sendid )++ "/" ++ ( model.receiveid )
+                 { url = "/accounts/community_save/"++( model.sendid )++ "/" ++ ( model.receiveid )
+                  ,    expect= Http.expectString Receive2
+                 }        
+                
+            )
+
+    Send2 ->
+            ( model
+            , 
+                 Http.get
+                 { url = "/accounts/community_delete/"++( model.sendid )++ "/" ++ ( model.receiveid )
                   ,    expect= Http.expectString Receive2
                  }        
                 
@@ -144,10 +153,16 @@ update msg model=
 
 
     Receive2 (Ok st) ->
-            ({model|
-             msg=(String.dropRight 1 (String.dropLeft 1 st))
+            (
+                let
+                  bhyoji=if (String.contains "参加" st) then True else False
+
+                in
+                
+                {model|
+             msg=String.dropRight 1 (String.dropLeft 1 st)
              --msg=st
-             ,buttonhyoji=if (String.contains "送ります" st) then True else False
+             ,buttonhyoji=bhyoji
              
              } 
               ,Cmd.none)
@@ -167,20 +182,23 @@ view model =
    let
     dmsg = case model.userState of
             --Init ->  [div [] [text model.msg]]
-            --Waiting ->  [div [] [text "waiting.."]]   
-            --Failed e -> [div [] [text (model.msg++(Debug.toString e))]]
-            Init -> model.msg
-            Waiting ->  "waiting.." 
-            Failed e -> (model.msg++(Debug.toString e))
+           -- Waiting ->  [div [] [text "waiting.."]]   
+           -- Failed e -> [div [] [text (model.msg++(Debug.toString e))]]
+           Init ->  model.msg
+           Waiting ->  "waiting.."   
+           Failed e -> (model.msg++(Debug.toString e))
 
     btn1=if model.buttonhyoji then
-          button [ onClick Send ] [ text "いいね" ]
+          button [ onClick Send ]  [ text "参加" ]
          else
-          span [] []
+          button [ onClick Send2 ]  [ text "退会" ]
+   
     in     
  
          div [] (btn1::[text dmsg])
-          
+   
+       
+       
 
 
    -- DATA

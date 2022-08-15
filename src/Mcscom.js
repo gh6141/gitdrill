@@ -5336,12 +5336,12 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$index = _Json_decodeIndex;
-var $author$project$McsIine$Init = {$: 'Init'};
-var $author$project$McsIine$Model = F8(
+var $author$project$McsCom$Init = {$: 'Init'};
+var $author$project$McsCom$Model = F8(
 	function (sendM, receiveM, selected, userState, msg, sendid, receiveid, buttonhyoji) {
 		return {buttonhyoji: buttonhyoji, msg: msg, receiveM: receiveM, receiveid: receiveid, selected: selected, sendM: sendM, sendid: sendid, userState: userState};
 	});
-var $author$project$McsIine$Receive2 = function (a) {
+var $author$project$McsCom$Receive2 = function (a) {
 	return {$: 'Receive2', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -6124,16 +6124,16 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $author$project$McsIine$init = function (_v0) {
+var $author$project$McsCom$init = function (_v0) {
 	var sendid = _v0.a;
 	var receiveid = _v0.b;
 	return _Utils_Tuple2(
 		A8(
-			$author$project$McsIine$Model,
+			$author$project$McsCom$Model,
 			{approached: '0', approaching: '0', approved: false},
 			{approached: '0', approaching: '0', approved: false},
 			$elm$core$Maybe$Nothing,
-			$author$project$McsIine$Init,
+			$author$project$McsCom$Init,
 			'',
 			sendid,
 			receiveid,
@@ -6143,15 +6143,15 @@ var $author$project$McsIine$init = function (_v0) {
 				[
 					$elm$http$Http$get(
 					{
-						expect: $elm$http$Http$expectString($author$project$McsIine$Receive2),
-						url: '/accounts/matching_exist/' + (sendid + ('/' + receiveid))
+						expect: $elm$http$Http$expectString($author$project$McsCom$Receive2),
+						url: '/accounts/community_exist/' + (sendid + ('/' + receiveid))
 					})
 				])));
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$McsIine$Failed = function (a) {
+var $author$project$McsCom$Failed = function (a) {
 	return {$: 'Failed', a: a};
 };
 var $elm$core$Basics$negate = function (n) {
@@ -6163,12 +6163,12 @@ var $elm$core$String$dropRight = F2(
 	});
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$json$Json$Encode$null = _Json_encodeNull;
-var $author$project$McsIine$startSound = _Platform_outgoingPort(
+var $author$project$McsCom$startSound = _Platform_outgoingPort(
 	'startSound',
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
-var $author$project$McsIine$update = F2(
+var $author$project$McsCom$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'Send':
@@ -6176,8 +6176,16 @@ var $author$project$McsIine$update = F2(
 					model,
 					$elm$http$Http$get(
 						{
-							expect: $elm$http$Http$expectString($author$project$McsIine$Receive2),
-							url: '/accounts/matching_save/' + (model.sendid + ('/' + model.receiveid))
+							expect: $elm$http$Http$expectString($author$project$McsCom$Receive2),
+							url: '/accounts/community_save/' + (model.sendid + ('/' + model.receiveid))
+						}));
+			case 'Send2':
+				return _Utils_Tuple2(
+					model,
+					$elm$http$Http$get(
+						{
+							expect: $elm$http$Http$expectString($author$project$McsCom$Receive2),
+							url: '/accounts/community_delete/' + (model.sendid + ('/' + model.receiveid))
 						}));
 			case 'Receive':
 				if (msg.a.$ === 'Ok') {
@@ -6193,7 +6201,7 @@ var $author$project$McsIine$update = F2(
 						_Utils_update(
 							model,
 							{
-								userState: $author$project$McsIine$Failed(e)
+								userState: $author$project$McsCom$Failed(e)
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -6201,15 +6209,18 @@ var $author$project$McsIine$update = F2(
 				if (msg.a.$ === 'Ok') {
 					var st = msg.a.a;
 					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								buttonhyoji: A2($elm$core$String$contains, '送ります', st) ? true : false,
-								msg: A2(
-									$elm$core$String$dropRight,
-									1,
-									A2($elm$core$String$dropLeft, 1, st))
-							}),
+						function () {
+							var bhyoji = A2($elm$core$String$contains, '参加', st) ? true : false;
+							return _Utils_update(
+								model,
+								{
+									buttonhyoji: bhyoji,
+									msg: A2(
+										$elm$core$String$dropRight,
+										1,
+										A2($elm$core$String$dropLeft, 1, st))
+								});
+						}(),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var e = msg.a.a;
@@ -6218,17 +6229,18 @@ var $author$project$McsIine$update = F2(
 							model,
 							{
 								msg: 'err recv2',
-								userState: $author$project$McsIine$Failed(e)
+								userState: $author$project$McsCom$Failed(e)
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
 			default:
 				return _Utils_Tuple2(
 					model,
-					$author$project$McsIine$startSound(_Utils_Tuple0));
+					$author$project$McsCom$startSound(_Utils_Tuple0));
 		}
 	});
-var $author$project$McsIine$Send = {$: 'Send'};
+var $author$project$McsCom$Send = {$: 'Send'};
+var $author$project$McsCom$Send2 = {$: 'Send2'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -6248,11 +6260,10 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$core$Debug$toString = _Debug_toString;
-var $author$project$McsIine$view = function (model) {
+var $author$project$McsCom$view = function (model) {
 	var dmsg = function () {
 		var _v0 = model.userState;
 		switch (_v0.$) {
@@ -6271,12 +6282,21 @@ var $author$project$McsIine$view = function (model) {
 		$elm$html$Html$button,
 		_List_fromArray(
 			[
-				$elm$html$Html$Events$onClick($author$project$McsIine$Send)
+				$elm$html$Html$Events$onClick($author$project$McsCom$Send)
 			]),
 		_List_fromArray(
 			[
-				$elm$html$Html$text('いいね')
-			])) : A2($elm$html$Html$span, _List_Nil, _List_Nil);
+				$elm$html$Html$text('参加')
+			])) : A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick($author$project$McsCom$Send2)
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('退会')
+			]));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -6288,16 +6308,16 @@ var $author$project$McsIine$view = function (model) {
 					$elm$html$Html$text(dmsg)
 				])));
 };
-var $author$project$McsIine$main = $elm$browser$Browser$element(
+var $author$project$McsCom$main = $elm$browser$Browser$element(
 	{
-		init: $author$project$McsIine$init,
+		init: $author$project$McsCom$init,
 		subscriptions: function (_v0) {
 			return $elm$core$Platform$Sub$none;
 		},
-		update: $author$project$McsIine$update,
-		view: $author$project$McsIine$view
+		update: $author$project$McsCom$update,
+		view: $author$project$McsCom$view
 	});
-_Platform_export({'McsIine':{'init':$author$project$McsIine$main(
+_Platform_export({'McsCom':{'init':$author$project$McsCom$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
 		function (_v0) {
