@@ -189,13 +189,13 @@ view model =
            Failed e -> (model.msg++(Debug.toString e))
 
     btn1=if model.buttonhyoji then
-          button [ onClick Send ]  [ text "参加" ]
+          button [ onClick Send,class "btn btn-primary" ]  [ text "参加" ]
          else
-          button [ onClick Send2 ]  [ text "退会" ]
+          button [ onClick Send2 ,class "btn btn-primary"]  [ text "退会" ]
    
     in     
  
-         div [] (btn1::[text dmsg])
+         div [] (btn1::[text ("　"++dmsg)])
    
        
        

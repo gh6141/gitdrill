@@ -6230,6 +6230,15 @@ var $author$project$McsIine$update = F2(
 	});
 var $author$project$McsIine$Send = {$: 'Send'};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -6271,7 +6280,8 @@ var $author$project$McsIine$view = function (model) {
 		$elm$html$Html$button,
 		_List_fromArray(
 			[
-				$elm$html$Html$Events$onClick($author$project$McsIine$Send)
+				$elm$html$Html$Events$onClick($author$project$McsIine$Send),
+				$elm$html$Html$Attributes$class('btn btn-primary')
 			]),
 		_List_fromArray(
 			[
@@ -6285,7 +6295,7 @@ var $author$project$McsIine$view = function (model) {
 			btn1,
 			_List_fromArray(
 				[
-					$elm$html$Html$text(dmsg)
+					$elm$html$Html$text('　' + dmsg)
 				])));
 };
 var $author$project$McsIine$main = $elm$browser$Browser$element(
