@@ -5159,14 +5159,16 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Nitaku$Model = F2(
-	function (num, toi) {
-		return {num: num, toi: toi};
+var $author$project$Nitaku$Model = F4(
+	function (num, toi, seikaiflg, flghyoji) {
+		return {flghyoji: flghyoji, num: num, seikaiflg: seikaiflg, toi: toi};
 	});
-var $author$project$Nitaku$minit = A2(
+var $author$project$Nitaku$minit = A4(
 	$author$project$Nitaku$Model,
 	0,
-	{img1: 'meron', img2: 'suika', mondai: 'すいか'});
+	{img1: 'meron', img2: 'suika', mondai: 'すいか'},
+	false,
+	false);
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Nitaku$init = function (_v0) {
@@ -5209,6 +5211,30 @@ var $author$project$Nitaku$startSound2 = _Platform_outgoingPort(
 	function ($) {
 		return $elm$json$Json$Encode$null;
 	});
+var $author$project$Nitaku$zenkaku = function (hk) {
+	switch (hk) {
+		case 'suika':
+			return 'すいか';
+		case 'mikan':
+			return 'みかん';
+		case 'ringo':
+			return 'りんご';
+		case 'budo':
+			return 'ぶどう';
+		case 'taiikukan':
+			return 'たいいくかん';
+		case 'youtube':
+			return 'ゆーちゅーぶ';
+		case 'tamago':
+			return 'たまご';
+		case 'taburetto':
+			return 'たぶれっと';
+		case 'meron':
+			return 'めろん';
+		default:
+			return '';
+	}
+};
 var $author$project$Nitaku$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -5217,7 +5243,8 @@ var $author$project$Nitaku$update = F2(
 					_Utils_update(
 						model,
 						{
-							num: (model.num < 8) ? (model.num + 1) : 0,
+							flghyoji: false,
+							num: (model.num < 8) ? (model.num + 1) : 1,
 							toi: $author$project$Nitaku$shutudai(model.num)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -5226,10 +5253,37 @@ var $author$project$Nitaku$update = F2(
 					_Utils_update(
 						model,
 						{
+							flghyoji: false,
 							num: (model.num > 0) ? (model.num - 1) : 9,
 							toi: $author$project$Nitaku$shutudai(model.num)
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'Btn1':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							flghyoji: true,
+							seikaiflg: _Utils_eq(
+								model.toi.mondai,
+								$author$project$Nitaku$zenkaku(model.toi.img1)) ? true : false
+						}),
+					_Utils_eq(
+						model.toi.mondai,
+						$author$project$Nitaku$zenkaku(model.toi.img1)) ? $author$project$Nitaku$startSound(_Utils_Tuple0) : $author$project$Nitaku$startSound2(_Utils_Tuple0));
+			case 'Btn2':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							flghyoji: true,
+							seikaiflg: _Utils_eq(
+								model.toi.mondai,
+								$author$project$Nitaku$zenkaku(model.toi.img2)) ? true : false
+						}),
+					_Utils_eq(
+						model.toi.mondai,
+						$author$project$Nitaku$zenkaku(model.toi.img2)) ? $author$project$Nitaku$startSound(_Utils_Tuple0) : $author$project$Nitaku$startSound2(_Utils_Tuple0));
 			case 'StartSound':
 				return _Utils_Tuple2(
 					model,
@@ -5240,6 +5294,8 @@ var $author$project$Nitaku$update = F2(
 					$author$project$Nitaku$startSound2(_Utils_Tuple0));
 		}
 	});
+var $author$project$Nitaku$Btn1 = {$: 'Btn1'};
+var $author$project$Nitaku$Btn2 = {$: 'Btn2'};
 var $author$project$Nitaku$Dec = {$: 'Dec'};
 var $author$project$Nitaku$Inc = {$: 'Inc'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
@@ -6340,6 +6396,7 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -6372,6 +6429,21 @@ var $rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Nitaku$view = function (model) {
+	var marubatu = A2(
+		$elm$html$Html$span,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'font-size', '20vw'),
+				A2(
+				$elm$html$Html$Attributes$style,
+				'color',
+				model.seikaiflg ? 'red' : 'blue')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text(
+				model.seikaiflg ? '〇' : 'ｘ')
+			]));
 	var btn2 = A2(
 		$rundis$elm_bootstrap$Bootstrap$Button$button,
 		_List_fromArray(
@@ -6444,7 +6516,8 @@ var $author$project$Nitaku$view = function (model) {
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'font-size', '50px')
+										A2($elm$html$Html$Attributes$style, 'font-size', '3vw'),
+										A2($elm$html$Html$Attributes$style, 'text-align', 'center')
 									]),
 								_List_fromArray(
 									[
@@ -6483,7 +6556,9 @@ var $author$project$Nitaku$view = function (model) {
 								$elm$html$Html$img,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$src('py/' + (model.toi.img1 + '.jpg'))
+										$elm$html$Html$Attributes$src('py/' + (model.toi.img1 + '.jpg')),
+										$elm$html$Html$Events$onClick($author$project$Nitaku$Btn1),
+										A2($elm$html$Html$Attributes$style, 'width', '30vw')
 									]),
 								_List_Nil)
 							])),
@@ -6493,7 +6568,13 @@ var $author$project$Nitaku$view = function (model) {
 							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$md4]),
 						_List_fromArray(
 							[
-								A2($elm$html$Html$div, _List_Nil, _List_Nil)
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										model.flghyoji ? marubatu : A2($elm$html$Html$span, _List_Nil, _List_Nil)
+									]))
 							])),
 						A2(
 						$rundis$elm_bootstrap$Bootstrap$Grid$col,
@@ -6505,7 +6586,9 @@ var $author$project$Nitaku$view = function (model) {
 								$elm$html$Html$img,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$src('py/' + (model.toi.img2 + '.jpg'))
+										$elm$html$Html$Attributes$src('py/' + (model.toi.img2 + '.jpg')),
+										$elm$html$Html$Events$onClick($author$project$Nitaku$Btn2),
+										A2($elm$html$Html$Attributes$style, 'width', '30vw')
 									]),
 								_List_Nil)
 							]))
