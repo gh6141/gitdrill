@@ -6556,7 +6556,7 @@ var $author$project$Nitaku$view = function (model) {
 								$elm$html$Html$img,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$src('py/' + (model.toi.img1 + '.jpg')),
+										$elm$html$Html$Attributes$src('https://rasp.cld9.work/py/' + (model.toi.img1 + '.jpg')),
 										$elm$html$Html$Events$onClick($author$project$Nitaku$Btn1),
 										A2($elm$html$Html$Attributes$style, 'width', '30vw')
 									]),
@@ -6586,7 +6586,7 @@ var $author$project$Nitaku$view = function (model) {
 								$elm$html$Html$img,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$src('py/' + (model.toi.img2 + '.jpg')),
+										$elm$html$Html$Attributes$src('https://rasp.cld9.work/py/' + (model.toi.img2 + '.jpg')),
 										$elm$html$Html$Events$onClick($author$project$Nitaku$Btn2),
 										A2($elm$html$Html$Attributes$style, 'width', '30vw')
 									]),

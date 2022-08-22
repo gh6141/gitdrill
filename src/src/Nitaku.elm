@@ -156,13 +156,13 @@ view model =
         [Row.middleMd]
         [ Grid.col
             [ Col.md4 ]
-            [ img [src ("py/"++model.toi.img1++".jpg"),onClick Btn1,style "width" "30vw"] []  ]
+            [ img [src ("https://rasp.cld9.work/py/"++model.toi.img1++".jpg"),onClick Btn1,style "width" "30vw"] []  ]
           , Grid.col
             [ Col.md4 ]
            [ div [] [if model.flghyoji then marubatu else (span [] []) ] ]
         , Grid.col
             [ Col.md4 ]
-           [ img [src ("py/"++model.toi.img2++".jpg"),onClick Btn2,style "width" "30vw"] []  ]
+           [ img [src ("https://rasp.cld9.work/py/"++model.toi.img2++".jpg"),onClick Btn2,style "width" "30vw"] []  ]
     
        
         ]
