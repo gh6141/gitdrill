@@ -20,6 +20,37 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Form as Form
 
+type alias Toi =
+    { img1:String,
+      img2:String,
+      mondai:String 
+    }
+ 
+
+shutudai: Int -> Toi
+shutudai num = case num of
+         0-> {img1="suika",img2="taburetto",mondai="すいか"}
+         1-> {img1="meron",img2="mikan",mondai="みかん"}
+         2-> {img1="ringo",img2="tamago",mondai="りんご"}
+         3-> {img1="budo",img2="taiikukan",mondai="ぶどう"}
+         4-> {img1="youtube",img2="taiikukan",mondai="たいいくかん"}
+         5-> {img1="youtube",img2="budo",mondai="ゆーちゅーぶ"}
+         6-> {img1="tamago",img2="ringo",mondai="たまご"}
+         7-> {img1="mikan",img2="taburetto",mondai="たぶれっと"}
+         8-> {img1="suika",img2="meron",mondai="めろん"}
+         _-> {img1="",img2="",mondai=""}
+
+zenkaku hk = case hk of
+         "suika" -> "すいか"
+         "mikan" -> "みかん"
+         "ringo" -> "りんご"
+         "budo" -> "ぶどう"
+         "taiikukan" -> "たいいくかん"
+         "yutube" -> "ゆーちゅーぶ"
+         "tamago" -> "たまご"
+         "taburetto" -> "たぶれっと"
+         "meron" -> "めろん"
+         _ -> ""
 
 getAt : Int -> List a -> Maybe a
 getAt idx xs =
@@ -41,17 +72,15 @@ main =
 
 -- MODEL
 type alias Model =
-    { img1:String,
-      img2:String,
-      mondai:String,
-      ans:String
- 
+    { 
+        num:Int,
+        toi:Toi
     }
  
 
 
 minit: Model
-minit =Model ["","","",""]
+minit =Model 0  {img1="meron",img2="suika",mondai="すいか"}
 
 init : () -> ( Model, Cmd Msg )
 init _ = ( minit  ,Cmd.none   )
@@ -73,8 +102,8 @@ port startSound2: () -> Cmd msg
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg model=
   case msg of
-    Inc -> (model,Cmd.none)
-    Dec -> (model,Cmd.none)
+    Inc -> ({model|num=if model.num<8 then model.num+1 else 0 ,toi=shutudai model.num},Cmd.none)
+    Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num},Cmd.none)
 
     StartSound -> (model,startSound())
     StartSound2 -> (model,startSound2())
@@ -100,32 +129,26 @@ view model =
         [Row.middleMd]
         [ Grid.col
           [Col.md4]
-          [div[] [btn1]]
+          [div[style "font-size" "50px"] [btn1,btn2,text (model.toi.mondai)]]
 
-          ,Grid.col
-          [Col.md4]
-          [div[] []]
+     
         ]
       ,Grid.row
         [Row.middleMd]
         [ Grid.col
             [ Col.md4 ]
-            [ div [] [btn2]]     
-         , Grid.col
-            [ Col.md4 ]
-            [ div [style "font-size" "50px"] [text model.mondai]   ]
+            [ div [style "font-size" "50px"] [text (model.toi.mondai)]]     
+      
         ]
       ,Grid.row
         [Row.middleMd]
         [ Grid.col
             [ Col.md4 ]
-            [ img [src ("py/"++model.img1++".jpg")] []  ]
+            [ img [src ("py/"++model.toi.img1++".jpg")] []  ]
         , Grid.col
             [ Col.md4 ]
-           [ img [src ("py/"++model.img2++".jpg")] []  ]
-        , Grid.col
-            [ Col.md4 ]
-            [ img [src ("py/"++model.img3++".jpg")] []  ]
+           [ img [src ("py/"++model.toi.img2++".jpg")] []  ]
+    
        
         ]
     
