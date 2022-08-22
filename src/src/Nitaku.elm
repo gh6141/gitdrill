@@ -115,8 +115,8 @@ view : Model -> Html Msg
 view model =
   let  
     
-    btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Dec]] [ text "もどる" ]
-    btn2=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Inc]] [text "つぎへ"]
+    btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Dec]] [ text "←" ]
+    btn2=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Inc]] [text "→"]
      
 
 
@@ -128,23 +128,27 @@ view model =
       ,Grid.row 
         [Row.middleMd]
         [ Grid.col
-          [Col.md4]
-          [div[style "font-size" "50px"] [btn1,btn2,text (model.toi.mondai)]]
-
-     
-        ]
-      ,Grid.row
-        [Row.middleMd]
-        [ Grid.col
             [ Col.md4 ]
-            [ div [style "font-size" "50px"] [text (model.toi.mondai)]]     
-      
+           [ div [style "text-align" "center"] [btn1] ]
+          
+           ,Grid.col
+          [Col.md4]
+          [div[style "font-size" "50px"] [text (model.toi.mondai)]]
+           
+           , Grid.col
+            [ Col.md4 ]
+           [ div [style "text-align" "center"] [btn2] ]
+    
         ]
+      
       ,Grid.row
         [Row.middleMd]
         [ Grid.col
             [ Col.md4 ]
             [ img [src ("py/"++model.toi.img1++".jpg")] []  ]
+          , Grid.col
+            [ Col.md4 ]
+           [ div [] [] ]
         , Grid.col
             [ Col.md4 ]
            [ img [src ("py/"++model.toi.img2++".jpg")] []  ]
