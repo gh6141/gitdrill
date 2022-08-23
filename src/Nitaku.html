@@ -7,7 +7,7 @@
     <!--
  <script src="https://rasp.cld9.work/py/Nitaku.js" async></script>
     -->
-    <script src="py/Nitaku.js" async></script>
+    <script src="Nitaku.js" async></script>
     <script defer>
         window.addEventListener('load', () => {
             const app = Elm.Nitaku.init({ node: document.getElementById('target') })
@@ -25,13 +25,11 @@
             })
 
        
-         //   app.ports.speak.subscribe(() => {
+            app.ports.speak.subscribe(function(data){
+              const uttr = new SpeechSynthesisUtterance(data)
+              speechSynthesis.speak(uttr)
+            });
               
-              // 発言を作成
-         //     const uttr = new SpeechSynthesisUtterance(text.value)
-              // 発言を再生 (発言キューに発言を追加)
-       //       speechSynthesis.speak(uttr)
-        //    })
 
 
 

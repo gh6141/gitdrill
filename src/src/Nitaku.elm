@@ -91,12 +91,14 @@ init _ = ( minit  ,Cmd.none   )
 
 -- UPDATE
 
-type Msg =  Inc | Dec | StartSound |StartSound2 |Btn1 | Btn2
+type Msg =  Inc | Dec | StartSound |StartSound2 |Btn1 | Btn2 
 
 
 port handleMsg: (String->msg) -> Sub msg
 port startSound: () -> Cmd msg
 port startSound2: () -> Cmd msg
+
+port speak: String -> Cmd msg
 
 
 
@@ -104,8 +106,8 @@ port startSound2: () -> Cmd msg
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg model=
   case msg of
-    Inc -> ({model|num=if model.num<8 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},Cmd.none)
-    Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},Cmd.none)
+    Inc -> ({model|num=if model.num<8 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
+    Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
 
     Btn1 -> ({model|seikaiflg=if model.toi.mondai==(zenkaku model.toi.img1) then True else False,flghyoji=True  } ,
             --Cmd.none
@@ -118,6 +120,7 @@ update msg model=
 
     StartSound -> (model,startSound())
     StartSound2 -> (model,startSound2())
+
 
 
 -- VIEW

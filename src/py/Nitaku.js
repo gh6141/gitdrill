@@ -5200,6 +5200,8 @@ var $author$project$Nitaku$shutudai = function (num) {
 			return {img1: '', img2: '', mondai: ''};
 	}
 };
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Nitaku$speak = _Platform_outgoingPort('speak', $elm$json$Json$Encode$string);
 var $elm$json$Json$Encode$null = _Json_encodeNull;
 var $author$project$Nitaku$startSound = _Platform_outgoingPort(
 	'startSound',
@@ -5247,7 +5249,8 @@ var $author$project$Nitaku$update = F2(
 							num: (model.num < 8) ? (model.num + 1) : 1,
 							toi: $author$project$Nitaku$shutudai(model.num)
 						}),
-					$elm$core$Platform$Cmd$none);
+					$author$project$Nitaku$speak(
+						$author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください'));
 			case 'Dec':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5257,7 +5260,8 @@ var $author$project$Nitaku$update = F2(
 							num: (model.num > 0) ? (model.num - 1) : 9,
 							toi: $author$project$Nitaku$shutudai(model.num)
 						}),
-					$elm$core$Platform$Cmd$none);
+					$author$project$Nitaku$speak(
+						$author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください'));
 			case 'Btn1':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5349,7 +5353,6 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
 					});
 		}
 	});
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
