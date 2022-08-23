@@ -46,7 +46,7 @@ zenkaku hk = case hk of
          "ringo" -> "りんご"
          "budo" -> "ぶどう"
          "taiikukan" -> "たいいくかん"
-         "yutube" -> "ゆーちゅーぶ"
+         "youtube" -> "ゆーちゅーぶ"
          "tamago" -> "たまご"
          "taburetto" -> "たぶれっと"
          "meron" -> "めろん"
@@ -74,13 +74,15 @@ main =
 type alias Model =
     { 
         num:Int,
-        toi:Toi
+        toi:Toi,
+        seikaiflg:Bool,
+        flghyoji:Bool
     }
  
 
 
 minit: Model
-minit =Model 0  {img1="meron",img2="suika",mondai="すいか"}
+minit =Model 0  {img1="meron",img2="suika",mondai="すいか"} False False
 
 init : () -> ( Model, Cmd Msg )
 init _ = ( minit  ,Cmd.none   )
@@ -89,7 +91,7 @@ init _ = ( minit  ,Cmd.none   )
 
 -- UPDATE
 
-type Msg =  Inc | Dec | StartSound |StartSound2
+type Msg =  Inc | Dec | StartSound |StartSound2 |Btn1 | Btn2
 
 
 port handleMsg: (String->msg) -> Sub msg
@@ -102,8 +104,17 @@ port startSound2: () -> Cmd msg
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg model=
   case msg of
-    Inc -> ({model|num=if model.num<8 then model.num+1 else 0 ,toi=shutudai model.num},Cmd.none)
-    Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num},Cmd.none)
+    Inc -> ({model|num=if model.num<8 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},Cmd.none)
+    Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},Cmd.none)
+
+    Btn1 -> ({model|seikaiflg=if model.toi.mondai==(zenkaku model.toi.img1) then True else False,flghyoji=True  } ,
+            --Cmd.none
+            if model.toi.mondai==(zenkaku model.toi.img1) then startSound() else startSound2()
+            )
+    Btn2 -> ({model|seikaiflg=if model.toi.mondai==(zenkaku model.toi.img2) then True else False ,flghyoji=True  } ,
+           --Cmd.none
+           if model.toi.mondai==(zenkaku model.toi.img2) then startSound() else startSound2()
+           )
 
     StartSound -> (model,startSound())
     StartSound2 -> (model,startSound2())
@@ -118,7 +129,7 @@ view model =
     btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Dec]] [ text "←" ]
     btn2=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Inc]] [text "→"]
      
-
+    marubatu=span [style "font-size" "20vw",style "color" (if model.seikaiflg then "red" else "blue")] [text (if model.seikaiflg then "〇" else "ｘ")]
 
   in
       
@@ -133,7 +144,7 @@ view model =
           
            ,Grid.col
           [Col.md4]
-          [div[style "font-size" "50px"] [text (model.toi.mondai)]]
+          [div[style "font-size" "3vw",style "text-align" "center"] [text (model.toi.mondai)]]
            
            , Grid.col
             [ Col.md4 ]
@@ -145,13 +156,13 @@ view model =
         [Row.middleMd]
         [ Grid.col
             [ Col.md4 ]
-            [ img [src ("py/"++model.toi.img1++".jpg")] []  ]
+            [ img [src ("https://rasp.cld9.work/py/"++model.toi.img1++".jpg"),onClick Btn1,style "width" "30vw"] []  ]
           , Grid.col
             [ Col.md4 ]
-           [ div [] [] ]
+           [ div [] [if model.flghyoji then marubatu else (span [] []) ] ]
         , Grid.col
             [ Col.md4 ]
-           [ img [src ("py/"++model.toi.img2++".jpg")] []  ]
+           [ img [src ("https://rasp.cld9.work/py/"++model.toi.img2++".jpg"),onClick Btn2,style "width" "30vw"] []  ]
     
        
         ]
