@@ -91,7 +91,7 @@ init _ = ( minit  ,Cmd.none   )
 
 -- UPDATE
 
-type Msg =  Inc | Dec | StartSound |StartSound2 |Btn1 | Btn2 
+type Msg =  Inc |  StartSound |StartSound2 |Btn1 | Btn2 | BtnMondai
 
 
 port handleMsg: (String->msg) -> Sub msg
@@ -105,18 +105,50 @@ port speak: String -> Cmd msg
 
 update : Msg -> Model -> (Model,Cmd Msg)
 update msg model=
+  let 
+    sflg1=if model.toi.mondai==(zenkaku model.toi.img1) then True else False
+    sflg2=if model.toi.mondai==(zenkaku model.toi.img2) then True else False    
+  in
   case msg of
     Inc -> ({model|num=if model.num<8 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
-    Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
+   --Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
 
-    Btn1 -> ({model|seikaiflg=if model.toi.mondai==(zenkaku model.toi.img1) then True else False,flghyoji=True  } ,
+    Btn1 -> ({model|
+                seikaiflg=sflg1
+
+               ,num=if sflg1 then (if model.num<8 then model.num+1 else 1 ) else model.num
+               ,toi=if sflg1 then (shutudai model.num) else model.toi
+               ,flghyoji=if sflg1 then False else True
+               
+               } ,
             --Cmd.none
-            if model.toi.mondai==(zenkaku model.toi.img1) then startSound() else startSound2()
+            if sflg1 then
+             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"を、えらんでください")]
+             
+            else
+              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"を、えらんでね")]
             )
-    Btn2 -> ({model|seikaiflg=if model.toi.mondai==(zenkaku model.toi.img2) then True else False ,flghyoji=True  } ,
+
+
+    Btn2 -> ({model|
+              seikaiflg=   sflg2      
+              
+               ,num=if sflg2 then (if model.num<8 then model.num+1 else 1 ) else model.num
+               ,toi=if sflg2 then (shutudai model.num) else model.toi
+               ,flghyoji=if sflg2 then False else True
+             
+              } ,
            --Cmd.none
-           if model.toi.mondai==(zenkaku model.toi.img2) then startSound() else startSound2()
+           if sflg2 then 
+            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"を、えらんでください")]
+           else 
+            Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"を、えらんでね")]
+      
            )
+
+    BtnMondai -> (model,
+                speak((shutudai (model.num-1)).mondai++"を、えらんでください")
+                 )
 
     StartSound -> (model,startSound())
     StartSound2 -> (model,startSound2())
@@ -129,10 +161,10 @@ view : Model -> Html Msg
 view model =
   let  
     
-    btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Dec]] [ text "←" ]
+   -- btn1=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Dec]] [ text "←" ]
     btn2=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick Inc]] [text "→"]
-     
-    marubatu=span [style "font-size" "20vw",style "color" (if model.seikaiflg then "red" else "blue")] [text (if model.seikaiflg then "〇" else "ｘ")]
+    btnMondai=Button.button [Button.large ,Button.primary ,Button.attrs [Spacing.m1  ,onClick BtnMondai]] [text (model.toi.mondai)]
+    marubatu=span [style "font-size" "10vw",style "color" (if model.seikaiflg then "red" else "blue")] [text (if model.seikaiflg then "〇" else "ｘ")]
 
   in
       
@@ -140,32 +172,26 @@ view model =
     Grid.container [Spacing.mt4Md]
     [ CDN.stylesheet 
       ,Grid.row 
-        [Row.middleMd]
-        [ Grid.col
-            [ Col.md4 ]
-           [ div [style "text-align" "center"] [btn1] ]
-          
-           ,Grid.col
-          [Col.md4]
-          [div[style "font-size" "3vw",style "text-align" "center"] [text (model.toi.mondai)]]
-           
-           , Grid.col
-            [ Col.md4 ]
-           [ div [style "text-align" "center"] [btn2] ]
-    
+        []
+        [      
+           Grid.col
+          []
+          [
+            div [style "text-align" "center"] [ btnMondai]           
+          ]            
         ]
       
       ,Grid.row
         [Row.middleMd]
         [ Grid.col
-            [ Col.md4 ]
-            [ img [src ("https://rasp.cld9.work/py/"++model.toi.img1++".jpg"),onClick Btn1,style "width" "30vw"] []  ]
+            []
+            [ img [src ("https://rasp.cld9.work/py/"++model.toi.img1++".jpg"),onClick Btn1,style "width" "20vw"] []  ]
           , Grid.col
-            [ Col.md4 ]
+            [ ]
            [ div [] [if model.flghyoji then marubatu else (span [] []) ] ]
         , Grid.col
-            [ Col.md4 ]
-           [ img [src ("https://rasp.cld9.work/py/"++model.toi.img2++".jpg"),onClick Btn2,style "width" "30vw"] []  ]
+            [  ]
+           [ img [src ("https://rasp.cld9.work/py/"++model.toi.img2++".jpg"),onClick Btn2,style "width" "20vw"] []  ]
     
        
         ]
