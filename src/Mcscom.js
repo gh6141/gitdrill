@@ -6310,7 +6310,10 @@ var $author$project$McsCom$view = function (model) {
 			]));
 	return A2(
 		$elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('source-code')
+			]),
 		A2(
 			$elm$core$List$cons,
 			btn1,

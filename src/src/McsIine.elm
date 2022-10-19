@@ -179,7 +179,7 @@ view model =
           span [] []
     in     
  
-         div [] (btn1::[text ("　"++dmsg)])
+         div [class "source-code"] (btn1::[text ("　"++dmsg)])
           
 
 
