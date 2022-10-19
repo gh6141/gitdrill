@@ -63,9 +63,9 @@ zenkaku hk = case hk of
          "carry.gif" -> "はこぶ"
          "great.gif" -> "すごい"
          "kowai.gif" -> "こわい"
-         "warry.gif" -> "しんぱい"
+         "worry.gif" -> "しんぱい"
          "iraira.gif" -> "いらいら"
-         "walk" -> "あるく"
+         "walk.gif" -> "あるく"
          
          _ -> ""
 
@@ -127,44 +127,44 @@ update msg model=
     sflg2=if model.toi.mondai==(zenkaku model.toi.img2) then True else False    
   in
   case msg of
-    Inc -> ({model|num=if model.num<8 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
+    Inc -> ({model|num=if model.num<16 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"は、どれかな"))
    --Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
 
     Btn1 -> ({model|
                 seikaiflg=sflg1
 
-               ,num=if sflg1 then (if model.num<8 then model.num+1 else 1 ) else model.num
+               ,num=if sflg1 then (if model.num<16 then model.num+1 else 1 ) else model.num
                ,toi=if sflg1 then (shutudai model.num) else model.toi
                ,flghyoji=if sflg1 then False else True
                
                } ,
             --Cmd.none
             if sflg1 then
-             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"を、えらんでください")]
+             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"はどれかな")]
              
             else
-              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"を、えらんでね")]
+              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"は、どれかな？")]
             )
 
 
     Btn2 -> ({model|
               seikaiflg=   sflg2      
               
-               ,num=if sflg2 then (if model.num<8 then model.num+1 else 1 ) else model.num
+               ,num=if sflg2 then (if model.num<16 then model.num+1 else 1 ) else model.num
                ,toi=if sflg2 then (shutudai model.num) else model.toi
                ,flghyoji=if sflg2 then False else True
              
               } ,
            --Cmd.none
            if sflg2 then 
-            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"を、えらんでください")]
+            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"は、どれかな")]
            else 
             Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"を、えらんでね")]
       
            )
 
     BtnMondai -> (model,
-                speak((shutudai (model.num-1)).mondai++"を、えらんでください")
+                speak((shutudai (model.num-1)).mondai++"を、えらんでね")
                  )
 
     StartSound -> (model,startSound())

@@ -27,6 +27,7 @@
        
             app.ports.speak.subscribe(function(data){
               const uttr = new SpeechSynthesisUtterance(data)
+              uttr.rate = 2.3
               speechSynthesis.speak(uttr)
             });
               

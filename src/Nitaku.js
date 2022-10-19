@@ -5259,11 +5259,11 @@ var $author$project$Nitaku$zenkaku = function (hk) {
 			return 'すごい';
 		case 'kowai.gif':
 			return 'こわい';
-		case 'warry.gif':
+		case 'worry.gif':
 			return 'しんぱい';
 		case 'iraira.gif':
 			return 'いらいら';
-		case 'walk':
+		case 'walk.gif':
 			return 'あるく';
 		default:
 			return '';
@@ -5284,18 +5284,18 @@ var $author$project$Nitaku$update = F2(
 						model,
 						{
 							flghyoji: false,
-							num: (model.num < 8) ? (model.num + 1) : 1,
+							num: (model.num < 16) ? (model.num + 1) : 1,
 							toi: $author$project$Nitaku$shutudai(model.num)
 						}),
 					$author$project$Nitaku$speak(
-						$author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください'));
+						$author$project$Nitaku$shutudai(model.num).mondai + 'は、どれかな'));
 			case 'Btn1':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							flghyoji: sflg1 ? false : true,
-							num: sflg1 ? ((model.num < 8) ? (model.num + 1) : 1) : model.num,
+							num: sflg1 ? ((model.num < 16) ? (model.num + 1) : 1) : model.num,
 							seikaiflg: sflg1,
 							toi: sflg1 ? $author$project$Nitaku$shutudai(model.num) : model.toi
 						}),
@@ -5304,13 +5304,13 @@ var $author$project$Nitaku$update = F2(
 							[
 								$author$project$Nitaku$startSound(_Utils_Tuple0),
 								$author$project$Nitaku$speak(
-								$author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください')
+								$author$project$Nitaku$shutudai(model.num).mondai + 'はどれかな')
 							])) : $elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
 								$author$project$Nitaku$startSound2(_Utils_Tuple0),
 								$author$project$Nitaku$speak(
-								$author$project$Nitaku$shutudai(model.num - 1).mondai + 'を、えらんでね')
+								$author$project$Nitaku$shutudai(model.num - 1).mondai + 'は、どれかな？')
 							])));
 			case 'Btn2':
 				return _Utils_Tuple2(
@@ -5318,7 +5318,7 @@ var $author$project$Nitaku$update = F2(
 						model,
 						{
 							flghyoji: sflg2 ? false : true,
-							num: sflg2 ? ((model.num < 8) ? (model.num + 1) : 1) : model.num,
+							num: sflg2 ? ((model.num < 16) ? (model.num + 1) : 1) : model.num,
 							seikaiflg: sflg2,
 							toi: sflg2 ? $author$project$Nitaku$shutudai(model.num) : model.toi
 						}),
@@ -5327,7 +5327,7 @@ var $author$project$Nitaku$update = F2(
 							[
 								$author$project$Nitaku$startSound(_Utils_Tuple0),
 								$author$project$Nitaku$speak(
-								$author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください')
+								$author$project$Nitaku$shutudai(model.num).mondai + 'は、どれかな')
 							])) : $elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -5339,7 +5339,7 @@ var $author$project$Nitaku$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Nitaku$speak(
-						$author$project$Nitaku$shutudai(model.num - 1).mondai + 'を、えらんでください'));
+						$author$project$Nitaku$shutudai(model.num - 1).mondai + 'を、えらんでね'));
 			case 'StartSound':
 				return _Utils_Tuple2(
 					model,
