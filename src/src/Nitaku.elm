@@ -38,6 +38,14 @@ shutudai num = case num of
          6-> {img1="tamago",img2="ringo",mondai="たまご"}
          7-> {img1="mikan",img2="taburetto",mondai="たぶれっと"}
          8-> {img1="suika",img2="meron",mondai="めろん"}
+         9-> {img1="pull.gif",img2="run.gif",mondai="ひっぱる"}
+         10-> {img1="great.gif",img2="carry.gif",mondai="はこぶ"}
+         11-> {img1="worry.gif",img2="kowai.gif",mondai="こわい"}
+         12-> {img1="iraira.gif",img2="walk.gif",mondai="いらいら"}
+         13-> {img1="run.gif",img2="walk.gif",mondai="あるく"}
+         14-> {img1="iraira.gif",img2="worry.gif",mondai="しんぱい"}
+         15-> {img1="great.gif",img2="carry.gif",mondai="すごい"}
+         16-> {img1="pull.gif",img2="run.gif",mondai="はしる"}
          _-> {img1="",img2="",mondai=""}
 
 zenkaku hk = case hk of
@@ -50,6 +58,14 @@ zenkaku hk = case hk of
          "tamago" -> "たまご"
          "taburetto" -> "たぶれっと"
          "meron" -> "めろん"
+         "pull.gif" -> "ひっぱる"
+         "run.gif" -> "はしる"
+         "carry.gif" -> "はこぶ"
+         "great.gif" -> "すごい"
+         "kowai.gif" -> "こわい"
+         "warry.gif" -> "しんぱい"
+         "iraira.gif" -> "いらいら"
+         "walk" -> "あるく"
          
          _ -> ""
 
