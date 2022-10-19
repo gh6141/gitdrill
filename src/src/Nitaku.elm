@@ -50,6 +50,7 @@ zenkaku hk = case hk of
          "tamago" -> "たまご"
          "taburetto" -> "たぶれっと"
          "meron" -> "めろん"
+         
          _ -> ""
 
 getAt : Int -> List a -> Maybe a
@@ -185,13 +186,13 @@ view model =
         [Row.middleMd]
         [ Grid.col
             []
-            [ img [src ("https://rasp.cld9.work/py/"++model.toi.img1++".jpg"),onClick Btn1,style "width" "20vw"] []  ]
+            [ img [src ("https://rasp.cld9.work/py/"++model.toi.img1++(if (String.contains ".gif" model.toi.img1) then "" else ".jpg")),onClick Btn1,style "width" "20vw"] []  ]
           , Grid.col
             [ ]
            [ div [] [if model.flghyoji then marubatu else (span [] []) ] ]
         , Grid.col
             [  ]
-           [ img [src ("https://rasp.cld9.work/py/"++model.toi.img2++".jpg"),onClick Btn2,style "width" "20vw"] []  ]
+           [ img [src ("https://rasp.cld9.work/py/"++model.toi.img2++(if (String.contains ".gif" model.toi.img2) then "" else ".jpg")),onClick Btn2,style "width" "20vw"] []  ]
     
        
         ]

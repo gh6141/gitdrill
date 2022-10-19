@@ -5006,6 +5006,7 @@ var author$project$Nitaku$Btn1 = {$: 'Btn1'};
 var author$project$Nitaku$Btn2 = {$: 'Btn2'};
 var author$project$Nitaku$BtnMondai = {$: 'BtnMondai'};
 var author$project$Nitaku$Inc = {$: 'Inc'};
+var elm$core$String$contains = _String_contains;
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -6304,7 +6305,8 @@ var author$project$Nitaku$view = function (model) {
 								elm$html$Html$img,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$src('https://rasp.cld9.work/py/' + (model.toi.img1 + '.jpg')),
+										elm$html$Html$Attributes$src(
+										'https://rasp.cld9.work/py/' + (model.toi.img1 + (A2(elm$core$String$contains, '.gif', model.toi.img1) ? '' : '.jpg'))),
 										elm$html$Html$Events$onClick(author$project$Nitaku$Btn1),
 										A2(elm$html$Html$Attributes$style, 'width', '20vw')
 									]),
@@ -6332,7 +6334,8 @@ var author$project$Nitaku$view = function (model) {
 								elm$html$Html$img,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$src('https://rasp.cld9.work/py/' + (model.toi.img2 + '.jpg')),
+										elm$html$Html$Attributes$src(
+										'https://rasp.cld9.work/py/' + (model.toi.img2 + (A2(elm$core$String$contains, '.gif', model.toi.img2) ? '' : '.jpg'))),
 										elm$html$Html$Events$onClick(author$project$Nitaku$Btn2),
 										A2(elm$html$Html$Attributes$style, 'width', '20vw')
 									]),
@@ -6459,7 +6462,6 @@ var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
-var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
