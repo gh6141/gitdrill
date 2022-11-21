@@ -43,6 +43,14 @@ shutudaiL=[ {obj= {img1="suika",img2="taburetto",mondai="すいか"},img="suika"
          , {obj={img1="iraira.gif",img2="worry.gif",mondai="しんぱい"},img="worry.gif"  }
          ,  {obj={img1="great.gif",img2="carry.gif",mondai="すごい"},img="great.gif"  }
          , {obj={img1="pull.gif",img2="run.gif",mondai="はしる"},img="run.gif"  }
+
+         , {obj={img1="tukareru",img2="kanasii",mondai="かなしい"},img="kanasii"  }
+         , {obj={img1="tanosii",img2="kanasii",mondai="たのしい"},img="tanosii"  }
+         , {obj={img1="konbanha",img2="tukareru",mondai="つかれる"},img="tukareru"  }
+         , {obj={img1="ohayo",img2="sayounara",mondai="さようなら"},img="sayounara"  }
+         , {obj={img1="ohayo",img2="konbanha",mondai="こんばんは"},img="konbanaha"  }
+         , {obj={img1="sayounara",img2="ohayo",mondai="おはようございます"},img="ohayo"  }
+
           ]
 
  

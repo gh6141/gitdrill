@@ -4929,6 +4929,30 @@ var author$project$Nitaku$shutudaiL = _List_fromArray(
 		{
 		img: 'run.gif',
 		obj: {img1: 'pull.gif', img2: 'run.gif', mondai: 'はしる'}
+	},
+		{
+		img: 'kanasii',
+		obj: {img1: 'tukareru', img2: 'kanasii', mondai: 'かなしい'}
+	},
+		{
+		img: 'tanosii',
+		obj: {img1: 'tanosii', img2: 'kanasii', mondai: 'たのしい'}
+	},
+		{
+		img: 'tukareru',
+		obj: {img1: 'konbanha', img2: 'tukareru', mondai: 'つかれる'}
+	},
+		{
+		img: 'sayounara',
+		obj: {img1: 'ohayo', img2: 'sayounara', mondai: 'さようなら'}
+	},
+		{
+		img: 'konbanaha',
+		obj: {img1: 'ohayo', img2: 'konbanha', mondai: 'こんばんは'}
+	},
+		{
+		img: 'ohayo',
+		obj: {img1: 'sayounara', img2: 'ohayo', mondai: 'おはようございます'}
 	}
 	]);
 var elm$core$List$drop = F2(
