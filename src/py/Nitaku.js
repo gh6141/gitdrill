@@ -4860,29 +4860,127 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Nitaku$init = function (_n0) {
 	return _Utils_Tuple2(author$project$Nitaku$minit, elm$core$Platform$Cmd$none);
 };
-var author$project$Nitaku$shutudai = function (num) {
-	switch (num) {
-		case 0:
-			return {img1: 'suika', img2: 'taburetto', mondai: 'すいか'};
-		case 1:
-			return {img1: 'meron', img2: 'mikan', mondai: 'みかん'};
-		case 2:
-			return {img1: 'ringo', img2: 'tamago', mondai: 'りんご'};
-		case 3:
-			return {img1: 'budo', img2: 'taiikukan', mondai: 'ぶどう'};
-		case 4:
-			return {img1: 'youtube', img2: 'taiikukan', mondai: 'たいいくかん'};
-		case 5:
-			return {img1: 'youtube', img2: 'budo', mondai: 'ゆーちゅーぶ'};
-		case 6:
-			return {img1: 'tamago', img2: 'ringo', mondai: 'たまご'};
-		case 7:
-			return {img1: 'mikan', img2: 'taburetto', mondai: 'たぶれっと'};
-		case 8:
-			return {img1: 'suika', img2: 'meron', mondai: 'めろん'};
-		default:
-			return {img1: '', img2: '', mondai: ''};
+var author$project$Nitaku$shutudaiL = _List_fromArray(
+	[
+		{
+		img: 'suika',
+		obj: {img1: 'suika', img2: 'taburetto', mondai: 'すいか'}
+	},
+		{
+		img: 'mikan',
+		obj: {img1: 'meron', img2: 'mikan', mondai: 'みかん'}
+	},
+		{
+		img: 'ringo',
+		obj: {img1: 'ringo', img2: 'tamago', mondai: 'りんご'}
+	},
+		{
+		img: 'budo',
+		obj: {img1: 'budo', img2: 'taiikukan', mondai: 'ぶどう'}
+	},
+		{
+		img: 'taiikukan',
+		obj: {img1: 'youtube', img2: 'taiikukan', mondai: 'たいいくかん'}
+	},
+		{
+		img: 'youtube',
+		obj: {img1: 'youtube', img2: 'budo', mondai: 'ゆーちゅーぶ'}
+	},
+		{
+		img: 'tamago',
+		obj: {img1: 'tamago', img2: 'ringo', mondai: 'たまご'}
+	},
+		{
+		img: 'taburetto',
+		obj: {img1: 'mikan', img2: 'taburetto', mondai: 'たぶれっと'}
+	},
+		{
+		img: 'meron',
+		obj: {img1: 'suika', img2: 'meron', mondai: 'めろん'}
+	},
+		{
+		img: 'pull.gif',
+		obj: {img1: 'pull.gif', img2: 'run.gif', mondai: 'ひっぱる'}
+	},
+		{
+		img: 'carry.gif',
+		obj: {img1: 'great.gif', img2: 'carry.gif', mondai: 'はこぶ'}
+	},
+		{
+		img: 'kowai.gif',
+		obj: {img1: 'worry.gif', img2: 'kowai.gif', mondai: 'こわい'}
+	},
+		{
+		img: 'iraira.gif',
+		obj: {img1: 'iraira.gif', img2: 'walk.gif', mondai: 'いらいら'}
+	},
+		{
+		img: 'walk.gif',
+		obj: {img1: 'run.gif', img2: 'walk.gif', mondai: 'あるく'}
+	},
+		{
+		img: 'worry.gif',
+		obj: {img1: 'iraira.gif', img2: 'worry.gif', mondai: 'しんぱい'}
+	},
+		{
+		img: 'great.gif',
+		obj: {img1: 'great.gif', img2: 'carry.gif', mondai: 'すごい'}
+	},
+		{
+		img: 'run.gif',
+		obj: {img1: 'pull.gif', img2: 'run.gif', mondai: 'はしる'}
 	}
+	]);
+var elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var author$project$Nitaku$shutudai = function (num) {
+	var ltail = A2(elm$core$List$drop, num, author$project$Nitaku$shutudaiL);
+	var tmpl = elm$core$List$head(ltail);
+	var tobj = A2(
+		elm$core$Maybe$withDefault,
+		{
+			img: '',
+			obj: {img1: '', img2: '', mondai: ''}
+		},
+		tmpl);
+	return tobj.obj;
 };
 var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$Nitaku$speak = _Platform_outgoingPort('speak', elm$json$Json$Encode$string);
@@ -4897,29 +4995,90 @@ var author$project$Nitaku$startSound2 = _Platform_outgoingPort(
 	function ($) {
 		return elm$json$Json$Encode$null;
 	});
+var author$project$Nitaku$fsearch = F2(
+	function (ig, obj) {
+		return _Utils_eq(obj.img, ig);
+	});
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var author$project$Nitaku$zenkaku = function (hk) {
-	switch (hk) {
-		case 'suika':
-			return 'すいか';
-		case 'mikan':
-			return 'みかん';
-		case 'ringo':
-			return 'りんご';
-		case 'budo':
-			return 'ぶどう';
-		case 'taiikukan':
-			return 'たいいくかん';
-		case 'youtube':
-			return 'ゆーちゅーぶ';
-		case 'tamago':
-			return 'たまご';
-		case 'taburetto':
-			return 'たぶれっと';
-		case 'meron':
-			return 'めろん';
-		default:
-			return '';
-	}
+	var lfilter = A2(
+		elm$core$List$filter,
+		author$project$Nitaku$fsearch(hk),
+		author$project$Nitaku$shutudaiL);
+	var tmpl = elm$core$List$head(lfilter);
+	var tobj = A2(
+		elm$core$Maybe$withDefault,
+		{
+			img: '',
+			obj: {img1: '', img2: '', mondai: ''}
+		},
+		tmpl);
+	return tobj.obj.mondai;
 };
 var author$project$Nitaku$update = F2(
 	function (msg, model) {
@@ -4936,18 +5095,22 @@ var author$project$Nitaku$update = F2(
 						model,
 						{
 							flghyoji: false,
-							num: (model.num < 8) ? (model.num + 1) : 1,
+							num: (_Utils_cmp(
+								model.num,
+								elm$core$List$length(author$project$Nitaku$shutudaiL) - 1) < 0) ? (model.num + 1) : 1,
 							toi: author$project$Nitaku$shutudai(model.num)
 						}),
 					author$project$Nitaku$speak(
-						author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください'));
+						author$project$Nitaku$shutudai(model.num).mondai + 'は、どれかな'));
 			case 'Btn1':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							flghyoji: sflg1 ? false : true,
-							num: sflg1 ? ((model.num < 8) ? (model.num + 1) : 1) : model.num,
+							num: sflg1 ? ((_Utils_cmp(
+								model.num,
+								elm$core$List$length(author$project$Nitaku$shutudaiL) - 1) < 0) ? (model.num + 1) : 1) : model.num,
 							seikaiflg: sflg1,
 							toi: sflg1 ? author$project$Nitaku$shutudai(model.num) : model.toi
 						}),
@@ -4956,13 +5119,13 @@ var author$project$Nitaku$update = F2(
 							[
 								author$project$Nitaku$startSound(_Utils_Tuple0),
 								author$project$Nitaku$speak(
-								author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください')
+								author$project$Nitaku$shutudai(model.num).mondai + 'はどれかな')
 							])) : elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
 								author$project$Nitaku$startSound2(_Utils_Tuple0),
 								author$project$Nitaku$speak(
-								author$project$Nitaku$shutudai(model.num - 1).mondai + 'を、えらんでね')
+								author$project$Nitaku$shutudai(model.num - 1).mondai + 'は、どれかな？')
 							])));
 			case 'Btn2':
 				return _Utils_Tuple2(
@@ -4970,7 +5133,9 @@ var author$project$Nitaku$update = F2(
 						model,
 						{
 							flghyoji: sflg2 ? false : true,
-							num: sflg2 ? ((model.num < 8) ? (model.num + 1) : 1) : model.num,
+							num: sflg2 ? ((_Utils_cmp(
+								model.num,
+								elm$core$List$length(author$project$Nitaku$shutudaiL) - 1) < 0) ? (model.num + 1) : 1) : model.num,
 							seikaiflg: sflg2,
 							toi: sflg2 ? author$project$Nitaku$shutudai(model.num) : model.toi
 						}),
@@ -4979,7 +5144,7 @@ var author$project$Nitaku$update = F2(
 							[
 								author$project$Nitaku$startSound(_Utils_Tuple0),
 								author$project$Nitaku$speak(
-								author$project$Nitaku$shutudai(model.num).mondai + 'を、えらんでください')
+								author$project$Nitaku$shutudai(model.num).mondai + 'は、どれかな')
 							])) : elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -4991,7 +5156,7 @@ var author$project$Nitaku$update = F2(
 				return _Utils_Tuple2(
 					model,
 					author$project$Nitaku$speak(
-						author$project$Nitaku$shutudai(model.num - 1).mondai + 'を、えらんでください'));
+						author$project$Nitaku$shutudai(model.num - 1).mondai + 'を、えらんでね'));
 			case 'StartSound':
 				return _Utils_Tuple2(
 					model,
@@ -5079,72 +5244,6 @@ var elm$core$Maybe$andThen = F2(
 		}
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5658,15 +5757,6 @@ var elm$core$Maybe$map = F2(
 				f(value));
 		} else {
 			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
 		}
 	});
 var rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption = function (size) {
@@ -6308,7 +6398,7 @@ var author$project$Nitaku$view = function (model) {
 										elm$html$Html$Attributes$src(
 										'https://rasp.cld9.work/py/' + (model.toi.img1 + (A2(elm$core$String$contains, '.gif', model.toi.img1) ? '' : '.jpg'))),
 										elm$html$Html$Events$onClick(author$project$Nitaku$Btn1),
-										A2(elm$html$Html$Attributes$style, 'width', '20vw')
+										A2(elm$html$Html$Attributes$style, 'width', '25vw')
 									]),
 								_List_Nil)
 							])),
@@ -6337,7 +6427,7 @@ var author$project$Nitaku$view = function (model) {
 										elm$html$Html$Attributes$src(
 										'https://rasp.cld9.work/py/' + (model.toi.img2 + (A2(elm$core$String$contains, '.gif', model.toi.img2) ? '' : '.jpg'))),
 										elm$html$Html$Events$onClick(author$project$Nitaku$Btn2),
-										A2(elm$html$Html$Attributes$style, 'width', '20vw')
+										A2(elm$html$Html$Attributes$style, 'width', '25vw')
 									]),
 								_List_Nil)
 							]))

@@ -25,10 +25,39 @@ type alias Toi =
       img2:String,
       mondai:String 
     }
- 
 
-shutudai: Int -> Toi
-shutudai num = case num of
+shutudaiL=[ {obj= {img1="suika",img2="taburetto",mondai="すいか"},img="suika"  }
+           , {obj= {img1="meron",img2="mikan",mondai="みかん"},img="mikan"  }
+         , {obj={img1="ringo",img2="tamago",mondai="りんご"},img="ringo"  }
+         ,  {obj={img1="budo",img2="taiikukan",mondai="ぶどう"},img="budo"  }
+         , {obj={img1="youtube",img2="taiikukan",mondai="たいいくかん"},img="taiikukan"  }
+         , {obj= {img1="youtube",img2="budo",mondai="ゆーちゅーぶ"},img="youtube"  }
+         ,  {obj={img1="tamago",img2="ringo",mondai="たまご"},img="tamago"  }
+        , {obj= {img1="mikan",img2="taburetto",mondai="たぶれっと"},img="taburetto"  }
+         , {obj= {img1="suika",img2="meron",mondai="めろん"},img="meron"  }
+        , {obj={img1="pull.gif",img2="run.gif",mondai="ひっぱる"},img="pull.gif"  }
+         ,  {obj={img1="great.gif",img2="carry.gif",mondai="はこぶ"},img="carry.gif"  }
+         , {obj= {img1="worry.gif",img2="kowai.gif",mondai="こわい"},img="kowai.gif"  }
+         , {obj= {img1="iraira.gif",img2="walk.gif",mondai="いらいら"},img="iraira.gif"  }
+         ,  {obj={img1="run.gif",img2="walk.gif",mondai="あるく"},img="walk.gif"  }
+         , {obj={img1="iraira.gif",img2="worry.gif",mondai="しんぱい"},img="worry.gif"  }
+         ,  {obj={img1="great.gif",img2="carry.gif",mondai="すごい"},img="great.gif"  }
+         , {obj={img1="pull.gif",img2="run.gif",mondai="はしる"},img="run.gif"  }
+          ]
+
+ 
+ 
+shutudai num= 
+   let
+     ltail=List.drop num shutudaiL
+     tmpl=List.head ltail
+     tobj=Maybe.withDefault  {obj={img1="",img2="",mondai=""},img=""} tmpl
+   in
+     tobj.obj
+
+
+shutudai_old: Int -> Toi
+shutudai_old num = case num of
          0-> {img1="suika",img2="taburetto",mondai="すいか"}
          1-> {img1="meron",img2="mikan",mondai="みかん"}
          2-> {img1="ringo",img2="tamago",mondai="りんご"}
@@ -48,7 +77,19 @@ shutudai num = case num of
          16-> {img1="pull.gif",img2="run.gif",mondai="はしる"}
          _-> {img1="",img2="",mondai=""}
 
-zenkaku hk = case hk of
+
+fsearch ig obj =  (obj.img==ig)
+
+zenkaku hk = 
+   let
+     lfilter=List.filter (fsearch hk)  shutudaiL
+     tmpl=List.head lfilter
+     tobj=Maybe.withDefault  {obj={img1="",img2="",mondai=""},img=""} tmpl
+
+   in         
+     tobj.obj.mondai
+
+zenkaku_old hk = case hk of
          "suika" -> "すいか"
          "mikan" -> "みかん"
          "ringo" -> "りんご"
@@ -65,8 +106,7 @@ zenkaku hk = case hk of
          "kowai.gif" -> "こわい"
          "worry.gif" -> "しんぱい"
          "iraira.gif" -> "いらいら"
-         "walk.gif" -> "あるく"
-         
+         "walk.gif" -> "あるく"         
          _ -> ""
 
 getAt : Int -> List a -> Maybe a
@@ -127,13 +167,13 @@ update msg model=
     sflg2=if model.toi.mondai==(zenkaku model.toi.img2) then True else False    
   in
   case msg of
-    Inc -> ({model|num=if model.num<16 then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"は、どれかな"))
+    Inc -> ({model|num=if model.num<((List.length shutudaiL)-1) then model.num+1 else 1 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"は、どれかな"))
    --Dec -> ({model|num=if model.num>0 then model.num-1 else 9 ,toi=shutudai model.num,flghyoji=False},speak((shutudai model.num).mondai++"を、えらんでください"))
 
     Btn1 -> ({model|
                 seikaiflg=sflg1
 
-               ,num=if sflg1 then (if model.num<16 then model.num+1 else 1 ) else model.num
+               ,num=if sflg1 then (if model.num<((List.length shutudaiL)-1) then model.num+1 else 1 ) else model.num
                ,toi=if sflg1 then (shutudai model.num) else model.toi
                ,flghyoji=if sflg1 then False else True
                
@@ -150,7 +190,7 @@ update msg model=
     Btn2 -> ({model|
               seikaiflg=   sflg2      
               
-               ,num=if sflg2 then (if model.num<16 then model.num+1 else 1 ) else model.num
+               ,num=if sflg2 then (if model.num<((List.length shutudaiL)-1) then model.num+1 else 1 ) else model.num
                ,toi=if sflg2 then (shutudai model.num) else model.toi
                ,flghyoji=if sflg2 then False else True
              
