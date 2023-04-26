@@ -20,6 +20,8 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Form as Form
 
+
+
 type alias Toi =
     { img1:String,
       img2:String,
@@ -156,7 +158,7 @@ init _ = ( minit  ,Cmd.none   )
 
 -- UPDATE
 
-type Msg =  Inc |  StartSound |StartSound2 |Btn1 | Btn2 | BtnMondai
+type Msg =  Inc |  StartSound |StartSound2 |Btn1 | Btn2 | BtnMondai 
 
 
 port handleMsg: (String->msg) -> Sub msg
@@ -187,7 +189,7 @@ update msg model=
                
                } ,
             --Cmd.none
-            
+
             if sflg1 then
              Cmd.batch [startSound() , speak((shutudai model.num).mondai++"はどれかな")]
              
@@ -221,6 +223,8 @@ update msg model=
 
 
 
+
+
 -- VIEW
 
 view : Model -> Html Msg
@@ -233,6 +237,7 @@ view model =
     marubatu=span [style "font-size" "10vw",style "color" (if model.seikaiflg then "red" else "blue")] [text (if model.seikaiflg then "〇" else "ｘ")]
 
   in
+
       
 
     Grid.container [Spacing.mt4Md]
@@ -243,7 +248,9 @@ view model =
            Grid.col
           []
           [
-            div [style "text-align" "center"] [ btnMondai]           
+            div [style "text-align" "center"]
+             [ btnMondai
+             ]           
           ]            
         ]
       
@@ -263,7 +270,5 @@ view model =
         ]
     
     ]
-
-
 
 
