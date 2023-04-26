@@ -187,6 +187,7 @@ update msg model=
                
                } ,
             --Cmd.none
+            
             if sflg1 then
              Cmd.batch [startSound() , speak((shutudai model.num).mondai++"はどれかな")]
              
