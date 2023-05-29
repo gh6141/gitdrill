@@ -191,10 +191,10 @@ update msg model=
             --Cmd.none
 
             if sflg1 then
-             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"はどれかな")]
+             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"わ、どれ？")]
              
             else
-              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"は、どれかな？")]
+              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"わ、どれ？")]
             )
 
 
@@ -208,14 +208,14 @@ update msg model=
               } ,
            --Cmd.none
            if sflg2 then 
-            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"は、どれかな")]
+            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"わ、どれ？")]
            else 
-            Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"を、えらんでね")]
+            Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"わ、どれ？")]
       
            )
 
     BtnMondai -> (model,
-                speak((shutudai (model.num-1)).mondai++"を、えらんでね")
+                speak((shutudai (model.num-1)).mondai++"わ、どれ？")
                  )
 
     StartSound -> (model,startSound())
