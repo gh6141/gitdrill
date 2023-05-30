@@ -20,6 +20,8 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
 import Bootstrap.Form as Form
 
+
+
 type alias Toi =
     { img1:String,
       img2:String,
@@ -118,7 +120,7 @@ init _ = ( minit  ,Cmd.none   )
 
 -- UPDATE
 
-type Msg =  Inc |  StartSound |StartSound2 |Btn1 | Btn2 | BtnMondai
+type Msg =  Inc |  StartSound |StartSound2 |Btn1 | Btn2 | BtnMondai 
 
 
 port handleMsg: (String->msg) -> Sub msg
@@ -149,11 +151,12 @@ update msg model=
                
                } ,
             --Cmd.none
+
             if sflg1 then
-             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"はどれかな")]
+             Cmd.batch [startSound() , speak((shutudai model.num).mondai++"わ、どれ？")]
              
             else
-              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"は、どれかな？")]
+              Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"わ、どれ？")]
             )
 
 
@@ -167,18 +170,20 @@ update msg model=
               } ,
            --Cmd.none
            if sflg2 then 
-            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"は、どれかな")]
+            Cmd.batch [startSound() ,speak((shutudai model.num).mondai++"わ、どれ？")]
            else 
-            Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"を、えらんでね")]
+            Cmd.batch [startSound2() ,speak((shutudai (model.num-1)).mondai++"わ、どれ？")]
       
            )
 
     BtnMondai -> (model,
-                speak((shutudai (model.num-1)).mondai++"を、えらんでね")
+                speak((shutudai (model.num-1)).mondai++"わ、どれ？")
                  )
 
     StartSound -> (model,startSound())
     StartSound2 -> (model,startSound2())
+
+
 
 
 
@@ -194,6 +199,7 @@ view model =
     marubatu=span [style "font-size" "10vw",style "color" (if model.seikaiflg then "red" else "blue")] [text (if model.seikaiflg then "〇" else "ｘ")]
 
   in
+
       
 
     Grid.container [Spacing.mt4Md]
@@ -204,7 +210,9 @@ view model =
            Grid.col
           []
           [
-            div [style "text-align" "center"] [ btnMondai]           
+            div [style "text-align" "center"]
+             [ btnMondai
+             ]           
           ]            
         ]
       
@@ -224,7 +232,5 @@ view model =
         ]
     
     ]
-
-
 
 
