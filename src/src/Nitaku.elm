@@ -48,7 +48,7 @@ shutudaiL=[ {obj= {img1="suika",img2="taburetto",mondai="すいか"},img="suika"
          , {obj={img1="tanosii",img2="kanasii",mondai="たのしい"},img="tanosii"  }
          , {obj={img1="konbanha",img2="tukareru",mondai="つかれる"},img="tukareru"  }
          , {obj={img1="ohayo",img2="sayounara",mondai="さようなら"},img="sayounara"  }
-         , {obj={img1="ohayo",img2="konbanha",mondai="こんばんは"},img="konbanaha"  }
+         , {obj={img1="ohayo",img2="konbanha",mondai="こんばんは"},img="konbanha"  }
          , {obj={img1="sayounara",img2="ohayo",mondai="おはようございます"},img="ohayo"  }
 
           ]
@@ -64,26 +64,7 @@ shutudai num=
      tobj.obj
 
 
-shutudai_old: Int -> Toi
-shutudai_old num = case num of
-         0-> {img1="suika",img2="taburetto",mondai="すいか"}
-         1-> {img1="meron",img2="mikan",mondai="みかん"}
-         2-> {img1="ringo",img2="tamago",mondai="りんご"}
-         3-> {img1="budo",img2="taiikukan",mondai="ぶどう"}
-         4-> {img1="youtube",img2="taiikukan",mondai="たいいくかん"}
-         5-> {img1="youtube",img2="budo",mondai="ゆーちゅーぶ"}
-         6-> {img1="tamago",img2="ringo",mondai="たまご"}
-         7-> {img1="mikan",img2="taburetto",mondai="たぶれっと"}
-         8-> {img1="suika",img2="meron",mondai="めろん"}
-         9-> {img1="pull.gif",img2="run.gif",mondai="ひっぱる"}
-         10-> {img1="great.gif",img2="carry.gif",mondai="はこぶ"}
-         11-> {img1="worry.gif",img2="kowai.gif",mondai="こわい"}
-         12-> {img1="iraira.gif",img2="walk.gif",mondai="いらいら"}
-         13-> {img1="run.gif",img2="walk.gif",mondai="あるく"}
-         14-> {img1="iraira.gif",img2="worry.gif",mondai="しんぱい"}
-         15-> {img1="great.gif",img2="carry.gif",mondai="すごい"}
-         16-> {img1="pull.gif",img2="run.gif",mondai="はしる"}
-         _-> {img1="",img2="",mondai=""}
+
 
 
 fsearch ig obj =  (obj.img==ig)
@@ -97,25 +78,6 @@ zenkaku hk =
    in         
      tobj.obj.mondai
 
-zenkaku_old hk = case hk of
-         "suika" -> "すいか"
-         "mikan" -> "みかん"
-         "ringo" -> "りんご"
-         "budo" -> "ぶどう"
-         "taiikukan" -> "たいいくかん"
-         "youtube" -> "ゆーちゅーぶ"
-         "tamago" -> "たまご"
-         "taburetto" -> "たぶれっと"
-         "meron" -> "めろん"
-         "pull.gif" -> "ひっぱる"
-         "run.gif" -> "はしる"
-         "carry.gif" -> "はこぶ"
-         "great.gif" -> "すごい"
-         "kowai.gif" -> "こわい"
-         "worry.gif" -> "しんぱい"
-         "iraira.gif" -> "いらいら"
-         "walk.gif" -> "あるく"         
-         _ -> ""
 
 getAt : Int -> List a -> Maybe a
 getAt idx xs =

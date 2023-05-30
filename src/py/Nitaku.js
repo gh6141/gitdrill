@@ -4947,7 +4947,7 @@ var author$project$Nitaku$shutudaiL = _List_fromArray(
 		obj: {img1: 'ohayo', img2: 'sayounara', mondai: 'さようなら'}
 	},
 		{
-		img: 'konbanaha',
+		img: 'konbanha',
 		obj: {img1: 'ohayo', img2: 'konbanha', mondai: 'こんばんは'}
 	},
 		{
