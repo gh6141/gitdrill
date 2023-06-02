@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Gensi</title>
+  <title>Zukei</title>
   <style>body { padding: 0; margin: 0; }</style>
 </head>
 
@@ -4501,12 +4501,12 @@ var $elm$core$Set$toList = function (_v0) {
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
-var $author$project$Gensi$Mada = {$: 'Mada'};
-var $author$project$Gensi$init = {
+var $author$project$Zukei$Mada = {$: 'Mada'};
+var $author$project$Zukei$init = {
 	marukei: 0,
 	name: '',
 	num: 0,
-	seikai: $author$project$Gensi$Mada,
+	seikai: $author$project$Zukei$Mada,
 	siki: '',
 	sikil: _List_fromArray(
 		['', '', ''])
@@ -5241,9 +5241,9 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
-var $author$project$Gensi$Batu = {$: 'Batu'};
-var $author$project$Gensi$Maru = {$: 'Maru'};
-var $author$project$Gensi$data = _List_fromArray(
+var $author$project$Zukei$Batu = {$: 'Batu'};
+var $author$project$Zukei$Maru = {$: 'Maru'};
+var $author$project$Zukei$data = _List_fromArray(
 	[
 		_Utils_Tuple2('ナトリウム原子', 'Na'),
 		_Utils_Tuple2('水素原子', 'H'),
@@ -5261,7 +5261,7 @@ var $author$project$Gensi$data = _List_fromArray(
 		_Utils_Tuple2('バリウム原子', 'Ba'),
 		_Utils_Tuple2('銀原子', 'Ag')
 	]);
-var $author$project$Gensi$fst = function (tpl) {
+var $author$project$Zukei$fst = function (tpl) {
 	var _v0 = tpl;
 	var fstx = _v0.a;
 	return fstx;
@@ -5296,7 +5296,7 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Gensi$getAt = F2(
+var $author$project$Zukei$getAt = F2(
 	function (idx, xs) {
 		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
 			A2($elm$core$List$drop, idx, xs));
@@ -5516,7 +5516,7 @@ var $elm$core$List$take = F2(
 	function (n, list) {
 		return A3($elm$core$List$takeFast, 0, n, list);
 	});
-var $author$project$Gensi$removeAt = F2(
+var $author$project$Zukei$removeAt = F2(
 	function (index, l) {
 		if (index < 0) {
 			return l;
@@ -5537,7 +5537,7 @@ var $elm$random$Random$step = F2(
 		var generator = _v0.a;
 		return generator(seed);
 	});
-var $author$project$Gensi$shuffleListHelper = F3(
+var $author$project$Zukei$shuffleListHelper = F3(
 	function (seed, source, result) {
 		shuffleListHelper:
 		while (true) {
@@ -5551,8 +5551,8 @@ var $author$project$Gensi$shuffleListHelper = F3(
 				var _v0 = A2($elm$random$Random$step, indexGenerator, seed);
 				var index = _v0.a;
 				var nextSeed = _v0.b;
-				var sourceWithoutIndex = A2($author$project$Gensi$removeAt, index, source);
-				var valAtIndex = A2($author$project$Gensi$getAt, index, source);
+				var sourceWithoutIndex = A2($author$project$Zukei$removeAt, index, source);
+				var valAtIndex = A2($author$project$Zukei$getAt, index, source);
 				if (valAtIndex.$ === 'Just') {
 					var val = valAtIndex.a;
 					var $temp$seed = nextSeed,
@@ -5568,11 +5568,11 @@ var $author$project$Gensi$shuffleListHelper = F3(
 			}
 		}
 	});
-var $author$project$Gensi$shuffleList = F2(
+var $author$project$Zukei$shuffleList = F2(
 	function (seed, list) {
-		return A3($author$project$Gensi$shuffleListHelper, seed, list, _List_Nil);
+		return A3($author$project$Zukei$shuffleListHelper, seed, list, _List_Nil);
 	});
-var $author$project$Gensi$snd = function (tpl) {
+var $author$project$Zukei$snd = function (tpl) {
 	var _v0 = tpl;
 	var sndx = _v0.b;
 	return sndx;
@@ -5586,48 +5586,48 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Gensi$update = F2(
+var $author$project$Zukei$update = F2(
 	function (msg, model) {
 		var yoso = function (idx) {
-			return $author$project$Gensi$snd(
+			return $author$project$Zukei$snd(
 				A2(
 					$elm$core$Maybe$withDefault,
 					_Utils_Tuple2('', ''),
-					A2($author$project$Gensi$getAt, idx, $author$project$Gensi$data)));
+					A2($author$project$Zukei$getAt, idx, $author$project$Zukei$data)));
 		};
 		switch (msg.$) {
 			case 'Increment':
 				return _Utils_update(
 					model,
 					{
-						name: $author$project$Gensi$fst(
+						name: $author$project$Zukei$fst(
 							A2(
 								$elm$core$Maybe$withDefault,
 								_Utils_Tuple2('', ''),
-								A2($author$project$Gensi$getAt, model.num, $author$project$Gensi$data))),
+								A2($author$project$Zukei$getAt, model.num, $author$project$Zukei$data))),
 						num: _Utils_eq(
 							model.num,
-							$elm$core$List$length($author$project$Gensi$data)) ? 0 : (model.num + 1),
-						seikai: $author$project$Gensi$Mada,
-						siki: $author$project$Gensi$snd(
+							$elm$core$List$length($author$project$Zukei$data)) ? 0 : (model.num + 1),
+						seikai: $author$project$Zukei$Mada,
+						siki: $author$project$Zukei$snd(
 							A2(
 								$elm$core$Maybe$withDefault,
 								_Utils_Tuple2('', ''),
-								A2($author$project$Gensi$getAt, model.num, $author$project$Gensi$data))),
+								A2($author$project$Zukei$getAt, model.num, $author$project$Zukei$data))),
 						sikil: A2(
-							$author$project$Gensi$shuffleList,
+							$author$project$Zukei$shuffleList,
 							$elm$random$Random$initialSeed(model.num),
 							_List_fromArray(
 								[
 									yoso(
 									A2(
 										$elm$core$Basics$modBy,
-										$elm$core$List$length($author$project$Gensi$data),
+										$elm$core$List$length($author$project$Zukei$data),
 										model.num + 1)),
 									yoso(
 									A2(
 										$elm$core$Basics$modBy,
-										$elm$core$List$length($author$project$Gensi$data),
+										$elm$core$List$length($author$project$Zukei$data),
 										model.num + 2)),
 									yoso(model.num)
 								]))
@@ -5636,17 +5636,17 @@ var $author$project$Gensi$update = F2(
 				return _Utils_update(
 					model,
 					{
-						name: $author$project$Gensi$fst(
+						name: $author$project$Zukei$fst(
 							A2(
 								$elm$core$Maybe$withDefault,
 								_Utils_Tuple2('', ''),
-								A2($author$project$Gensi$getAt, model.num, $author$project$Gensi$data))),
+								A2($author$project$Zukei$getAt, model.num, $author$project$Zukei$data))),
 						num: model.num - 1,
-						siki: $author$project$Gensi$snd(
+						siki: $author$project$Zukei$snd(
 							A2(
 								$elm$core$Maybe$withDefault,
 								_Utils_Tuple2('', ''),
-								A2($author$project$Gensi$getAt, model.num, $author$project$Gensi$data)))
+								A2($author$project$Zukei$getAt, model.num, $author$project$Zukei$data)))
 					});
 			case 'B1':
 				return _Utils_update(
@@ -5656,14 +5656,14 @@ var $author$project$Gensi$update = F2(
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($author$project$Gensi$getAt, 0, model.sikil)),
+								A2($author$project$Zukei$getAt, 0, model.sikil)),
 							model.siki) ? (model.marukei + 1) : model.marukei,
 						seikai: _Utils_eq(
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($author$project$Gensi$getAt, 0, model.sikil)),
-							model.siki) ? $author$project$Gensi$Maru : $author$project$Gensi$Batu
+								A2($author$project$Zukei$getAt, 0, model.sikil)),
+							model.siki) ? $author$project$Zukei$Maru : $author$project$Zukei$Batu
 					});
 			case 'B2':
 				return _Utils_update(
@@ -5673,14 +5673,14 @@ var $author$project$Gensi$update = F2(
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($author$project$Gensi$getAt, 1, model.sikil)),
+								A2($author$project$Zukei$getAt, 1, model.sikil)),
 							model.siki) ? (model.marukei + 1) : model.marukei,
 						seikai: _Utils_eq(
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($author$project$Gensi$getAt, 1, model.sikil)),
-							model.siki) ? $author$project$Gensi$Maru : $author$project$Gensi$Batu
+								A2($author$project$Zukei$getAt, 1, model.sikil)),
+							model.siki) ? $author$project$Zukei$Maru : $author$project$Zukei$Batu
 					});
 			default:
 				return _Utils_update(
@@ -5690,21 +5690,21 @@ var $author$project$Gensi$update = F2(
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($author$project$Gensi$getAt, 2, model.sikil)),
+								A2($author$project$Zukei$getAt, 2, model.sikil)),
 							model.siki) ? (model.marukei + 1) : model.marukei,
 						seikai: _Utils_eq(
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($author$project$Gensi$getAt, 2, model.sikil)),
-							model.siki) ? $author$project$Gensi$Maru : $author$project$Gensi$Batu
+								A2($author$project$Zukei$getAt, 2, model.sikil)),
+							model.siki) ? $author$project$Zukei$Maru : $author$project$Zukei$Batu
 					});
 		}
 	});
-var $author$project$Gensi$B1 = {$: 'B1'};
-var $author$project$Gensi$B2 = {$: 'B2'};
-var $author$project$Gensi$B3 = {$: 'B3'};
-var $author$project$Gensi$Increment = {$: 'Increment'};
+var $author$project$Zukei$B1 = {$: 'B1'};
+var $author$project$Zukei$B2 = {$: 'B2'};
+var $author$project$Zukei$B3 = {$: 'B3'};
+var $author$project$Zukei$Increment = {$: 'Increment'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -5728,7 +5728,7 @@ var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Gensi$view = function (model) {
+var $author$project$Zukei$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -5747,7 +5747,7 @@ var $author$project$Gensi$view = function (model) {
 				_List_fromArray(
 					[
 						A2($elm$html$Html$Attributes$style, 'font-size', '30pt'),
-						$elm$html$Html$Events$onClick($author$project$Gensi$Increment)
+						$elm$html$Html$Events$onClick($author$project$Zukei$Increment)
 					]),
 				_List_fromArray(
 					[
@@ -5769,7 +5769,7 @@ var $author$project$Gensi$view = function (model) {
 					[
 						A2($elm$html$Html$Attributes$style, 'margin', '5pt'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '100pt'),
-						$elm$html$Html$Events$onClick($author$project$Gensi$B1)
+						$elm$html$Html$Events$onClick($author$project$Zukei$B1)
 					]),
 				_List_fromArray(
 					[
@@ -5777,7 +5777,7 @@ var $author$project$Gensi$view = function (model) {
 						A2(
 							$elm$core$Maybe$withDefault,
 							'',
-							A2($author$project$Gensi$getAt, 0, model.sikil)))
+							A2($author$project$Zukei$getAt, 0, model.sikil)))
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -5785,7 +5785,7 @@ var $author$project$Gensi$view = function (model) {
 					[
 						A2($elm$html$Html$Attributes$style, 'margin', '5pt'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '100pt'),
-						$elm$html$Html$Events$onClick($author$project$Gensi$B2)
+						$elm$html$Html$Events$onClick($author$project$Zukei$B2)
 					]),
 				_List_fromArray(
 					[
@@ -5793,7 +5793,7 @@ var $author$project$Gensi$view = function (model) {
 						A2(
 							$elm$core$Maybe$withDefault,
 							'',
-							A2($author$project$Gensi$getAt, 1, model.sikil)))
+							A2($author$project$Zukei$getAt, 1, model.sikil)))
 					])),
 				A2(
 				$elm$html$Html$button,
@@ -5801,7 +5801,7 @@ var $author$project$Gensi$view = function (model) {
 					[
 						A2($elm$html$Html$Attributes$style, 'margin', '5pt'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '100pt'),
-						$elm$html$Html$Events$onClick($author$project$Gensi$B3)
+						$elm$html$Html$Events$onClick($author$project$Zukei$B3)
 					]),
 				_List_fromArray(
 					[
@@ -5809,7 +5809,7 @@ var $author$project$Gensi$view = function (model) {
 						A2(
 							$elm$core$Maybe$withDefault,
 							'',
-							A2($author$project$Gensi$getAt, 2, model.sikil)))
+							A2($author$project$Zukei$getAt, 2, model.sikil)))
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -5822,16 +5822,16 @@ var $author$project$Gensi$view = function (model) {
 					[
 						$elm$html$Html$text(
 						$elm$core$String$fromInt(model.marukei) + ('/' + ($elm$core$String$fromInt(
-							$elm$core$List$length($author$project$Gensi$data)) + (' ' + (_Utils_eq(model.seikai, $author$project$Gensi$Maru) ? '〇' : (_Utils_eq(model.seikai, $author$project$Gensi$Batu) ? '✖' : ''))))))
+							$elm$core$List$length($author$project$Zukei$data)) + (' ' + (_Utils_eq(model.seikai, $author$project$Zukei$Maru) ? '〇' : (_Utils_eq(model.seikai, $author$project$Zukei$Batu) ? '✖' : ''))))))
 					]))
 			]));
 };
-var $author$project$Gensi$main = $elm$browser$Browser$sandbox(
-	{init: $author$project$Gensi$init, update: $author$project$Gensi$update, view: $author$project$Gensi$view});
-_Platform_export({'Gensi':{'init':$author$project$Gensi$main(
+var $author$project$Zukei$main = $elm$browser$Browser$sandbox(
+	{init: $author$project$Zukei$init, update: $author$project$Zukei$update, view: $author$project$Zukei$view});
+_Platform_export({'Zukei':{'init':$author$project$Zukei$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
 
-  var app = Elm.Gensi.init({ node: document.getElementById("elm") });
+  var app = Elm.Zukei.init({ node: document.getElementById("elm") });
 }
 catch (e)
 {

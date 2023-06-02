@@ -3,6 +3,7 @@
 -- Read how it works:
 --   https://guide.elm-lang.org/architecture/buttons.html
 --
+module Gensi exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, text)
@@ -25,7 +26,7 @@ shuffleListHelper seed source result =
                 int 0 ((List.length source) - 1)
 
             ( index, nextSeed ) =
-                step indexGenerator seed
+                Random.step indexGenerator seed
 
             valAtIndex =
                 getAt index source
