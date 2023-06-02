@@ -65,8 +65,8 @@ emptyGroup =
     BoxGroup 0 Nothing []
 
 
-addBox : Vec2 -> Color -> Zukei -> BoxGroup -> BoxGroup
-addBox position col zuk ({ uid, idleBoxes } as group) =
+addBox : Color -> Zukei ->Vec2 ->  BoxGroup -> BoxGroup
+addBox col zuk position  ({ uid, idleBoxes } as group) =
     { group
         | idleBoxes = makeBox (String.fromInt uid) position col zuk :: idleBoxes
         , uid = uid + 1
@@ -76,7 +76,7 @@ addBox position col zuk ({ uid, idleBoxes } as group) =
 makeBoxGroup : List Vec2 -> BoxGroup
 makeBoxGroup positions =
     positions
-        |> List.foldl addBox Red Circle emptyGroup
+        |> List.foldl (addBox Green Triangle) emptyGroup
 
 
 allBoxes : BoxGroup -> List Box
@@ -213,25 +213,59 @@ boxesView boxGroup =
 
 
 boxView : Box -> Svg Msg
-boxView { id, position } =
-    let
-        color =          "red"
+boxView { id, position,color,zukei } =
+   let
+      --  color =          "red"
+    colorx col=case col of
+              Red -> "red"
+              Green -> "green"
+              Yellow -> "yellow"
 
-           
-    in
-    Svg.rect
+
+    hyoji zuk=case zuk of
+     Cube ->
+      Svg.rect
        ( [ num Attr.width <| getX boxSize
         , num Attr.height <| getY boxSize
         , num Attr.x (getX position)
         , num Attr.y (getY position)
-        , Attr.fill color
+        , Attr.fill (colorx color)
         , Attr.stroke "black"
         , Attr.cursor "move"
         , Draggable.mouseTrigger id DragMsg
         , onMouseUp StopDragging
         ]++ (Draggable.touchTriggers id DragMsg) )
         []
-
+     Triangle ->
+       Svg.rect
+       ( [ num Attr.width <| getX boxSize
+        , num Attr.height <| getY boxSize
+        , num Attr.x (getX position)
+        , num Attr.y (getY position)
+        , Attr.fill (colorx color)
+        , Attr.stroke "yellow"
+        , Attr.cursor "move"
+        , Draggable.mouseTrigger id DragMsg
+        , onMouseUp StopDragging
+        ]++ (Draggable.touchTriggers id DragMsg) )
+        []
+     Circle ->
+            Svg.rect
+       ( [ num Attr.width <| getX boxSize
+        , num Attr.height <| getY boxSize
+        , num Attr.x (getX position)
+        , num Attr.y (getY position)
+        , Attr.fill (colorx color)
+        , Attr.stroke "black"
+        , Attr.cursor "move"
+        , Draggable.mouseTrigger id DragMsg
+        , onMouseUp StopDragging
+        ]++ (Draggable.touchTriggers id DragMsg) )
+        []
+   
+        
+     in
+       hyoji zukei
 
 background : Svg msg
 background =

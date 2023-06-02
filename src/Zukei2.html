@@ -6214,16 +6214,18 @@ var $zaboco$elm_draggable$Draggable$State = function (a) {
 	return {$: 'State', a: a};
 };
 var $zaboco$elm_draggable$Draggable$init = $zaboco$elm_draggable$Draggable$State($zaboco$elm_draggable$Internal$NotDragging);
-var $author$project$Zukei2$Box = F2(
-	function (id, position) {
-		return {id: id, position: position};
+var $author$project$Zukei2$Green = {$: 'Green'};
+var $author$project$Zukei2$Triangle = {$: 'Triangle'};
+var $author$project$Zukei2$Box = F4(
+	function (id, position, color, zukei) {
+		return {color: color, id: id, position: position, zukei: zukei};
 	});
-var $author$project$Zukei2$makeBox = F2(
-	function (id, position) {
-		return A2($author$project$Zukei2$Box, id, position);
+var $author$project$Zukei2$makeBox = F4(
+	function (id, position, col, zu) {
+		return A4($author$project$Zukei2$Box, id, position, col, zu);
 	});
-var $author$project$Zukei2$addBox = F2(
-	function (position, group) {
+var $author$project$Zukei2$addBox = F4(
+	function (col, zuk, position, group) {
 		var uid = group.uid;
 		var idleBoxes = group.idleBoxes;
 		return _Utils_update(
@@ -6231,10 +6233,12 @@ var $author$project$Zukei2$addBox = F2(
 			{
 				idleBoxes: A2(
 					$elm$core$List$cons,
-					A2(
+					A4(
 						$author$project$Zukei2$makeBox,
 						$elm$core$String$fromInt(uid),
-						position),
+						position,
+						col,
+						zuk),
 					idleBoxes),
 				uid: uid + 1
 			});
@@ -6245,7 +6249,11 @@ var $author$project$Zukei2$BoxGroup = F3(
 	});
 var $author$project$Zukei2$emptyGroup = A3($author$project$Zukei2$BoxGroup, 0, $elm$core$Maybe$Nothing, _List_Nil);
 var $author$project$Zukei2$makeBoxGroup = function (positions) {
-	return A3($elm$core$List$foldl, $author$project$Zukei2$addBox, $author$project$Zukei2$emptyGroup, positions);
+	return A3(
+		$elm$core$List$foldl,
+		A2($author$project$Zukei2$addBox, $author$project$Zukei2$Green, $author$project$Zukei2$Triangle),
+		$author$project$Zukei2$emptyGroup,
+		positions);
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -7279,36 +7287,116 @@ var $zaboco$elm_draggable$Draggable$touchTriggers = F2(
 var $author$project$Zukei2$boxView = function (_v0) {
 	var id = _v0.id;
 	var position = _v0.position;
-	var color = 'red';
-	return A2(
-		$elm$svg$Svg$rect,
-		_Utils_ap(
-			_List_fromArray(
-				[
-					A2(
-					$author$project$Zukei2$num,
-					$elm$svg$Svg$Attributes$width,
-					$elm_explorations$linear_algebra$Math$Vector2$getX($author$project$Zukei2$boxSize)),
-					A2(
-					$author$project$Zukei2$num,
-					$elm$svg$Svg$Attributes$height,
-					$elm_explorations$linear_algebra$Math$Vector2$getY($author$project$Zukei2$boxSize)),
-					A2(
-					$author$project$Zukei2$num,
-					$elm$svg$Svg$Attributes$x,
-					$elm_explorations$linear_algebra$Math$Vector2$getX(position)),
-					A2(
-					$author$project$Zukei2$num,
-					$elm$svg$Svg$Attributes$y,
-					$elm_explorations$linear_algebra$Math$Vector2$getY(position)),
-					$elm$svg$Svg$Attributes$fill(color),
-					$elm$svg$Svg$Attributes$stroke('black'),
-					$elm$svg$Svg$Attributes$cursor('move'),
-					A2($zaboco$elm_draggable$Draggable$mouseTrigger, id, $author$project$Zukei2$DragMsg),
-					$elm$svg$Svg$Events$onMouseUp($author$project$Zukei2$StopDragging)
-				]),
-			A2($zaboco$elm_draggable$Draggable$touchTriggers, id, $author$project$Zukei2$DragMsg)),
-		_List_Nil);
+	var color = _v0.color;
+	var zukei = _v0.zukei;
+	var colorx = function (col) {
+		switch (col.$) {
+			case 'Red':
+				return 'red';
+			case 'Green':
+				return 'green';
+			default:
+				return 'yellow';
+		}
+	};
+	var hyoji = function (zuk) {
+		switch (zuk.$) {
+			case 'Cube':
+				return A2(
+					$elm$svg$Svg$rect,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$width,
+								$elm_explorations$linear_algebra$Math$Vector2$getX($author$project$Zukei2$boxSize)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$height,
+								$elm_explorations$linear_algebra$Math$Vector2$getY($author$project$Zukei2$boxSize)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$x,
+								$elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$y,
+								$elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+								$elm$svg$Svg$Attributes$fill(
+								colorx(color)),
+								$elm$svg$Svg$Attributes$stroke('black'),
+								$elm$svg$Svg$Attributes$cursor('move'),
+								A2($zaboco$elm_draggable$Draggable$mouseTrigger, id, $author$project$Zukei2$DragMsg),
+								$elm$svg$Svg$Events$onMouseUp($author$project$Zukei2$StopDragging)
+							]),
+						A2($zaboco$elm_draggable$Draggable$touchTriggers, id, $author$project$Zukei2$DragMsg)),
+					_List_Nil);
+			case 'Triangle':
+				return A2(
+					$elm$svg$Svg$rect,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$width,
+								$elm_explorations$linear_algebra$Math$Vector2$getX($author$project$Zukei2$boxSize)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$height,
+								$elm_explorations$linear_algebra$Math$Vector2$getY($author$project$Zukei2$boxSize)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$x,
+								$elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$y,
+								$elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+								$elm$svg$Svg$Attributes$fill(
+								colorx(color)),
+								$elm$svg$Svg$Attributes$stroke('yellow'),
+								$elm$svg$Svg$Attributes$cursor('move'),
+								A2($zaboco$elm_draggable$Draggable$mouseTrigger, id, $author$project$Zukei2$DragMsg),
+								$elm$svg$Svg$Events$onMouseUp($author$project$Zukei2$StopDragging)
+							]),
+						A2($zaboco$elm_draggable$Draggable$touchTriggers, id, $author$project$Zukei2$DragMsg)),
+					_List_Nil);
+			default:
+				return A2(
+					$elm$svg$Svg$rect,
+					_Utils_ap(
+						_List_fromArray(
+							[
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$width,
+								$elm_explorations$linear_algebra$Math$Vector2$getX($author$project$Zukei2$boxSize)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$height,
+								$elm_explorations$linear_algebra$Math$Vector2$getY($author$project$Zukei2$boxSize)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$x,
+								$elm_explorations$linear_algebra$Math$Vector2$getX(position)),
+								A2(
+								$author$project$Zukei2$num,
+								$elm$svg$Svg$Attributes$y,
+								$elm_explorations$linear_algebra$Math$Vector2$getY(position)),
+								$elm$svg$Svg$Attributes$fill(
+								colorx(color)),
+								$elm$svg$Svg$Attributes$stroke('black'),
+								$elm$svg$Svg$Attributes$cursor('move'),
+								A2($zaboco$elm_draggable$Draggable$mouseTrigger, id, $author$project$Zukei2$DragMsg),
+								$elm$svg$Svg$Events$onMouseUp($author$project$Zukei2$StopDragging)
+							]),
+						A2($zaboco$elm_draggable$Draggable$touchTriggers, id, $author$project$Zukei2$DragMsg)),
+					_List_Nil);
+		}
+	};
+	return hyoji(zukei);
 };
 var $elm$virtual_dom$VirtualDom$nodeNS = F2(
 	function (namespace, tag) {
