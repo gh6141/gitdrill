@@ -106,6 +106,19 @@ startDragging id ({ idleBoxes, movingBox } as group) =
 
 stopDragging : BoxGroup -> BoxGroup
 stopDragging group =
+   let
+                  dfb:Box
+                  dfb=Box "0" (Vector2.vec2 10.0 10.0)  Red Cube
+
+                  mbx=group.movingBox
+                  bx=Maybe.withDefault dfb mbx
+                  xx=Vector2.getX bx.position
+                  yy=Vector2.getY bx.position
+
+
+   in
+
+
     { group
         | idleBoxes = allBoxes group
         , movingBox = Nothing
@@ -220,10 +233,11 @@ update msg ({ boxGroup } as model) =
 
         StopDragging ->
             ( { model | boxGroup = boxGroup |> stopDragging },             
-             if sflg1 then
-              startSound()        
-            else          
-               startSound2() 
+            -- if sflg1 then
+             -- startSound()        
+            --else          
+             --  startSound2() 
+             Cmd.none
             )
             
              

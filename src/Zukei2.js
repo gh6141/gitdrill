@@ -6920,7 +6920,19 @@ var $author$project$Zukei2$allBoxes = function (_v0) {
 			},
 			movingBox));
 };
+var $elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
+var $elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
 var $author$project$Zukei2$stopDragging = function (group) {
+	var mbx = group.movingBox;
+	var dfb = A4(
+		$author$project$Zukei2$Box,
+		'0',
+		A2($elm_explorations$linear_algebra$Math$Vector2$vec2, 10.0, 10.0),
+		$author$project$Zukei2$Red,
+		$author$project$Zukei2$Cube);
+	var bx = A2($elm$core$Maybe$withDefault, dfb, mbx);
+	var xx = $elm_explorations$linear_algebra$Math$Vector2$getX(bx.position);
+	var yy = $elm_explorations$linear_algebra$Math$Vector2$getY(bx.position);
 	return _Utils_update(
 		group,
 		{
@@ -7060,7 +7072,7 @@ var $author$project$Zukei2$update = F2(
 						{
 							boxGroup: $author$project$Zukei2$stopDragging(boxGroup)
 						}),
-					sflg1 ? $author$project$Zukei2$startSound(_Utils_Tuple0) : $author$project$Zukei2$startSound2(_Utils_Tuple0));
+					$elm$core$Platform$Cmd$none);
 			case 'DragMsg':
 				var dragMsg = msg.a;
 				return A3($zaboco$elm_draggable$Draggable$update, $author$project$Zukei2$dragConfig, dragMsg, model);
@@ -7099,8 +7111,6 @@ var $elm$svg$Svg$Attributes$cursor = _VirtualDom_attribute('cursor');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm_explorations$linear_algebra$Math$Vector2$getX = _MJS_v2getX;
-var $elm_explorations$linear_algebra$Math$Vector2$getY = _MJS_v2getY;
 var $zaboco$elm_draggable$Draggable$alwaysPreventDefaultAndStopPropagation = function (msg) {
 	return {message: msg, preventDefault: true, stopPropagation: true};
 };
