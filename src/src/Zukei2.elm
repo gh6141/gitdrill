@@ -1,6 +1,4 @@
-module Zukei2 exposing (..)
-
-
+port module Zukei2 exposing (main)
 
 import Browser
 import Draggable
@@ -14,8 +12,8 @@ import Svg.Events exposing (onMouseUp)
 import Svg.Keyed
 import Svg.Lazy exposing (lazy)
 import Html exposing (Attribute)
-import Random
 
+--import Platform.Cmd
 
 
 import Svg exposing (svg, polygon)
@@ -27,7 +25,7 @@ main =
     Browser.element
         { init = init
         , update = update
-        , subscriptions = subscriptions
+        ,  subscriptions = subscriptions
         , view = view
         }
 
@@ -47,9 +45,7 @@ type alias Id =
     String
 
 
---makeBox : Id -> Vec2 -> Color -> Zukei ->Box
---makeBox id position col zu=
- --   Box id position col zu
+
 
 makeBox : Id ->Zokusei->Box
 makeBox id zoku=
@@ -80,21 +76,9 @@ emptyGroup =
     BoxGroup 0 Nothing []
 
 
---addBox : Color -> Zukei ->Vec2 ->  BoxGroup -> BoxGroup
---addBox col zuk position  ({ uid, idleBoxes } as group) =
-  --  { group
-  --      | idleBoxes = makeBox (String.fromInt uid) position col zuk :: idleBoxes
-  --      , uid = uid + 1
-  --  }
-
 --addBox : Zokusei ->  BoxGroup -> BoxGroup
 addBox zoku ({uid,idleBoxes} as group) = {group| idleBoxes =  makeBox (String.fromInt uid) zoku :: idleBoxes , uid = uid + 1 }
 
-
---makeBoxGroup : List Vec2 -> BoxGroup
---makeBoxGroup positions =
---    positions
---        |> List.foldl (addBox Green Triangle) emptyGroup
 
 makeBoxGroup attributes =
     attributes
@@ -146,6 +130,8 @@ type Msg
     | OnDragBy Vec2
     | StartDragging String
     | StopDragging
+    | StartSound
+    | StartSound2
 
 
 fixedYCoordinate y = \x -> Vector2.vec2 x y
@@ -190,9 +176,6 @@ fixedYCoordinateAndAttribute y =
 --  (randomNumber, newSeed) = generateRandomInt 0 10 Random.initialSeed
 
 
-       
-
-
 
 init : flags -> ( Model, Cmd Msg )
 init _ =
@@ -214,8 +197,20 @@ dragConfig =
         ]
 
 
+        
+--port handleMsg: (String->msg) -> Sub msg
+port startSound: () -> Cmd msg
+port startSound2: () -> Cmd msg
+
+port speak: String -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg ({ boxGroup } as model) =
+  let 
+    sflg1=False
+
+  in
     case msg of
         OnDragBy delta ->
             ( { model | boxGroup = boxGroup |> dragActiveBy delta }, Cmd.none )
@@ -224,16 +219,27 @@ update msg ({ boxGroup } as model) =
             ( { model | boxGroup = boxGroup |> startDragging id }, Cmd.none )
 
         StopDragging ->
-            ( { model | boxGroup = boxGroup |> stopDragging }, Cmd.none )
+            ( { model | boxGroup = boxGroup |> stopDragging },             
+             if sflg1 then
+              startSound()        
+            else          
+               startSound2() 
+            )
+            
+             
 
 
         DragMsg dragMsg ->
-            Draggable.update dragConfig dragMsg model
+            Draggable.update dragConfig dragMsg model  
+        StartSound -> (model,startSound())
+        StartSound2 -> (model,startSound2())
 
 
 subscriptions : Model -> Sub Msg
 subscriptions { drag } =
     Draggable.subscriptions DragMsg drag
+
+
 
 
 
@@ -259,9 +265,9 @@ view { boxGroup } =
             [ background
             ,(boxwaku "100" "100"),(boxwaku "320" "100"),boxwaku "540" "100"
             , boxesView boxGroup
-            , boxView {id="0",position=Vector2.vec2 120 110  ,color=Yellow,zukei=Triangle}
-             , boxView {id="0",position=Vector2.vec2 330 110  ,color=Yellow,zukei=Circle}
-             , boxView {id="0",position=Vector2.vec2 550 110  ,color=Yellow,zukei=Cube}
+            , boxView {id="100",position=Vector2.vec2 120 110  ,color=Yellow,zukei=Triangle}
+             , boxView {id="101",position=Vector2.vec2 330 110  ,color=Yellow,zukei=Circle}
+             , boxView {id="102",position=Vector2.vec2 550 110  ,color=Yellow,zukei=Cube}
      
             ]
         ]

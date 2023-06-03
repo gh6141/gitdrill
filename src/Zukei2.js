@@ -6887,6 +6887,17 @@ var $author$project$Zukei2$startDragging = F2(
 				movingBox: $elm$core$List$head(targetAsList)
 			});
 	});
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $author$project$Zukei2$startSound = _Platform_outgoingPort(
+	'startSound',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
+var $author$project$Zukei2$startSound2 = _Platform_outgoingPort(
+	'startSound2',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -7022,6 +7033,7 @@ var $zaboco$elm_draggable$Draggable$update = F3(
 var $author$project$Zukei2$update = F2(
 	function (msg, model) {
 		var boxGroup = model.boxGroup;
+		var sflg1 = false;
 		switch (msg.$) {
 			case 'OnDragBy':
 				var delta = msg.a;
@@ -7048,10 +7060,18 @@ var $author$project$Zukei2$update = F2(
 						{
 							boxGroup: $author$project$Zukei2$stopDragging(boxGroup)
 						}),
-					$elm$core$Platform$Cmd$none);
-			default:
+					sflg1 ? $author$project$Zukei2$startSound(_Utils_Tuple0) : $author$project$Zukei2$startSound2(_Utils_Tuple0));
+			case 'DragMsg':
 				var dragMsg = msg.a;
 				return A3($zaboco$elm_draggable$Draggable$update, $author$project$Zukei2$dragConfig, dragMsg, model);
+			case 'StartSound':
+				return _Utils_Tuple2(
+					model,
+					$author$project$Zukei2$startSound(_Utils_Tuple0));
+			default:
+				return _Utils_Tuple2(
+					model,
+					$author$project$Zukei2$startSound2(_Utils_Tuple0));
 		}
 	});
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
@@ -7504,21 +7524,21 @@ var $author$project$Zukei2$view = function (_v0) {
 						$author$project$Zukei2$boxView(
 						{
 							color: $author$project$Zukei2$Yellow,
-							id: '0',
+							id: '100',
 							position: A2($elm_explorations$linear_algebra$Math$Vector2$vec2, 120, 110),
 							zukei: $author$project$Zukei2$Triangle
 						}),
 						$author$project$Zukei2$boxView(
 						{
 							color: $author$project$Zukei2$Yellow,
-							id: '0',
+							id: '101',
 							position: A2($elm_explorations$linear_algebra$Math$Vector2$vec2, 330, 110),
 							zukei: $author$project$Zukei2$Circle
 						}),
 						$author$project$Zukei2$boxView(
 						{
 							color: $author$project$Zukei2$Yellow,
-							id: '0',
+							id: '102',
 							position: A2($elm_explorations$linear_algebra$Math$Vector2$vec2, 550, 110),
 							zukei: $author$project$Zukei2$Cube
 						})

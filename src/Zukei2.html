@@ -10,7 +10,7 @@
     <script src="Zukei2.js" async></script>
     <script defer>
         window.addEventListener('load', () => {
-            const app = Elm.Nitaku.init({ node: document.getElementById('target') })
+            const app = Elm.Zukei2.init({ node: document.getElementById('target') })
 
             const audio = document.getElementById('audio')
             app.ports.startSound.subscribe(() => {
@@ -33,10 +33,6 @@
               
 
 
-
-            setTimeout(() => {
-                app.ports.handleMsg.send('(o・∇・o) < Hello!!!')
-            }, 3000)
         }, false)
     </script>
     <title></title>
