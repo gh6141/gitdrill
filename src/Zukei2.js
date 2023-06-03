@@ -6937,7 +6937,7 @@ var $author$project$Zukei2$stopDragging = function (group) {
 		group,
 		{
 			idleBoxes: $author$project$Zukei2$allBoxes(group),
-			movingBox: $elm$core$Maybe$Nothing
+			movingBox: mbx
 		});
 };
 var $zaboco$elm_draggable$Cmd$Extra$message = function (x) {

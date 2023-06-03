@@ -2,7 +2,7 @@ port module Zukei2 exposing (main)
 
 import Browser
 import Draggable
-import Draggable.Events exposing (onClick, onDragBy, onDragStart)
+import Draggable.Events exposing (onClick, onDragBy, onDragStart,onDragEnd)
 import Html exposing (Html)
 import Html.Attributes
 import Math.Vector2 as Vector2 exposing (Vec2, getX, getY)
@@ -121,7 +121,8 @@ stopDragging group =
 
     { group
         | idleBoxes = allBoxes group
-        , movingBox = Nothing
+        --, movingBox = Nothing
+        ,movingBox =mbx
     }
 
 
@@ -240,11 +241,9 @@ update msg ({ boxGroup } as model) =
              Cmd.none
             )
             
-             
-
-
         DragMsg dragMsg ->
             Draggable.update dragConfig dragMsg model  
+
         StartSound -> (model,startSound())
         StartSound2 -> (model,startSound2())
 
