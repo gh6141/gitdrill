@@ -102,7 +102,7 @@ type alias Model =
 
 
 minit: Model
-minit =Model 0  {img1="",img2="",mondai=""} False False
+minit =Model 0  {img1="osu",img2="tatu",mondai="おす"} False False
 
 init : () -> ( Model, Cmd Msg )
 init _ = ( minit  ,Cmd.none   )
