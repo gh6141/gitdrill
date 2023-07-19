@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<h1>音声合成 (Text To Speech : TTS)</h1>
+<p>以下に文字を入力して「再生する」を押します。音声はコンボボックスで切り替えます。</p>
+<form id="form_tts">
+  <input type="text" id="txt_tts" style="width:80%;font-size:24px;">
+  
+  <!--
+
+  <p></p>
+  <div>
+    <label for="rate_tts">再生速度</label> <input type="range" min="0.5" max="2" value="1" step="0.1" id="rate_tts">&nbsp;&nbsp;<span id="rate-value-tts">1</span>
+  </div>
+  <div>
+    <label for="pitch_tts">ピッチ(音高)</label> <input type="range" min="0" max="2" value="1" step="0.1" id="pitch_tts">&nbsp;&nbsp;<span id="pitch-value-tts">1</span>
+  </div>
+
+  -->
+  
+  <select id="select_tts" style="visibility:hidden">
+     <option data-lang="ja-JP" data-name="Google 日本語">Google 日本語 (ja-JP)</option>
+    <option data-lang="ja-JP" data-name="Microsoft Sayaka - Japanese (Japan)">Microsoft Sayaka - Japanese (Japan) (ja-JP)</option>
+   
+  </select>
+  <p></p>
+  <button id="play" type="submit">再生する</button>
+</form>
+
+<h1>音声認識 (Speech To Text : STT)</h1>
+<button id="btn_stt">音声認識をする</button>
+<div>
+  <p id="output_stt">ここに結果が返ります。</p>
+  <p id="confidence_stt"></p>
+</div>
+ 
+<script>
+var synth = window.speechSynthesis;
+ 
+if (synth){
+  var form_tts   = document.getElementById('form_tts');
+  var txt_tts    = document.getElementById('txt_tts');
+  var select_tts = document.getElementById('select_tts');
+  var pitch_tts  = document.getElementById('pitch_tts');
+  var rate_tts   = document.getElementById('rate_tts');
+ 
+ /*
+  // 音声リスト
+ var voices = [];
+  function populateVoiceList() {
+    voices = synth.getVoices().sort(function (a, b) {
+        const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+        if ( aname < bname ) return -1;
+        else if ( aname == bname ) return 0;
+        else return +1;
+    });
+    var selectedIndex = select_tts.selectedIndex < 0 ? 0 : select_tts.selectedIndex;
+    select_tts.innerHTML = '';
+    for(i = 0; i < voices.length ; i++) {
+      var option = document.createElement('option');
+      option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+      
+      // デフォルトにする
+      if(option.textContent.indexOf('Japanese') != -1){
+        selectedIndex  = i;
+      }
+ 
+      option.setAttribute('data-lang', voices[i].lang);
+      option.setAttribute('data-name', voices[i].name);
+      select_tts.appendChild(option);
+    }
+    select_tts.selectedIndex = selectedIndex;
+  }
+  
+  populateVoiceList();
+  
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoiceList;
+  }
+*/
+
+  function speakC(text){
+ 
+    // 再生中
+    if (synth.speaking) {
+      console.log('再生をキャンセルしました。');
+      synth.cancel();
+    }
+      
+      var utterThis = new SpeechSynthesisUtterance(text);
+      synth.speak(utterThis);
+  
+  }
+
+    
+  // 再生
+  function speak(){
+ 
+    // 再生中
+    if (synth.speaking) {
+      console.log('再生をキャンセルしました。');
+      synth.cancel();
+    }
+      
+    if (txt_tts.value !== '') {
+      var utterThis = new SpeechSynthesisUtterance(txt_tts.value);
+        
+      utterThis.onstart  = function (event) {
+        console.log('再生を開始しました。');
+      }        
+      utterThis.onend = function (event) {
+        console.log('再生が終了しました。');
+        //speakC("再生Ｏｋ");
+      }
+      utterThis.onerror = function (event) {
+        alert('エラーが発生しました。')
+      }
+ 
+      var selectedOption = select_tts.selectedOptions[0].getAttribute('data-name');
+ /*     for(i = 0; i < voices.length ; i++) {
+        if(voices[i].name === selectedOption) {
+          utterThis.voice = voices[i];
+          console.log(utterThis.voice)
+          break;
+        }
+      }
+      
+      utterThis.pitch = pitch_tts.value;
+      utterThis.rate = rate_tts.value;
+      */
+      synth.speak(utterThis);
+    }
+  }
+  
+  // 以下、イベント
+  form_tts.onsubmit = function(event) {
+    event.preventDefault();
+    speak();
+    txt_tts.blur();
+  }
+  
+  /*
+  pitch_tts.onchange = function() {
+    document.getElementById('pitch-value-tts').innerHTML = pitch_tts.value;
+  }
+ 
+  rate_tts.onchange = function() {
+    document.getElementById('rate-value-tts').innerHTML = rate_tts.value;
+  }
+  
+ 
+  select_tts.onchange = function(){
+    speak();
+  }
+  
+  */
+}else{
+  alert('IE11には対応していません。\n※macOS/iOSのブラウザは未確認');
+}
+
+
+var SpeechRecognition = SpeechRecognition;
+if (!SpeechRecognition){
+  if (typeof webkitSpeechRecognition !== 'undefined'){
+    SpeechRecognition = webkitSpeechRecognition;
+  }
+}
+ 
+if (SpeechRecognition){
+  var btn_stt = document.getElementById('btn_stt');  
+  btn_stt.onclick = function(){
+    btn_stt.disabled = true;
+ 
+    // SpeechRecognitionの生成
+    var recognition = new SpeechRecognition();  
+    recognition.lang = 'ja'; 
+ 
+    // 音声認識の開始
+    recognition.start();
+    
+    // 結果
+    recognition.onresult = function(event) {
+      
+      // 文字列の取得
+      var speechResult = event.results[0][0].transcript;
+      document.getElementById('output_stt').innerHTML = '認識結果：' + speechResult + '。';
+      
+      // 信頼度 ※Egdeは現在(2021/06)、信頼度には非対応で常に0になる
+   //   document.getElementById('confidence_stt').innerHTML = '信頼度： ' + event.results[0][0].confidence + 
+     //     '<br>※信頼度は0.0 ～ 1.0で1.0に近いほど信頼度が高いです。';
+ 
+     // console.log(event.results);
+    }
+    
+    // スピーチの終了
+    recognition.onspeechend = function() {
+      recognition.stop();
+      btn_stt.disabled = false;
+    }
+    
+    // エラー
+    recognition.onerror = function(event) {
+      btn_stt.disabled = false;
+      alert('エラーが発生しました。');
+    }
+  }
+}else{
+  alert('ブラウザはChromeをお使いください。');
+}
+</script>
+
+
+
+</body>
+</html>
