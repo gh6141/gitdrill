@@ -5166,7 +5166,7 @@ var $author$project$Nitaku_Dousa$Model = F4(
 var $author$project$Nitaku_Dousa$minit = A4(
 	$author$project$Nitaku_Dousa$Model,
 	0,
-	{img1: 'osu', img2: 'tatu', mondai: 'おす'},
+	{img1: 'osu', img2: 'tatu', mondai: 'たつ'},
 	false,
 	false);
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -5263,6 +5263,10 @@ var $author$project$Nitaku_Dousa$shutudaiL = _List_fromArray(
 		{
 		img: 'oru',
 		obj: {img1: 'kiru', img2: 'oru', mondai: 'おる'}
+	},
+		{
+		img: 'tatu',
+		obj: {img1: 'tatu', img2: 'suwaru', mondai: 'たつ'}
 	}
 	]);
 var $elm$core$Maybe$withDefault = F2(

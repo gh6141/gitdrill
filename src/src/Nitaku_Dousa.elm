@@ -42,7 +42,7 @@ shutudaiL=[ {obj= {img1="tatu",img2="suwaru",mondai="たつ"},img="tatu"  }
          , {obj= {img1="aruku",img2="oru",mondai="あるく"},img="aruku"  }
          , {obj= {img1="kiru",img2="yaburu",mondai="やぶる"},img="yaburu"  }
          , {obj= {img1="kiru",img2="oru",mondai="おる"},img="oru"  }
-         
+         , {obj= {img1="tatu",img2="suwaru",mondai="たつ"},img="tatu"  }
 
           ]
 
@@ -102,7 +102,7 @@ type alias Model =
 
 
 minit: Model
-minit =Model 0  {img1="osu",img2="tatu",mondai="おす"} False False
+minit =Model 0  {img1="osu",img2="tatu",mondai="たつ"} False False
 
 init : () -> ( Model, Cmd Msg )
 init _ = ( minit  ,Cmd.none   )
