@@ -5166,7 +5166,7 @@ var $author$project$Nitaku_Dousa$Model = F4(
 var $author$project$Nitaku_Dousa$minit = A4(
 	$author$project$Nitaku_Dousa$Model,
 	0,
-	{img1: 'tatu', img2: 'suwaru', mondai: 'たつ'},
+	{img1: '', img2: '', mondai: ''},
 	false,
 	false);
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
