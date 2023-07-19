@@ -5213,7 +5213,7 @@ var $author$project$Nitaku_Dousa$shutudaiL = _List_fromArray(
 		obj: {img1: 'tatu', img2: 'suwaru', mondai: 'たつ'}
 	},
 		{
-		img: 'swaru',
+		img: 'suwaru',
 		obj: {img1: 'suwaru', img2: 'tatu', mondai: 'すわる'}
 	},
 		{

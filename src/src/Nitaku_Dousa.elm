@@ -29,7 +29,7 @@ type alias Toi =
     }
 
 shutudaiL=[ {obj= {img1="tatu",img2="suwaru",mondai="たつ"},img="tatu"  }
-           , {obj= {img1="suwaru",img2="tatu",mondai="すわる"},img="swaru"  }
+           , {obj= {img1="suwaru",img2="tatu",mondai="すわる"},img="suwaru"  }
          , {obj={img1="neru",img2="osu",mondai="ねる"},img="neru"  }
          ,  {obj={img1="kiru",img2="osu",mondai="おす"},img="osu"  }
          , {obj={img1="hakobu",img2="kiru",mondai="きる"},img="kiru"  }
