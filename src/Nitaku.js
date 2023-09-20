@@ -5245,6 +5245,30 @@ var $author$project$Nitaku$shutudaiL = _List_fromArray(
 		obj: {img1: 'suika', img2: 'meron', mondai: 'めろん'}
 	},
 		{
+		img: 'hasi',
+		obj: {img1: 'terebi', img2: 'hasi', mondai: 'はし'}
+	},
+		{
+		img: 'terebi',
+		obj: {img1: 'terebi', img2: 'kuruma', mondai: 'てれび'}
+	},
+		{
+		img: 'kuruma',
+		obj: {img1: 'kuruma', img2: 'saihu', mondai: 'くるま'}
+	},
+		{
+		img: 'saihu',
+		obj: {img1: 'saihu', img2: 'tukue', mondai: 'さいふ'}
+	},
+		{
+		img: 'isu',
+		obj: {img1: 'isu', img2: 'tukue', mondai: 'いす'}
+	},
+		{
+		img: 'tukue',
+		obj: {img1: 'tukue', img2: 'hasi', mondai: 'つくえ'}
+	},
+		{
 		img: 'pull.gif',
 		obj: {img1: 'pull.gif', img2: 'run.gif', mondai: 'ひっぱる'}
 	},

@@ -37,6 +37,15 @@ shutudaiL=[ {obj= {img1="suika",img2="taburetto",mondai="すいか"},img="suika"
          ,  {obj={img1="tamago",img2="ringo",mondai="たまご"},img="tamago"  }
         , {obj= {img1="mikan",img2="taburetto",mondai="たぶれっと"},img="taburetto"  }
          , {obj= {img1="suika",img2="meron",mondai="めろん"},img="meron"  }
+
+ , {obj={img1="terebi",img2="hasi",mondai="はし"},img="hasi"  }
+  , {obj={img1="terebi",img2="kuruma",mondai="てれび"},img="terebi"  }
+   , {obj={img1="kuruma",img2="saihu",mondai="くるま"},img="kuruma"  }
+    , {obj={img1="saihu",img2="tukue",mondai="さいふ"},img="saihu"  }
+     , {obj={img1="isu",img2="tukue",mondai="いす"},img="isu"  }
+        , {obj={img1="tukue",img2="hasi",mondai="つくえ"},img="tukue"  }
+
+
         , {obj={img1="pull.gif",img2="run.gif",mondai="ひっぱる"},img="pull.gif"  }
          ,  {obj={img1="great.gif",img2="carry.gif",mondai="はこぶ"},img="carry.gif"  }
          , {obj= {img1="worry.gif",img2="kowai.gif",mondai="こわい"},img="kowai.gif"  }
