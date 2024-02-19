@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Gojuon exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, text)
@@ -19,23 +19,23 @@ hiraganaList =
     , "ま", "み", "む", "め", "も"
     , "や", "ゆ", "よ"
     , "ら", "り", "る", "れ", "ろ"
-    , "わ", "を", "ん"
+    , "わ", "を", "ん","　"
     ]
 
 
--- メイン
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = init
         , view = view
         , update = update
+        , subscriptions = \_ -> Sub.none  
         }
 
 
 -- メッセージ型
 type Msg
-    = ClickHiragana String
+    = ClickHiragana String | Allplay | Allclear
 
 
 -- モデル
@@ -44,9 +44,14 @@ type alias Model =
     }
 
 
-initialModel : Model
-initialModel =
-    { output = "" }
+
+init : () -> ( Model, Cmd Msg )
+init _ = (   { output = "" } ,Cmd.none   )
+
+port handleMsg: (String->msg) -> Sub msg
+port startSound: () -> Cmd msg
+port startSound2: () -> Cmd msg
+port speak: String -> Cmd msg
 
 
 -- ボタンを作成する
@@ -56,11 +61,15 @@ buttonForHiragana hiragana =
 
 
 -- メッセージハンドラ
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model,Cmd Msg)
 update msg mdl =
     case msg of
         ClickHiragana h ->
-            { mdl | output = mdl.output ++ h }
+           ( { mdl | output = mdl.output ++ h }, if h=="　" then speak(h) else Cmd.none)
+        Allplay ->
+           ( mdl,  speak(mdl.output))
+        Allclear ->
+            ( { mdl | output = "" }, Cmd.none)
 
 
 -- ビュー
@@ -69,7 +78,7 @@ view model =
     let
      customStyle =
             [ style "font-size" "40px"
-            , style "background-color" "#771177"
+            , style "background-color" "#e6e6fa"
             ]
 
      customStyle2 =
@@ -79,8 +88,12 @@ view model =
     
      buttonForHiraganaWithStyle customStylex hiragana =
       button (customStylex ++ [ onClick (ClickHiragana hiragana) ]) [ text hiragana ]
+
+     buttonCreate msg caption = div [style "font-size" "40px", style "background-color" "#0000ff",onClick msg ] [text caption]
     in
     div []
         [ div [] (List.map (buttonForHiraganaWithStyle customStyle) hiraganaList)
         , div customStyle2 [ text model.output ]
+        , buttonCreate Allplay "ぜんぶ はなす"
+        , buttonCreate Allclear "ぜんぶ けす"
         ]
