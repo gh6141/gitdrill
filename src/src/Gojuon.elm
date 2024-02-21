@@ -48,9 +48,6 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init _ = (   { output = "" } ,Cmd.none   )
 
-port handleMsg: (String->msg) -> Sub msg
-port startSound: () -> Cmd msg
-port startSound2: () -> Cmd msg
 port speak: String -> Cmd msg
 
 
