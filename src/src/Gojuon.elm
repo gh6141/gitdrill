@@ -8,20 +8,34 @@ import Html.Attributes exposing (style)
 
 
 -- ひらがなリスト
-hiraganaList : List String
-hiraganaList =
-    [ "あ", "い", "う", "え", "お"
-    , "か", "が", "き", "ぎ", "く", "ぐ", "け", "げ", "こ", "ご"
-    , "さ", "ざ", "し", "じ", "す", "ず", "せ", "ぜ", "そ", "ぞ"
-    , "た", "だ", "ち", "ぢ", "つ", "づ", "て", "で", "と", "ど"
-    , "な", "に", "ぬ", "ね", "の"
-    , "は", "ば", "ぱ", "ひ", "び", "ぴ", "ふ", "ぶ", "ぷ", "へ", "べ", "ぺ", "ほ", "ぼ", "ぽ"
-    , "ま", "み", "む", "め", "も"
-    , "や", "ゆ", "よ"
-    , "ら", "り", "る", "れ", "ろ"
+hiraganaListo : List String
+hiraganaListo =
+    [ "あ", "い", "う", "え", "お","　"
+    , "か",  "き", "く",  "け",  "こ","　"
+    , "さ", "し",  "す", "せ", "そ","　"
+    , "た",  "ち",  "つ", "て",  "と","　"
+    , "な", "に", "ぬ", "ね", "の","　"
+    , "は", "ひ",  "ふ", "へ", "ほ","　"
+    , "ま", "み", "む", "め", "も","　"
+    , "や", "ゆ", "よ","　"
+    , "ら", "り", "る", "れ", "ろ","　"
     , "わ", "を", "ん","　"
     ]
 
+hiraganaListd =
+    [ "が",  "ぎ", "ぐ",  "げ",  "ご","　"
+    , "ざ", "じ",  "ず", "ぜ", "ぞ","　"
+    , "だ",  "ぢ",  "づ", "で",  "ど","　"    
+    , "ば", "び",  "ぶ", "べ", "ぼ","　" 
+    ]
+
+hiraganaListh =
+    ["ぱ", "ぴ", "ぷ","ぺ","ぽ","　"]
+
+hiraganaListy =
+    [   "っ","　"   
+    , "ゃ", "ゅ", "ょ","　"  
+    ]
 
 main : Program () Model Msg
 main =
@@ -35,18 +49,19 @@ main =
 
 -- メッセージ型
 type Msg
-    = ClickHiragana String | Allplay | Allclear
+    = ClickHiragana String | Allplay | Allclear | Backspace | Dakuten | Handakuten | Yoon
 
 
 -- モデル
 type alias Model =
     { output : String
+     ,hiraganaList: List String
     }
 
 
 
 init : () -> ( Model, Cmd Msg )
-init _ = (   { output = "" } ,Cmd.none   )
+init _ = (   { output = "" ,hiraganaList=hiraganaListo} ,Cmd.none   )
 
 port speak: String -> Cmd msg
 
@@ -62,12 +77,29 @@ update : Msg -> Model -> (Model,Cmd Msg)
 update msg mdl =
     case msg of
         ClickHiragana h ->
-           ( { mdl | output = mdl.output ++ h }, if h=="　" then speak(h) else Cmd.none)
+           ( { mdl | output = mdl.output ++ h ,hiraganaList = hiraganaListo}, if h/="　" then speak(h) else Cmd.none)
         Allplay ->
            ( mdl,  speak(mdl.output))
         Allclear ->
             ( { mdl | output = "" }, Cmd.none)
+        Backspace ->
+           let
+             removeLastCharacter str =
+                      if String.length str > 0 then
+                          String.left (String.length str - 1) str
+                      else
+                           str          
+           in
+            ( {mdl | output = removeLastCharacter mdl.output } ,Cmd.none)
 
+        Dakuten ->
+           ( {mdl | hiraganaList = hiraganaListd } ,Cmd.none)
+        Handakuten ->
+            ( {mdl |  hiraganaList = hiraganaListh } ,Cmd.none)
+        Yoon ->
+             ( {mdl |  hiraganaList = hiraganaListy  } ,Cmd.none)
+         
+ 
 
 -- ビュー
 view : Model -> Html Msg
@@ -86,11 +118,14 @@ view model =
      buttonForHiraganaWithStyle customStylex hiragana =
       button (customStylex ++ [ onClick (ClickHiragana hiragana) ]) [ text hiragana ]
 
-     buttonCreate msg caption = div [style "font-size" "40px", style "background-color" "#0000ff",onClick msg ] [text caption]
+     buttonCreate msg caption color = button [style "font-size" "40px", style "background-color" color,onClick msg ] [text caption]
+    
     in
     div []
-        [ div [] (List.map (buttonForHiraganaWithStyle customStyle) hiraganaList)
+        [ buttonCreate Allclear "ぜんぶ けす" "#0000ff",buttonCreate Backspace "ひとつけす" "#0000ff"
+        ,buttonCreate Dakuten "てんてん" "#009900",buttonCreate Handakuten "まる" "#009900",buttonCreate Yoon "ちいさく" "#009900"
+        ,div [] (List.map (buttonForHiraganaWithStyle customStyle) model.hiraganaList)
         , div customStyle2 [ text model.output ]
-        , buttonCreate Allplay "ぜんぶ はなす"
-        , buttonCreate Allclear "ぜんぶ けす"
+        , buttonCreate Allplay "はなす" "#ff0000"
+      
         ]

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="Gojuon.js" async></script>
+    <script src="/Gojuon.js" async></script>
     <script defer>
         window.addEventListener('load', () => {
             const app = Elm.Gojuon.init({ node: document.getElementById('target') })
@@ -13,7 +13,7 @@
            
             app.ports.speak.subscribe(function(data){
               const uttr = new SpeechSynthesisUtterance(data)
-              uttr.rate = 1.2
+              uttr.rate = 0.6
               speechSynthesis.speak(uttr)
             });
               
