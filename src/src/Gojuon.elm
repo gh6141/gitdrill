@@ -122,8 +122,8 @@ view model =
     
     in
     div []
-        [ buttonCreate Allclear "ぜんぶ けす" "#0000ff",buttonCreate Backspace "ひとつけす" "#0000ff"
-        ,buttonCreate Dakuten "てんてん" "#009900",buttonCreate Handakuten "まる" "#009900",buttonCreate Yoon "ちいさく" "#009900"
+        [ buttonCreate Allclear "クリア" "#0000ff",buttonCreate Backspace "けす" "#0000ff"
+        ,buttonCreate Dakuten "\"" "#009900",buttonCreate Handakuten "。" "#009900",buttonCreate Yoon "っゃゅょ" "#009900"
         ,div [] (List.map (buttonForHiraganaWithStyle customStyle) model.hiraganaList)
         , div customStyle2 [ text model.output ]
         , buttonCreate Allplay "はなす" "#ff0000"
