@@ -5048,12 +5048,12 @@ var elm$html$Html$Events$onClick = function (msg) {
 var author$project$Gojuon$view = function (model) {
 	var customStyle2 = _List_fromArray(
 		[
-			A2(elm$html$Html$Attributes$style, 'font-size', '40px'),
+			A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
 			A2(elm$html$Html$Attributes$style, 'background-color', '#00ff00')
 		]);
 	var customStyle = _List_fromArray(
 		[
-			A2(elm$html$Html$Attributes$style, 'font-size', '40px'),
+			A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
 			A2(elm$html$Html$Attributes$style, 'background-color', '#e6e6fa')
 		]);
 	var buttonForHiraganaWithStyle = F2(
@@ -5092,11 +5092,11 @@ var author$project$Gojuon$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				A3(buttonCreate, author$project$Gojuon$Allclear, 'ぜんぶ けす', '#0000ff'),
-				A3(buttonCreate, author$project$Gojuon$Backspace, 'ひとつけす', '#0000ff'),
-				A3(buttonCreate, author$project$Gojuon$Dakuten, 'てんてん', '#009900'),
-				A3(buttonCreate, author$project$Gojuon$Handakuten, 'まる', '#009900'),
-				A3(buttonCreate, author$project$Gojuon$Yoon, 'ちいさく', '#009900'),
+				A3(buttonCreate, author$project$Gojuon$Allclear, 'クリア', '#0000ff'),
+				A3(buttonCreate, author$project$Gojuon$Backspace, 'けす', '#0000ff'),
+				A3(buttonCreate, author$project$Gojuon$Dakuten, '\"', '#009900'),
+				A3(buttonCreate, author$project$Gojuon$Handakuten, '。', '#009900'),
+				A3(buttonCreate, author$project$Gojuon$Yoon, 'っゃゅょ', '#009900'),
 				A2(
 				elm$html$Html$div,
 				_List_Nil,

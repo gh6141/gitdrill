@@ -106,12 +106,12 @@ view : Model -> Html Msg
 view model =
     let
      customStyle =
-            [ style "font-size" "40px"
+            [ style "font-size" "50px"
             , style "background-color" "#e6e6fa"
             ]
 
      customStyle2 =
-            [ style "font-size" "40px"
+            [ style "font-size" "50px"
             , style "background-color" "#00ff00"
             ]
     
