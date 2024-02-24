@@ -5168,7 +5168,7 @@ var $author$project$Gojuon$hiraganaListo = _List_fromArray(
 		_List_fromArray(
 		['な', 'に', 'ぬ', 'ね', 'の', '　', 'は', 'ひ', 'ふ', 'へ', 'ほ']),
 		_List_fromArray(
-		['ま', 'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ']),
+		['ま', 'み', 'む', 'め', 'も', '　', 'や', 'ゆ', 'よ']),
 		_List_fromArray(
 		['ら', 'り', 'る', 'れ', 'ろ', '　', 'わ', 'を', 'ん'])
 	]);
