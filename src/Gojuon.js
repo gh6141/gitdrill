@@ -4884,7 +4884,7 @@ var author$project$Gojuon$hiraganaListd = _List_fromArray(
 		_List_fromArray(
 		['だ', 'ぢ', 'づ', 'で', 'ど']),
 		_List_fromArray(
-		['ば', 'び', 'ぶ', 'べ', 'ぼ', '　'])
+		['ば', 'び', 'ぶ', 'べ', 'ぼ', '　', 'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ', '　'])
 	]);
 var author$project$Gojuon$hiraganaListh = _List_fromArray(
 	[
@@ -4971,7 +4971,6 @@ var author$project$Gojuon$ClickHiragana = function (a) {
 	return {$: 'ClickHiragana', a: a};
 };
 var author$project$Gojuon$Dakuten = {$: 'Dakuten'};
-var author$project$Gojuon$Handakuten = {$: 'Handakuten'};
 var author$project$Gojuon$Yoon = {$: 'Yoon'};
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
@@ -5086,12 +5085,12 @@ var elm$html$Html$Events$onClick = function (msg) {
 var author$project$Gojuon$view = function (model) {
 	var customStyle2 = _List_fromArray(
 		[
-			A2(elm$html$Html$Attributes$style, 'font-size', '60px'),
+			A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
 			A2(elm$html$Html$Attributes$style, 'background-color', '#00ff00')
 		]);
 	var customStyle = _List_fromArray(
 		[
-			A2(elm$html$Html$Attributes$style, 'font-size', '60px'),
+			A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
 			A2(elm$html$Html$Attributes$style, 'background-color', '#e6e6fa')
 		]);
 	var buttonForHiraganaWithStyle = F2(
@@ -5125,7 +5124,7 @@ var author$project$Gojuon$view = function (model) {
 				elm$html$Html$button,
 				_List_fromArray(
 					[
-						A2(elm$html$Html$Attributes$style, 'font-size', '60px'),
+						A2(elm$html$Html$Attributes$style, 'font-size', '50px'),
 						A2(elm$html$Html$Attributes$style, 'background-color', color),
 						elm$html$Html$Events$onClick(msg)
 					]),
@@ -5146,16 +5145,15 @@ var author$project$Gojuon$view = function (model) {
 					[
 						elm$html$Html$text(model.output)
 					])),
+				A3(buttonCreate, author$project$Gojuon$Backspace, 'けす', '#0000ff'),
 				A3(buttonCreate, author$project$Gojuon$Allplay, 'はなす', '#ff0000'),
-				A3(buttonCreate, author$project$Gojuon$Dakuten, '\"', '#009900'),
-				A3(buttonCreate, author$project$Gojuon$Handakuten, '。', '#009900'),
-				A3(buttonCreate, author$project$Gojuon$Yoon, 'っゃゅょ', '#009900'),
+				A3(buttonCreate, author$project$Gojuon$Dakuten, 'が..', '#009900'),
+				A3(buttonCreate, author$project$Gojuon$Yoon, 'ゃ..', '#009900'),
 				A2(
 				elm$html$Html$div,
 				_List_Nil,
 				A2(elm$core$List$map, listCreate, model.hiraganaList)),
-				A3(buttonCreate, author$project$Gojuon$Allclear, 'クリア', '#0000ff'),
-				A3(buttonCreate, author$project$Gojuon$Backspace, 'けす', '#0000ff')
+				A3(buttonCreate, author$project$Gojuon$Allclear, 'クリア', '#0000ff')
 			]));
 };
 var elm$browser$Browser$External = function (a) {

@@ -26,7 +26,8 @@ hiraganaListd = [
     [ "が",  "ぎ", "ぐ",  "げ",  "ご","　"]
     , ["ざ", "じ",  "ず", "ぜ", "ぞ"]
     , ["だ",  "ぢ",  "づ", "で",  "ど"]
-    ,[ "ば", "び",  "ぶ", "べ", "ぼ","　" ]
+    ,[ "ば", "び",  "ぶ", "べ", "ぼ","　" 
+    ,"ぱ", "ぴ", "ぷ","ぺ","ぽ","　"]
     ]
 
 hiraganaListh = [
@@ -106,28 +107,28 @@ view : Model -> Html Msg
 view model =
     let
      customStyle =
-            [ style "font-size" "60px"
+            [ style "font-size" "50px"
             , style "background-color" "#e6e6fa"
             ]
 
      customStyle2 =
-            [ style "font-size" "60px"
+            [ style "font-size" "50px"
             , style "background-color" "#00ff00"
             ]
     
      buttonForHiraganaWithStyle customStylex hiragana =
       button (customStylex ++ [ onClick (ClickHiragana hiragana) ]) [ text hiragana ]
 
-     buttonCreate msg caption color = button [style "font-size" "60px", style "background-color" color,onClick msg ] [text caption]
+     buttonCreate msg caption color = button [style "font-size" "50px", style "background-color" color,onClick msg ] [text caption]
     
      listCreate list= div [] (List.map (buttonForHiraganaWithStyle customStyle) list )
 
     in
     div []
-        [   div customStyle2 [ text model.output ] , buttonCreate Allplay "はなす" "#ff0000"
-        ,buttonCreate Dakuten "\"" "#009900",buttonCreate Handakuten "。" "#009900",buttonCreate Yoon "っゃゅょ" "#009900"
+        [   div customStyle2 [ text model.output ] ,buttonCreate Backspace "けす" "#0000ff", buttonCreate Allplay "はなす" "#ff0000"
+        ,buttonCreate Dakuten "が.." "#009900",buttonCreate Yoon "ゃ.." "#009900"
        -- ,div [] (List.map (buttonForHiraganaWithStyle customStyle) model.hiraganaList)
         ,div [] (List.map listCreate model.hiraganaList)
-        ,buttonCreate Allclear "クリア" "#0000ff",buttonCreate Backspace "けす" "#0000ff"
+        ,buttonCreate Allclear "クリア" "#0000ff"
            
         ]
