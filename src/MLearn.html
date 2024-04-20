@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -5,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Web Audio Beep Morse Code</title>
     <style>
+
+  #texta {
+    font-size: 25px;
+
+  }
+  
+   /* Optional: Style the buttons */
+    .surrounding-char {
+      cursor: pointer;
+      padding: 2px;
+      margin: 0px;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      background-color: #dcdcdc;
+    }
+    
+ 　  .surrounding-none {
+ 　    border: 1px solid#000;
+      background-color: #000000;
+    }
+
 
 *, ::before, ::after { box-sizing: border-box; }
 html { font-family: sans-serif; }
@@ -14,22 +36,29 @@ html { font-family: sans-serif; }
   </head>
   <body>
 
-<h1>Morse Code</h1>
+<h1>和文 Morse Code</h1>
 
+<div>表示された文字をクリックして符号音を確認できます</div>
 <p>
-  <input type="button" value="Dit" onclick="dit();" accesskey="t">
-  <input type="button" value="Dah" onclick="dah();" accesskey="h">
-  <input type="button" value="和文" onclick="wabun();">
-  <input type="button" value="記号数字" onclick="kigo();">
-  <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="0.8">
+   <input type="button" value="ランダム(66文字)" onclick="random();">　<input type="button" value="リプレイ" onclick="replay59()"><br>
+   <input type="text" value="40" id="mojisu">文字<input type="button" value="ランダム" onclick="randomx()"> <input type="button" value="リプレイ" onclick="replayx()"><br>
+   <input type="text" value="ヲ12ク3?ミツセヤ°" placeholder="10文字以上入力" id="tbox">からランダムに<input type ="button" value="10文字抽出" onclick="sitei()">
+   　<input type="button" value="リプレイ" onclick="replay()">
+   <br>
+  <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="0.6">
 </p>
 
-<textarea id="texta" cols=80 rows=3></textarea><br>
+<!-- <textarea id="texta" cols=80 rows=20></textarea><br> -->
+<div id="texta" style="line-height:60px;"></div>
+
 参照させていただいたサイト:<a href="https://neos21.net/blog/2021/03/30-01.html">https://neos21.net/blog/2021/03/30-01.html</a><br>
   </body>
 
   <script>
     var audioContext = new window.AudioContext();
+    var rcsx=[];
+    var rcsxx=[];
+    var rcsx59=[];
   
   const beep = options => new Promise(resolve => {
     // Options
@@ -37,7 +66,7 @@ html { font-family: sans-serif; }
     const type      = options.type      == null ? 'sine' : options.type;
     const frequency = options.frequency == null ? 603    : options.frequency;
     const time      = options.time      == null ? 0.1    : options.time;
-    const volume    = options.volume    == null ? 0.8    : options.volume;
+    const volume    = options.volume    == null ? 0.2    : options.volume;
     const speed=1;
     // Create
   
@@ -68,142 +97,335 @@ html { font-family: sans-serif; }
   const shortGap  = () => beep({ volume: 0, time: .3*speed });  // Between Letters・3 Units Long
   const mediumGap = () => beep({ volume: 0, time: .7*speed });  // Between Words・7 Units Long
   
+  const mh= (moji)=> {if (moji==" "){
+      return "<span class='surrounding-none' onclick='insertSurroundingChar(\""+moji+"\")'>   </span>" ;
+  }  else{
+      return "<span class='surrounding-char' onclick='insertSurroundingChar(\""+moji+"\")'>"+moji+"</span>" ;
+  }}
   
-    const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-  
-    const ch2= (moji,t1,t2)=> Promise.resolve().then(t1).then(interGap).then(t2).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-    che=()=>ch1("ヘ",dit);
-    cmu=()=>ch1("ム",dah);
-    ci=()=> ch2("イ",dit,dah);
-    cta=() => ch2("タ",dah,dit);
-    cda=()=>ch2("\"",dit,dit);
-    cyo=()=>ch2("ヨ",dah,dah);
-    const ch3= (moji,t1,t2,t3)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-    cra=()=>ch3("ラ",dit,dit,dit);
-    cu=()=>ch3("ウ",dit,dit,dah);
-    cya=()=>ch3("ヤ",dit,dah,dah);
-    cwa=()=>ch3("ワ",dah,dit,dah);
-    cna=()=>ch3("ナ",dit,dah,dit);
-    cri=()=>ch3("リ",dah,dah,dit);
-    cre=()=>ch3("レ",dah,dah,dah);
-    cho=()=>ch3("ホ",dah,dit,dit);
-    
-    const w1=() => Promise.resolve().then(cwa).then(che).then(cmu).then(ci).then(cra).then(cu).then(cna).then(cri).then(cre);
-    const w2=()=>Promise.resolve().then(cho).then(ci).then(cta).then(cda).then(cyo).then();
-  
-    const ch4= (moji,t1,t2,t3,t4)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-    cko=()=>ch4("コ",dah,dah,dah,dah);
-    cwo=()=>ch4("ヲ",dit,dah,dah,dah);
-    cno=()=>ch4("ノ",dit,dit,dah,dah);
-    cku=()=>ch4("ク",dit,dit,dit,dah);
-    cnu=()=>ch4("ヌ",dit,dit,dit,dit);
-  
-    cma=()=>ch4("マ",dah,dit,dit,dah);
-    cha=()=>ch4("ハ",dah,dit,dit,dit);
-    cne=()=>ch4("ネ",dah,dah,dit,dah);
-    chu=()=>ch4("フ",dah,dah,dit,dit);
-    cso=()=>ch4("ソ",dah,dah,dah,dit);
-  
-    cke=()=>ch4("ケ",dah,dit,dah,dah);
-    ctu=()=>ch4("ツ",dit,dah,dah,dit);
-    cni=()=>ch4("ニ",dah,dit,dah,dit);
-    cro=()=>ch4("ロ",dit,dah,dit,dah);
-    cka=()=>ch4("カ",dit,dah,dit,dit);
-    cti=()=>ch4("チ",dit,dit,dah,dit);
-    
-    const w3=()=>Promise.resolve().then(cko).then(cwo).then(cno).then(cku).then(cnu);
-    const w4=()=>Promise.resolve().then(cma).then(cha).then(cne).then(chu).then(cso);
-    const w5=()=>Promise.resolve().then(cke).then(ctu).then(cni).then(cro).then(cka).then(cti);
-  
-    const ch5= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-    csa=()=>ch5("サ",dah,dit,dah,dit,dah);
-    csi=()=>ch5("シ",dah,dah,dit,dah,dit);
-    csu=()=>ch5("ス",dah,dah,dah,dit,dah);
-    cse=()=>ch5("セ",dit,dah,dah,dah,dit);
-    cru=()=>ch5("ル",dah,dit,dah,dah,dit);
-  
-    ca=()=>ch5("ア",dah,dah,dit,dah,dah);
-    ce=()=>ch5("エ",dah,dit,dah,dah,dah);
-    co=()=>ch5("オ",dit,dah,dit,dit,dit);
-    chi=()=>ch5("ヒ",dah,dah,dit,dit,dah);
-    cyu=()=>ch5("ユ",dah,dit,dit,dah,dah);
-    cki=()=>ch5("キ",dah,dit,dah,dit,dit);
-  
-    cmi=()=>ch5("ミ",dit,dit,dah,dit,dah);
-    cn=()=>ch5("ン",dit,dah,dit,dah,dit);
-    cte=()=>ch5("テ",dit,dah,dit,dah,dah);
-    cmo=()=>ch5("モ",dah,dit,dit,dah,dit);
-    cme=()=>ch5("メ",dah,dit,dit,dit,dah);
-    cto=()=>ch5("ト",dit,dit,dah,dit,dit);
-   
-    const w6=()=>Promise.resolve().then(csa).then(csi).then(csu).then(cse).then(cru);
-    const w7=()=>Promise.resolve().then(ca).then(ce).then(co).then(chi).then(cyu).then(cki);
-    const w8=()=>Promise.resolve().then(cmi).then(cn).then(cte).then(cmo);
-    const w8a=()=>Promise.resolve().then(cme).then(cto);
+  const rmv=()=>　{ 
+       var myDiv = document.getElementById("texta");
+    var lastSpan = myDiv.lastElementChild; // 最後の子要素を取得
 
-    const ch6= (moji,t1,t2,t3,t4,t5,t6)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(interGap).then(t6).then(mediumGap).then(()=>{document.getElementById('texta').value=document.getElementById('texta').value+moji;});
-    cdan=()=>ch6("」",dit,dah,dit,dah,dit,dit);
-    cten=()=>ch6("、",dit,dah,dit,dah,dit,dah);
-    ckas=()=>ch6("（",dah,dit,dah,dah,dit,dah);
-    ckae=()=>ch6("）",dit,dah,dit,dit,dah,dit);
-    cq=()=>ch6("?",dit,dit,dah,dah,dit,dit);
-    cat= ()=>ch6("@",dit,dah,dah,dit,dah,dit);
-    
-    cii= ()=>ch5("ヰ",dit,dah,dit,dit,dah);
-    cee= ()=>ch5("ヱ",dit,dah,dah,dit,dit);
-    cp=()=>ch5("°",dit,dit,dah,dah,dit);
-    cd=()=>ch5("ー",dit,dah,dah,dit,dah);
-    
-    c1=()=>ch5("1",dit,dah,dah,dah,dah);
-    c2=()=>ch5("2",dit,dit,dah,dah,dah);
-    c3=()=>ch5("3",dit,dit,dit,dah,dah);
-    c4=()=>ch5("4",dit,dit,dit,dit,dah);
-    c5=()=>ch5("5",dit,dit,dit,dit,dit);
-    c6=()=>ch5("6",dah,dit,dit,dit,dit);
-    c7=()=>ch5("7",dah,dah,dit,dit,dit);
-    c8=()=>ch5("8",dah,dah,dah,dit,dit);
-    c9=()=>ch5("9",dah,dah,dah,dah,dit);
-    c0=()=>ch5("0",dah,dah,dah,dah,dah);
-    
-    
+    if (lastSpan) {
+      // 最後の子要素が存在する場合にのみ削除
+      myDiv.removeChild(lastSpan);
+    }
+  }
   
+  
+  
+  
+  function insertSurroundingChar(char) {
+      Promise.resolve().then(cwf(char)).then(rmv);
 
-    const w9=()=>Promise.resolve().then(cdan).then(cten).then(ckas).then(ckae).then(cq);
-    const w10=()=>Promise.resolve().then(cat).then(cii).then(cee).then(c5).then(c3);
-    const w11=()=>Promise.resolve().then(c8).then(c9).then(c0).then(c2).then(c4).then(cd);
-    const w12=()=>Promise.resolve().then(c6).then(c1).then(c7).then(chi).then(cp);
- 
+    }
+
+  
+    const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch2= (moji,t1,t2)=> Promise.resolve().then(t1).then(interGap).then(t2).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch3= (moji,t1,t2,t3)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch4= (moji,t1,t2,t3,t4)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch5= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch6= (moji,t1,t2,t3,t4,t5,t6)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(interGap).then(t6).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const chc= (moji)=> Promise.resolve().then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+
+  const cwf=(moji)=> {
+  　 switch (moji) {
+      case 'ヘ':
+         return ()=>ch1(moji,dit);
+         break;
+      case 'ム':
+         return ()=>ch1(moji,dah);
+         break;
+      case 'イ':
+         return ()=> ch2(moji,dit,dah);
+         break;
+      case 'タ':
+         return () => ch2(moji,dah,dit);
+         break;
+      case '\"':
+         return ()=>ch2(moji,dit,dit);
+         break;
+      case 'ヨ':
+         return ()=>ch2(moji,dah,dah);
+         break;
+      case 'ラ':
+         return ()=>ch3(moji,dit,dit,dit);
+         break;
+      case 'ウ':
+         return ()=>ch3(moji,dit,dit,dah);
+         break;
+      case 'ヤ':
+         return ()=>ch3(moji,dit,dah,dah);
+         break;
+      case 'ワ':
+         return ()=>ch3(moji,dah,dit,dah);
+         break;
+      case 'ナ':
+         return ()=>ch3(moji,dit,dah,dit);
+         break;
+      case 'リ':
+         return ()=>ch3(moji,dah,dah,dit);
+         break;
+      case 'レ':
+         return ()=>ch3(moji,dah,dah,dah);
+         break;
+      case 'ホ':
+         return ()=>ch3(moji,dah,dit,dit);
+         break;
+      case 'コ':
+         return ()=>ch4(moji,dah,dah,dah,dah);
+         break;
+      case 'ヲ':
+         return ()=>ch4(moji,dit,dah,dah,dah);
+         break;
+      case 'ノ':
+         return ()=>ch4(moji,dit,dit,dah,dah);
+         break;
+      case 'ク':
+         return ()=>ch4(moji,dit,dit,dit,dah);
+         break;
+      case 'ヌ':
+         return ()=>ch4(moji,dit,dit,dit,dit);
+         break;
+      case 'マ':
+         return ()=>ch4(moji,dah,dit,dit,dah);
+         break;
+      case 'ハ':
+         return ()=>ch4(moji,dah,dit,dit,dit);
+         break;
+      case 'ネ':
+         return ()=>ch4(moji,dah,dah,dit,dah);
+         break;
+      case 'フ':
+         return ()=>ch4(moji,dah,dah,dit,dit);
+         break;
+      case 'ソ':
+         return ()=>ch4(moji,dah,dah,dah,dit);
+         break;
+      case 'ケ':
+         return ()=>ch4(moji,dah,dit,dah,dah);
+         break;
+      case 'ツ':
+         return ()=>ch4(moji,dit,dah,dah,dit);
+         break;
+      case 'ニ':
+         return ()=>ch4(moji,dah,dit,dah,dit);
+         break;
+      case 'ロ':
+         return ()=>ch4(moji,dit,dah,dit,dah);
+         break;
+      case 'カ':
+         return ()=>ch4(moji,dit,dah,dit,dit);
+         break;
+      case 'チ':
+         return ()=>ch4(moji,dit,dit,dah,dit);
+         break;
+      case 'サ':
+         return ()=>ch5(moji,dah,dit,dah,dit,dah);
+         break;
+      case 'シ':
+         return ()=>ch5(moji,dah,dah,dit,dah,dit);
+         break;
+      case 'ス':
+         return ()=>ch5(moji,dah,dah,dah,dit,dah);
+         break;
+      case 'セ':
+         return ()=>ch5(moji,dit,dah,dah,dah,dit);
+         break;
+      case 'ル':
+         return ()=>ch5(moji,dah,dit,dah,dah,dit);
+         break;
+      case 'ア':
+         return ()=>ch5(moji,dah,dah,dit,dah,dah);
+         break;
+      case 'エ':
+         return ()=>ch5(moji,dah,dit,dah,dah,dah);
+         break;
+      case 'オ':
+         return ()=>ch5(moji,dit,dah,dit,dit,dit);
+         break;
+      case 'ヒ':
+         return ()=>ch5(moji,dah,dah,dit,dit,dah);
+         break;
+      case 'ユ':
+         return ()=>ch5(moji,dah,dit,dit,dah,dah);
+         break;
+      case 'キ':
+         return ()=>ch5(moji,dah,dit,dah,dit,dit);
+         break;
+      case 'ミ':
+         return ()=>ch5(moji,dit,dit,dah,dit,dah);
+         break;
+      case 'ン':
+         return ()=>ch5(moji,dit,dah,dit,dah,dit);
+         break;
+      case 'テ':
+         return ()=>ch5(moji,dit,dah,dit,dah,dah);
+         break;
+      case 'ト':
+         return ()=>ch5(moji,dit,dit,dah,dit,dit);
+         break;
+      case 'モ':
+         return ()=>ch5(moji,dah,dit,dit,dah,dit);
+         break;
+      case 'メ':
+         return ()=>ch5(moji,dah,dit,dit,dit,dah);
+         break;
+      case '」':
+         return ()=>ch6(moji,dit,dah,dit,dah,dit,dit);
+         break;
+      case '、':
+         return ()=>ch6(moji,dit,dah,dit,dah,dit,dah);
+         break;
+      case '（':
+         return ()=>ch6(moji,dah,dit,dah,dah,dit,dah);
+         break;
+      case '）':
+         return ()=>ch6(moji,dit,dah,dit,dit,dah,dit);
+         break;
+      case '?':
+         return ()=>ch6(moji,dit,dit,dah,dah,dit,dit);
+         break;
+      case '@':
+         return ()=>ch6(moji,dit,dah,dah,dit,dah,dit);
+         break;
+      case 'ヰ':
+         return ()=>ch5(moji,dit,dah,dit,dit,dah);
+         break;
+      case 'ヱ':
+         return  ()=>ch5(moji,dit,dah,dah,dit,dit);
+         break;
+      case '°':
+         return ()=>ch5(moji,dit,dit,dah,dah,dit);
+         break;
+      case 'ー':
+         return ()=>ch5(moji,dit,dah,dah,dit,dah);
+         break;
+      case '1':
+         return ()=>ch5(moji,dit,dah,dah,dah,dah);
+         break;
+      case '2':
+         return ()=>ch5(moji,dit,dit,dah,dah,dah);
+         break;
+      case '3':
+         return ()=>ch5(moji,dit,dit,dit,dah,dah);
+         break;
+      case '4':
+         return ()=>ch5(moji,dit,dit,dit,dit,dah);
+         break;
+      case '5':
+         return ()=>ch5(moji,dit,dit,dit,dit,dit);
+         break;
+      case '6':
+         return ()=>ch5(moji,dah,dit,dit,dit,dit);
+         break;
+      case '7':
+         return ()=>ch5(moji,dah,dah,dit,dit,dit);
+         break;
+      case '8':
+         return ()=>ch5(moji,dah,dah,dah,dit,dit);
+         break;
+      case '9':
+         return ()=>ch5(moji,dah,dah,dah,dah,dit);
+         break;
+      case '0':
+         return ()=>ch5(moji,dah,dah,dah,dah,dah);
+         break;
+      case '　':
+         return ()=>chc(" ");
+         break;
+     
+  　 };
+  　}
   
     openc=()=>{ audioContext.close();   audioContext = new window.AudioContext();}
-    const wabun=() =>{
-      const textbox = document.getElementById("speed");
-      speed = textbox.value;
-      Promise.resolve().then(w1).then(openc).then(w2).then(openc).then(w3).then(openc).then(w4).then(openc).then(w5)
-    .then(openc).then(w6).then(openc).then(w7).then(openc).then(w8).then(openc).then(w8a);
 
-    } 
-
-    const kigo=() =>{
-      const textbox = document.getElementById("speed");
-      speed = textbox.value;
-      Promise.resolve().then(w9).then(openc).then(w10).then(openc).then(w11).then(openc).then(w12);
-
-    } 
-  
+    const random=() =>{
+      speed = document.getElementById("speed").value;
+      
+      const inputString = 'イロハニホヘトチリヌルヲワカヨタレソツネナラムウヰノオクヤマケフコエテアサキユメミシヱヒモセスン?ー°1234567890」、＊（）';
+      rcsx59 =insertSpaces(getRandomChars(inputString, 66),5).map(char => char.replace(/＊/g, '\"')); 
+        promiseResolve(rcsx59)
+ 
+    }
     
-  
+    const randomx=() =>{
+      speed = document.getElementById("speed").value;
+      const mojisu = document.getElementById("mojisu").value;
+      
+      const inputString = 'イロハニホヘトチリヌルヲワカヨタレソツネナラムウヰノオクヤマケフコエテアサキユメミシヱヒモセスン?ー°1234567890」、＊（）';
+      rcsxx = getRandomChars(inputString, Number(mojisu)).map(char => char.replace(/＊/g, '\"')); 
+        promiseResolve(rcsxx)
+ 
+    }
+    
+  const replay59= ()=>{
+
+      speed = document.getElementById("speed").value;
+           promiseResolve(rcsx59);
+         }
+         
+  const replayx= ()=>{
+      speed = document.getElementById("speed").value;
+       promiseResolve(rcsxx);
+         }
+         
+  const sitei=() =>{
+      speed = document.getElementById("speed").value;
+        rcsx = getRandomChars(document.getElementById('tbox').value, 10).map(char => char.replace(/＊/g, '\"')); 
+     promiseResolve(rcsx)
+   }
+    
+  const replay= ()=>{
+      speed = document.getElementById("speed").value;
+       promiseResolve(rcsx);
+         }
+    
+  const promiseResolve = (rcs)=>{
+    const promises = rcs.map(rc => cwf(rc));
+    promises.push(() => document.getElementById('texta').innerHTML += "<br>");
+    promises.reduce((chain, promise) => chain.then(() => promise()), Promise.resolve());
+　} 
+    
+ 
+
+  function getRandomChars(inputString, count) {
+  if (inputString.length < count) {
+    console.error('指定された文字列に十分な文字が含まれていません。');
+    return null;
+  }
+
+  const rcs = [];
+  const availableIndices = Array.from({ length: inputString.length }, (_, index) => index);
+
+  for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * availableIndices.length);
+    const selectedIndex = availableIndices.splice(randomIndex, 1)[0];
+    rcs.push(inputString[selectedIndex]);
+  }
+
+  return rcs;
+}
+
+
+
+function insertSpaces(inputString, interval) {
+ // const chars = inputString.split(',');
+  const chars=inputString;
+  const result = [];
+
+  for (let i = 0; i < chars.length; i++) {
+    result.push(chars[i]);
+    if ((i + 1) % interval === 0 && i !== chars.length - 1) {
+      result.push('　');
+    }
+  }
+
+ // return result.join(',');
+ return result;
+}
       </script>
 
 </html>
-refer:© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
