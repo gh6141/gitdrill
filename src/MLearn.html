@@ -43,7 +43,9 @@ html { font-family: sans-serif; }
    <input type="button" value="ランダム(66文字)" onclick="random();">　<input type="button" value="リプレイ" onclick="replay59()"><br>
    <input type="text" value="40" id="mojisu">文字<input type="button" value="ランダム" onclick="randomx()"> <input type="button" value="リプレイ" onclick="replayx()"><br>
    <input type="text" value="ヲ12ク3?ミツセヤ°" placeholder="10文字以上入力" id="tbox">からランダムに<input type ="button" value="10文字抽出" onclick="sitei()">
-   　<input type="button" value="リプレイ" onclick="replay()">
+   　<input type="button" value="リプレイ" onclick="replay()"><br>
+   <input type="text" value="テンキ　アリガトウゴザイマス　コンニチハ　デンパ　コンデイシヨン　オハヨウゴザイマス　マタヨロシクオネガイシマス" id="wbox"><input type ="button" value="単語練習" onclick="word()">
+
    <br>
   <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="0.6">
 </p>
@@ -377,6 +379,14 @@ html { font-family: sans-serif; }
         rcsx = getRandomChars(document.getElementById('tbox').value, 10).map(char => char.replace(/＊/g, '\"')); 
      promiseResolve(rcsx)
    }
+
+   const word=() =>{
+      speed = document.getElementById("speed").value;
+        rcsx = getRandomWords(document.getElementById('wbox').value).map(char => char.replace(/＊/g, '\"')); 
+     promiseResolve(rcsx)
+   }
+
+
     
   const replay= ()=>{
       speed = document.getElementById("speed").value;
@@ -408,6 +418,31 @@ html { font-family: sans-serif; }
 
   return rcs;
 }
+
+function getRandomCharacters(inputString) {
+  // 入力文字列を文字ごとに分割して配列に格納
+  const charactersArray = inputString.split("");
+  
+  // ランダムな順序で文字を配列に追加
+  const shuffledCharacters = [];
+  while (charactersArray.length > 0) {
+    // 入力文字列からランダムに選択した文字を取り出して配列に追加
+    const randomIndex = Math.floor(Math.random() * charactersArray.length);
+    shuffledCharacters.push(charactersArray[randomIndex]);
+    // 選択された文字を元の配列から削除
+    charactersArray.splice(randomIndex, 1);
+  }
+  
+  // 空白文字の配列を単語の区切りとして追加
+  for (let i = 0; i < shuffledCharacters.length - 1; i++) {
+    if (shuffledCharacters[i] !== " " && shuffledCharacters[i + 1] === " ") {
+      shuffledCharacters.splice(i + 1, 0, " ");
+    }
+  }
+  
+  return shuffledCharacters;
+}
+
 
 
 
