@@ -419,28 +419,29 @@ html { font-family: sans-serif; }
   return rcs;
 }
 
-function getRandomCharacters(inputString) {
-  // 入力文字列を文字ごとに分割して配列に格納
-  const charactersArray = inputString.split("");
+function getRandomWords(inputString) {
+  // 入力文字列を単語ごとに分割して配列に格納
+  const wordsArray = inputString.split(/\s+/);
   
-  // ランダムな順序で文字を配列に追加
-  const shuffledCharacters = [];
-  while (charactersArray.length > 0) {
-    // 入力文字列からランダムに選択した文字を取り出して配列に追加
-    const randomIndex = Math.floor(Math.random() * charactersArray.length);
-    shuffledCharacters.push(charactersArray[randomIndex]);
-    // 選択された文字を元の配列から削除
-    charactersArray.splice(randomIndex, 1);
+  // 単語の配列をランダムな順序に並び替え
+  const shuffledWords = [];
+  while (wordsArray.length > 0) {
+    const randomIndex = Math.floor(Math.random() * wordsArray.length);
+    shuffledWords.push(wordsArray[randomIndex]);
+    wordsArray.splice(randomIndex, 1);
   }
   
-  // 空白文字の配列を単語の区切りとして追加
-  for (let i = 0; i < shuffledCharacters.length - 1; i++) {
-    if (shuffledCharacters[i] !== " " && shuffledCharacters[i + 1] === " ") {
-      shuffledCharacters.splice(i + 1, 0, " ");
+  // 単語ごとの文字配列を生成し、空白文字の配列を追加して文字ごとの配列を作成
+  const charactersArray = [];
+  shuffledWords.forEach((word, index) => {
+    const wordCharacters = word.split("");
+    charactersArray.push(...wordCharacters);
+    if (index !== shuffledWords.length - 1) {
+      charactersArray.push("　"); // 単語の区切りに空白文字を挿入
     }
-  }
+  });
   
-  return shuffledCharacters;
+  return charactersArray;
 }
 
 
