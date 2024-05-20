@@ -381,6 +381,7 @@ html { font-family: sans-serif; }
    }
 
    const word=() =>{
+    saveValue();
       speed = document.getElementById("speed").value;
         rcsx = getRandomWordsAndCharacters(document.getElementById('wbox').value).map(char => char.replace(/＊/g, '\"')); 
      promiseResolve(rcsx)
@@ -479,6 +480,23 @@ function getRandomWordsAndCharacters(inputString) {
   
   return charactersArray;
 }
+
+ // ローカルストレージから値を取得してinput要素にセットする関数
+ function setInitialValue() {
+      const savedValue = localStorage.getItem('savedValue');
+      if (savedValue !== null) {
+        document.getElementById('wbox').value = savedValue;
+      }
+    }
+    
+    // ローカルストレージに値を保存する関数
+    function saveValue() {
+      const valueToSave = document.getElementById('wbox').value;
+      localStorage.setItem('savedValue', valueToSave);
+    }
+    
+    // ロード時に初期値をセット
+    setInitialValue();
 
 
 
