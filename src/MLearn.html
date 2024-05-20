@@ -419,7 +419,39 @@ html { font-family: sans-serif; }
   return rcs;
 }
 
-function getRandomWords(inputString) {
+function decomposeDiacritics(char) {
+  const diacriticMap = {
+    "ガ": ["カ", "゛"],
+    "ギ": ["キ", "゛"],
+    "グ": ["ク", "゛"],
+    "ゲ": ["ケ", "゛"],
+    "ゴ": ["コ", "゛"],
+    "ザ": ["サ", "゛"],
+    "ジ": ["シ", "゛"],
+    "ズ": ["ス", "゛"],
+    "ゼ": ["セ", "゛"],
+    "ゾ": ["ソ", "゛"],
+    "ダ": ["タ", "゛"],
+    "ヂ": ["チ", "゛"],
+    "ヅ": ["ツ", "゛"],
+    "デ": ["テ", "゛"],
+    "ド": ["ト", "゛"],
+    "バ": ["ハ", "゛"],
+    "ビ": ["ヒ", "゛"],
+    "ブ": ["フ", "゛"],
+    "ベ": ["ヘ", "゛"],
+    "ボ": ["ホ", "゛"],
+    "パ": ["ハ", "゜"],
+    "ピ": ["ヒ", "゜"],
+    "プ": ["フ", "゜"],
+    "ペ": ["ヘ", "゜"],
+    "ポ": ["ホ", "゜"]
+  };
+  
+  return diacriticMap[char] || [char];
+}
+
+function getRandomWordsAndCharacters(inputString) {
   // 入力文字列を単語ごとに分割して配列に格納
   const wordsArray = inputString.split(/\s+/);
   
@@ -434,7 +466,11 @@ function getRandomWords(inputString) {
   // 単語ごとの文字配列を生成し、空白文字の配列を追加して文字ごとの配列を作成
   const charactersArray = [];
   shuffledWords.forEach((word, index) => {
-    const wordCharacters = word.split("");
+    const wordCharacters = [];
+    for (const char of word) {
+      const decomposedChars = decomposeDiacritics(char);
+      wordCharacters.push(...decomposedChars);
+    }
     charactersArray.push(...wordCharacters);
     if (index !== shuffledWords.length - 1) {
       charactersArray.push("　"); // 単語の区切りに空白文字を挿入
@@ -443,6 +479,7 @@ function getRandomWords(inputString) {
   
   return charactersArray;
 }
+
 
 
 
