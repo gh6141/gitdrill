@@ -382,7 +382,7 @@ html { font-family: sans-serif; }
 
    const word=() =>{
       speed = document.getElementById("speed").value;
-        rcsx = getRandomWords(document.getElementById('wbox').value).map(char => char.replace(/＊/g, '\"')); 
+        rcsx = getRandomWordsAndCharacters(document.getElementById('wbox').value).map(char => char.replace(/＊/g, '\"')); 
      promiseResolve(rcsx)
    }
 
