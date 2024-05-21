@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Audio Beep Morse Code</title>
+    <style>
+
+  #texta {
+    font-size: 25px;
+
+  }
+  
+   /* Optional: Style the buttons */
+    .surrounding-char {
+      cursor: pointer;
+      padding: 2px;
+      margin: 0px;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      background-color: #dcdcdc;
+    }
+
+ 　  .surrounding-none {
+ 　    border: 1px solid#000;
+      background-color: #000000;
+    }
+
+
+*, ::before, ::after { box-sizing: border-box; }
+html { font-family: sans-serif; }
+
+    </style>
+ 
+  </head>
+  <body>
+
+<h1>欧文 Morse Code</h1>
+和文は<a href="https://rasp.cld9.work/py/MLearn.html">こちら</a>
+<div>表示された文字をクリックして符号音を確認できます</div>
+<p>
+   <input type="button" value="ランダム(40文字)" onclick="random();">　<input type="button" value="リプレイ" onclick="replay59()"><br>
+   <input type="text" value="SD53HBEY90124678" placeholder="10文字以上入力" id="tbox">からランダムに<input type ="button" value="10文字" onclick="sitei()">
+   　<input type="button" value="リプレイ" onclick="replay()">
+   <br>
+   <input type="text" value="CQ DE TNX TU UR 5NN CU AGN QRZ? SIG SRI VA VY WX 73 GM GN HPE HR HW? KN MI MSG OP PSE CPI ES FB GA GB GE ABT ADR ANT AR BK " id="wbox" style="width: 400px;"><input type ="button" value="単語練習" onclick="word()">
+<br>
+  <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="0.6">
+</p>
+
+<!-- <textarea id="texta" cols=80 rows=20></textarea><br> -->
+
+<div id="texta" style="line-height:60px;"></div>
+
+参照させていただいたサイト:<a href="https://neos21.net/blog/2021/03/30-01.html">https://neos21.net/blog/2021/03/30-01.html</a><br>
+  </body>
+
+  <script>
+    var audioContext = new window.AudioContext();
+    var rcsx=[];
+    var rcsx59=[];
+  
+  const beep = options => new Promise(resolve => {
+    // Options
+    options         = options           || {};
+    const type      = options.type      == null ? 'sine' : options.type;
+    const frequency = options.frequency == null ? 603    : options.frequency;
+    const time      = options.time      == null ? 0.1    : options.time;
+    const volume    = options.volume    == null ? 0.2    : options.volume;
+    const speed=1;
+    // Create
+  
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    // Set Options
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+    gain.gain.value = volume;
+    // Start
+    oscillator.onended = () => {
+      gain.disconnect(audioContext.destination);
+      oscillator.disconnect(gain);
+      resolve();
+    };
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + time);  // Stop Timing
+   // audioContext.close();
+  });
+  
+
+  
+  const dit = () => beep({ time: .1*speed });  // Short Mark・Dot・1 Units Long
+  const dah = () => beep({ time: .3*speed });  // Long Mark・Dash・3 Units Long
+  const interGap  = () => beep({ volume: 0, time: .1*speed });  // Between Characters・1 Units Long
+  const shortGap  = () => beep({ volume: 0, time: .3*speed });  // Between Letters・3 Units Long
+  const mediumGap = () => beep({ volume: 0, time: .7*speed });  // Between Words・7 Units Long
+  
+  //const mh= (moji)=> "<span class='surrounding-char' onclick='insertSurroundingChar(\""+moji+"\")'>"+moji+"</span>" ;
+  
+    const mh= (moji)=> {if (moji==" "){
+      return "<span class='surrounding-none' onclick='insertSurroundingChar(\""+moji+"\")'>   </span>" ;
+  }  else{
+      return "<span class='surrounding-char' onclick='insertSurroundingChar(\""+moji+"\")'>"+moji+"</span>" ;
+  }}
+  
+  const rmv=()=>　{ 
+       var myDiv = document.getElementById("texta");
+    var lastSpan = myDiv.lastElementChild; // 最後の子要素を取得
+
+    if (lastSpan) {
+      // 最後の子要素が存在する場合にのみ削除
+      myDiv.removeChild(lastSpan);
+    }
+  }
+  
+  function insertSurroundingChar(char) {
+       Promise.resolve().then(cwf(char)).then(rmv);
+    }
+
+  
+    const ch1= (moji,t1)=> Promise.resolve().then(t1).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch2= (moji,t1,t2)=> Promise.resolve().then(t1).then(interGap).then(t2).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch3= (moji,t1,t2,t3)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch4= (moji,t1,t2,t3,t4)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch5= (moji,t1,t2,t3,t4,t5)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const ch6= (moji,t1,t2,t3,t4,t5,t6)=> Promise.resolve().then(t1).then(interGap).then(t2).then(interGap).then(t3).then(interGap).then(t4).then(interGap).then(t5).then(interGap).then(t6).then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+    const chc= (moji)=> Promise.resolve().then(mediumGap).then(()=>{document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+mh(moji);});
+ 
+    che=()=>ch1("E",dit);
+    cmu=()=>ch1("T",dah);
+    ci=()=> ch2("A",dit,dah);
+    cta=() => ch2("N",dah,dit);
+    cda=()=>ch2("I",dit,dit);
+    cyo=()=>ch2("M",dah,dah);
+    cra=()=>ch3("S",dit,dit,dit);
+    cu=()=>ch3("U",dit,dit,dah);
+    cya=()=>ch3("W",dit,dah,dah);
+    cwa=()=>ch3("K",dah,dit,dah);
+    cna=()=>ch3("R",dit,dah,dit);
+    cri=()=>ch3("G",dah,dah,dit);
+    cre=()=>ch3("O",dah,dah,dah);
+    cho=()=>ch3("D",dah,dit,dit);
+    cwo=()=>ch4("J",dit,dah,dah,dah);
+    cku=()=>ch4("V",dit,dit,dit,dah);
+    cnu=()=>ch4("H",dit,dit,dit,dit);
+    cma=()=>ch4("X",dah,dit,dit,dah);
+    cha=()=>ch4("B",dah,dit,dit,dit);
+    cne=()=>ch4("Q",dah,dah,dit,dah);
+    chu=()=>ch4("Z",dah,dah,dit,dit);
+    cke=()=>ch4("Y",dah,dit,dah,dah);
+    ctu=()=>ch4("P",dit,dah,dah,dit);
+    cni=()=>ch4("C",dah,dit,dah,dit);
+    cka=()=>ch4("L",dit,dah,dit,dit);
+    cti=()=>ch4("F",dit,dit,dah,dit);
+    cmo=()=>ch5("/",dah,dit,dit,dah,dit);
+   cme=()=>ch5("=",dah,dit,dit,dit,dah);
+    cq=()=>ch6("?",dit,dit,dah,dah,dit,dit);
+    cat= ()=>ch6("@",dit,dah,dah,dit,dah,dit);
+    c1=()=>ch5("1",dit,dah,dah,dah,dah);
+    c2=()=>ch5("2",dit,dit,dah,dah,dah);
+    c3=()=>ch5("3",dit,dit,dit,dah,dah);
+    c4=()=>ch5("4",dit,dit,dit,dit,dah);
+    c5=()=>ch5("5",dit,dit,dit,dit,dit);
+    c6=()=>ch5("6",dah,dit,dit,dit,dit);
+    c7=()=>ch5("7",dah,dah,dit,dit,dit);
+    c8=()=>ch5("8",dah,dah,dah,dit,dit);
+    c9=()=>ch5("9",dah,dah,dah,dah,dit);
+    c0=()=>ch5("0",dah,dah,dah,dah,dah);
+    cc=()=>chc(" ");
+    
+  const cwf=(moji)=> {
+  　 switch (moji) {
+      case 'E':
+         return che;
+         break;
+      case 'T':
+         return cmu;
+         break;
+      case 'A':
+         return ci;
+         break;
+      case 'N':
+         return cta;
+         break;
+      case 'I':
+         return cda;
+         break;
+      case 'M':
+         return cyo;
+         break;
+      case 'S':
+         return cra;
+         break;
+      case 'U':
+         return cu;
+         break;
+      case 'W':
+         return cya;
+         break;
+      case 'K':
+         return cwa;
+         break;
+      case 'R':
+         return cna;
+         break;
+      case 'G':
+         return cri;
+         break;
+      case 'O':
+         return cre;
+         break;
+      case 'D':
+         return cho;
+         break;
+
+      case 'J':
+         return cwo;
+         break;
+
+      case 'V':
+         return cku;
+         break;
+      case 'H':
+         return cnu;
+         break;
+      case 'X':
+         return cma;
+         break;
+      case 'B':
+         return cha;
+         break;
+      case 'Q':
+         return cne;
+         break;
+      case 'Z':
+         return chu;
+         break;
+      case 'Y':
+         return cke;
+         break;
+      case 'P':
+         return ctu;
+         break;
+      case 'C':
+         return cni;
+         break;
+      case 'L':
+         return cka;
+         break;
+      case 'F':
+         return cti;
+         break;
+    
+  
+      case '/':
+         return cmo;
+         break;
+      case '=':
+         return cme;
+         break;
+
+
+      case '?':
+         return cq;
+         break;
+      case '@':
+         return cat;
+         break;
+
+      case '1':
+         return c1;
+         break;
+      case '2':
+         return c2;
+         break;
+      case '3':
+         return c3;
+         break;
+      case '4':
+         return c4;
+         break;
+      case '5':
+         return c5;
+         break;
+      case '6':
+         return c6;
+         break;
+      case '7':
+         return c7;
+         break;
+      case '8':
+         return c8;
+         break;
+      case '9':
+         return c9;
+         break;
+      case '0':
+         return c0;
+         break;
+      case '　':
+         return cc;
+         break;
+     
+  　 };
+  　}
+  
+    openc=()=>{ audioContext.close();   audioContext = new window.AudioContext();}
+
+    const random=() =>{
+        saveValue();
+      const textbox = document.getElementById("speed");
+      speed = textbox.value;
+      
+      const inputString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?1234567890/@=';
+    //  const randomCharsorg = getRandomChars(inputString, 37);
+     // rcsx59 = randomCharsorg.map(char => char.replace(/＊/g, '\"')); 
+      rcsx59 =insertSpaces(getRandomChars(inputString, 40),5).map(char => char.replace(/＊/g, '\"')); 
+     // promiseResolve59(rcsx59)
+      promiseResolve(rcsx59)
+ 
+    }
+    
+  const replay59= ()=>{
+            const textbox = document.getElementById("speed");
+      speed = textbox.value;
+      
+      // promiseResolve59(rcsx59);
+         promiseResolve(rcsx59);
+         }
+         
+ // const promiseResolve59 = (rcs)=>{
+  //    Promise.resolve().then(cwf(rcs[0])).then(cwf(rcs[1])).then(cwf(rcs[2])).then(cwf(rcs[3])).then(cwf(rcs[4])).then(cwf(rcs[5])).then(cwf(rcs[6])).then(cwf(rcs[7])).then(cwf(rcs[8])).then(cwf(rcs[9])).then(cwf(rcs[10])).then(cwf(rcs[11])).then(cwf(rcs[12])).then(cwf(rcs[13])).then(cwf(rcs[14])).then(cwf(rcs[15])).then(cwf(rcs[16])).then(cwf(rcs[17])).then(cwf(rcs[18])).then(cwf(rcs[19])).then(cwf(rcs[20])).then(cwf(rcs[21])).then(cwf(rcs[22])).then(cwf(rcs[23])).then(cwf(rcs[24])).then(cwf(rcs[25])).then(cwf(rcs[26])).then(cwf(rcs[27])).then(cwf(rcs[28])).then(cwf(rcs[29])).then(cwf(rcs[30])).then(cwf(rcs[31])).then(cwf(rcs[32])).then(cwf(rcs[33])).then(cwf(rcs[34])).then(cwf(rcs[35])).then(cwf(rcs[36])).then(cwf(rcs[37])).then(cwf(rcs[38])).then(cwf(rcs[39])).then(cwf(rcs[40])).then(cwf(rcs[41])).then(cwf(rcs[42])).then(cwf(rcs[43])).then(cwf(rcs[44])).then(cwf(rcs[45])).then(cwf(rcs[46])).then(cwf(rcs[47])).then(cwf(rcs[48])).then(cwf(rcs[49])).then(cwf(rcs[50])).then(cwf(rcs[51])).then(cwf(rcs[52])).then(cwf(rcs[53])).then(cwf(rcs[54])).then(cwf(rcs[55])).then(cwf(rcs[56])).then(cwf(rcs[57])).then(cwf(rcs[58])).then(cwf(rcs[59])).then(cwf(rcs[60])).then(cwf(rcs[61])).then(cwf(rcs[62])).then(cwf(rcs[63])).then(cwf(rcs[64])).then(cwf(rcs[65])).then(()=> document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+"<br>");
+ // } 
+  
+  const sitei=() =>{
+    saveValue();
+      const textbox = document.getElementById("speed");
+      speed = textbox.value;
+      
+      const inputString = document.getElementById('tbox').value;
+      const randomCharsorg = getRandomChars(inputString, 10);
+       rcsx = randomCharsorg.map(char => char.replace(/＊/g, '\"')); 
+     promiseResolve(rcsx)
+   }
+    
+   const word=() =>{
+    saveValue();
+      speed = document.getElementById("speed").value;
+        rcsx = splitWordsAndCharacters(document.getElementById('wbox').value).map(char => char.replace(/＊/g, '\"')); 
+     promiseResolve(rcsx)
+   }
+
+
+  const replay= ()=>{
+            const textbox = document.getElementById("speed");
+      speed = textbox.value;
+      
+       promiseResolve(rcsx);
+         }
+    
+  const promiseResolve = (rcs)=>{
+    //   Promise.resolve().then(cwf(rcs[0])).then(cwf(rcs[1])).then(cwf(rcs[2])).then(cwf(rcs[3])).then(cwf(rcs[4])).then(cwf(rcs[5])).then(cwf(rcs[6])).then(cwf(rcs[7])).then(cwf(rcs[8])).then(cwf(rcs[9])).then(cwf(rcs[0])).then(cwf(rcs[1])).then(cwf(rcs[2])).then(cwf(rcs[3])).then(cwf(rcs[4])).then(cwf(rcs[5])).then(cwf(rcs[6])).then(cwf(rcs[7])).then(cwf(rcs[8])).then(cwf(rcs[9])).then(()=> document.getElementById('texta').innerHTML=document.getElementById('texta').innerHTML+"<br>");
+    const promises = rcs.map(rc => cwf(rc));
+    promises.push(() => document.getElementById('texta').innerHTML += "<br>");
+    promises.reduce((chain, promise) => chain.then(() => promise()), Promise.resolve());
+   } 
+    
+    
+
+  function getRandomChars(inputString, count) {
+   if (inputString.length < count) {
+    console.error('指定された文字列に十分な文字が含まれていません。');
+    return null;
+   }
+
+   const rcs = [];
+   const availableIndices = Array.from({ length: inputString.length }, (_, index) => index);
+
+   for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * availableIndices.length);
+    const selectedIndex = availableIndices.splice(randomIndex, 1)[0];
+    rcs.push(inputString[selectedIndex]);
+   }
+
+  return rcs;
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function splitWordsAndCharacters(str) {
+    // スペースで文字列を分割して単語の配列を取得
+    const words = str.split(" ");
+    // 単語の順序をランダムに入れ替え
+    const shuffledWords = shuffleArray(words);
+    // 文字ごとに分割された配列を格納するための空の配列を作成
+    const result = [];
+
+    // 各単語についてループ処理
+    shuffledWords.forEach((word, index) => {
+        // 単語を文字ごとに分割して配列に追加
+        const characters = word.split("");
+        result.push(...characters); // スプレッド演算子を使って配列を展開して追加
+        // 単語の末尾にスペースを追加（最後の単語以外）
+        if (index !== shuffledWords.length - 1) {
+            result.push("　");
+        }
+    });
+
+    return result;
+}
+
+function insertSpaces(inputString, interval) {
+ // const chars = inputString.split(',');
+  const chars=inputString;
+  const result = [];
+
+  for (let i = 0; i < chars.length; i++) {
+    result.push(chars[i]);
+    if ((i + 1) % interval === 0 && i !== chars.length - 1) {
+      result.push('　');
+    }
+  }
+
+ // return result.join(',');
+ return result;
+}
+
+
+ // ローカルストレージから値を取得してinput要素にセットする関数
+ function setInitialValue() {
+      const savedValue = localStorage.getItem('savedValueO');
+      if (savedValue !== null) {
+        document.getElementById('wbox').value = savedValue;
+      }
+
+   
+
+      const savedTbox = localStorage.getItem('savedTboxO');
+      if (savedTbox !== null) {
+        document.getElementById('tbox').value = savedTbox;
+      }
+
+      const savedSpeed = localStorage.getItem('savedSpeedO');
+      if (savedSpeed !== null) {
+        document.getElementById('speed').value = savedSpeed
+      }
+    }
+    
+    // ローカルストレージに値を保存する関数
+    function saveValue() {
+      const valueToSave = document.getElementById('wbox').value;
+      localStorage.setItem('savedValueO', valueToSave);
+
+
+      const valueToTbox = document.getElementById('tbox').value;
+      localStorage.setItem('savedTboxO', valueToTbox);
+
+      const valueToSpeed = document.getElementById('speed').value;
+      localStorage.setItem('savedSpeedO', valueToSpeed);
+    }
+    
+    // ロード時に初期値をセット
+    setInitialValue();
+  
+      </script>
+
+</html>

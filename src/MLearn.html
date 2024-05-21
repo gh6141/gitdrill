@@ -44,7 +44,7 @@ html { font-family: sans-serif; }
    <input type="text" value="40" id="mojisu">文字<input type="button" value="ランダム" onclick="randomx()"> <input type="button" value="リプレイ" onclick="replayx()"><br>
    <input type="text" value="ヲ12ク3?ミツセヤ°" placeholder="10文字以上入力" id="tbox">からランダムに<input type ="button" value="10文字抽出" onclick="sitei()">
    　<input type="button" value="リプレイ" onclick="replay()"><br>
-   <input type="text" value="テンキ　アリガトウゴザイマス　コンニチハ　デンパ　コンデイシヨン　オハヨウゴザイマス　マタヨロシクオネガイシマス" id="wbox"><input type ="button" value="単語練習" onclick="word()">
+   <input type="text" value="テンキ　アリガトウゴザイマス　コンニチハ　デンパ　コンデイシヨン　オハヨウゴザイマス　マタヨロシクオネガイシマス" id="wbox" style="width: 400px;"><input type ="button" value="単語練習" onclick="word()">
 
    <br>
   <label for="speed">Speed (0.4~1):</label><input type="text" id="speed" name="speed"  size="5" value="0.6">
@@ -346,7 +346,7 @@ html { font-family: sans-serif; }
 
     const random=() =>{
       speed = document.getElementById("speed").value;
-      
+      saveValue();
       const inputString = 'イロハニホヘトチリヌルヲワカヨタレソツネナラムウヰノオクヤマケフコエテアサキユメミシヱヒモセスン?ー°1234567890」、＊（）';
       rcsx59 =insertSpaces(getRandomChars(inputString, 66),5).map(char => char.replace(/＊/g, '\"')); 
         promiseResolve(rcsx59)
@@ -354,6 +354,7 @@ html { font-family: sans-serif; }
     }
     
     const randomx=() =>{
+      saveValue();
       speed = document.getElementById("speed").value;
       const mojisu = document.getElementById("mojisu").value;
       
@@ -375,6 +376,7 @@ html { font-family: sans-serif; }
          }
          
   const sitei=() =>{
+   saveValue();
       speed = document.getElementById("speed").value;
         rcsx = getRandomChars(document.getElementById('tbox').value, 10).map(char => char.replace(/＊/g, '\"')); 
      promiseResolve(rcsx)
@@ -487,12 +489,36 @@ function getRandomWordsAndCharacters(inputString) {
       if (savedValue !== null) {
         document.getElementById('wbox').value = savedValue;
       }
+
+      const savedMojisu= localStorage.getItem('savedMojisu');
+      if (savedMojisu !== null) {
+        document.getElementById('mojisu').value = savedMojisu;
+      }
+
+      const savedTbox = localStorage.getItem('savedTbox');
+      if (savedTbox !== null) {
+        document.getElementById('tbox').value = savedTbox;
+      }
+
+      const savedSpeed = localStorage.getItem('savedSpeed');
+      if (savedSpeed !== null) {
+        document.getElementById('speed').value = savedSpeed
+      }
     }
     
     // ローカルストレージに値を保存する関数
     function saveValue() {
       const valueToSave = document.getElementById('wbox').value;
       localStorage.setItem('savedValue', valueToSave);
+
+      const valueToMojisu = document.getElementById('mojisu').value;
+      localStorage.setItem('savedMojisu', valueToMojisu);
+
+      const valueToTbox = document.getElementById('tbox').value;
+      localStorage.setItem('savedTbox', valueToTbox);
+
+      const valueToSpeed = document.getElementById('speed').value;
+      localStorage.setItem('savedSpeed', valueToSpeed);
     }
     
     // ロード時に初期値をセット
